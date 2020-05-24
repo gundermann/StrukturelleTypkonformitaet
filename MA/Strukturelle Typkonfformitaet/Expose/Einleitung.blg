@@ -1,0 +1,49 @@
+This is BibTeX, Version 0.99d (MiKTeX 2.9.7350)
+Capacity: max_strings=4000, hash_size=5000, hash_prime=4253
+The top-level auxiliary file: Einleitung.aux
+The style file: plain.bst
+Database file #1: bib.bib
+Warning--to sort, need author or key in proxy
+Warning--to sort, need author or key in cglib
+You've used 12 entries,
+            2118 wiz_defined-function locations,
+            564 strings with 5779 characters,
+and the built_in function-call counts, 3136 in all, are:
+= -- 291
+> -- 149
+< -- 1
++ -- 60
+- -- 48
+* -- 164
+:= -- 536
+add.period$ -- 37
+call.type$ -- 12
+change.case$ -- 57
+chr.to.int$ -- 0
+cite$ -- 14
+duplicate$ -- 135
+empty$ -- 277
+format.name$ -- 48
+if$ -- 673
+int.to.chr$ -- 0
+int.to.str$ -- 12
+missing$ -- 12
+newline$ -- 64
+num.names$ -- 20
+pop$ -- 101
+preamble$ -- 1
+purify$ -- 48
+quote$ -- 0
+skip$ -- 77
+stack$ -- 0
+substring$ -- 75
+swap$ -- 16
+text.length$ -- 1
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 40
+warning$ -- 2
+while$ -- 22
+width$ -- 14
+write$ -- 129
+(There were 2 warnings)

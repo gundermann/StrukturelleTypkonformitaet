@@ -1,0 +1,74 @@
+\begin{thebibliography}{10}
+
+\bibitem{cglib}
+cglib 2.0beta2 api - class enhancer.
+\newblock Webseite, 2003.
+\newblock Online erhältlich unter
+  \url{http://cglib.sourceforge.net/apidocs/index.html} abgerufen am
+  23.04.2020.
+
+\bibitem{proxy}
+Java™ platform standard ed. 7 - class proxy.
+\newblock Webseite, 2017.
+\newblock Online erhältlich unter
+  \url{https://docs.oracle.com/javase/7/docs/api/java/lang/reflect/Proxy.html}
+  abgerufen am 23.04.2020.
+
+\bibitem{Bas13}
+Len Bass, Paul Clements, and Rick Kazman.
+\newblock {\em Software Architecture in Practice 3. Edition}.
+\newblock Addison-Wesley, 2013.
+
+\bibitem{compoundtypes}
+Martin Büchi and Wolfgang Weck.
+\newblock Compound types for java.
+\newblock In {\em OOPSLA '98 10/98}, Vancouver, 1998.
+
+\bibitem{Bus96}
+Frank Buschmann, Regine Meunier, Hans Rohnert, Peter Sommerlad, and Michael
+  Stal.
+\newblock {\em Pattern orientated Software Architecture: A System of Patterns}.
+\newblock John Wiley Sons, 1996.
+
+\bibitem{structjvm}
+Gilles Dubochet and Martin Oderski.
+\newblock Compiling structural types on the jvm.
+\newblock In {\em ICOOOLPS '09}, Genova, Italien, 2009.
+
+\bibitem{gamma}
+Erich Gamma, Richard Helm, Ralph Johnson, and John Vlissides.
+\newblock {\em Design Patterns – Elements of Reusable Object-Oriented
+  Software}.
+\newblock Addison-Wesley, 1995.
+
+\bibitem{whiteoak}
+Joseph Gil and Itay Maman.
+\newblock Whiteoak: Introducing structural typing into java.
+\newblock In {\em OOPSLA'08}, Nashville, Tennessee, USA, 19-23.10.2008.
+
+\bibitem{structconfjava}
+Konstantin Läufer, Gerald Baumgartner, and Vincent~F. Russo.
+\newblock Safe structural conformance for java.
+\newblock Technical report, Computer and Information Science Department, Ohio
+  State University, 17.06.1998.
+
+\bibitem{modanwendungen}
+Guido Oelmann.
+\newblock Modulare anwendungen mit java: Tutorial mit beispielen.
+\newblock Webseite, 26.06.2018.
+\newblock Online erhältlich unter
+  \url{https://www.informatik-aktuell.de/entwicklung/programmiersprachen/modulare-anwendungen-mit-java.html}
+  abgerufen am 12.04.2020.
+
+\bibitem{types}
+Benjamin~C. Pierce.
+\newblock {\em Types and Programming Languages}.
+\newblock The MIT Press, 2002.
+
+\bibitem{apiEvolve}
+Julian~R. Ullmann.
+\newblock How do apis evolve? a story of refactoring.
+\newblock {\em Journal of Software Maintance and Evolution: Research and
+  Practise}, pages 1--26, 2006.
+
+\end{thebibliography}
