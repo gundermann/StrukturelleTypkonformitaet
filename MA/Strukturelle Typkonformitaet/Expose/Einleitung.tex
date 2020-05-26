@@ -16,8 +16,7 @@ chapterinoneline, % Uncomment to place the chapter title next to the number on o
 consistentlayout, % Uncomment to change the layout of the declaration, abstract and acknowledgements pages to match the default layout
 ]{scrartcl}
 \usepackage{ngerman}
-\usepackage[demo]{graphicx}
-
+\usepackage{graphicx}
 \usepackage{hyperref} 
 \usepackage[figure]{hypcap}
 \usepackage{url}
@@ -43,13 +42,13 @@ Die vorliegende Arbeit befasst sich mit einem Ansatz der einerseits als Java-Bib
 Aufgrund der Tatsache, dass die Methoden strukturell typkonformer Objekte, in unterschiedlichen Modulen auch unterschiedlich implementiert werden können, muss entschieden werden, welche der Implementierung letztendlich ver\-wendet werden soll. Auf dieses Problem wird ein besonderer Fokus innerhalb dieser Arbeit gelegt.
 Dies betrifft natürlich nicht nur Methoden-Implementierungen in Klassen, sondern auch default-Methoden in Interfaces.
 
-\subsection{Problembeschreibung}
+\subsection{Problembeschreibung}\label{problembeschreibung}
 In dieser Arbeit werden zwei Szenaien betrachtet, die unterschiedliche Probleme aufzeigen. In beiden Fällen wird ein Ausschnitt aus einem System beschrieben, dessen Aufbau den Prinzipien einer strengen Schichtenarchitektur folgt  (siehe \ref{architektur}).
 \subsubsection{Szenario 1}
 Auf architektonischer Ebene kann das erste Szenario, wie im Abbildung \ref{fig:problem} folgt dargestellt werden.
 \begin{figure}[h]
   \centering
-  \includegraphics{problem}
+  \includegraphics[scale = 0.7]{pics/problemS1Abstrakt.png}
   \caption{Problem: Szenario 1}
   \label{fig:problem}
 \end{figure}
@@ -66,10 +65,10 @@ Das zweite Szenario bezieht sich auf eine Serviceorientierte Architektur (siehe 
 Abbildung \ref{fig:problem2} zeigt den angenommenen Ausschnitt aus einem System. 
 \begin{figure}[h]
   \centering
-  \includegraphics{problem}
+  \includegraphics[scale=0.7]{pics/problemS2Abstrakt.png}
   \caption{Problem: Szenario 2}
   \label{fig:problem2}
-\end{figure}
+\end{figure}\\
 Hierbei wird von einem Broadcast Serviceaufruf ausgegangen. Sas bedeutet, dass es eine Service-Schittstelle gibt, die in mehreren Modulen implementiert wird. Die Aufrufer liegen in diesem Fall in Modul \emph{A} und \emph{B}, während die Service-Schnittstelle in Modul \emph{S} liegt. Die weiteren Module beinhalten unterschiedliche Implementierungen des augerufenen Services. Weiterhin ist anzunehmen, dass alle Module im Verantwortungsbereich unterschiedlicher Entwicklerteams liegen.\\\\
 Nun ist davon auszugehen, dass innerhalb von Modul \emph{A} eine weitere Information durch den Service bereitgestelt werden soll. Hierbei gibt es folgende Lösungsansätze:
 \begin{enumerate}
@@ -93,9 +92,9 @@ Beide Lösungsansätze erfordern wiederrum erheblichen Aufwand und Koordination 
 \cite{modanwendungen}
 \subsection{Schnittstellen}
 \cite{Bas13}, \cite{Bus96}
-\section{Problemstellung}
 \section{Lösungsansätze}
 \subsection{Bestehende Lösungen}
+In den folgenden Kapiteln wird auf die Lösungsmöglichkeiten der in \ref{problembeschreibung} beschriebenen Szenarien mit den bestehenden Lösungen nach \cite{structconfjava} und \cite{whiteoak} eingegangen. Die hier beschriebenen Lösungsansätze basieren lediglich auf den theoretischen Ausführungen bzgl. der allgemeinen Ansätze. Es wurde kein praktischer Nachweis in Form einer Implementierung erbracht, der die theoretischen Grundlagen aus \cite{structconfjava} und \cite{whiteoak} bestätigt. Das Ziel dieses Abschnittes der Arbeit ist es, grundlegende Konzepte, die in den nachfolgenden Lösungsansätzen enthalten sind, aufzunehmen und weiterzuentwickeln.
 \subsubsection{Erweitung des Java-Compilers}
 \cite{structconfjava}
 
