@@ -1,6 +1,7 @@
 package de.fernuni.hagen.ma.gundermann.szenario1.bookshelf;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import de.fernuni.hagen.ma.gundermann.szenario1.dokumente.AbstractDocument;
@@ -11,7 +12,7 @@ import de.fernuni.hagen.ma.gundermann.typkonverter.TypConverterBuilder;
 
 public class Bookshelf {
 
-	private List<IBookFromBookshelf> books = new ArrayList<IBookFromBookshelf>();
+	private Collection<IBookFromBookshelf> books = new ArrayList<IBookFromBookshelf>();
 
 	private TypConverter<IBookFromBookshelf> structConverter = TypConverterBuilder.create(ConformityCheckingBase.NAMES)
 			.withStructureDefinition(StructureDefinition.ABSTRACT_METHODS_NECESSARY).build(IBookFromBookshelf.class);

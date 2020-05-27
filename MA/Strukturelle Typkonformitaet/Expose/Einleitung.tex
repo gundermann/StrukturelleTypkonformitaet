@@ -49,12 +49,21 @@ Auf architektonischer Ebene kann das erste Szenario, wie im Abbildung \ref{fig:p
 \begin{figure}[h]
   \centering
   \includegraphics[scale = 0.7]{pics/problemS1Abstrakt.png}
-  \caption{Problem: Szenario 1}
+  \caption{Problem: Szenario 1 (abstrakt)}
   \label{fig:problem}
 \end{figure}
 Die Module \emph{A} und \emph{B} liegen architektonisch auf der gleichen Ebene und dürfen somit keine direkte Abhängigkeiten aufweisen. Das Modul \emph{C} stellt eine Abstraktionsebene dar, die für das gesamte System verwendet wird. Änderungen an diesem Modul würden demnach nicht nur die Module \emph{A} und \emph{B} betreffen, sondern auch noch weitere Module, die in Abbildung \ref{fig:problem} nicht aufgeführt sind. Zudem soll zusätzlich davon ausgegangen werden, dass die Module \emph{A} und \emph{B} im Verantwortungsbereich eines Eintwicklerteams \emph{E1} liegen, während das Modul \emph{C} im Verantwortungsbereich eines Entwicklerteams \emph{E2} liegt.\\\\
-Nun wird eine abstrakte Klasse aus Modul \emph{C} in Modul \emph{B} konkret implementiert. Weiterhin werden Objekte, die in Modul \emph{B} erzeugt werden in Modul \emph{A} verwendet. Die Verwendung erfolgt jedoch über die abstrakte Klassendefinition aus Modul \emph{C}.\\\\
-Aufgrund einer geänderten Anforderung muss innerhalb von Modul \emph{A} eine Information genutzt werden, die bereits in der konkreten Implementierung aus Modul \emph{B} vorliegt, aber nicht in der abstrakten Implementierung aus Modul \emph{C} zur Verfügung steht. In diesem Szenario gäbe es aufgrund der nominalen Typkonformität folgenden Lösungsvarianten:
+Ein konkretes Beispiel hierzu ist in Abbildung \ref{fig:problem1Konkret} zu sehen.
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale = 0.3]{pics/problemS1Konkret.png}
+  \caption{Problem: Szenario 1}
+  \label{fig:problem1Konkret}
+\end{figure}\\
+Hier liegen die Module \emph{bookshelves} und \emph{books} auf einer Architekturebene, analog zu den abstrakten Modulen \emph{A} und \emph{B}. Dementsprechend stellt das Modul \emph{documents} das Pendant zum abstrakten Modul \emph{C} dar. Zu erkennen ist, dass die Klasse \emph{Bookshelf} im Modul \emph{bookshelves} einige Sortier-Methoden enthält. Da die Klasse \emph{AbstractDocument} aus dem Modul \emph{documents} jedoch lediglich einen \emph{title} enthält, wäre die Implementierung eines Algorithmus zur Sortierung nach dem Jahr (\emph{sortByYear}) oder nach dem Autor (\emph{sortByAuthor}) nur schwer umzusetzen. Würde hingegen die Klasse \emph{Book} aus dem Modul \emph{books} in der Klasse \emph{Bookshelf} nutzbar sein, könnten der Entwickler das \emph{year} und den \emph{author} bei der Implementierung der Sortier-Algorithmen verwenden.\\\\
+%Nun wird eine abstrakte Klasse aus Modul \emph{C} in Modul \emph{B} konkret implementiert. Weiterhin werden Objekte, die in Modul \emph{B} erzeugt werden in Modul \emph{A} verwendet. Die Verwendung erfolgt jedoch über die abstrakte Klassendefinition aus Modul \emph{C}.\\\\
+%Aufgrund einer geänderten Anforderung muss innerhalb von Modul \emph{A} eine Information genutzt werden, die bereits in der konkreten Implementierung aus Modul \emph{B} vorliegt, aber nicht in der abstrakten Implementierung aus Modul \emph{C} zur Verfügung steht. In diesem Szenario gäbe es aufgrund der nominalen Typkonformität folgenden Lösungsvarianten:
+Aufgrund der nominalen Typkonformität gäbe es für dieses Szenario folgende Lösungsvarianten:
 \begin{enumerate}
 \item Die abstrakte Impementierung wird um diese Information erweitert.
 \item Es wird eine weitere Abstraktionsschicht zwischen den beiden vorliegenden Schichten eingebaut.
@@ -70,12 +79,21 @@ Abbildung \ref{fig:problem2} zeigt den angenommenen Ausschnitt aus einem System.
   \label{fig:problem2}
 \end{figure}\\
 Hierbei wird von einem Broadcast Serviceaufruf ausgegangen. Sas bedeutet, dass es eine Service-Schittstelle gibt, die in mehreren Modulen implementiert wird. Die Aufrufer liegen in diesem Fall in Modul \emph{A} und \emph{B}, während die Service-Schnittstelle in Modul \emph{S} liegt. Die weiteren Module beinhalten unterschiedliche Implementierungen des augerufenen Services. Weiterhin ist anzunehmen, dass alle Module im Verantwortungsbereich unterschiedlicher Entwicklerteams liegen.\\\\
-Nun ist davon auszugehen, dass innerhalb von Modul \emph{A} eine weitere Information durch den Service bereitgestelt werden soll. Hierbei gibt es folgende Lösungsansätze:
+Abbildung \ref{fig:problem2Konkret} zeigt ein konkretes Beispiel für dieses Szenario.
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.7]{pics/problemS2Abstrakt.png}
+  \caption{Problem: Szenario 2}
+  \label{fig:problem2Konkret}
+\end{figure}\\
+Im Speziellen ist hier eine Art Notruf-Szenario abgebildet. Dabei gibt es ein Modul \emph{injured}, in dem unterschiedliche Personen, die sich verletzen können bzw. in eine Notsituation geraten könnten, über die Klassen \emph{Person} und \emph{Allergic} abgebildet sind. Die daraus entstehenden Objekte können über einen Service aus dem Modul \emph{MedicalServices} medizinische Hilfe anfordern. Die konkreten Services werden in den Modulen \emph{doctors} und \emph{cardriver} bereitgestellt. (Fachlich gesehen handelt es sich bei den Services also um eine Art Erstversorgung bzw. Erste-Hilfe).\\\\
+Nun ist aber davon auszugehen, dass ein Allergiker (\emph{Allergic}) mitunter eine andere medizinische Erstversorgung benötigt, als eine Person, die keine Allergien aufweist (\emph{Person}). Weiterhin wäre vorstellbar, dass der Allergiker spezielle Informationen oder Werkzeuge, die für die notwendige Versorgung benötigt werden, bei sich trägt. (Beispielsweise einen Notimpfstoff mit Instruktionen zur Verabreichung.) Um diese zusätzlichen Informationen in den Service-Implementierungen nutzen zu können, gäbe es basierend auf der Tatsache, dass eine nominale Typkonformität im System angenommen wird, folgende Lösungsansätze:
+%Nun ist davon auszugehen, dass innerhalb von Modul \emph{A} eine weitere Information durch den Service bereitgestelt werden soll. Hierbei gibt es folgende Lösungsansätze:
 \begin{enumerate}
 \item Die Service-Schnittstelle wird erweitert.
-\item Es wird eine neue Service-Schnittstelle geschaffen, die künfitg nur von Modul \emph{A} verwendet wird.
+\item Es wird eine neue Service-Schnittstelle geschaffen, die auf die zusätzlichen Informationen Zugriff hat.
 \end{enumerate}
-Beide Lösungsansätze erfordern wiederrum erheblichen Aufwand und Koordination zwischen den Entwicklerteams. Daber ist zu erwähnen, dass der zweiter Lösungsansätz etwas weniger Aufwand erfordert, da die Entwicklerteams, deren Service-Implementierungen ohnehin in Modul \emph{A} keine Verwendung finden, nicht beteiligt sind. 
+Beide Lösungsansätze erfordern wiederrum erheblichen Aufwand und Koordination zwischen den Entwicklerteams. Dabei ist zu erwähnen, dass der zweite Lösungsansätz etwas weniger Aufwand erfordert, da die Entwicklerteams, deren Service-Implementierungen ohnehin in Modul \emph{A} keine Verwendung finden, nicht beteiligt sind. 
 
 \section{Typen und Typkonformität}
 \cite{types}
