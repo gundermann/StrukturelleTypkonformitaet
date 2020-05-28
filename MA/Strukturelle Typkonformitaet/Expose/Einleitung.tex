@@ -20,6 +20,9 @@ consistentlayout, % Uncomment to change the layout of the declaration, abstract 
 \usepackage{hyperref} 
 \usepackage[figure]{hypcap}
 \usepackage{url}
+
+\newtheorem{definition}{Definition}
+
 \begin{document}
 \author{Niels Gundermann}
 \title{Kommunikation zwischen entkoppelten Java-Modulen über strukturell typkonforme Objekte
@@ -100,7 +103,7 @@ Beide Lösungsansätze erfordern wiederrum erheblichen Aufwand und Koordination 
 \subsection{Typen in Java}
 \subsection{Typkonformität in Java}
 \cite{structconfjava}, \cite{compoundtypes}
-\subsection{Formale Definition struktureller Typkonformität in Java}
+\subsection{Zufällige Typkonformität}
 \cite{structconfjava}
 \section{Softwarearchitektur}
 \cite{Bas13}
@@ -114,7 +117,46 @@ Beide Lösungsansätze erfordern wiederrum erheblichen Aufwand und Koordination 
 \subsection{Bestehende Lösungen}
 In den folgenden Kapiteln wird auf die Lösungsmöglichkeiten der in \ref{problembeschreibung} beschriebenen Szenarien mit den bestehenden Lösungen nach \cite{structconfjava} und \cite{whiteoak} eingegangen. Die hier beschriebenen Lösungsansätze basieren lediglich auf den theoretischen Ausführungen bzgl. der allgemeinen Ansätze. Es wurde kein praktischer Nachweis in Form einer Implementierung erbracht, der die theoretischen Grundlagen aus \cite{structconfjava} und \cite{whiteoak} bestätigt. Das Ziel dieses Abschnittes der Arbeit ist es, grundlegende Konzepte, die in den nachfolgenden Lösungsansätzen enthalten sind, aufzunehmen und weiterzuentwickeln.
 \subsubsection{Erweitung des Java-Compilers}
-\cite{structconfjava}
+In der Arbeit von Läufer et. al. (\cite{structconfjava}) wurde der Java-Compiler so erweitert, dass die Deklaration der implementierten Interfaces an einer Klasse entfallen kann. Die Substituierbarkeit nach dem eines Interfaces und einer Klasse nach dem Liskovschen Substitutionsprinzip wird durch den Java-Compiler zusätzlich auf Basis der Struktur der entsprechenden Klassen und Interfaces festgestellt.\\\\
+Hierzu musste definiert werden, was unter Typkonformität innerhalb der Sprache Java zu verstehen ist. Dabei wurden beachtet, dass in Java sowohl Klassen als auch Interfaces als Typen fungieren. Allgemein wurde folgende formale Definition hinsichtlich der Typkonformität aufgestellt:
+\begin{definition}\label{def_allgTypkonfJava}
+Sei \emph{I} ein Interface und \emph{X} sowie \emph{Y} jeweils eine Klasse oder ein Interface.\\
+In der Sprache Java hat jede Klasse mit Außnahme von \emph{java.lang.Object} eine direkte Oberklasse. Jede Klasse und jedes Interfaces hat keine ider mehrere direkte Interfaces.\\\\
+\emph{X} ist konform zu \emph{Y} genau dann, wenn:
+\begin{itemize}
+\item\emph{X} nominal Typkonform zu \emph{Y} ist, oder
+\item\emph{Y} ein Interface ist, dass strukturelle Typkonformität erlaubt und \emph{X} strukturell Typkonform zu \emph{Y} ist.
+\end{itemize}
+\end{definition} (vgl. \cite{structconfjava}) \\\\
+An Definition \ref{def_allgTypkonfJava} ist zu erkennen, dass die nominale Typkonformität in dem Ansatz von Läufer et. al \cite{structconfjava} nicht ausgeschlossen wurde, sodass die Konformität zweier Typen sowohl auf nominaler als auch struktureller Ebenen definiert ist. Die nominale Typkonformität wird in diesem Ansatz dabei wie folgt definiert:
+\begin{definition}
+\emph{X} ist nominal typkonform zu \emph{Y} genau dann, wenn:
+\begin{itemize}
+\item \emph{X} ist identisch zu \emph{Y}, oder
+\item die direkte Oberklasse von \emph{X}, sofern sie existiert, ist nominal typkonform zu \emph{Y}, oder
+\item ein direktes Interface \emph{I} von \emph{X} ist nominal typkonform zu \emph{Y}
+\end{itemize}
+\end{definition} (vgl. \cite{structconfjava})\\\\
+Die strukturelle Typkonformität wird in dem Ansatz aus \cite{structconfjava} wie folgt definiert:
+\begin{definition}\label{def_structTypkonfJava}
+\emph{X} ist strutkurell typkonform zu \emph{I} genau dann, wenn \emph{X} nominal typkonform zu \emph{I} ist, oder alle der folgenden Bedingungen gleichzeitig erfüllt sind:
+\begin{itemize}
+\item \emph{I} ist ein Interface, dass strutkurelle Typkonformität erlaubt, und
+\item \emph{X} überschreibt jede Methode, die in \emph{I} spezifiziert ist, und
+\item \emph{X} ist typkonform zu alles direkten Interfaces von \emph{I}.
+\end{itemize}
+\end{definition} (vgl. \cite{structconfjava})\\\\
+Zur Vollständigkeit der Definitionen muss weiterhin definiet werden, wann eine Methode eines Interfaces in einer Klasse oder Interface überschrieben wird. Das Überschreiben einer Methode wird dabei wie folgt definiert:
+\begin{definition}
+\emph{X} überschreibt eine Methode \emph{Y.f}, die in \emph{Y} spezifiziert ist, genau dann, wenn es eine Methode \emph{f} in \emph{X} gibt (\emph{X.f}), die folgende Bedingungen erfüllt:
+\begin{itemize}
+\item \emph{X.f} ist von der Sichtbarkeit her nicht stärker eingeschränkt als \emph{Y.f}.
+\item \emph{X.f} hat dieselbe Methodensignatur wie \emph{Y.f}
+\item Checked Exceptions, die von \emph{X.f} geworfen werden, sind Unterklassen oder von derselben Klasse, die auch der Checked Excpetions zugrundeliegen, die von \emph{Y.f} geworden werden.
+\end{itemize}
+\end{definition} (vgl. \cite{structconfjava})\\\\
+Da der Ansatz aus \cite{structconfjava} eine Hybride Variante bzgl. der Feststellung der Typkonformität darstellt (Verwendung von nominaler und struktureller Typkonformität) musste festgelegt werden, welche From der Typkonformität als Standardvariante verwendet wird. Anderenfalls würde die Gefahr der \emph{versehentlichen Typkonformität} bestehen. Aufgrunddessen wurde festgelegt, dass die nominale Typkonformität als Standardvariante verwendet wird und die strukturelle Typkonformität einer speziellen Erlaubnis bedarf. (vgl. \cite{structconfjava}) Dieser Fakt ebenfalls bei genauerer Betrachtung der Definitionen \ref{def_allgTypkonfJava} und \ref{def_structTypkonfJava} klar. In diesen Definitionen ist die Rede davon, dass ein Interface die strukturelle Typkonformität erlaubt.
+
 
 \subsubsection{WHITEOAK}
 \cite{whiteoak}
