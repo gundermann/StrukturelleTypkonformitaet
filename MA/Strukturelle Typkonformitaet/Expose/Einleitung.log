@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 2.9.7350) (preloaded format=pdflatex 2020.4.23)  28 MAY 2020 12:43
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 2.9.7350) (preloaded format=pdflatex 2020.4.23)  2 JUN 2020 10:31
 entering extended mode
 **./Einleitung.tex
 (Einleitung.tex
@@ -576,12 +576,12 @@ Underfull \hbox (badness 10000) in paragraph at lines 130--133
 
  []
 
-[6]
+
 Underfull \hbox (badness 10000) in paragraph at lines 139--141
 
  []
 
-
+[6]
 Overfull \hbox (0.93738pt too wide) in paragraph at lines 142--143
 []\OT1/cmr/m/n/10.95 X \OT1/cmr/m/it/10.95 ist strutkurell typkonform zu \OT1/c
 mr/m/n/10.95 I \OT1/cmr/m/it/10.95 genau dann, wenn \OT1/cmr/m/n/10.95 X \OT1/c
@@ -589,28 +589,203 @@ mr/m/it/10.95 nominal typkonform
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 148--151
+Underfull \hbox (badness 10000) in paragraph at lines 148--150
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 157--159
+Underfull \hbox (badness 10000) in paragraph at lines 157--158
 
  []
 
 
-Overfull \hbox (3.53293pt too wide) in paragraph at lines 157--159
+Overfull \hbox (3.53293pt too wide) in paragraph at lines 157--158
 \OT1/cmr/m/n/10.95 darstellt (Verwendung von nominaler und struktureller Typkon
 formit[]at) musste festgelegt
  []
 
 
-Overfull \hbox (15.1216pt too wide) in paragraph at lines 157--159
+Overfull \hbox (15.1216pt too wide) in paragraph at lines 157--158
 \OT1/cmr/m/n/10.95 werden, welche From der Typkonformit[]at als Standardvariant
 e verwendet wird. Anderenfalls
  []
 
-[7] (Einleitung.bbl
+
+Overfull \hbox (17.6745pt too wide) in paragraph at lines 159--160
+[]\OT1/cmr/m/it/10.95 Ein Interface erlaubt die sturkturelle Typkonformit[]at, 
+wenn eine der folgenden
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 164--166
+
+ []
+
+[7]
+Underfull \hbox (badness 10000) in paragraph at lines 172--175
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 172--175
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 176--179
+
+ []
+
+
+Overfull \hbox (0.30861pt too wide) in paragraph at lines 176--179
+\OT1/cmr/m/n/10.95 Dieser L[]osungsansatz verwendet weder einen erweiterten Com
+piler noch eine Erweiterung
+ []
+
+
+Overfull \hbox (3.68498pt too wide) in paragraph at lines 176--179
+\OT1/cmr/m/n/10.95 der Sprachekonstrukte. Die Verwendung der strukturellen Typk
+onformit[]at muss innerhalb
+ []
+
+
+Overfull \hbox (0.20313pt too wide) in paragraph at lines 176--179
+\OT1/cmr/m/n/10.95 Hierzu steht in der Bibliothek das Interface \OT1/cmr/m/it/1
+0.95 TypConverter \OT1/cmr/m/n/10.95 bereit, welches die Verwendung
+ []
+
+
+Overfull \hbox (24.66583pt too wide) in paragraph at lines 176--179
+\OT1/cmr/m/n/10.95 der strukturellen Typkonformit[]at erm[]oglicht. Ein Objekt,
+ welches das Interfaces \OT1/cmr/m/it/10.95 TypConverter
+ []
+
+
+Overfull \hbox (1.09718pt too wide) in paragraph at lines 176--179
+\OT1/cmr/m/n/10.95 erf[]ullt, kann mithilfe der Klasse \OT1/cmr/m/it/10.95 TypC
+onverterBuilder \OT1/cmr/m/n/10.95 erzeugt werden. Auf die Parameter,
+ []
+
+
+Overfull \hbox (21.02254pt too wide) in paragraph at lines 176--179
+\OT1/cmr/m/n/10.95 spezieller eingegangen. Im Allgemeinen dienen sie der Konfig
+uration der Konformit[]atspr[]ufung
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 176--179
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 183--185
+
+ []
+
+
+Overfull \hbox (1.8294pt too wide) in paragraph at lines 183--185
+\OT1/cmr/m/n/10.95 angegeben werden muss, ist es anders als im Ansatz aus [[]] 
+nicht notwendig, die Interfaces,
+ []
+
+
+Overfull \hbox (4.9624pt too wide) in paragraph at lines 183--185
+\OT1/cmr/m/n/10.95 L[]osungsansatz nicht verwendet werden. Allerdings sind nur 
+kleinere folgende Anpassungen
+ []
+
+[8]
+Underfull \hbox (badness 10000) in paragraph at lines 186--189
+
+ []
+
+
+Overfull \hbox (0.93738pt too wide) in paragraph at lines 195--196
+[]\OT1/cmr/m/n/10.95 X \OT1/cmr/m/it/10.95 ist strutkurell typkonform zu \OT1/c
+mr/m/n/10.95 I \OT1/cmr/m/it/10.95 genau dann, wenn \OT1/cmr/m/n/10.95 X \OT1/c
+mr/m/it/10.95 nominal typkonform
+ []
+
+
+Overfull \hbox (2.29968pt too wide) in paragraph at lines 202--203
+[]\OT1/cmr/m/n/10.95 X \OT1/cmr/m/it/10.95 enth[]alt eine Methode \OT1/cmr/m/n/
+10.95 f \OT1/cmr/m/it/10.95 (\OT1/cmr/m/n/10.95 X.f)\OT1/cmr/m/it/10.95 , die s
+trukturell []aquivalenz zu einer Methode
+ []
+
+
+LaTeX Warning: Reference `ambigousStructMethods' on page 9 undefined on input l
+ine 210.
+
+
+Overfull \hbox (10.28531pt too wide) in paragraph at lines 210--229
+\OT1/cmr/m/n/10.95 Interface. Bei der Konvertierung muss jedoch festgestellt we
+rden, welche Methode innerhalb
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 210--229
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 210--229
+
+ []
+
+
+Overfull \hbox (48.33328pt too wide) in paragraph at lines 210--229
+\OT1/cmr/m/n/10.95 Daher muss beim Erzeugen eines Objekte vom \OT1/cmr/m/it/10.
+95 TypConverterBuilder \OT1/cmr/m/n/10.95 eine \OT1/cmr/m/it/10.95 ComformityCh
+eckingBase
+ []
+
+
+Overfull \hbox (9.9095pt too wide) in paragraph at lines 210--229
+\OT1/cmr/m/n/10.95 angegeben. Diese kann genau zwei Werte annehmen, wobei der e
+rste (\OT1/cmr/m/it/10.95 Name\OT1/cmr/m/n/10.95 ) die Ermittlung
+ []
+
+
+Overfull \hbox (24.69028pt too wide) in paragraph at lines 210--229
+\OT1/cmr/m/n/10.95 der strukturell []aquivalenten Methoden nach Definition []4[
+] angibt und die zweite (\OT1/cmr/m/it/10.95 SIGNATURE\OT1/cmr/m/n/10.95 )
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 210--229
+
+ []
+
+
+Overfull \hbox (10.18129pt too wide) in paragraph at lines 210--229
+\OT1/cmr/m/n/10.95 f[]allt auf, dass diese Klasse strukturell typkonform zu dem
+ neune Interface \OT1/cmr/m/it/10.95 BookForBookshelf
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 210--229
+
+ []
+
+
+Overfull \hbox (10.70622pt too wide) in paragraph at lines 210--229
+\OT1/cmr/m/n/10.95 Grunds[]atzlich kann die Konvertierung in diesem Fall nur im
+ Modul \OT1/cmr/m/it/10.95 Bookshelves \OT1/cmr/m/n/10.95 stattfinden,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 210--229
+
+ []
+
+
+Overfull \hbox (1.92337pt too wide) in paragraph at lines 210--229
+\OT1/cmr/m/n/10.95 Der Entwickler muss nun beim Einlagern der Elemente in ein \
+OT1/cmr/m/it/10.95 Bookshelf \OT1/cmr/m/n/10.95 die Konvertierung
+ []
+
+[9] [10] (Einleitung.bbl
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <10.95> on input line 7.
 LaTeX Font Info:    External font `cmex10' loaded for size
@@ -623,28 +798,32 @@ Underfull \hbox (badness 10000) in paragraph at lines 11--16
 i / java / lang / reflect / Proxy .
  []
 
-[8]
+[11]
 Underfull \hbox (badness 10000) in paragraph at lines 56--62
 \OT1/cmtt/m/n/10.95 de / entwicklung / programmiersprachen / modulare-[]anwendu
 ngen-[]mit-[]java .
  []
 
 )
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 178.
- [9]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 178.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 246.
+ [12]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 246.
  (Einleitung.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 178.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 178.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 246.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 246.
 Package rerunfilecheck Info: File `Einleitung.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 178.
+
+
+LaTeX Warning: There were undefined references.
+
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 246.
  ) 
 Here is how much of TeX's memory you used:
- 8383 strings out of 482859
- 149887 string characters out of 2952984
- 520814 words of memory out of 3000000
- 23841 multiletter control sequences out of 15000+200000
+ 8400 strings out of 482859
+ 150101 string characters out of 2952984
+ 525814 words of memory out of 3000000
+ 23849 multiletter control sequences out of 15000+200000
  539015 words of font info for 46 fonts, out of 3000000 for 9000
  0 hyphenation exceptions out of 8191
  42i,7n,53p,10127b,452s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -657,9 +836,9 @@ fb></home/niels/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmr12.pfb
 b></home/niels/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmti10.pfb
 ></home/niels/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
 
-Output written on Einleitung.pdf (9 pages, 176050 bytes).
+Output written on Einleitung.pdf (12 pages, 194142 bytes).
 PDF statistics:
- 267 PDF objects out of 1000 (max. 8388607)
- 60 named destinations out of 1000 (max. 500000)
- 216 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 308 PDF objects out of 1000 (max. 8388607)
+ 69 named destinations out of 1000 (max. 500000)
+ 208 words of extra memory for PDF output out of 10000 (max. 10000000)
 
