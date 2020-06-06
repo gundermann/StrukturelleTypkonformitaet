@@ -5,9 +5,9 @@ import java.util.stream.Stream;
 
 import de.fernuni.hagen.ma.gundermann.typkonverter.BehaviorDefinition;
 import de.fernuni.hagen.ma.gundermann.typkonverter.StructureDefinition;
-import de.fernuni.hagen.ma.gundermann.typkonverter.TypConverter;
+import de.fernuni.hagen.ma.gundermann.typkonverter.TypeConverter;
 
-public class TypeConverter<T> implements TypConverter<T>{
+public class StructureByNamesTypeConverter<T> implements TypeConverter<T>{
 
   private final Class<T> targetStructure;
 
@@ -16,7 +16,7 @@ public class TypeConverter<T> implements TypConverter<T>{
 private StructureDefinition structureDefinition;
 
   // Was ist mit ENUMs?
-  public TypeConverter( Class<T> targetStructure, StructureDefinition structureDefinition, BehaviorDefinition behaviorDefinition ) {
+  public StructureByNamesTypeConverter( Class<T> targetStructure, StructureDefinition structureDefinition, BehaviorDefinition behaviorDefinition ) {
     this.targetStructure = targetStructure;
 	this.structureDefinition = structureDefinition;
     // Grundlagen pruefen:

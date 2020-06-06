@@ -17,7 +17,7 @@ package de.fernuni.hagen.ma.gundermann.typkonverter.structureBySignatures;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
-import de.fernuni.hagen.ma.gundermann.typkonverter.structureBySignatures.TypeConverter.MethodStructure;
+import de.fernuni.hagen.ma.gundermann.typkonverter.structureBySignatures.StructureBySignatureTypeConverter.MethodStructure;
 
 
 public class BehaviourDelegateInvocationHandler implements InvocationHandler {

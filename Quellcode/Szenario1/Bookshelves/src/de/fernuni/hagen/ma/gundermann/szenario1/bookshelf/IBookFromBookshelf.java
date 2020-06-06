@@ -8,9 +8,8 @@ public interface IBookFromBookshelf {
 	
 	String getAuthor();
 	
-	String getIsbn();
-	
-	default String getSignature() {
-		return getAuthor() + getYear();
+	default String getIsbn() {
+		return "";
 	}
+	
 }

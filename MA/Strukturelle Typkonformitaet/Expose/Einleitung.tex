@@ -20,6 +20,25 @@ consistentlayout, % Uncomment to change the layout of the declaration, abstract 
 \usepackage{hyperref} 
 \usepackage[figure]{hypcap}
 \usepackage{url}
+\usepackage{listings}
+\lstdefinestyle{mystyle}{
+    numberstyle=\tiny,
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+
 
 \newtheorem{definition}{Definition}
 
@@ -52,7 +71,7 @@ Auf architektonischer Ebene kann das erste Szenario, wie im Abbildung \ref{fig:p
 \begin{figure}[h]
   \centering
   \includegraphics[scale = 0.7]{pics/problemS1Abstrakt.png}
-  \caption{Problem: Szenario 1 (abstrakt)}
+  \caption{Problemszenario 1 (abstrakt)}
   \label{fig:problem}
 \end{figure}
 Die Module \emph{A} und \emph{B} liegen architektonisch auf der gleichen Ebene und dürfen somit keine direkte Abhängigkeiten aufweisen. Das Modul \emph{C} stellt eine Abstraktionsebene dar, die für das gesamte System verwendet wird. Änderungen an diesem Modul würden demnach nicht nur die Module \emph{A} und \emph{B} betreffen, sondern auch noch weitere Module, die in Abbildung \ref{fig:problem} nicht aufgeführt sind. Zudem soll zusätzlich davon ausgegangen werden, dass die Module \emph{A} und \emph{B} im Verantwortungsbereich eines Eintwicklerteams \emph{E1} liegen, während das Modul \emph{C} im Verantwortungsbereich eines Entwicklerteams \emph{E2} liegt.\\\\
@@ -60,7 +79,7 @@ Ein konkretes Beispiel hierzu ist in Abbildung \ref{fig:problem1Konkret} zu sehe
 \begin{figure}[h]
   \centering
   \includegraphics[scale = 0.3]{pics/problemS1Konkret.png}
-  \caption{Problem: Szenario 1}
+  \caption{Problemszenario 1}
   \label{fig:problem1Konkret}
 \end{figure}\\
 Hier liegen die Module \emph{bookshelves} und \emph{books} auf einer Architekturebene, analog zu den abstrakten Modulen \emph{A} und \emph{B}. Dementsprechend stellt das Modul \emph{documents} das Pendant zum abstrakten Modul \emph{C} dar. Zu erkennen ist, dass die Klasse \emph{Bookshelf} im Modul \emph{bookshelves} einige Sortier-Methoden enthält. Da die Klasse \emph{AbstractDocument} aus dem Modul \emph{documents} jedoch lediglich einen \emph{title} enthält, wäre die Implementierung eines Algorithmus zur Sortierung nach dem Jahr (\emph{sortByYear}) oder nach dem Autor (\emph{sortByAuthor}) nur schwer umzusetzen. Würde hingegen die Klasse \emph{Book} aus dem Modul \emph{books} in der Klasse \emph{Bookshelf} nutzbar sein, könnten der Entwickler das \emph{year} und den \emph{author} bei der Implementierung der Sortier-Algorithmen verwenden.\\\\
@@ -78,7 +97,7 @@ Abbildung \ref{fig:problem2} zeigt den angenommenen Ausschnitt aus einem System.
 \begin{figure}[h]
   \centering
   \includegraphics[scale=0.7]{pics/problemS2Abstrakt.png}
-  \caption{Problem: Szenario 2}
+  \caption{Problemszenario 2}
   \label{fig:problem2}
 \end{figure}\\
 Hierbei wird von einem Broadcast Serviceaufruf ausgegangen. Sas bedeutet, dass es eine Service-Schittstelle gibt, die in mehreren Modulen implementiert wird. Die Aufrufer liegen in diesem Fall in Modul \emph{A} und \emph{B}, während die Service-Schnittstelle in Modul \emph{S} liegt. Die weiteren Module beinhalten unterschiedliche Implementierungen des augerufenen Services. Weiterhin ist anzunehmen, dass alle Module im Verantwortungsbereich unterschiedlicher Entwicklerteams liegen.\\\\
@@ -86,7 +105,7 @@ Abbildung \ref{fig:problem2Konkret} zeigt ein konkretes Beispiel für dieses Sze
 \begin{figure}[h]
   \centering
   \includegraphics[scale=0.7]{pics/problemS2Abstrakt.png}
-  \caption{Problem: Szenario 2}
+  \caption{Problemszenario 2}
   \label{fig:problem2Konkret}
 \end{figure}\\
 Im Speziellen ist hier eine Art Notruf-Szenario abgebildet. Dabei gibt es ein Modul \emph{injured}, in dem unterschiedliche Personen, die sich verletzen können bzw. in eine Notsituation geraten könnten, über die Klassen \emph{Person} und \emph{Allergic} abgebildet sind. Die daraus entstehenden Objekte können über einen Service aus dem Modul \emph{MedicalServices} medizinische Hilfe anfordern. Die konkreten Services werden in den Modulen \emph{doctors} und \emph{cardriver} bereitgestellt. (Fachlich gesehen handelt es sich bei den Services also um eine Art Erstversorgung bzw. Erste-Hilfe).\\\\
@@ -162,9 +181,22 @@ Ein Interface erlaubt die sturkturelle Typkonformität, wenn eine der folgenden 
 \item Das Interface erweitert ein anderes Interface, welches strukturelle Typkonformität erlaubt
 \end{enumerate} 
 \end{definition} (vgl. \cite{structconfjava})\\\\
-Ausgehend von den Definitionen \ref{def_allgTypkonfJava} - \ref{def_allowStruct} können die beiden Problem-Szenarien aus Kapitel \ref{problembeschreibung} wie folgt mithifle dieses Ansatzes umgesetzt werden:
-
-
+Ausgehend von den Definitionen \ref{def_allgTypkonfJava} - \ref{def_allowStruct} können die beiden Problem-Szenarien aus Kapitel \ref{problembeschreibung} wie folgt mithifle dieses Ansatzes umgesetzt werden:\\\\
+Aus den Sortier-Methoden (\emph{sortByTitle}, \emph{sortByYear}, usw.), die von der Klasse \emph{Bookshelf} angeboten werden, kann man schließen, dass die in einem \emph{Bookshelf} verwalteten Dokumente über folgende Informationen verfügen müssen.
+\begin{itemize}
+\item Titel
+\item Jahr
+\item Autor
+\end{itemize}
+Ausgehend von diesem Wissen, kann ein Typ als Interface bereitgestellt werden, welcher innerhalb der Klasse \emph{Bookshelf} verwendet wird und über die Sepzifikation der im Interface enthaltenen Methoden sicherstellt, dass die o.g. Informationen abgefragt werden können. Abbildung \ref{cd_loesungProblem1_compiler} zeigt den Inhalt des Moduls \emph{Bookshelves} mit den notwendigen Erweiterungen. 
+\begin{figure}[h]
+\label{cd_loesungProblem1_compiler}
+\centering
+\includegraphics[scale=0.5]{pics/cd_loesungProblem1_compiler}
+\caption{Lösung Problemszenario 1 mit erweitertem Compiler}
+\end{figure}\\
+Da sich die Änderungen nur innerhalb des Moduls \emph{Bookshelves} vorgenomment werden sollen, wird das Interface \emph{IBookForBookshelf} darin aufgenommen, welches vom Marker-Interface \emph{Structural} erbt. Weiterhin spezifiziert dieses Interface drei Methoden, über die die oben genannten Informationen angefragt werden können. Die letzte beiden Änderungen beziehen sich auf die in der Klasse \emph{Bookshelf} verwalteten \emph{Collection}. Vorher konnten wurde dort Objekte vom Typ \emph{AbstractDocument} enthalten sein. Da die Klasse \emph{AbstractDocument} das Interface \emph{IBookForBookshelf} aufgrund der Architektur-Richtlinien nicht implementieren darf, wurde der generische Typ der \emph{Collection} ebenfalls in \emph{IBookForBookshelf} geändert. In der Konsequenz wurde auch die Signatur der Methode \emph{addDocument} geändert, sodass hier ein Objekt vom Typ \emph{IBookForBookshelf} übergeben werden muss.\\\\
+Laut den Beschreibungen von Läufer et. al. \cite{structconfjava} genügen diese Änderungen, damit der Compiler zum Übersetzungszeitpunkt sicherstellen kann, dass der Methode \emph{addDocument} nur Objekte übergeben werden, deren Typ laut Definition \ref{def_allgTypkonfJava} konform zum Typ \emph{IBookForBookshelf} ist.
 
 
 
@@ -175,7 +207,7 @@ Ausgehend von den Definitionen \ref{def_allgTypkonfJava} - \ref{def_allowStruct}
 \subsection{Neuer Lösungsansatz}
 In den folgenden Kapiteln wird auf die Umsetzung der Problem-Szenarien aus Kapitel \ref{problembeschreibung} unter der Verwendung des im Rahmen dieser Arbeit erarbeiteten Ansatz beschrieben.\\\\
 Dieser Lösungsansatz verwendet weder einen erweiterten Compiler noch eine Erweiterung der Sprachekonstrukte. Die Verwendung der strukturellen Typkonformität muss innerhalb der Programms mithilfe einer einzubindenden Bibliothek explitit angestoßen werden. Hierzu steht in der Bibliothek das Interface \emph{TypConverter} bereit, welches die Verwendung der strukturellen Typkonformität ermöglicht. Ein Objekt, welches das Interfaces \emph{TypConverter}  erfüllt, kann mithilfe der Klasse \emph{TypConverterBuilder} erzeugt werden. Auf die Parameter, die dem \emph{TypConverterBuilder} mitgegeben werden müssen, wird im späteren Verlauf spezieller eingegangen. Im Allgemeinen dienen sie der Konfiguration der Konformitätsprüfung sowie der Form Konvertierung von strukturell typkonformen Objekten.\\\\
-Der neue Lösungsansatz geht über den Ansatz von Läufer et. al \cite{structconfjava} insofern hinaus, dass sich eine strukturelle Typkonformität nicht nur zwischen Klassen und Interfaces feststellen lässt, sondern auch zwischen zwei Klassen. 
+Der neue Lösungsansatz geht über den Ansatz von Läufer et. al \cite{structconfjava} insofern hinaus, dass sich eine strukturelle Typkonformität nicht nur zwischen Klassen und Interfaces feststellen lässt, sondern auch zwischen zwei Klassen. Weiterhin wird in Bezug auf Interfaces auf die Nutzung von \emph{default-Methoden} eingegangen.
 
 
 
@@ -191,13 +223,25 @@ In der Sprache Java hat jede Klasse mit Außnahme von \emph{java.lang.Object} ei
 \item\emph{Y} ein Interface ist, das zu \emph{X} strukturell Typkonform ist.
 \end{itemize}
 \end{definition}
+Um zu definieren, wann ein Interfaces oder eine Klasse zu einem anderen Interface strukturell typkonform ist, muss in Bezug auf den neuen Lösungsansatz folgendes vorweggenommen werden. Mit der Java-Version ... wurden sogenannte \emph{default-Methoden} für Interfaces aufgenommen. Diese Methoden erlauben es, ein bestimmtes Verhalten innerhalb eines Interfaces zu definieren. Nach der Definition \ref{def_structTypkonfJava} aus \cite{structconfjava} müsste ein zum Interface \emph{I} typkonformes Interface oder eine Klasse auch die Methoden enthalten, die in \emph{I} als \emph{default-Methoden} bereits implementiert sind. Die Möglichkeit, Verhalten innerhalb eines Interfaces zu definieren, welches in der implementierenden Klasse nicht erneut definiert werden muss, würde bei diesem Ansatz nach Läufer et. al. \cite{structconfjava} jedoch verloren gehen.\\\\
+In dem neuen Lösungsansatz wird dem Entwickler daher die Möglichkeit gegeben, die Verwendung von \emph{default-Methoden} bzw. implementierten Methoden innerhalb von Klassen (siehe Kapitel \ref{sec_classes}) zu steuern. Das bedeutet, dass der Entwickler zwischen zwei Definitionen bzgl. der sturkturellen Konformität zweier Typen wählen kann. Die erste Definition ist dabei an der Definition \ref{def_structTypkonfJava} aus \cite{structconfjava} angelehnt und beschreibt den Ansatz, dass alle Methoden (auch die \emph{default-Methoden}) im \emph{Zieltyp} spezifiziert sein müssen.
 \begin{definition}\label{def_structTypkonfJava_V1}
 \emph{X} ist strutkurell typkonform zu \emph{I} genau dann, wenn \emph{X} nominal typkonform zu \emph{I} ist, oder alle der folgenden Bedingungen gleichzeitig erfüllt sind:
 \begin{itemize}
 \item \emph{X} enthält für jede Methode, die in \emph{I} spezifiziert ist, eine strukturell äquivalente Methode und
 \item \emph{X} ist typkonform zu allen direkten Interfaces von \emph{I}.
 \end{itemize}
-\end{definition} (vgl. \cite{structconfjava})
+\end{definition} (vgl. \cite{structconfjava})\\\\
+Dem gegenüber steht die folgende Definition bzgl. der strukturellen Typkonformität, welche eine Spezifikation bereits implementierter Methoden im \emph{Zieltyp} nicht fordert
+\begin{definition}\label{def_structTypkonfJava_V2}
+\emph{X} ist strutkurell typkonform zu \emph{I} genau dann, wenn \emph{X} nominal typkonform zu \emph{I} ist, oder alle der folgenden Bedingungen gleichzeitig erfüllt sind:
+\begin{itemize}
+\item \emph{X} enthält für jede Methode, die in \emph{I} spezifiziert aber nicht implementiert ist, eine strukturell äquivalente Methode und
+\item \emph{X} ist typkonform zu allen direkten Interfaces von \emph{I}.
+\end{itemize}
+\end{definition}
+Die o.g. Unterscheidung zwischen der Verwendung von Definition \ref{def_structTypkonfJava_V1} und Definition \ref{def_structTypkonfJava_V2} wird innerhalb des neuen Lösungsansatzes über das Enum \emph{StructureDefinition} gesteuert. Der Wert \emph{ALL\_METHODS\_NECESSARY} gibt an, dass Definition \ref{def_allgTypkonfJava_V1} zu verwenden ist. Hierbei handelt es sich um den Standardwert. Sofern im \emph{TypConverterBuilder} also nicht die \emph{StructureDefinition.ABSTRACT\_METHODS\_NECESSARY} angegeben wurde, wird die strukturelle Typkonformität immer laut Definition \ref{def_structTypkonfJava_V1} festgestellt. Die Wahl Definition \ref{def_structTypkonfJava_V1} als Standard wird dadurch gebründet, weil sie der allgemeinen Definition der Strukturellen Typkonformität eher entspricht als die Definition \ref{def_structTypkonfJava_V2}, da in Definition \ref{def_structTypkonfJava_V2} auf spezifische Elemente der Sprache Java referenziert wird.\\\\
+Um eine vollständige Grundlage für den neuen Lösungsansatz zu erhalten, muss darüber hinaus noch definiert werden, was unter strukturell äquivalenten Methoden zu verstehen ist.
 \begin{definition}\label{def_containMethod_V1}
 \emph{X} enthält eine Methode \emph{f} (\emph{X.f)}, die strukturell äquivalenz zu einer Methode \emph{Y.f} ist, wenn \emph{X.f} \emph{Y.f} lauf Definition \ref{def_override} überschreibt, oder alle der folgenden Bedingungen erfüllt sind:
 \begin{itemize}
@@ -207,32 +251,98 @@ In der Sprache Java hat jede Klasse mit Außnahme von \emph{java.lang.Object} ei
 \item Checked Exceptions, die von \emph{Y.f} geworden werden, werden auch von \emph{X.f} geworfen, wobei diese in \emph{X.f} auch als Unterklassen derer, die von \emph{Y.f} geworden werden, umgesetzt sein können
 \end{itemize} 
 \end{definition}
-Diese Grundlage unterscheiden sich wie folgt von derer aus dem Ansatz von Läufer et. al. \cite{structconfjava} wie folgt. Zum einen ist es nicht mehr notwendig, dass ein Interface die strukturelle Typkonformität erlauben muss, um eine strutkurelle Typkonformität zu gewähleisten. Weiterhin können sich die Methoden zweier strukturell konformer Typen durchaus vom Namen her unterscheiden. Die Definition \ref{def_containMethod_V1} erlaubt dabei zwei Wege, um das \emph{Enthalten} einer strukturell äquivalenten Methode in einer Klasse zu gewährleisten. Der erste Weg besteht im Überschreiben der Methode gemät Defintion \ref{def_override}. Der zweite Weg fordert hingegen nicht, dass die Bezeichnungen der Methoden gleich sein müssen. Diese Herangehensweise kann jedoch zu Problemen führen. So kann die strukturelle Typkonformität zwischen einem Interface und einer Klasse, wie in Abbildung \ref{ambigousStructMethods}, zwar festgestellt werden. Eine Konvertierung und damit Nutzung des Konzepts ist aber nicht möglich. 
-%\begin{figure}[h]
-%\includegraphics[]{}
-%\label{ambigousStructMethods}
-%\end{figure} 
-Die Klasse ist auf Basis der o.g. Definitionen strukturell Typkonform zum Interface. Bei der Konvertierung muss jedoch festgestellt werden, welche Methode innerhalb der Klasse das strukturelle Äquivalent zur Methode aus dem Interface darstellt. Da die Methodensignaturen abgesehen vom Methodennamen aller Methoden gleich sind, sind auch alle Methoden sturkturell äquivalent.\\\\
+Diese Grundlage unterscheiden weiterhin wie folgt von derer aus dem Ansatz von Läufer et. al. \cite{structconfjava} wie folgt. Zum einen ist es nicht mehr notwendig, dass ein Interface die strukturelle Typkonformität erlauben muss, um eine strutkurelle Typkonformität zu gewähleisten. Weiterhin können sich die Methoden zweier strukturell konformer Typen durchaus vom Namen her unterscheiden. Die Definition \ref{def_containMethod_V1} erlaubt dabei zwei Wege, um das \emph{Enthalten} einer strukturell äquivalenten Methode in einer Klasse zu gewährleisten. Der erste Weg besteht im Überschreiben der Methode gemäß Defintion \ref{def_override}. Der zweite Weg fordert hingegen nicht, dass die Bezeichnungen der Methoden gleich sein müssen. Diese Herangehensweise kann jedoch zu Problemen führen. So kann die strukturelle Typkonformität zwischen einem Interface (\emph{I}) und einer Klasse (\emph{C}), wie in Abbildung \ref{ambigousStructMethods}, zwar festgestellt werden, eine Konvertierung und damit Nutzung des Konzepts ist aber nicht möglich. 
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.5]{pics/ambigousMethods.png}
+\caption{Mehrdeutige Methoden ohne Namensbeachtung}
+\label{ambigousStructMethods}
+\end{figure} 
+Die Klasse \emph{C} ist auf Basis der o.g. Definitionen strukturell Typkonform zum Interface \emph{I}. Bei der Konvertierung muss jedoch festgestellt werden, welche Methode innerhalb der Klasse das strukturelle Äquivalent zur Methode \emph{getName} aus dem Interface darstellt. Da die Methodensignaturen abgesehen vom Methodennamen aller Methoden gleich sind, sind auch alle Methoden sturkturell äquivalent.\\\\
 Für dieses Problem wurde im \emph{TypConverterBuilder} die Möglichkeit geschaffen, einen der beiden Wege zur Ermittlung der strukturell äquivalenten Methoden explizit anzugeben. So kann der Entwickler selbst entscheiden, welchen Ansatz er verwendet und muss in der Konsequenz die Klassen und Interfaces bzgl. der Methoden dementsprechen so entwerfen, dass der gewünschte Ansatz verwendet werden kann.\\\\
-Daher muss beim Erzeugen eines Objekte vom \emph{TypConverterBuilder} eine \emph{ComformityCheckingBase} angegeben. Diese kann genau zwei Werte annehmen, wobei der erste (\emph{Name}) die Ermittlung der strukturell äquivalenten Methoden nach Definition \ref{def_override} angibt und die zweite (\emph{SIGNATURE}) die Ermittlung auf Basis der Signatur, als ohne Beachtung des Methodennamens, angibt.
-%In Abhängigkeit werden unterschiedliche TypConverter erzeugt
-\\\\
+Daher muss beim Erzeugen eines Objekte vom \emph{TypConverterBuilder} eine \emph{ComformityCheckingBase} angegeben. Diese kann genau zwei Werte annehmen, wobei der erste (\emph{Name}) die Ermittlung der strukturell äquivalenten Methoden nach Definition \ref{def_override} angibt und die zweite (\emph{SIGNATURE}) die Ermittlung auf Basis der Signatur, als ohne Beachtung des Methodennamens, angibt. In Abhängigkeit der angegebenen \emph{ComformityCheckingBase} werden unterschiedliche Objekte erzeugt, die das Interface \emph{TypConverter} erfüllen (siehe Abbildung \ref{cd_typeConverter}).
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.25]{pics/cd_typeConverter.png}
+\caption{TypeConverter}
+\label{cd_typeConverter}
+\end{figure}
+Innerhalb der konkreten Implementierungen \emph{StructureByNamesTypeConverter} und \emph{StructureBySignaturesTypeConverter} sind die unterschiedlichen Wege zum Ermitteln der strukturell äquivalenten Methoden umgesetzt.\\\\
 Bezogen auf das erste Problemszenario (siehe Kapitel \ref{prob1}) sähe eine Lösungsvariante über ein strukturell typkonformes Interfaces wie folgt aus. Der Typ, der in dem Modul \emph{Bookshelves} die Elemente abbilden soll, die innerhalb der Objekte der Klasse \emph{Bookshelf} verwaltet werden, könnte innerhalb des Moduls, wie in Abbildung \ref{solveInterface_PS1} spezifiziert werden.
 \begin{figure}[h]
-%\includegraphics[draft]{foo}
+\centering
+\includegraphics[scale=0.5]{pics/loesung_s1_interface.png}
 \caption{Lösungsansatz: Interfaces - Problemszenario 1}
 \label{solveInterface_PS1}
 \end{figure} 
-Hierbei ist zu bemerken, dass es sich bei den Methoden im Interface \emph{BookForBookshelf} um genau die Methoden handelt, die in den Sortier-Methoden der Klasse \emph{Bookshelf} Verwendung finden. Bei genauerer Betrachtung der Klasse \emph{Book} aus dem Modul \emph{Books} fällt auf, dass diese Klasse strukturell typkonform zu dem neune Interface \emph{BookForBookshelf} ist. Die Frage die offen bleibt ist, wie ein Objekt der Klasse \emph{Book} in ein Objekt vom Typ \emph{BookForBookshelf} konvertiert wird.\\\\
-Grundsätzlich kann die Konvertierung in diesem Fall nur im Modul \emph{Bookshelves} stattfinden, da nur dort der Zugriff auf den \emph{Ziel-Typ} - in diesem Fall \emph{BookForBookshelf} - gewährleistet ist. Zu bemerken ist, dass innerhalb den Moduls zwar ein Objekt der Klasse \emph{Book} zu verwenden ist, der konkrete Typ des Objektes jedoch für das Einleiten der Konvertierung irrelevant ist. Somit kann zur Not das konkrete Objekt einer Klasse aus einem anderen Modul - wie in diesem Fall \emph{Book} aus dem Modul \emph{Books} - mit dem Typ \emph{java.lang.Object} verwendet werden. In diesem speziellen Fall wäre es jedoch von Vorteil, die bestehende Signatur der Methode zum Hinzufügen von Elementen in ein \emph{Bookshelf} beizubehalten, da der dort benötigte Typ aus einer Abstraktionsebene stammt, auf die beide Module - \emph{Books} und \emph{Bookshelves} - zugreifen dürfen. Somit können die Methoden der Klasse \emph{Bookshelf} von der Signatur her für diesen Lösungsweg unverändert bleiben, was den Entscheidenen Vorteil mit sich bringt, dass die verwendenen Klassen nicht angepasst werden müssen.\\\\
-Der Entwickler muss nun beim Einlagern der Elemente in ein \emph{Bookshelf} die Konvertierung zu einem Objekt vom Typ \emph{BookForBookshelf} einleiten. Hierzu ist, wie oben bereits erwähnt der \emph{TypConverterBuilder} zu verwenden. Dabei muss entschieden werden, wie die Struktur der Methoden des \emph{Ziel-Typs} definiert werden soll (siehe Definition \ref{def_containMethod_V1}). In diesem Beispiel soll die Variante verwendet werden, die auch von Läufer et. al. \cite{structconfjava} verwendet wurde. Daher wird der \emph{TypConverterBuilder} mit der \emph{ComformityCheckingBase.NAMES} erzeugt.
+Hierbei ist zu bemerken, dass es sich bei den Methoden im Interface \emph{IBookFromBookshelf} um genau die Methoden handelt, die in den Sortier-Methoden der Klasse \emph{Bookshelf} Verwendung finden. Bei genauerer Betrachtung der Klasse \emph{Book} aus dem Modul \emph{Books} fällt auf, dass diese Klasse strukturell typkonform zu dem neune Interface \emph{IBookFromBookshelf} ist. Die Frage die offen bleibt ist, wie ein Objekt der Klasse \emph{Book} in ein Objekt vom Typ \emph{IBookFromBookshelf} konvertiert wird.\\\\
+Grundsätzlich kann die Konvertierung in diesem Fall nur im Modul \emph{Bookshelves} stattfinden, da nur dort der Zugriff auf den \emph{Ziel-Typ} - in diesem Fall \emph{IBookFromBookshelf} - gewährleistet ist. Zu bemerken ist, dass innerhalb den Moduls zwar ein Objekt der Klasse \emph{Book} zu verwenden ist, der konkrete Typ des Objektes jedoch für das Einleiten der Konvertierung irrelevant ist. Somit kann zur Not das konkrete Objekt einer Klasse aus einem anderen Modul - wie in diesem Fall \emph{Book} aus dem Modul \emph{Books} - mit dem Typ \emph{java.lang.Object} verwendet werden. In diesem speziellen Fall wäre es jedoch von Vorteil, die bestehende Signatur der Methode zum Hinzufügen von Elementen in ein \emph{Bookshelf} beizubehalten, da der dort benötigte Typ aus einer Abstraktionsebene stammt, auf die beide Module - \emph{Books} und \emph{Bookshelves} - zugreifen dürfen. Somit können die Methoden der Klasse \emph{Bookshelf} von der Signatur her für diesen Lösungsweg unverändert bleiben, was den Entscheidenen Vorteil mit sich bringt, dass die verwendenen Klassen nicht angepasst werden müssen.\\\\
+Der Entwickler muss nun beim Einlagern der Elemente in ein \emph{Bookshelf} die Konvertierung zu einem Objekt vom Typ \emph{IBookFromBookshelf} einleiten. Hierzu ist, wie oben bereits erwähnt der \emph{TypConverterBuilder} zu verwenden. Dabei muss entschieden werden, wie die Struktur der Methoden des \emph{Ziel-Typs} definiert werden soll (siehe Definition \ref{def_containMethod_V1}). In diesem Beispiel soll die Variante verwendet werden, die auch von Läufer et. al. \cite{structconfjava} verwendet wurde. Daher wird der \emph{TypConverterBuilder} mit der \emph{ComformityCheckingBase.NAMES} erzeugt. Die Methode zum Einlagern eines Elements in das \emph{Bookshelf} könnte demnach wie in Listing \ref{ls_insertBook1} aussehen.
+\begin{lstlisting}[language=Java, label=ls_insertBook1, caption=addDocument]
+public void addDocument(AbstractDocument dokument) {
+	TypConverter<IBookFromBookshelf> structConverter = TypConverterBuilder
+		.create(ConformityCheckingBase.NAMES)
+		.build(IBookFromBookshelf.class);
 
+	if(structConverter.matchesStructural(dokument)){
+		IBookFromBookshelf buchAusBuecherregal = structConverter
+			.convertStructural(dokument);
+		books.add(buchAusBuecherregal);
+	}	
+	
+}
+\end{lstlisting}
+Welcher konkrete \emph{TypeConverter} dabei erzeugt wird, ist ist dem Sequenzdiagramm in Abbildung \ref{sd_typeconverterbuilder} zu entnehmen.
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.25]{pics/sd_createSignatureTypeConverter.png}
+\caption{Interne Aufrufe im TypeConverterBuilder}
+\label{sd_typeconverterbuilder}
+\end{figure}\\\\
+Zu bemerken ist, dass bei dieser Implementierung direkt beim Hinzufügen eines \emph{AbstractDocument} geprüft wird, ob der konkrete Typ des Objektes strukturell konform zum benötigten Typ ist. Wäre dies nicht der Fall, würde das übergebene \emph{AbstractDocument} nicht hinzugefügt werden. Dieses Verhalten kann unter Umständen zur Verletzung diverser Vertragsbedingungen führen, auf die an dieser Stelle nicht weiter eingegangen wurde.\\\\
+Eine andere Herangehensweise, die ein Vertragsmodel wiederrum unterstützen würde, wäre die Aufnahme einer weiteren Methode (\emph{isDocumentSuitable}) in der Klasse \emph{Bookshelf}. Diese Methode könnte prüfen, ob ein Objekt überhaupt für dieses \emph{Bookshelf} geeignet ist. Hierbei könnte der Sachverhalt, der in Listing \ref{ls_insertBook1} in \emph{addDocument} geprüft wird, innerhalb der neuen Methode geprüft werden. Der Entwickler kann das Vertragsmodel dann so anpassen, dass er davon ausgehen kann, dass der Methode \emph{addDocument} nur Objekte übergeben werden, die laut der Methode \emph{isDocumentSuitable} für das \emph{Bookshelf} vorgesehen sind. Die angepasste Klasse \emph{Bookshelf} sähe dann wie in Abbildung \ref{cd_erwBookshelf} aus.
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.5]{pics/cd_erwBookshelf.png}
+\caption{Erweiterte Klasse \emph{Bookshelf}}
+\label{cd_erwBookshelf}
+\end{figure}
+Diese Erweiterung ist jedoch in Bezug auf den Anpassungsaufwand, sofern eine solche Methode nicht ohnehin bestand, kritisch einzustufen. Der Grund dafür ist, dass durch die Notwendigkeit der Aufrufs der Methode \emph{isDocumentSuitable} vor der Methode \emph{addDocument} alle Aufrufer angepasst werden müssten.\\\\
+In Bezug auf das Problemszenario 1 (siehe Kapitel \ref{prob1}) sollte das Ziel sein, die unterschiedlichen Bücher aus dem Modul \emph{Books} an ein Objekt der Klasse  \emph{Bookshelf} aus dem Modul \emph{Bookshelves} zu übergeben, sodass die Bücher einsortiert werden. Auf der Grundlage der Implementierung aus Listing \ref{ls_insertBook1} ist das jedoch nur für die Objekte der Klasse \emph{Book} möglich. Ein Objekt der Klasse \emph{UnpublishedBook} würde die Prüfung in \emph{Bookshelf::addDocument} nicht bestehen, da die Klasse die Methode \emph{getIsbn} nicht enthält.\\\\
+Diesem Problem kann mit der zu Beginn dieses Kaptiels beschriebenen alternativen Definition bzgl. der Strukturellen Typkonformität (siehe Definition \ref{def_structTypkonfJava_V2}) Abhilfe geschaffen werden. Hierzu sind zwei Schritte notwendig:
+\begin{enumerate}
+\item Die Methode \emph{getIsbn} im Interface \emph{IBookFromBookshelf} muss als \emph{default-Methoden} spezifiziert und implementiert werden.
+\item Im \emph{TypeConverterBuilder} muss die \emph{StructureDefinition.ABSTRACT\_METHODS\_NECESSARY} gesetzt werden.
+\end{enumerate}
+Eine sinnvolle default-Implementierung für die Methode \emph{getIsbn} können wie in Listing \ref{ls_getIsbn} aussehen, sodass eine fehlende Isbn einfach als Leerstring definiert wird und somit der Sortieralgorihmus in \emph{Bookshelf::sortByIsbn} problemlos damit umgehen kann.
+\begin{lstlisting}[language=Java, label=ls_getIsbn, caption=Default-Implementierung getIsbn]
+default String getIsbn(){
+	return "";
+}
+\end{lstlisting}
+Die Methode \emph{addDocument} in der Klasse \emph{Bookshelf}, in der der \emph{TypConverter} erzeugt wird, muss wie in Listing \ref{ls_insertBook2} angepasst werden, damit bzgl. der Strukturellen Typkonformität die Definition \ref{def_structTypkonfJava_V2} Anwendung findet.
+\begin{lstlisting}[language=Java, label=ls_insertBook2, caption=addDocument]
+public void addDocument(AbstractDocument dokument) {
+	TypConverter<IBookFromBookshelf> structConverter = TypConverterBuilder
+		.create(ConformityCheckingBase.NAMES)
+		.withStructureDefinition(
+			StructureDefinition.ABSTRACT_METHODS_NECESSARY)
+		.build(IBookFromBookshelf.class);
 
-
-
+	if(structConverter.matchesStructural(dokument)){
+		IBookFromBookshelf buchAusBuecherregal = structConverter
+			.convertStructural(dokument);
+		books.add(buchAusBuecherregal);
+	}	
+	
+}
+\end{lstlisting}
+Mit dieser Implementierung ist es nicht nur möglich Objekte der Klasse \emph{Book} einem Objekt der Klasse \emph{Bookshelf} hinzuzugeüfen, sonder auch Objekte der Klasse \emph{UnpublishedBook}, da beide Objekte (\emph{Book} und \emph{UnpublishedBook}) gemäß Definition \ref{def_structTypkonfJava_V2} strukturell typkonform zu \emph{IBookFromBookshelf} sind.\\\\
+Bisher wurde nur die Grundlage für die Konvertierung zwischen stukturell konformen Typen beschrieben und wie die Klassen in der Bibliothek des neuen Lösungsansatzes zu verwenden sind. In folgendem Kapitel wird darauf eingeganen, wie die Konvertierung innerhalb der Bibliothek vonstatten geht und welche Konsequenzen sich daraus für die weitere Verwendung von Interfaces als \emph{Ziel-Typen} ergeben.
 \subsubsection{Umsetzung mit dynamischen Proxies}
+
 \cite{proxy}
-\subsection{Klassen als Schnittstellen-Typ}
+\subsection{Klassen als Schnittstellen-Typ}\label{sec_classes}
 \subsubsection{Umsetzung mit cglib}
 \cite{cglib}
 \section{Diskussion}
