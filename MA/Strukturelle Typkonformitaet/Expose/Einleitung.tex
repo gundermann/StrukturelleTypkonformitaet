@@ -201,7 +201,20 @@ Laut den Beschreibungen von Läufer et. al. \cite{structconfjava} genügen diese
 
 
 \subsection{WHITEOAK}
-\cite{whiteoak}
+Der Lösungsansatz vom Gil und Maman \cite{whiteoak} beschreibt eine Spracherweiterung für die Programmiersprache Java, die es ermöglicht spezielle Typen zu definieren, die explizit für die strukturelle Typkonformitätsprüfung vorgesehen sind. Damit ist dieser Ansatz genauso wie der Ansatz von Läufer et. al. \cite{structconfjava} als hybrider Ansatz einzustufen, weil er die Verwendung von struktureller und nominaler Typkonformität innerhalb einer Sprache vereint.\\\\
+Gil und Maman beschreiben in ihrer Arbeit ein neues Schlüsselwort \emph{struct} in der Syntax. Durch dieses Schlüsselwort können strukturelle Typen definiert werden. Diese strukturellen Typen insofern mit Interfaces gleichzusetzen, dass sie Mehrfachvererbung ermöglichen. Dabei wird die Vererbung innerhalb struktureller Typen auf struktureller Ebene deklariert und nicht auf nominaler.  (vgl. \cite{whiteoak})\\\\
+Aufgrund der exklusiven Verwendung der strukturellen Typkonfimität bei strukturellen Typen (definitiert mit dem Schlüsselwort \emph{struct}), ist es nicht notwendig, für einen strukturellen Typ eine Bezeichnung zu definieren. (vgl. \cite{whiteoak}). Das zeigt, dass das Konzept der strukturellen Typkonformität durch die Spracherweiterung stärker im Vordergrund steht und dem Entwickler aufgrund der Markierung über ein bestimmten Schlüsselwort deutlich gemacht wird, welche Form der Typkonformität verwendet wird. Eine Verpflichtende Bezeichnung für strukturelle Typen und deren daraus folgende zwangläufige Verwendung führt zur Vermischung der Ansätze.\\\\
+Der Übergang von strukturelle zu nominalen Typen verläuft auf Basis des Grundsatzes, dass ein nominaler Typ \emph{NT}, der strukturellen typkonform zu einem strukturellen Typ \emph{ST} ist, auf den strukturellen Typ gecastet werden kann (siehe Listing \ref{ls_castStructWHITEOAK})\\
+\begin{lstlisting}[language=Java, label=ls_castStructWHITEOAK, caption=Strukturelle Typen auf nominale Typen casten]
+	struct ST { };
+	interface NT { };
+	
+	NT nomType = new Object(); 
+	ST structType = (ST) nomType;
+		
+}
+\end{lstlisting}
+Weiterhin haben Gil und Maman \cite{whiteoak} durch ihre Arbeit nicht nur Analogien zwischen strukturelllen Typen und Interfaces festgestellt, sondern auch zwischen strukturelle Typen und abstracten Klassen. So können strukturelle Typen beispielsweise bestimmte Methode-Implementierungen und Instanzvariablen vorgeben. Jedoch ist es nicht möglich Konstruktoren zu definieren, sodass auch die Instanzvariablen nicht in einem Konstruktor initialisiert werden können. Um dem entgegenzuwirken können Constraints für Konstruktoren definiert werden, durch die zumindest die für den Konstruktor benötigten Parameter definiert werden können. (vgl. \cite{whiteoak})
 %\subsubsection{REST/SOAP}
 \\\\
 \subsection{Neuer Lösungsansatz}
