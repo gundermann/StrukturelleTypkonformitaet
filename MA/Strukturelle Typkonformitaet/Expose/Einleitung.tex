@@ -214,13 +214,38 @@ Der Übergang von strukturelle zu nominalen Typen verläuft auf Basis des Grunds
 		
 }
 \end{lstlisting}
-Weiterhin haben Gil und Maman \cite{whiteoak} durch ihre Arbeit nicht nur Analogien zwischen strukturelllen Typen und Interfaces festgestellt, sondern auch zwischen strukturelle Typen und abstracten Klassen. So können strukturelle Typen beispielsweise bestimmte Methode-Implementierungen und Instanzvariablen vorgeben. Jedoch ist es nicht möglich Konstruktoren zu definieren, sodass auch die Instanzvariablen nicht in einem Konstruktor initialisiert werden können. Um dem entgegenzuwirken können Constraints für Konstruktoren definiert werden, durch die zumindest die für den Konstruktor benötigten Parameter definiert werden können. (vgl. \cite{whiteoak})
-%\subsubsection{REST/SOAP}
-\\\\
+Weiterhin haben Gil und Maman \cite{whiteoak} durch ihre Arbeit nicht nur Analogien zwischen strukturelllen Typen und Interfaces festgestellt, sondern auch zwischen strukturelle Typen und abstrakten Klassen. So können strukturelle Typen beispielsweise bestimmte Methode-Implementierungen und Instanzvariablen vorgeben. Eine vordefinierte Methode kann jedoch durch das Objekt eines \emph{Quell-Typs} überschrieben werden. So werden bspw. in dem Szenario, welches in Listing \ref{ls_standardMethWHITEOAK} dargestellt wird, von dem strutkurellen Typen \emph{ST} zwei Methoden spezifiziert und stellt eine vordefinierte Implementierung für diese bereit. Der nominale Typ \emph{NT} spezifiziert jedoch nur eine dieser beiden Methoden. Eine Impementierung dieser Methode ist ebenfalls in \emph{NT} definiert. Wird nun ein Objekt des nominalen Typs \emph{NT} in ein Objekt des strukturellen Typs \emph{ST} konvertiert, bietet dieses konvertierte Objekt vom Typ \emph{ST} die beiden Methoden aus \emph{ST} an. Dabei wird beim Aufrufen der Methode \emph{m1} die Implementierung aus der Spezifikation des nominalen Typs \emph{NT} verwendet, wohingegen beim Aufrufen der Methode \emph{m2} die Implementierung aus dem strukturellen Typ \emph{ST} verwendet wird. Dieses Konzept wurde von Gil und Maman als \emph{virtuelle Objekte} bezeichnet (vgl. \cite{whiteoak})
+\begin{lstlisting}[caption =Standardmethoden in WHITEOAK, language=Java, label=ls_standardMethWHITEOAK ]
+	struct ST {
+	
+		String getA(){
+			return "A";
+		}
+		
+		String getB(){
+			return "B";
+		}
+
+	}
+
+	
+	class NT {
+
+		String getA(){
+			return "a";
+		}	
+
+	}
+\end{lstlisting}
+Innerhalb eines strukturellen Typs ist es jedoch nicht möglich Konstruktoren zu definieren. Das führt zu dem Problem, dass die Instanzvariablen nicht in einem Konstruktor initialisiert werden können. Um dem entgegenzuwirken können Constraints für Konstruktoren definiert werden, durch die zumindest die für den Konstruktor benötigten Parameter definiert werden können. (vgl. \cite{whiteoak})\\\\
+Weiterhin bietet \emph{WHITEOAK} die Möglichkeit diverse Kompositionstechniken wie \emph{Mixins}, \emph{Traits} oder \emph{Delegationsobjekte} zu emulieren. (vgl. \cite{whiteoak}) Da diese Konzepte allerdings nicht im Vordergrund bzgl. dieser Arbeit stehen, wird auf darauf nicht weiter eingegangen.\\\\
+Mit dem bisherigen Wissen zu \emph{WHITEOAK} ist es möglich, jeweils einen Lösungsansatz für die genantnen Problemszenarien unter Zuhilfenahme von \emph{WHITEOAK} zu skizzieren.
+
 \subsection{Neuer Lösungsansatz}
 In den folgenden Kapiteln wird auf die Umsetzung der Problem-Szenarien aus Kapitel \ref{problembeschreibung} unter der Verwendung des im Rahmen dieser Arbeit erarbeiteten Ansatz beschrieben.\\\\
 Dieser Lösungsansatz verwendet weder einen erweiterten Compiler noch eine Erweiterung der Sprachekonstrukte. Die Verwendung der strukturellen Typkonformität muss innerhalb der Programms mithilfe einer einzubindenden Bibliothek explitit angestoßen werden. Hierzu steht in der Bibliothek das Interface \emph{TypConverter} bereit, welches die Verwendung der strukturellen Typkonformität ermöglicht. Ein Objekt, welches das Interfaces \emph{TypConverter}  erfüllt, kann mithilfe der Klasse \emph{TypConverterBuilder} erzeugt werden. Auf die Parameter, die dem \emph{TypConverterBuilder} mitgegeben werden müssen, wird im späteren Verlauf spezieller eingegangen. Im Allgemeinen dienen sie der Konfiguration der Konformitätsprüfung sowie der Form Konvertierung von strukturell typkonformen Objekten.\\\\
-Der neue Lösungsansatz geht über den Ansatz von Läufer et. al \cite{structconfjava} insofern hinaus, dass sich eine strukturelle Typkonformität nicht nur zwischen Klassen und Interfaces feststellen lässt, sondern auch zwischen zwei Klassen. Weiterhin wird in Bezug auf Interfaces auf die Nutzung von \emph{default-Methoden} eingegangen.
+Der neue Lösungsansatz geht über den Ansatz von Läufer et. al \cite{structconfjava} insofern hinaus, dass sich eine strukturelle Typkonformität nicht nur zwischen Klassen und Interfaces feststellen lässt, sondern auch zwischen zwei Klassen. Weiterhin wird in Bezug auf Interfaces auf die Nutzung von \emph{default-Methoden} eingegangen. Hierbei wird jedoch auf Konzepte aus der Arbeit von Gil und Maman \cite{whiteoak} zurückgegriffen.\\\\
+Allerdings wird es auch in Bezug auf \emph{WHITEOAK} eine Erweiterung geben. Im nueuen Lösungsansatz wird in Betracht gezogen, dass eine vordefinierten Methode in einem \emph{Ziel-Typ} auch explizit im Kontext, in dem dieser Typ verwendet wird, so verwendet werden soll. Das heißt, dass die Verwendung von vordefinierten Methoden, die durch den \emph{Quell-Typen} möglicherweise überschrieben werden, gesteuert werden kann.
 
 
 
