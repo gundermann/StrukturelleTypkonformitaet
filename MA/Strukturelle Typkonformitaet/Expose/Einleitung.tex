@@ -37,7 +37,7 @@ consistentlayout, % Uncomment to change the layout of the declaration, abstract 
 }
 
 \lstset{style=mystyle}
-
+\usepackage{float}
 
 
 \newtheorem{definition}{Definition}
@@ -239,8 +239,20 @@ Weiterhin haben Gil und Maman \cite{whiteoak} durch ihre Arbeit nicht nur Analog
 \end{lstlisting}
 Innerhalb eines strukturellen Typs ist es jedoch nicht möglich Konstruktoren zu definieren. Das führt zu dem Problem, dass die Instanzvariablen nicht in einem Konstruktor initialisiert werden können. Um dem entgegenzuwirken können Constraints für Konstruktoren definiert werden, durch die zumindest die für den Konstruktor benötigten Parameter definiert werden können. (vgl. \cite{whiteoak})\\\\
 Weiterhin bietet \emph{WHITEOAK} die Möglichkeit diverse Kompositionstechniken wie \emph{Mixins}, \emph{Traits} oder \emph{Delegationsobjekte} zu emulieren. (vgl. \cite{whiteoak}) Da diese Konzepte allerdings nicht im Vordergrund bzgl. dieser Arbeit stehen, wird auf darauf nicht weiter eingegangen.\\\\
-Mit dem bisherigen Wissen zu \emph{WHITEOAK} ist es möglich, jeweils einen Lösungsansatz für die genantnen Problemszenarien unter Zuhilfenahme von \emph{WHITEOAK} zu skizzieren.
-
+Mit dem bisherigen Wissen zu \emph{WHITEOAK} ist es möglich, jeweils einen Lösungsansatz für die genantnen Problemszenarien unter Zuhilfenahme von \emph{WHITEOAK} zu skizzieren.\\\\
+Für das erste Problemszenario wie ähnlich vorgegangen, wie bei der Verwendung des Ansatzen von Läufer et. al \cite{structconfjava}. Grundlegend muss auch ein Typ bereitgestellt werden, der entsprechende Methoden anbietet, um die Informationen bzgl. \emph{Titel}, \emph{Autor} und \emph{Jahr} abzufragen. 
+Allerdings muss mit \emph{WHITEOAK} kein Interface im Modul \emph{Bookshelves} bereitgestellt werden, sondern es kann auf einen strukturellen Typ zurückgegriffen werden, der je notwendiger Information eine abstrakte Methode bereitstellt. (siehe Abbildung \ref{cd_loesungProblem1_whiteoak})
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.5]{pics/cd_loesungProlem1_whiteoak.png}
+\caption{Lösung Problemszenario 1 mit \emph{WHITEOAK}\protect\footnotemark  }
+\label{cd_loesungProblem1_whiteoak}
+\end{figure}
+\footnote{In dieser Arbeit werden die strukturelle Typen, die in \emph{WHITEOAK} über das Schlüsselwort \emph{struct} definiert werden, in Klassendiagrammen durch den Stereotypen \emph{struct} gekennzeichnet.}
+Weiterhin muss die Klasse \emph{Bookself}, wie in Abbildung \ref{cd_loesungProblem1_whiteoak}, etwas angepasst werden. Auch hier muss die Valriable, in der die Dokumente verwaltet werden sollen einen anderen generischen Typ erhalten. Ob hierzu einfach der generische Typ der \emph{Collection} mit dem strukturellen Typ \emph{StructBook} ersetzt werden kann, ist nicht sicher. Der Grund dafür ist, dass aus den Ausführungen vom Gil und Maman \cite{whiteoak} nicht auf die Verwendung von strukturellen Typen als generische Typen eingegangen wird. Allerdings wird beschrieben, dass ein struktureller Typ durch den Compiler letztendlich in einen nominalen Typ konvertiert wird (vgl. \cite{whiteoak}), womit er auch als ein solcher behandelt werden kann. Daher ist die Anpassung  der Instanzvariablen \emph{documents} in der Klasse \emph{Bookshelf} wie in Abbildung \ref{cd_loesungProblem1_whiteoak} zulässig.
+Ferner muss die Methodensignatur der Methode \emph{addDocument} so angepasst werden, dass ein Objekt vom Typ \emph{StructBook} als Parameter gefordert wird.\\\\
+So kann abschließend festgehalten werden, dass sich die notwendigen Änderungen nur auf das Modul \emph{Bookshelves} beschränkten. Die strukturelle Typkonformität zwischen dem neu aufgenommenen Typen und den Typen \emph{Book} und \emph{UnpublishedBook}
+aus dem Modul \emph{Books} ist wie bei der Verwendung des Lösungsansatzes von Läufer et. al. \cite{structconfjava} gegeben.
 \subsection{Neuer Lösungsansatz}
 In den folgenden Kapiteln wird auf die Umsetzung der Problem-Szenarien aus Kapitel \ref{problembeschreibung} unter der Verwendung des im Rahmen dieser Arbeit erarbeiteten Ansatz beschrieben.\\\\
 Dieser Lösungsansatz verwendet weder einen erweiterten Compiler noch eine Erweiterung der Sprachekonstrukte. Die Verwendung der strukturellen Typkonformität muss innerhalb der Programms mithilfe einer einzubindenden Bibliothek explitit angestoßen werden. Hierzu steht in der Bibliothek das Interface \emph{TypConverter} bereit, welches die Verwendung der strukturellen Typkonformität ermöglicht. Ein Objekt, welches das Interfaces \emph{TypConverter}  erfüllt, kann mithilfe der Klasse \emph{TypConverterBuilder} erzeugt werden. Auf die Parameter, die dem \emph{TypConverterBuilder} mitgegeben werden müssen, wird im späteren Verlauf spezieller eingegangen. Im Allgemeinen dienen sie der Konfiguration der Konformitätsprüfung sowie der Form Konvertierung von strukturell typkonformen Objekten.\\\\
