@@ -97,14 +97,14 @@ Abbildung \ref{fig:problem2} zeigt den angenommenen Ausschnitt aus einem System.
 \begin{figure}[h]
   \centering
   \includegraphics[scale=0.7]{pics/problemS2Abstrakt.png}
-  \caption{Problemszenario 2}
+  \caption{Problemszenario 2 (abstrakt)}
   \label{fig:problem2}
 \end{figure}\\
 Hierbei wird von einem Broadcast Serviceaufruf ausgegangen. Sas bedeutet, dass es eine Service-Schittstelle gibt, die in mehreren Modulen implementiert wird. Die Aufrufer liegen in diesem Fall in Modul \emph{A} und \emph{B}, während die Service-Schnittstelle in Modul \emph{S} liegt. Die weiteren Module beinhalten unterschiedliche Implementierungen des augerufenen Services. Weiterhin ist anzunehmen, dass alle Module im Verantwortungsbereich unterschiedlicher Entwicklerteams liegen.\\\\
 Abbildung \ref{fig:problem2Konkret} zeigt ein konkretes Beispiel für dieses Szenario.
 \begin{figure}[h]
   \centering
-  \includegraphics[scale=0.7]{pics/problemS2Abstrakt.png}
+  \includegraphics[scale=0.5]{pics/problemS2Konkret.png}
   \caption{Problemszenario 2}
   \label{fig:problem2Konkret}
 \end{figure}\\
@@ -239,6 +239,15 @@ Weiterhin haben Gil und Maman \cite{whiteoak} durch ihre Arbeit nicht nur Analog
 \end{lstlisting}
 Innerhalb eines strukturellen Typs ist es jedoch nicht möglich Konstruktoren zu definieren. Das führt zu dem Problem, dass die Instanzvariablen nicht in einem Konstruktor initialisiert werden können. Um dem entgegenzuwirken können Constraints für Konstruktoren definiert werden, durch die zumindest die für den Konstruktor benötigten Parameter definiert werden können. (vgl. \cite{whiteoak})\\\\
 Weiterhin bietet \emph{WHITEOAK} die Möglichkeit diverse Kompositionstechniken wie \emph{Mixins}, \emph{Traits} oder \emph{Delegationsobjekte} zu emulieren. (vgl. \cite{whiteoak}) Da diese Konzepte allerdings nicht im Vordergrund bzgl. dieser Arbeit stehen, wird auf darauf nicht weiter eingegangen.\\\\
+
+Die Grundlagen bzgl. der Konformitätsprüfungen des Lösungsansatzes aus \cite{whiteoak} wurden in der Arbeit in Form von Funktionen beschrieben, durch die geprüft wird, ob ein Typ (\emph{Quell-Typ}) in einen anderen Typ (\emph{Ziel-Typ}) konvertiert werden kann. Um die einzelnen Lösungsansätz später besser vergleichen zu können, wurden in Anlehnung an der Arbeit von Läufer et. al. \cite{structconfjava} folgende Definitionen aufgestellt:
+%TODO add Definitions here
+
+
+Die genannten Definitionen werden in \cite{whiteoak} durch die Verwendung der dort definierten Funktionen erfüllt.\\\\
+
+
+
 Mit dem bisherigen Wissen zu \emph{WHITEOAK} ist es möglich, jeweils einen Lösungsansatz für die genantnen Problemszenarien unter Zuhilfenahme von \emph{WHITEOAK} zu skizzieren.\\\\
 Für das erste Problemszenario wie ähnlich vorgegangen, wie bei der Verwendung des Ansatzen von Läufer et. al \cite{structconfjava}. Grundlegend muss auch ein Typ bereitgestellt werden, der entsprechende Methoden anbietet, um die Informationen bzgl. \emph{Titel}, \emph{Autor} und \emph{Jahr} abzufragen. 
 Allerdings muss mit \emph{WHITEOAK} kein Interface im Modul \emph{Bookshelves} bereitgestellt werden, sondern es kann auf einen strukturellen Typ zurückgegriffen werden, der je notwendiger Information eine abstrakte Methode bereitstellt. (siehe Abbildung \ref{cd_loesungProblem1_whiteoak})
