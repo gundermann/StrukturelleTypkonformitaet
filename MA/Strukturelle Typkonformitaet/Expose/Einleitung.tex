@@ -240,15 +240,58 @@ Weiterhin haben Gil und Maman \cite{whiteoak} durch ihre Arbeit nicht nur Analog
 Innerhalb eines strukturellen Typs ist es jedoch nicht möglich Konstruktoren zu definieren. Das führt zu dem Problem, dass die Instanzvariablen nicht in einem Konstruktor initialisiert werden können. Um dem entgegenzuwirken können Constraints für Konstruktoren definiert werden, durch die zumindest die für den Konstruktor benötigten Parameter definiert werden können. (vgl. \cite{whiteoak})\\\\
 Weiterhin bietet \emph{WHITEOAK} die Möglichkeit diverse Kompositionstechniken wie \emph{Mixins}, \emph{Traits} oder \emph{Delegationsobjekte} zu emulieren. (vgl. \cite{whiteoak}) Da diese Konzepte allerdings nicht im Vordergrund bzgl. dieser Arbeit stehen, wird auf darauf nicht weiter eingegangen.\\\\
 
-Die Grundlagen bzgl. der Konformitätsprüfungen des Lösungsansatzes aus \cite{whiteoak} wurden in der Arbeit in Form von Funktionen beschrieben, durch die geprüft wird, ob ein Typ (\emph{Quell-Typ}) in einen anderen Typ (\emph{Ziel-Typ}) konvertiert werden kann. Um die einzelnen Lösungsansätz später besser vergleichen zu können, wurden in Anlehnung an der Arbeit von Läufer et. al. \cite{structconfjava} folgende Definitionen aufgestellt:
-%TODO add Definitions here
+Die Grundlagen bzgl. der Konformitätsprüfungen des Lösungsansatzes aus \cite{whiteoak} wurden in der Arbeit in Form von Funktionen beschrieben, durch die geprüft wird, ob ein Typ (\emph{Quell-Typ}) in einen anderen Typ (\emph{Ziel-Typ}) konvertiert werden kann. Um die einzelnen Lösungsansätz später besser vergleichen zu können, wurden diese Funktionen in Anlehnung an der Arbeit von Läufer et. al. \cite{structconfjava} folgende Definitionen abgeleitet:
+%ACHTUNG "Konform" bedeutet hier austauschbar, weil X ein Untertyp von Y ist
+\begin{definition}\label{def_allgTypkonfWHITEOAK}
+Seien \emph{X} und \emph{Y} jeweils Typen (strutkurelle oder nominale).\\
+\emph{X} ist konform zu \emph{Y}, wenn eine der folgenden Bedingungen erfüllt ist:
+\begin{enumerate}
+\item \emph{X} und \emph{Y} sind identisch
+\item \emph{Y} ist ein nominaler Typ und und nominal typkonform zu \emph{X} 
+\item \emph{X} ist eine nicht-anonyme, öffentlich sichtbare (public) Klasse und der Inhalt von \emph{Y} ist kompatibel zum Inhalt von \emph{X} 
+\end{enumerate}
+\end{definition}
+Die ersten beiden Bedingungen sind durch die Definition für die Indentität (Typäquivalenz) und der nominalen Typkonformität ausreichend beschrieben. Die dritte Bedingung bedarf jedoch weiteren Definitionen.
+\begin{definition}\label{def_compatibleTypesWHITEOAK}
+Der Inhalt von \emph{Y} ist kompatibel zum Inhalt von \emph{X}, wenn folgende Bedingungen erfüllt sind:
+\begin{enumerate}
+\item für alle Konstruktoren aus \emph{Y} (\emph{Y.c}) existiert genau ein öffentlich sichtbarer (public) äquivalenter Konstruktor in \emph{X} (\emph{X.c})
+\item für alle Methoden aus \emph{Y} (\emph{Y.m}) existiert genau eine öffentlich sichtbare (public) äquivalente Methoden in \emph{X} (\emph{X.m})
+\item für alle Instanzvariablen aus \emph{Y} (\emph{Y.v}) existiert genau eine öffentlich sichtbare (public) äquivalente Instanzvariable in \emph{X} (\emph{X.v})
+\end{enumerate}
+\end{definition}
+Ausgehend von der Definition \ref{def_compatibleTypesWHITEOAK} muss weiter definiert werden, was unter der Äquivalenz von Konstruktoren, Methoden und Instanzvariablen zu verstehen ist.
+\begin{definition}\label{def_equiConstWHITEOAK}
+Ein Konstruktor \emph{Y.c} ist äquivalent zu einem anderen Konstruktor \emph{X.c}, wenn folgende Bedingungen erfüllt sind:
+\begin{enumerate}
+\item falls \emph{X.c} einen nominalen Typ deklariert, dann ist dieser nicht abstrakt und keine statische innere Klasse
+\item alle Parameter aus \emph{X.y} sind identisch zu den Parametern aus \emph{Y.c} sind
+\item Jede Checked Exception, die von \emph{Y.c} geworfen wird, muss auch in Form von derselben Exception oder einer Unterklasse dieser von \emph{X.c} geworfen werden.
+%Ich glaube, diese Definition bzgl. der Exceptions ist besser auf die aus dem anderen Ansatz
+\end{enumerate}
+\end{definition}
+
+\begin{definition}\label{def_equiMethWHITEOAK}
+Eine Methode \emph{Y.m} ist äquivalent zu einer anderen Methode \emph{X.m}, wenn folgende Bedingungen erfüllt sind:
+\begin{enumerate}
+\item \emph{Y.m} und \emph{X.m} haben den gleichen Namen
+\item der von \emph{X.m} deklarierte Rückgabe-Typ ist konform zum deklarieten Rückgabe-Typ von \emph{Y.m}
+\item alle Parameter aus \emph{X.m} sind identisch zu den Parametern aus \emph{Y.m} sind
+\item Jede Checked Exception, die von \emph{Y.m} geworfen wird, muss auch in Form von derselben Exception oder einer Unterklasse dieser von \emph{X.m} geworfen werden.
+
+\end{enumerate}
+\end{definition}
 
 
-Die genannten Definitionen werden in \cite{whiteoak} durch die Verwendung der dort definierten Funktionen erfüllt.\\\\
-
-
-
-Mit dem bisherigen Wissen zu \emph{WHITEOAK} ist es möglich, jeweils einen Lösungsansatz für die genantnen Problemszenarien unter Zuhilfenahme von \emph{WHITEOAK} zu skizzieren.\\\\
+\begin{definition}\label{def_equiVarWHITEOAK}
+Eine Instanzvariable \emph{Y.v} ist äquivalent zu einer anderen Instanzvariable \emph{X.v}, wenn folgende Bedingungen erfüllt sind:
+\begin{enumerate}
+\item \emph{Y.v} und \emph{X.v} haben den gleichen Namen
+\item \emph{X.v} ist keine read-only Variable
+\item \emph{Y.v} ist eine read-only (final) Variable und der Typ von \emph{X.v} ist konform zum Typ von \emph{Y.v}, oder (falls \emph{Y.v} keine read-only Variable ist) sind die Typen von \emph{X.v} und von \emph{Y.v} identisch. 
+\end{enumerate}
+\end{definition}
+Mit diesem Wissen über \emph{WHITEOAK} ist es möglich, jeweils einen Lösungsansatz für die genantnen Problemszenarien unter Zuhilfenahme von \emph{WHITEOAK} zu skizzieren.\\\\
 Für das erste Problemszenario wie ähnlich vorgegangen, wie bei der Verwendung des Ansatzen von Läufer et. al \cite{structconfjava}. Grundlegend muss auch ein Typ bereitgestellt werden, der entsprechende Methoden anbietet, um die Informationen bzgl. \emph{Titel}, \emph{Autor} und \emph{Jahr} abzufragen. 
 Allerdings muss mit \emph{WHITEOAK} kein Interface im Modul \emph{Bookshelves} bereitgestellt werden, sondern es kann auf einen strukturellen Typ zurückgegriffen werden, der je notwendiger Information eine abstrakte Methode bereitstellt. (siehe Abbildung \ref{cd_loesungProblem1_whiteoak})
 \begin{figure}[h]
