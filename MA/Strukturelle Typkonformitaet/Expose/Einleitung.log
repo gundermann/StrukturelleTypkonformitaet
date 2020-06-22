@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 2.9.7350) (preloaded format=pdflatex 2020.4.23)  18 JUN 2020 14:42
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 2.9.7350) (preloaded format=pdflatex 2020.4.23)  22 JUN 2020 19:33
 entering extended mode
 **./Einleitung.tex
 (Einleitung.tex
@@ -441,11 +441,11 @@ File: pics/problemS1Abstrakt.png Graphic file (type png)
 <use pics/problemS1Abstrakt.png>
 Package pdftex.def Info: pics/problemS1Abstrakt.png  used on input line 73.
 (pdftex.def)             Requested size: 186.54565pt x 154.40079pt.
-<pics/problemS1Konkret.png, id=23, 886.81313pt x 506.6428pt>
+<pics/problemS1Konkret.png, id=23, 1172.88188pt x 506.6428pt>
 File: pics/problemS1Konkret.png Graphic file (type png)
 <use pics/problemS1Konkret.png>
 Package pdftex.def Info: pics/problemS1Konkret.png  used on input line 81.
-(pdftex.def)             Requested size: 266.04599pt x 151.994pt.
+(pdftex.def)             Requested size: 351.86728pt x 151.994pt.
 
 Overfull \hbox (2.9811pt too wide) in paragraph at lines 70--89
 \OT1/cmr/m/n/10.95 somit keine direkte Abh[]angigkeiten aufweisen. Das Modul \O
@@ -460,12 +460,6 @@ Underfull \hbox (badness 10000) in paragraph at lines 70--89
 
 Underfull \hbox (badness 10000) in paragraph at lines 70--89
 
- []
-
-
-Overfull \hbox (30.11711pt too wide) in paragraph at lines 70--89
-\OT1/cmr/m/n/10.95 Aufgrund der nominalen Typkonformit[]at g[]abe es f[]ur dies
-es Szenario folgende L[]osungsvarianten: 
  []
 
 [2pdfTeX warning (ext4): destination with the same identifier (name{figure.1}) 
@@ -497,15 +491,9 @@ File: pics/problemS2Konkret.png Graphic file (type png)
 Package pdftex.def Info: pics/problemS2Konkret.png  used on input line 107.
 (pdftex.def)             Requested size: 351.56258pt x 260.47249pt.
 
-Overfull \hbox (7.6695pt too wide) in paragraph at lines 95--114
-\OT1/cmr/m/n/10.95 liegt. Die weiteren Module beinhalten unterschiedliche Imple
-mentierungen des augerufenen
- []
-
-
-Overfull \hbox (40.09364pt too wide) in paragraph at lines 95--114
-\OT1/cmr/m/n/10.95 Services. Weiterhin ist anzunehmen, dass alle Module im Vera
-ntwortungsbereich unterschiedlicher
+Overfull \hbox (1.7383pt too wide) in paragraph at lines 95--114
+\OT1/cmr/m/n/10.95 einem Broadcast Serviceaufruf ausgegangen. Das bedeutet, das
+s es eine Service-Schittstel-
  []
 
 
@@ -514,38 +502,8 @@ Underfull \hbox (badness 10000) in paragraph at lines 95--114
  []
 
 
-Overfull \hbox (16.91586pt too wide) in paragraph at lines 95--114
-\OT1/cmr/m/it/10.95 injured\OT1/cmr/m/n/10.95 , in dem unterschiedliche Persone
-n, die sich verletzen k[]onnen bzw. in eine Notsituation
- []
-
-
-Overfull \hbox (23.72739pt too wide) in paragraph at lines 95--114
-\OT1/cmr/m/n/10.95 entstehenden Objekte k[]onnen []uber einen Service aus dem M
-odul \OT1/cmr/m/it/10.95 MedicalServices \OT1/cmr/m/n/10.95 medizinische
- []
-
-
-Overfull \hbox (31.97244pt too wide) in paragraph at lines 95--114
-\OT1/cmr/m/n/10.95 bereitgestellt. (Fachlich gesehen handelt es sich bei den Se
-rvices also um eine Art Erstversorgung
- []
-
-
 Underfull \hbox (badness 10000) in paragraph at lines 95--114
 
- []
-
-
-Overfull \hbox (13.95993pt too wide) in paragraph at lines 95--114
-\OT1/cmr/m/n/10.95 medizinische Erstversorgung ben[]otigt, als eine Person, die
- keine Allergien aufweist (\OT1/cmr/m/it/10.95 Person\OT1/cmr/m/n/10.95 ).
- []
-
-
-Overfull \hbox (11.5021pt too wide) in paragraph at lines 95--114
-\OT1/cmr/m/n/10.95 dass eine nominale Typkonformit[]at im System angenommen wir
-d, folgende L[]osungsans[]atze: 
  []
 
 
@@ -562,21 +520,9 @@ l.114 \begin{enumerate}
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 
-Overfull \hbox (22.66496pt too wide) in paragraph at lines 116--117
-[]\OT1/cmr/m/n/10.95 Es wird eine neue Service-Schnittstelle geschaffen, die au
-f die zus[]atzlichen Informationen
- []
-
-[4pdfTeX warning (ext4): destination with the same identifier (name{figure.3}) 
-has been already used, duplicate ignored
-
-\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
-                                                  \fi \fi 
-l.117 \end{enumerate}
-                      <./pics/problemS2Abstrakt.png>]
-Overfull \hbox (16.24706pt too wide) in paragraph at lines 118--119
-\OT1/cmr/m/n/10.95 Beide L[]osungsans[]atze erfordern wiederrum erheblichen Auf
-wand und Koordination zwischen
+Overfull \hbox (11.9583pt too wide) in paragraph at lines 118--119
+\OT1/cmr/m/n/10.95 Beide L[]osungsans[]atze erfordern wiederum erheblichen Aufw
+and und Koordination zwischen
  []
 
 
@@ -585,29 +531,30 @@ Overfull \hbox (3.16776pt too wide) in paragraph at lines 118--119
 e L[]osungsans[]atz etwas weniger
  []
 
-[5pdfTeX warning (ext4): destination with the same identifier (name{figure.4}) 
+[4pdfTeX warning (ext4): destination with the same identifier (name{figure.3}) 
 has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.129 \subsection
-                 {Schichtenarchitektur}\label{architektur} <./pics/problemS2Kon
-kret.png>]
-Overfull \hbox (19.71454pt too wide) in paragraph at lines 137--138
+l.119 
+       <./pics/problemS2Abstrakt.png>] [5pdfTeX warning (ext4): destination wit
+h the same identifier (name{figure.4}) has been already used, duplicate ignored
+
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.131 \subsection
+                 {Serviceorientierte Architektur}\label{sarchitektur} <./pics/p
+roblemS2Konkret.png>]
+Overfull \hbox (0.552pt too wide) in paragraph at lines 137--138
 \OT1/cmr/m/n/10.95 Szenarien mit den bestehenden L[]osungen nach [[]] und [[]] 
-eingegangen. Die hier beschriebenen
+eingegangen. Die hier beschrie-
  []
 
 
-Overfull \hbox (11.56287pt too wide) in paragraph at lines 137--138
-\OT1/cmr/m/n/10.95 L[]osungsans[]atze basieren lediglich auf den theoretischen 
-Ausf[]uhrungen bzgl. der allgemeinen
- []
-
-
-Overfull \hbox (35.10545pt too wide) in paragraph at lines 139--141
-\OT1/cmr/m/n/10.95 Deklaration der implementierten Interfaces an einer Klasse e
-ntfallen kann. Die Substituierbarkeit
+Overfull \hbox (1.67737pt too wide) in paragraph at lines 137--138
+\OT1/cmr/m/n/10.95 bestehenden Ans[]atze. Es wurde kein praktischer Nachweis in
+ Form einer Implementierung
  []
 
 
@@ -616,22 +563,17 @@ Underfull \hbox (badness 10000) in paragraph at lines 139--141
  []
 
 
-Overfull \hbox (25.58499pt too wide) in paragraph at lines 139--141
+Overfull \hbox (3.0766pt too wide) in paragraph at lines 139--141
 \OT1/cmr/m/n/10.95 Typen fungieren. Allgemein wurde folgende formale Definition
- hinsichtlich der Typkonformit[]at
+ hinsichtlich der Typkonfor-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 142--145
+Underfull \hbox (badness 10000) in paragraph at lines 149--151
 
  []
 
 [6]
-Underfull \hbox (badness 10000) in paragraph at lines 149--152
-
- []
-
-
 Underfull \hbox (badness 10000) in paragraph at lines 158--160
 
  []
@@ -653,25 +595,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 176--177
 
  []
 
-
-Overfull \hbox (3.53293pt too wide) in paragraph at lines 176--177
-\OT1/cmr/m/n/10.95 darstellt (Verwendung von nominaler und struktureller Typkon
-formit[]at) musste festgelegt
- []
-
-
-Overfull \hbox (15.1216pt too wide) in paragraph at lines 176--177
-\OT1/cmr/m/n/10.95 werden, welche From der Typkonformit[]at als Standardvariant
-e verwendet wird. Anderenfalls
- []
-
 [7]
-Overfull \hbox (17.6745pt too wide) in paragraph at lines 178--179
-[]\OT1/cmr/m/it/10.95 Ein Interface erlaubt die sturkturelle Typkonformit[]at, 
-wenn eine der folgenden
- []
-
-
 Underfull \hbox (badness 10000) in paragraph at lines 183--186
 
  []
@@ -682,63 +606,38 @@ Underfull \hbox (badness 10000) in paragraph at lines 183--186
  []
 
 
-Overfull \hbox (11.1397pt too wide) in paragraph at lines 183--186
+Overfull \hbox (5.96886pt too wide) in paragraph at lines 183--186
 \OT1/cmr/m/n/10.95 angeboten werden, kann man schlieen, dass die in einem \OT1
-/cmr/m/it/10.95 Bookshelf \OT1/cmr/m/n/10.95 verwalteten Dokumente
+/cmr/m/it/10.95 Bookshelf \OT1/cmr/m/n/10.95 verwalteten Dokumen-
  []
 
 <pics/cd_loesungProblem1_compiler.png, id=124, 483.30562pt x 434.37282pt>
 File: pics/cd_loesungProblem1_compiler.png Graphic file (type png)
 <use pics/cd_loesungProblem1_compiler.png>
 Package pdftex.def Info: pics/cd_loesungProblem1_compiler.png  used on input li
-ne 195.
+ne 197.
 (pdftex.def)             Requested size: 241.65222pt x 217.18587pt.
 
-Overfull \hbox (1.95387pt too wide) in paragraph at lines 191--200
+Overfull \hbox (1.95387pt too wide) in paragraph at lines 193--202
 \OT1/cmr/m/n/10.95 innerhalb der Klasse \OT1/cmr/m/it/10.95 Bookshelf \OT1/cmr/
 m/n/10.95 verwendet wird und []uber die Sepzifikation der im Interface
  []
 
 
-Overfull \hbox (5.33762pt too wide) in paragraph at lines 191--200
+Overfull \hbox (5.33762pt too wide) in paragraph at lines 193--202
 \OT1/cmr/m/n/10.95 Abbildung []5[] zeigt den Inhalt des Moduls \OT1/cmr/m/it/10
 .95 Bookshelves \OT1/cmr/m/n/10.95 mit den notwendigen Erweiterungen.
  []
 
 
-Overfull \hbox (7.24373pt too wide) in paragraph at lines 191--200
-\OT1/cmr/m/n/10.95 die oben genannten Informationen angefragt werden k[]onnen. 
-Die letzte beiden []Anderungen
- []
-
-
-Overfull \hbox (35.875pt too wide) in paragraph at lines 191--200
-\OT1/cmr/m/n/10.95 wurde dort Objekte vom Typ \OT1/cmr/m/it/10.95 AbstractDocum
-ent \OT1/cmr/m/n/10.95 enthalten sein. Da die Klasse \OT1/cmr/m/it/10.95 Abstra
-ctDocument
- []
-
-
-Overfull \hbox (13.89503pt too wide) in paragraph at lines 191--200
-\OT1/cmr/m/n/10.95 das Interface \OT1/cmr/m/it/10.95 IBookForBookshelf \OT1/cmr
-/m/n/10.95 aufgrund der Architektur-Richtlinien nicht implementieren
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 191--200
+Underfull \hbox (badness 10000) in paragraph at lines 193--202
 
  []
 
 
-Overfull \hbox (0.16223pt too wide) in paragraph at lines 191--200
+Overfull \hbox (0.16223pt too wide) in paragraph at lines 193--202
 \OT1/cmr/m/n/10.95 Compiler zum []Ubersetzungszeitpunkt sicherstellen kann, das
 s der Methode \OT1/cmr/m/it/10.95 addDocument
- []
-
-
-Overfull \hbox (36.42477pt too wide) in paragraph at lines 191--200
-\OT1/cmr/m/n/10.95 nur Objekte []ubergeben werden, deren Typ laut Definition []
-1[] konform zum Typ \OT1/cmr/m/it/10.95 IBookForBookshelf
  []
 
 
@@ -747,40 +646,22 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 [8] (/home/niels/.miktex/texmfs/install/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2020/03/24 1.8d listings language file
 )
-Underfull \hbox (badness 10000) in paragraph at lines 204--208
+Underfull \hbox (badness 10000) in paragraph at lines 206--210
 
  []
 
 
-Overfull \hbox (7.9433pt too wide) in paragraph at lines 204--208
-\OT1/cmr/m/n/10.95 Durch dieses Schl[]usselwort k[]onnen strukturelle Typen def
-iniert werden. Diese strukturellen
- []
-
-
-Overfull \hbox (4.11087pt too wide) in paragraph at lines 204--208
-\OT1/cmr/m/n/10.95 Dabei wird die Vererbung innerhalb struktureller Typen auf s
-truktureller Ebene deklariert
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 204--208
+Underfull \hbox (badness 10000) in paragraph at lines 206--210
 
  []
 
 
-Overfull \hbox (17.52443pt too wide) in paragraph at lines 204--208
-\OT1/cmr/m/n/10.95 deutlich gemacht wird, welche Form der Typkonformit[]at verw
-endet wird. Eine Verpflichtende
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 204--208
+Underfull \hbox (badness 10000) in paragraph at lines 206--210
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 204--208
+Underfull \hbox (badness 10000) in paragraph at lines 206--210
 
  []
 
@@ -789,125 +670,85 @@ has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.208 ...kturelle Typen auf nominale Typen casten]
+l.210 ...kturelle Typen auf nominale Typen casten]
                                                    <./pics/cd_loesungProblem1_c
 ompiler.png>]
 Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on i
-nput line 208.
+nput line 210.
 LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <9> not available
-(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 210.
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 212.
 
-Overfull \hbox (3.9283pt too wide) in paragraph at lines 217--218
+Overfull \hbox (3.9283pt too wide) in paragraph at lines 219--220
 \OT1/cmr/m/n/10.95 strukturelllen Typen und Interfaces festgestellt, sondern au
 ch zwischen strukturelle Typen
  []
 
 
-Overfull \hbox (4.50627pt too wide) in paragraph at lines 217--218
+Overfull \hbox (4.50627pt too wide) in paragraph at lines 219--220
 \OT1/cmr/m/n/10.95 und abstrakten Klassen. So k[]onnen strukturelle Typen beisp
 ielsweise bestimmte Methode-
  []
 
 
-Overfull \hbox (14.7583pt too wide) in paragraph at lines 217--218
-\OT1/cmr/m/n/10.95 nominale Typ \OT1/cmr/m/it/10.95 NT \OT1/cmr/m/n/10.95 spezi
-fiziert jedoch nur eine dieser beiden Methoden. Eine Impementierung
+Underfull \hbox (badness 10000) in paragraph at lines 219--220
+
  []
 
 [10]
-Overfull \hbox (4.77997pt too wide) in paragraph at lines 240--242
+Overfull \hbox (4.77997pt too wide) in paragraph at lines 242--246
 \OT1/cmr/m/n/10.95 Innerhalb eines strukturellen Typs ist es jedoch nicht m[]og
 lich Konstruktoren zu definieren.
  []
 
 
-Overfull \hbox (11.77586pt too wide) in paragraph at lines 240--242
-\OT1/cmr/m/n/10.95 Das f[]uhrt zu dem Problem, dass die Instanzvariablen nicht 
-in einem Konstruktor initialisiert
- []
-
-
-Overfull \hbox (8.88626pt too wide) in paragraph at lines 240--242
-\OT1/cmr/m/n/10.95 werden k[]onnen. Um dem entgegenzuwirken k[]onnen Constraint
-s f[]ur Konstruktoren definiert
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 240--242
+Underfull \hbox (badness 10000) in paragraph at lines 242--246
 
  []
 
 
-Overfull \hbox (4.51944pt too wide) in paragraph at lines 240--242
-\OT1/cmr/m/n/10.95 Weiterhin bietet \OT1/cmr/m/it/10.95 WHITEOAK \OT1/cmr/m/n/1
-0.95 die M[]oglichkeit diverse Kompositionstechniken wie \OT1/cmr/m/it/10.95 Mi
-xins\OT1/cmr/m/n/10.95 ,
- []
+Underfull \hbox (badness 10000) in paragraph at lines 242--246
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 240--242
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 240--242
-
- []
-
-
-Overfull \hbox (8.2475pt too wide) in paragraph at lines 254--255
-\OT1/cmr/m/n/10.95 Die ersten beiden Bedingungen sind durch die Definition f[]u
-r die Indentit[]at (Typ[]aquivalenz)
- []
-
-
-Overfull \hbox (1.19083pt too wide) in paragraph at lines 254--255
-\OT1/cmr/m/n/10.95 und der nominalen Typkonformit[]at ausreichend beschrieben. 
-Die dritte Bedingung bedarf
- []
-
-
-Overfull \hbox (19.02512pt too wide) in paragraph at lines 256--257
-[]\OT1/cmr/m/it/10.95 Der Inhalt von \OT1/cmr/m/n/10.95 Y \OT1/cmr/m/it/10.95 i
-st kompatibel zum Inhalt von \OT1/cmr/m/n/10.95 X\OT1/cmr/m/it/10.95 , wenn fol
-gende Bedingungen
  []
 
 [11]
+Underfull \hbox (badness 2368) in paragraph at lines 260--261
+[]\OT1/cmr/m/it/10.95 f[]ur alle Methoden aus \OT1/cmr/m/n/10.95 Y \OT1/cmr/m/i
+t/10.95 (\OT1/cmr/m/n/10.95 Y.m\OT1/cmr/m/it/10.95 ) existiert genau eine []off
+entlich sichtbare
+ []
+
+
+Underfull \hbox (badness 7851) in paragraph at lines 261--262
+[]\OT1/cmr/m/it/10.95 f[]ur alle Instanzvariablen aus \OT1/cmr/m/n/10.95 Y \OT1
+/cmr/m/it/10.95 (\OT1/cmr/m/n/10.95 Y.v\OT1/cmr/m/it/10.95 ) existiert genau ei
+ne []offentlich
+ []
+
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <10.95> on input line 297.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 297.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 297.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <9> on input line 297.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 297.
 <pics/cd_loesungProlem1_whiteoak.png, id=202, 355.3275pt x 522.45187pt>
 File: pics/cd_loesungProlem1_whiteoak.png Graphic file (type png)
 <use pics/cd_loesungProlem1_whiteoak.png>
 Package pdftex.def Info: pics/cd_loesungProlem1_whiteoak.png  used on input lin
-e 299.
+e 300.
 (pdftex.def)             Requested size: 177.6633pt x 261.2253pt.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <10.95> on input line 300.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 300.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 300.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <9> on input line 303.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 303.
 
-Underfull \hbox (badness 10000) in paragraph at lines 294--308
+Underfull \hbox (badness 10000) in paragraph at lines 295--308
 
  []
 
 
-Overfull \hbox (3.50247pt too wide) in paragraph at lines 294--308
-\OT1/cmr/m/n/10.95 bereitgestellt werden, sondern es kann auf einen strukturell
-en Typ zur[]uckgegriffen werden,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 294--308
+Underfull \hbox (badness 10000) in paragraph at lines 295--308
 
  []
-
-
-LaTeX Warning: `h' float specifier changed to `ht'.
 
 [12] [13pdfTeX warning (ext4): destination with the same identifier (name{figur
 e.6}) has been already used, duplicate ignored
@@ -928,33 +769,21 @@ piler noch eine Erweiterung
  []
 
 
-Overfull \hbox (3.68498pt too wide) in paragraph at lines 309--313
-\OT1/cmr/m/n/10.95 der Sprachekonstrukte. Die Verwendung der strukturellen Typk
-onformit[]at muss innerhalb
+Overfull \hbox (1.7688pt too wide) in paragraph at lines 309--313
+\OT1/cmr/m/n/10.95 halb der Programms mithilfe einer einzubindenden Bibliothek 
+explitit angestoen werden.
  []
 
 
 Overfull \hbox (0.20313pt too wide) in paragraph at lines 309--313
-\OT1/cmr/m/n/10.95 Hierzu steht in der Bibliothek das Interface \OT1/cmr/m/it/1
-0.95 TypConverter \OT1/cmr/m/n/10.95 bereit, welches die Verwendung
+\OT1/cmr/m/n/10.95 Hierzu steht das Interface \OT1/cmr/m/it/10.95 TypConverter 
+\OT1/cmr/m/n/10.95 in der Bibliothek bereit, welches die Verwendung
  []
 
 
-Overfull \hbox (24.66583pt too wide) in paragraph at lines 309--313
+Underfull \hbox (badness 1735) in paragraph at lines 309--313
 \OT1/cmr/m/n/10.95 der strukturellen Typkonformit[]at erm[]oglicht. Ein Objekt,
- welches das Interfaces \OT1/cmr/m/it/10.95 TypConverter
- []
-
-
-Overfull \hbox (1.09718pt too wide) in paragraph at lines 309--313
-\OT1/cmr/m/n/10.95 erf[]ullt, kann mithilfe der Klasse \OT1/cmr/m/it/10.95 TypC
-onverterBuilder \OT1/cmr/m/n/10.95 erzeugt werden. Auf die Parameter,
- []
-
-
-Overfull \hbox (21.02254pt too wide) in paragraph at lines 309--313
-\OT1/cmr/m/n/10.95 spezieller eingegangen. Im Allgemeinen dienen sie der Konfig
-uration der Konformit[]atspr[]ufung
+ welches das Interface
  []
 
 
@@ -972,203 +801,110 @@ Underfull \hbox (badness 10000) in paragraph at lines 317--319
 
  []
 
-
-Overfull \hbox (1.8294pt too wide) in paragraph at lines 317--319
-\OT1/cmr/m/n/10.95 angegeben werden muss, ist es anders als im Ansatz aus [[]] 
-nicht notwendig, die Interfaces,
- []
-
-
-Overfull \hbox (4.9624pt too wide) in paragraph at lines 317--319
-\OT1/cmr/m/n/10.95 L[]osungsansatz nicht verwendet werden. Allerdings sind nur 
-kleinere folgende Anpassungen
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 320--323
-
- []
-
 [14]
-Overfull \hbox (47.12004pt too wide) in paragraph at lines 328--330
-\OT1/cmr/m/n/10.95 strukturell typkonform ist, muss in Bezug auf den neuen L[]o
-sungsansatz folgendes vorweggenommen
- []
-
-
-Overfull \hbox (20.82954pt too wide) in paragraph at lines 328--330
-\OT1/cmr/m/n/10.95 Interfaces zu definieren. Nach der Definition []3[] aus [[]]
- m[]usste ein zum Interface \OT1/cmr/m/it/10.95 I \OT1/cmr/m/n/10.95 typkonform
-es
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 328--330
+Underfull \hbox (badness 10000) in paragraph at lines 320--322
 
  []
 
 
-Overfull \hbox (5.80786pt too wide) in paragraph at lines 328--330
-\OT1/cmr/m/n/10.95 Verwendung von \OT1/cmr/m/it/10.95 default-Methoden \OT1/cmr
-/m/n/10.95 bzw. implementierten Methoden innerhalb von Klassen
+Overfull \hbox (1.0587pt too wide) in paragraph at lines 327--329
+\OT1/cmr/m/n/10.95 ein zum Interface \OT1/cmr/m/it/10.95 I \OT1/cmr/m/n/10.95 t
+ypkonformes Interface oder eine Klasse auch die Methoden enthalten,
  []
 
 
-Overfull \hbox (10.01158pt too wide) in paragraph at lines 328--330
-\OT1/cmr/m/n/10.95 (siehe Kapitel []4.5[]) zu steuern. Das bedeutet, dass der E
-ntwickler zwischen zwei Definitionen
- []
-
-
-Overfull \hbox (7.23358pt too wide) in paragraph at lines 331--332
-[]\OT1/cmr/m/n/10.95 X \OT1/cmr/m/it/10.95 ist strutkurell typkonform zu \OT1/c
-mr/m/n/10.95 I \OT1/cmr/m/it/10.95 genau dann, wenn \OT1/cmr/m/n/10.95 X \OT1/c
-mr/m/it/10.95 nominal typkonform
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 336--338
-
- []
-
-
-Overfull \hbox (7.23358pt too wide) in paragraph at lines 339--340
-[]\OT1/cmr/m/n/10.95 X \OT1/cmr/m/it/10.95 ist strutkurell typkonform zu \OT1/c
-mr/m/n/10.95 I \OT1/cmr/m/it/10.95 genau dann, wenn \OT1/cmr/m/n/10.95 X \OT1/c
-mr/m/it/10.95 nominal typkonform
- []
-
-
-Overfull \hbox (1.03879pt too wide) in paragraph at lines 345--347
-\OT1/cmr/m/n/10.95 die strukturelle Typkonformit[]at immer laut Definition []12
-[] festgestellt. Die Wahl Definition
- []
-
-
-Overfull \hbox (17.22043pt too wide) in paragraph at lines 345--347
-[]\OT1/cmr/m/n/10.95 12[] als Standard wird dadurch gebr[]undet, weil sie der a
-llgemeinen Definition der Strukturellen
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 345--347
+Underfull \hbox (badness 10000) in paragraph at lines 327--329
 
  []
 
 [15]
-Overfull \hbox (8.59589pt too wide) in paragraph at lines 348--349
-[]\OT1/cmr/m/n/10.95 X \OT1/cmr/m/it/10.95 enth[]alt eine Methode \OT1/cmr/m/n/
-10.95 f \OT1/cmr/m/it/10.95 (\OT1/cmr/m/n/10.95 X.f)\OT1/cmr/m/it/10.95 , die s
-trukturell []aquivalenz zu einer Methode
+Underfull \hbox (badness 10000) in paragraph at lines 335--337
+
  []
 
-<pics/ambigousMethods.png, id=285, 340.27126pt x 106.89937pt>
+
+Underfull \hbox (badness 10000) in paragraph at lines 344--346
+
+ []
+
+
+Overfull \hbox (1.6001pt too wide) in paragraph at lines 347--348
+[]\OT1/cmr/m/n/10.95 X \OT1/cmr/m/it/10.95 enth[]alt eine Methode \OT1/cmr/m/n/
+10.95 f \OT1/cmr/m/it/10.95 (\OT1/cmr/m/n/10.95 X.f)\OT1/cmr/m/it/10.95 , die s
+trukturell []aquivalent zu einer Metho-
+ []
+
+
+Overfull \hbox (5.85548pt too wide) in paragraph at lines 347--348
+\OT1/cmr/m/it/10.95 de \OT1/cmr/m/n/10.95 Y.f \OT1/cmr/m/it/10.95 ist, wenn \OT
+1/cmr/m/n/10.95 X.f Y.f \OT1/cmr/m/it/10.95 laut Definition []4[] []uberschreib
+t, oder alle der folgenden Bedingungen
+ []
+
+<pics/ambigousMethods.png, id=283, 340.27126pt x 106.89937pt>
 File: pics/ambigousMethods.png Graphic file (type png)
 <use pics/ambigousMethods.png>
-Package pdftex.def Info: pics/ambigousMethods.png  used on input line 359.
+Package pdftex.def Info: pics/ambigousMethods.png  used on input line 358.
 (pdftex.def)             Requested size: 170.13521pt x 53.44954pt.
-<pics/cd_typeConverter.png, id=288, 1256.44406pt x 328.22626pt>
+<pics/cd_typeConverter.png, id=286, 1256.44406pt x 328.22626pt>
 File: pics/cd_typeConverter.png Graphic file (type png)
 <use pics/cd_typeConverter.png>
-Package pdftex.def Info: pics/cd_typeConverter.png  used on input line 368.
+Package pdftex.def Info: pics/cd_typeConverter.png  used on input line 367.
 (pdftex.def)             Requested size: 314.11024pt x 82.05635pt.
-<pics/loesung_s1_interface.png, id=291, 608.2725pt x 264.99pt>
+<pics/loesung_s1_interface.png, id=289, 608.2725pt x 264.99pt>
 File: pics/loesung_s1_interface.png Graphic file (type png)
 <use pics/loesung_s1_interface.png>
-Package pdftex.def Info: pics/loesung_s1_interface.png  used on input line 376.
+Package pdftex.def Info: pics/loesung_s1_interface.png  used on input line 375.
 
 (pdftex.def)             Requested size: 304.13551pt x 132.49467pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 356--383
+Underfull \hbox (badness 10000) in paragraph at lines 355--382
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 356--383
+Underfull \hbox (badness 10000) in paragraph at lines 355--382
 
  []
 
 
-Overfull \hbox (48.33328pt too wide) in paragraph at lines 356--383
+Underfull \hbox (badness 10000) in paragraph at lines 355--382
 \OT1/cmr/m/n/10.95 Daher muss beim Erzeugen eines Objekte vom \OT1/cmr/m/it/10.
-95 TypConverterBuilder \OT1/cmr/m/n/10.95 eine \OT1/cmr/m/it/10.95 ComformityCh
-eckingBase
+95 TypConverterBuilder \OT1/cmr/m/n/10.95 eine
  []
 
 
-Overfull \hbox (9.9095pt too wide) in paragraph at lines 356--383
-\OT1/cmr/m/n/10.95 angegeben. Diese kann genau zwei Werte annehmen, wobei der e
-rste (\OT1/cmr/m/it/10.95 Name\OT1/cmr/m/n/10.95 ) die Ermittlung
- []
-
-
-Overfull \hbox (24.69028pt too wide) in paragraph at lines 356--383
-\OT1/cmr/m/n/10.95 der strukturell []aquivalenten Methoden nach Definition []4[
-] angibt und die zweite (\OT1/cmr/m/it/10.95 SIGNATURE\OT1/cmr/m/n/10.95 )
- []
-
-
-Overfull \hbox (19.5021pt too wide) in paragraph at lines 356--383
-\OT1/cmr/m/n/10.95 In Abh[]angigkeit der angegebenen \OT1/cmr/m/it/10.95 Comfor
-mityCheckingBase \OT1/cmr/m/n/10.95 werden unterschiedliche Objekte
- []
-
-
-Overfull \hbox (85.3981pt too wide) in paragraph at lines 356--383
-\OT1/cmr/m/n/10.95 konkreten Implementierungen \OT1/cmr/m/it/10.95 StructureByN
-amesTypeConverter \OT1/cmr/m/n/10.95 und \OT1/cmr/m/it/10.95 StructureBySignatu
-resTypeConverter
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 356--383
+Underfull \hbox (badness 10000) in paragraph at lines 355--382
 
  []
 
 
-Overfull \hbox (22.79803pt too wide) in paragraph at lines 356--383
+Underfull \hbox (badness 4429) in paragraph at lines 355--382
 \OT1/cmr/m/n/10.95 f[]allt auf, dass diese Klasse strukturell typkonform zu dem
- neune Interface \OT1/cmr/m/it/10.95 IBookFromBookshelf
+ neuen Interface
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 356--383
-
- []
-
-
-Overfull \hbox (10.70622pt too wide) in paragraph at lines 356--383
-\OT1/cmr/m/n/10.95 Grunds[]atzlich kann die Konvertierung in diesem Fall nur im
- Modul \OT1/cmr/m/it/10.95 Bookshelves \OT1/cmr/m/n/10.95 stattfinden,
- []
-
-
-Overfull \hbox (11.95177pt too wide) in paragraph at lines 356--383
-\OT1/cmr/m/n/10.95 da nur dort der Zugriff auf den \OT1/cmr/m/it/10.95 Ziel-Typ
- \OT1/cmr/m/n/10.95 - in diesem Fall \OT1/cmr/m/it/10.95 IBookFromBookshelf \OT
-1/cmr/m/n/10.95 - gew[]ahrleistet
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 356--383
+Underfull \hbox (badness 10000) in paragraph at lines 355--382
 
  []
 
 
-Overfull \hbox (1.92337pt too wide) in paragraph at lines 356--383
+Underfull \hbox (badness 10000) in paragraph at lines 355--382
+
+ []
+
+
+Overfull \hbox (1.92337pt too wide) in paragraph at lines 355--382
 \OT1/cmr/m/n/10.95 Der Entwickler muss nun beim Einlagern der Elemente in ein \
 OT1/cmr/m/it/10.95 Bookshelf \OT1/cmr/m/n/10.95 die Konvertierung
  []
 
 
-Overfull \hbox (46.44713pt too wide) in paragraph at lines 356--383
+Underfull \hbox (badness 10000) in paragraph at lines 355--382
 \OT1/cmr/m/n/10.95 verwendet wurde. Daher wird der \OT1/cmr/m/it/10.95 TypConve
-rterBuilder \OT1/cmr/m/n/10.95 mit der \OT1/cmr/m/it/10.95 ComformityCheckingBa
-se.NAMES
+rterBuilder \OT1/cmr/m/n/10.95 mit der
  []
-
-
-LaTeX Warning: `h' float specifier changed to `ht'.
 
 [16]
 
@@ -1179,94 +915,82 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.383 ...abel=ls_insertBook1, caption=addDocument]
+l.382 ...abel=ls_insertBook1, caption=addDocument]
+                                                   <./pics/ambigousMethods.png>
+] [18pdfTeX warning (ext4): destination with the same identifier (name{figure.8
+}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.382 ...abel=ls_insertBook1, caption=addDocument]
                                                   pdfTeX warning (ext4): destin
-ation with the same identifier (name{figure.8}) has been already used, duplicat
+ation with the same identifier (name{figure.9}) has been already used, duplicat
 e ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.383 ...abel=ls_insertBook1, caption=addDocument]
-                                                   <./pics/ambigousMethods.png>
- <./pics/cd_typeConverter.png>] [18pdfTeX warning (ext4): destination with the 
-same identifier (name{figure.9}) has been already used, duplicate ignored
-
-\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
-                                                  \fi \fi 
-l.396 \end{lstlisting}
-                       <./pics/loesung_s1_interface.png>]
-<pics/sd_createSignatureTypeConverter.png, id=327, 1253.43282pt x 264.99pt>
+l.382 ...abel=ls_insertBook1, caption=addDocument]
+                                                   <./pics/cd_typeConverter.png
+> <./pics/loesung_s1_interface.png>]
+<pics/sd_createSignatureTypeConverter.png, id=314, 1253.43282pt x 264.99pt>
 File: pics/sd_createSignatureTypeConverter.png Graphic file (type png)
 <use pics/sd_createSignatureTypeConverter.png>
 Package pdftex.def Info: pics/sd_createSignatureTypeConverter.png  used on inpu
-t line 400.
+t line 399.
 (pdftex.def)             Requested size: 313.35744pt x 66.24733pt.
-<pics/cd_erwBookshelf.png, id=330, 389.95688pt x 198.7425pt>
+<pics/cd_erwBookshelf.png, id=317, 389.95688pt x 198.7425pt>
 File: pics/cd_erwBookshelf.png Graphic file (type png)
 <use pics/cd_erwBookshelf.png>
-Package pdftex.def Info: pics/cd_erwBookshelf.png  used on input line 408.
+Package pdftex.def Info: pics/cd_erwBookshelf.png  used on input line 407.
 (pdftex.def)             Requested size: 194.97795pt x 99.371pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 397--415
+Overfull \hbox (19.00674pt too wide) in paragraph at lines 396--414
+\OT1/cmr/m/n/10.95 Welcher konkrete \OT1/cmr/m/it/10.95 TypeConverter \OT1/cmr/
+m/n/10.95 dabei erzeugt wird, ist dem Sequenzdiagramm in Abbildung
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 396--414
 
  []
 
 
-Overfull \hbox (41.20627pt too wide) in paragraph at lines 397--415
-\OT1/cmr/m/n/10.95 Zu bemerken ist, dass bei dieser Implementierung direkt beim
- Hinzuf[]ugen eines \OT1/cmr/m/it/10.95 AbstractDocument
+Underfull \hbox (badness 4205) in paragraph at lines 396--414
+\OT1/cmr/m/n/10.95 zum ben[]otigten Typ ist. W[]are dies nicht der Fall, w[]urd
+e das []ubergebene
  []
 
 
-Overfull \hbox (23.51659pt too wide) in paragraph at lines 397--415
-\OT1/cmr/m/n/10.95 werden. Dieses Verhalten kann unter Umst[]anden zur Verletzu
-ng diverser Vertragsbedingungen
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 397--415
+Underfull \hbox (badness 10000) in paragraph at lines 396--414
 
  []
 
 
-Overfull \hbox (2.14626pt too wide) in paragraph at lines 397--415
+Overfull \hbox (2.14626pt too wide) in paragraph at lines 396--414
 \OT1/cmr/m/n/10.95 w[]are die Aufnahme einer weiteren Methode (\OT1/cmr/m/it/10
 .95 isDocumentSuitable\OT1/cmr/m/n/10.95 ) in der Klasse \OT1/cmr/m/it/10.95 Bo
 okshelf\OT1/cmr/m/n/10.95 .
  []
 
 
-Overfull \hbox (11.61787pt too wide) in paragraph at lines 397--415
+Overfull \hbox (11.61787pt too wide) in paragraph at lines 396--414
 \OT1/cmr/m/n/10.95 Notwendigkeit der Aufrufs der Methode \OT1/cmr/m/it/10.95 is
 DocumentSuitable \OT1/cmr/m/n/10.95 vor der Methode \OT1/cmr/m/it/10.95 addDocu
 ment
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 397--415
+Underfull \hbox (badness 10000) in paragraph at lines 396--414
 
  []
 
 
-Overfull \hbox (35.16621pt too wide) in paragraph at lines 397--415
-\OT1/cmr/m/n/10.95 In Bezug auf das Problemszenario 1 (siehe Kapitel []1.1.1[])
- sollte das Ziel sein, die unterschiedlichen
- []
-
-
-Overfull \hbox (30.7162pt too wide) in paragraph at lines 397--415
-\OT1/cmr/m/n/10.95 m[]oglich. Ein Objekt der Klasse \OT1/cmr/m/it/10.95 Unpubli
-shedBook \OT1/cmr/m/n/10.95 w[]urde die Pr[]ufung in \OT1/cmr/m/it/10.95 Booksh
-elf::addDocument
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 397--415
+Underfull \hbox (badness 10000) in paragraph at lines 396--414
 
  []
 
 
-Overfull \hbox (0.21753pt too wide) in paragraph at lines 397--415
+Overfull \hbox (0.21753pt too wide) in paragraph at lines 396--414
 \OT1/cmr/m/n/10.95 Definition bzgl. der Strukturellen Typkonformit[]at (siehe D
 efinition []13[]) Abhilfe geschaffen
  []
@@ -1276,39 +1000,25 @@ efinition []13[]) Abhilfe geschaffen
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.415 \begin{enumerate}
-                       pdfTeX warning (ext4): destination with the same identif
-ier (name{figure.11}) has been already used, duplicate ignored
+l.414 \begin{enumerate}
+                        <./pics/sd_createSignatureTypeConverter.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 416--418
+[]\OT1/cmr/m/n/10.95 Im \OT1/cmr/m/it/10.95 TypeConverterBuilder \OT1/cmr/m/n/1
+0.95 muss die \OT1/cmr/m/it/10.95 StructureDefinition \OT1/cmr/m/n/10.95 auf de
+n Wert
+ []
+
+[20pdfTeX warning (ext4): destination with the same identifier (name{figure.11}
+) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.415 \begin{enumerate}
-                        <./pics/sd_createSignatureTypeConverter.png> <./pics/cd
-_erwBookshelf.png>]
-Overfull \hbox (62.63266pt too wide) in paragraph at lines 417--418
-[]\OT1/cmr/m/n/10.95 Im \OT1/cmr/m/it/10.95 TypeConverterBuilder \OT1/cmr/m/n/1
-0.95 muss die \OT1/cmr/m/it/10.95 StructureDefinition.ABSTRACT[]METHODS[]NECESS
-ARY
- []
-
-
-Overfull \hbox (10.0421pt too wide) in paragraph at lines 425--426
-\OT1/cmr/m/n/10.95 wird, muss wie in Listing []5[] angepasst werden, damit bzgl
-. der Strukturellen Typkonformit[]at
- []
-
-
-Overfull \hbox (24.10269pt too wide) in paragraph at lines 442--444
+l.426 ...abel=ls_insertBook2, caption=addDocument]
+                                                   <./pics/cd_erwBookshelf.png>
+]
+Underfull \hbox (badness 3907) in paragraph at lines 442--444
 \OT1/cmr/m/n/10.95 Objekt der Klasse \OT1/cmr/m/it/10.95 Bookshelf \OT1/cmr/m/n
-/10.95 hinzuzuge[]ufen, sonder auch Objekte der Klasse \OT1/cmr/m/it/10.95 Unpu
-blishedBook\OT1/cmr/m/n/10.95 ,
- []
-
-
-Overfull \hbox (8.25583pt too wide) in paragraph at lines 442--444
-\OT1/cmr/m/n/10.95 da beide Objekte (\OT1/cmr/m/it/10.95 Book \OT1/cmr/m/n/10.9
-5 und \OT1/cmr/m/it/10.95 UnpublishedBook\OT1/cmr/m/n/10.95 ) gem[]a Definitio
-n []13[] strukturell typkonform
+/10.95 hinzuzuf[]ugen, sonder auch Objekte der Klasse
  []
 
 
@@ -1316,21 +1026,21 @@ Underfull \hbox (badness 10000) in paragraph at lines 442--444
 
  []
 
-[20] (Einleitung.bbl
+(Einleitung.bbl [21]
 Underfull \hbox (badness 10000) in paragraph at lines 11--16
 []$\OT1/cmtt/m/n/10.95 https : / / docs . oracle . com / javase / 7 / docs / ap
 i / java / lang / reflect / Proxy .
  []
 
-[21]
-Underfull \hbox (badness 10000) in paragraph at lines 56--62
+
+Underfull \hbox (badness 10000) in paragraph at lines 64--70
 \OT1/cmtt/m/n/10.95 de / entwicklung / programmiersprachen / modulare-[]anwendu
 ngen-[]mit-[]java .
  []
 
-)
+[22])
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 458.
- [22]
+ [23]
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 458.
  (Einleitung.aux)
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 458.
@@ -1340,32 +1050,29 @@ Package rerunfilecheck Info: File `Einleitung.out' has not changed.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 458.
  ) 
 Here is how much of TeX's memory you used:
- 10318 strings out of 482859
- 176059 string characters out of 2952984
- 748103 words of memory out of 3000000
- 25635 multiletter control sequences out of 15000+200000
+ 10321 strings out of 482859
+ 176100 string characters out of 2952984
+ 743703 words of memory out of 3000000
+ 25637 multiletter control sequences out of 15000+200000
  540439 words of font info for 51 fonts, out of 3000000 for 9000
  0 hyphenation exceptions out of 8191
- 42i,8n,53p,10127b,1885s stack positions out of 5000i,500n,10000p,200000b,50000s
-pdfTeX warning (dest): name{Hfootnote.1} has been referenced but does not exi
-st, replaced by a fixed one
-
- </home/niels/.miktex/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/tcrm1095.p
-k> </home/niels/.miktex/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/tcti1095
-.pk></home/niels/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmbx10.p
-fb></home/niels/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmr10.pfb
-></home/niels/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmr12.pfb><
-/home/niels/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmr6.pfb></ho
-me/niels/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmr8.pfb></home/
-niels/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmr9.pfb></home/nie
-ls/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmssbx10.pfb></home/ni
-els/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmti10.pfb></home/nie
-ls/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmti9.pfb></home/niels
-/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmtt10.pfb></home/niels/
-.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmtt9.pfb>
-Output written on Einleitung.pdf (22 pages, 478662 bytes).
+ 42i,8n,53p,10127b,1883s stack positions out of 5000i,500n,10000p,200000b,50000s
+ </home/niels/.miktex/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/tcrm1095
+.pk> </home/niels/.miktex/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/tcti10
+95.pk></home/niels/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmbx10
+.pfb></home/niels/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmr10.p
+fb></home/niels/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmr12.pfb
+></home/niels/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmr6.pfb></
+home/niels/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmr8.pfb></hom
+e/niels/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmr9.pfb></home/n
+iels/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmssbx10.pfb></home/
+niels/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmti10.pfb></home/n
+iels/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmti9.pfb></home/nie
+ls/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmtt10.pfb></home/niel
+s/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmtt9.pfb>
+Output written on Einleitung.pdf (23 pages, 489474 bytes).
 PDF statistics:
- 556 PDF objects out of 1000 (max. 8388607)
- 172 named destinations out of 1000 (max. 500000)
+ 561 PDF objects out of 1000 (max. 8388607)
+ 173 named destinations out of 1000 (max. 500000)
  248 words of extra memory for PDF output out of 10000 (max. 10000000)
 

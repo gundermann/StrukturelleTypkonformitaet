@@ -46,6 +46,14 @@ Joseph Gil and Itay Maman.
 \newblock Whiteoak: Introducing structural typing into java.
 \newblock In {\em OOPSLA'08}, Nashville, Tennessee, USA, 19-23.10.2008.
 
+\bibitem{javaspec8}
+James Gosling, Bill Joy, Guy Steele, Gilad Bracha, and Alex Buckley.
+\newblock The java language speficication - java se 8 edition.
+\newblock Webseite, 13.02.2015.
+\newblock Online erhältlich unter
+  \url{https://https://docs.oracle.com/javase/specs/jls/se8/html/index.html}
+  abgerufen am 19.06.2020.
+
 \bibitem{structconfjava}
 Konstantin Läufer, Gerald Baumgartner, and Vincent~F. Russo.
 \newblock Safe structural conformance for java.

@@ -5,45 +5,45 @@ The style file: plain.bst
 Database file #1: bib.bib
 Warning--to sort, need author or key in proxy
 Warning--to sort, need author or key in cglib
-You've used 12 entries,
+You've used 13 entries,
             2118 wiz_defined-function locations,
-            564 strings with 5779 characters,
-and the built_in function-call counts, 3136 in all, are:
-= -- 291
-> -- 149
+            569 strings with 6047 characters,
+and the built_in function-call counts, 3484 in all, are:
+= -- 322
+> -- 177
 < -- 1
-+ -- 60
-- -- 48
-* -- 164
-:= -- 536
-add.period$ -- 37
-call.type$ -- 12
-change.case$ -- 57
++ -- 72
+- -- 58
+* -- 187
+:= -- 597
+add.period$ -- 41
+call.type$ -- 13
+change.case$ -- 65
 chr.to.int$ -- 0
-cite$ -- 14
-duplicate$ -- 135
-empty$ -- 277
-format.name$ -- 48
-if$ -- 673
+cite$ -- 15
+duplicate$ -- 142
+empty$ -- 299
+format.name$ -- 58
+if$ -- 743
 int.to.chr$ -- 0
-int.to.str$ -- 12
+int.to.str$ -- 13
 missing$ -- 12
-newline$ -- 64
-num.names$ -- 20
-pop$ -- 101
+newline$ -- 70
+num.names$ -- 22
+pop$ -- 113
 preamble$ -- 1
-purify$ -- 48
+purify$ -- 55
 quote$ -- 0
-skip$ -- 77
+skip$ -- 83
 stack$ -- 0
-substring$ -- 75
-swap$ -- 16
+substring$ -- 81
+swap$ -- 17
 text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 40
+type$ -- 44
 warning$ -- 2
-while$ -- 22
-width$ -- 14
-write$ -- 129
+while$ -- 24
+width$ -- 15
+write$ -- 141
 (There were 2 warnings)
