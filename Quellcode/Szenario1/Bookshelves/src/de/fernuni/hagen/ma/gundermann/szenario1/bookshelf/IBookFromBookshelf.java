@@ -11,5 +11,6 @@ public interface IBookFromBookshelf {
 	default String getIsbn() {
 		return "";
 	}
+
 	
 }

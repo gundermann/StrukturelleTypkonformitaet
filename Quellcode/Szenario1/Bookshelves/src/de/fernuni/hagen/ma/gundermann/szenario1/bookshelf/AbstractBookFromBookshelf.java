@@ -14,7 +14,6 @@ public abstract class AbstractBookFromBookshelf implements IBookFromBookshelf {
 		this.signatur = signatur;
 	}
 
-	@Override
 	public String getSignature() {
 		return signatur;
 	}

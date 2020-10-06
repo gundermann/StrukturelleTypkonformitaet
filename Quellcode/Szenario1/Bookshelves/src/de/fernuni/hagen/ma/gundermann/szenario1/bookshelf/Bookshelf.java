@@ -15,7 +15,7 @@ public class Bookshelf {
 	private Collection<IBookFromBookshelf> books = new ArrayList<IBookFromBookshelf>();
 
 	private TypeConverter<IBookFromBookshelf> structConverter = TypeConverterBuilder.create(ConformityCheckingBase.NAMES)
-			.withStructureDefinition(StructureDefinition.ABSTRACT_METHODS_NECESSARY).build(IBookFromBookshelf.class);
+			.withStructureDefinition(StructureDefinition.ALL_METHODS_NECESSARY).build(IBookFromBookshelf.class);
 
 	public void sortByTitle() {
 
