@@ -47,12 +47,12 @@ public class WrappedTypeMethodMatcherTest {
 
   @Test
   public void test8() {
-    assertFalse( matcher.matches( getMethod( "addPartlyNativeWrapped" ), getMethod( "subPartlyNativeWrapped" ) ) );
+    assertTrue( matcher.matches( getMethod( "addPartlyNativeWrapped" ), getMethod( "subPartlyNativeWrapped" ) ) );
   }
 
   @Test
   public void test9() {
-    assertFalse( matcher.matches( getMethod( "addPartlyWrapped" ), getMethod( "subPartlyWrapped" ) ) );
+    assertTrue( matcher.matches( getMethod( "addPartlyWrapped" ), getMethod( "subPartlyWrapped" ) ) );
   }
 
   @Test

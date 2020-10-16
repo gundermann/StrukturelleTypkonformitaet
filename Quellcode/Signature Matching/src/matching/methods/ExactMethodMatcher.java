@@ -15,7 +15,7 @@ public class ExactMethodMatcher implements MethodMatcher, Comparator<MethodStruc
 
   @Override
   public int compare( MethodStructure o1, MethodStructure o2 ) {
-    if ( o1.getReturnType() != o2.getReturnType() ) {
+    if ( !matchesType( o1.getReturnType(), o2.getReturnType() ) ) {
       return 1;
     }
     if ( o1.getSortedArgumentTypes().length != o2.getSortedArgumentTypes().length ) {
@@ -27,6 +27,10 @@ public class ExactMethodMatcher implements MethodMatcher, Comparator<MethodStruc
       }
     }
     return 0;
+  }
+
+  static boolean matchesType( Class<?> t1, Class<?> t2 ) {
+    return t1.equals( t2 );
   }
 
 }
