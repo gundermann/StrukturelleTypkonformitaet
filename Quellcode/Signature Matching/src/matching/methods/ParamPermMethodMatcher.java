@@ -3,6 +3,7 @@ package matching.methods;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.function.BiFunction;
 
 /**
  * Dieser Matcher beachtet, dass die Argumenttypen der beiden Methoden in unterschiedlicher Reihenfolge angegeben sein
@@ -25,9 +26,15 @@ public class ParamPermMethodMatcher implements MethodMatcher {
       return false;
     }
 
-    Collection<Class<?>[]> permutations = permuteAgruments( ms1.getSortedArgumentTypes() );
+    return matchPermutedArguments( ms1.getSortedArgumentTypes(), ms2.getSortedArgumentTypes(),
+        this::matchesArgumentTypes );
+  }
+
+  boolean matchPermutedArguments( Class<?>[] sortedArgumentTypes1, Class<?>[] sortedArgumentTypes2,
+      BiFunction<Class<?>[], Class<?>[], Boolean> matchingFunction ) {
+    Collection<Class<?>[]> permutations = permuteAgruments( sortedArgumentTypes1 );
     for ( Class<?>[] combination : permutations ) {
-      if ( matchesArgumentTypes( combination, ms2.getSortedArgumentTypes() ) ) {
+      if ( matchingFunction.apply( combination, sortedArgumentTypes2 ) ) {
         return true;
       }
     }

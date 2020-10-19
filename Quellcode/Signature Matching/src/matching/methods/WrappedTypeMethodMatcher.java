@@ -2,6 +2,9 @@ package matching.methods;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.BiFunction;
 
@@ -10,6 +13,12 @@ import java.util.function.BiFunction;
  * anderen Methode enthalten sein können (Wrapper).
  */
 public class WrappedTypeMethodMatcher implements MethodMatcher {
+
+  // Versuch: Cache der Wrapped-Prüfungen
+  // Grund: Bei der Wrapped-Prüfung von boolean und Boolean über den CombinedMethodMatcher kam es zu einem StackOverflow
+  // Idee: Die geprüften Kombinationen werden gecached. Sofern eine gecachedte Kombination nochmal geprüft wird, wird
+  // die Prüfung einfach übersprungen.
+  Map<Class<?>[], Boolean> cachedWrappedTypeChecks = new HashMap<>();
 
   @Override
   public boolean matches( Method m1, Method m2 ) {
@@ -40,13 +49,25 @@ public class WrappedTypeMethodMatcher implements MethodMatcher {
    * @param t2
    * @return t1 = t2 || t1 in t2 || t2 in t1
    */
-  static boolean matchesWrapped( Class<?> t1, Class<?> t2,
+  boolean matchesWrapped( Class<?> t1, Class<?> t2,
       BiFunction<Class<?>, Class<?>, Boolean> innerCompareFunction ) {
     return t1.equals( t2 ) || isWrappedIn( t1, t2, innerCompareFunction )
         || isWrappedIn( t2, t1, innerCompareFunction );
   }
 
-  private static boolean isWrappedIn( Class<?> wrappedType, Class<?> wrapperType,
+  /**
+   * Prüft auf Gleichheit oder auf Wrapped in eine Richtung
+   *
+   * @param t1
+   * @param t2
+   * @return t1 = t2 || t1 in t2
+   */
+  boolean matchesWrappedOneDirection( Class<?> t1, Class<?> t2,
+      BiFunction<Class<?>, Class<?>, Boolean> innerCompareFunction ) {
+    return t1.equals( t2 ) || isWrappedIn( t1, t2, innerCompareFunction );
+  }
+
+  private boolean isWrappedIn( Class<?> wrappedType, Class<?> wrapperType,
       BiFunction<Class<?>, Class<?>, Boolean> innerCompareFunction ) {
     // Hier ist die Frage, ob nur ein Attribut vom Typ des wrappedType im Wrapper vorhanden sein muss, oder nur eine
     // Methode mit den Rückgabewert des wrappedType, oder sogar beides.
@@ -56,7 +77,40 @@ public class WrappedTypeMethodMatcher implements MethodMatcher {
     // containsMethodWithType( wrapperType, wrappedType );
 
     // Zweiter Versuch: nur Attribute
-    return containsFieldWithType( wrapperType, wrappedType, innerCompareFunction );
+
+    // return containsFieldWithType( wrapperType, wrappedType, innerCompareFunction );
+
+    // Dritter Versuch: wie zweiter Versucht nur mit Cache.
+    Class<?>[] cacheKey = new Class<?>[] { wrappedType, wrapperType };
+    if ( isCombinationCached( cacheKey ) ) {
+      // false, weil die Überprüfung noch nicht stattgefunden bzw. wenn sie bereits true ermittelt hatte, dann wäre die
+      // Überprüfung bereits erfolgreich gewesen
+      return getResultFromCache( cacheKey );
+    }
+    cachedWrappedTypeChecks.put( cacheKey, null );
+    boolean result = containsFieldWithType( wrapperType, wrappedType, innerCompareFunction );
+    cachedWrappedTypeChecks.put( cacheKey, result );
+    return result;
+
+  }
+
+  private boolean getResultFromCache( Class<?>[] newCacheKey ) {
+    for ( Entry<Class<?>[], Boolean> cacheEntries : cachedWrappedTypeChecks.entrySet() ) {
+      Class<?>[] cachedKey = cacheEntries.getKey();
+      if ( Objects.equals( cachedKey[0], newCacheKey[0] ) && Objects.equals( cachedKey[1], newCacheKey[1] ) ) {
+        return cacheEntries.getValue() == null ? false : cacheEntries.getValue();
+      }
+    }
+    return false;
+  }
+
+  private boolean isCombinationCached( Class<?>[] newCacheKey ) {
+    for ( Class<?>[] cacheKeys : cachedWrappedTypeChecks.keySet() ) {
+      if ( Objects.equals( cacheKeys[0], newCacheKey[0] ) && Objects.equals( cacheKeys[1], newCacheKey[1] ) ) {
+        return true;
+      }
+    }
+    return false;
   }
 
   @Deprecated
@@ -78,7 +132,7 @@ public class WrappedTypeMethodMatcher implements MethodMatcher {
     return false;
   }
 
-  private static boolean containsFieldWithType( Class<?> checkingClass, Class<?> fieldType,
+  private boolean containsFieldWithType( Class<?> checkingClass, Class<?> fieldType,
       BiFunction<Class<?>, Class<?>, Boolean> compareFunction ) {
     Field[] fieldsOfWrapper = checkingClass.getDeclaredFields();
     for ( Field field : fieldsOfWrapper ) {

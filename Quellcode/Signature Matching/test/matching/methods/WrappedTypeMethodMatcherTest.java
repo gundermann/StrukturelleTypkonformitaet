@@ -1,14 +1,19 @@
 package matching.methods;
 
-import static matching.methods.MethodPool.getMethod;
+import static matching.methods.testmethods.MethodPool.getMethod;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.Before;
 import org.junit.Test;
 
 public class WrappedTypeMethodMatcherTest {
+  MethodMatcher matcher;
 
-  MethodMatcher matcher = new WrappedTypeMethodMatcher();
+  @Before
+  public void setup() {
+    matcher = new WrappedTypeMethodMatcher();
+  }
 
   @Test
   public void test1() {
@@ -58,5 +63,10 @@ public class WrappedTypeMethodMatcherTest {
   @Test
   public void test10() {
     assertFalse( matcher.matches( getMethod( "addSpec" ), getMethod( "addGen" ) ) );
+  }
+
+  @Test
+  public void test11() {
+    assertFalse( matcher.matches( getMethod( "setBool" ), getMethod( "setObject" ) ) );
   }
 }

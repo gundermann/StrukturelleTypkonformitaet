@@ -29,7 +29,7 @@ public class ExactMethodMatcher implements MethodMatcher, Comparator<MethodStruc
     return 0;
   }
 
-  static boolean matchesType( Class<?> t1, Class<?> t2 ) {
+  boolean matchesType( Class<?> t1, Class<?> t2 ) {
     return t1.equals( t2 );
   }
 

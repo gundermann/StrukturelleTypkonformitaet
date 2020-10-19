@@ -1,6 +1,6 @@
 package matching.methods;
 
-import static matching.methods.MethodPool.getMethod;
+import static matching.methods.testmethods.MethodPool.getMethod;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 

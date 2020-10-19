@@ -1,12 +1,21 @@
 package matching.methods;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
 
 /**
  * Dieser Matcher achtet darauf, dass die Typen (Return- und Argumenttypen) der beiden Methoden auch Generelisierungen
  * bzw. Spezialisierungen von einander sein können.
  */
 public class GenSpecMethodMatcher implements MethodMatcher {
+
+  // Versuch: Cache der Wrapped-Prüfungen
+  // Grund: Im WrappedTypeMethodMatcher wird auch ein Cache verwendet und es ist sicherlich aus Performance-Sicht
+  // sinnvoll auch hier einen Cache aufzubauen.
+  Map<Class<?>[], Boolean> cachedGenSpecTypesChecks = new HashMap<>();
 
   @Override
   public boolean matches( Method m1, Method m2 ) {
@@ -30,8 +39,49 @@ public class GenSpecMethodMatcher implements MethodMatcher {
     return true;
   }
 
-  static boolean machtesGenSpecType( Class<?> t1, Class<?> t2 ) {
-    return t1.isAssignableFrom( t2 ) || t2.isAssignableFrom( t1 );
+  boolean machtesGenSpecType( Class<?> t1, Class<?> t2 ) {
+    // Versuch 1: Über die Methode isAssignableFrom feststellen, ob die Typen voneinander erben.
+    // Problem: native Typen erben nicht von Object
+    // #####################Frage: Ist das wirklich ein Problem, oder ist das so korrekt????????#####################
+    // return t1.isAssignableFrom( t2 ) || t2.isAssignableFrom( t1 );
+
+    // Versuche 2: wie Versuch 1 mit zusätzlicher Equals-Prüfung, aufgrund des in Versuch 1 erwähnten Problems
+    // return t1.equals( Object.class ) || t2.equals( Object.class ) || t1.isAssignableFrom( t2 )
+    // || t2.isAssignableFrom( t1 );
+
+    // Versuch 3: wie Versuch 2 mit Cache
+    Class<?>[] cacheKey = new Class<?>[] { t1, t2 };
+    if ( isCombinationCached( cacheKey ) ) {
+      // false, weil die Überprüfung noch nicht stattgefunden bzw. wenn sie bereits true ermittelt hatte, dann wäre die
+      // Überprüfung bereits erfolgreich gewesen
+      return getResultFromCache( cacheKey );
+    }
+    cachedGenSpecTypesChecks.put( cacheKey, null );
+    boolean result = t1.equals( Object.class ) || t2.equals( Object.class ) || t1.isAssignableFrom( t2 )
+        || t2.isAssignableFrom( t1 );
+    cachedGenSpecTypesChecks.put( cacheKey, result );
+    return result;
   }
 
+  private boolean isCombinationCached( Class<?>[] newCacheKey ) {
+    // Hier ist die Richtung der geprüften Typen egal. Also
+    for ( Class<?>[] cacheKey : cachedGenSpecTypesChecks.keySet() ) {
+      if ( Objects.equals( cacheKey[0], newCacheKey[0] ) && Objects.equals( cacheKey[1], newCacheKey[1] ) ||
+          Objects.equals( cacheKey[0], newCacheKey[1] ) && Objects.equals( cacheKey[1], newCacheKey[0] ) ) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private boolean getResultFromCache( Class<?>[] newCacheKey ) {
+    for ( Entry<Class<?>[], Boolean> cacheEntries : cachedGenSpecTypesChecks.entrySet() ) {
+      Class<?>[] cachedKey = cacheEntries.getKey();
+      if ( Objects.equals( cachedKey[0], newCacheKey[0] ) && Objects.equals( cachedKey[1], newCacheKey[1] ) ||
+          Objects.equals( cachedKey[0], newCacheKey[1] ) && Objects.equals( cachedKey[1], newCacheKey[0] ) ) {
+        return cacheEntries.getValue() == null ? false : cacheEntries.getValue();
+      }
+    }
+    return false;
+  }
 }

@@ -1,4 +1,4 @@
-package matching.methods;
+package matching.methods.testmethods;
 
 import java.lang.reflect.Method;
 import java.math.BigInteger;
@@ -16,6 +16,8 @@ interface MethodPool {
   void setBool( boolean b );
 
   void setBoolNativeWrapped( Boolean b );
+
+  void setObject( Object o );
 
   int addOne( int a );
 
