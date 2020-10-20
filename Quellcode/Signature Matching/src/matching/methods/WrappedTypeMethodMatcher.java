@@ -47,7 +47,7 @@ public class WrappedTypeMethodMatcher implements MethodMatcher {
    *
    * @param t1
    * @param t2
-   * @return t1 = t2 || t1 in t2 || t2 in t1
+   * @return t1 = t2 || t1 > t2 || t2 > t1
    */
   boolean matchesWrapped( Class<?> t1, Class<?> t2,
       BiFunction<Class<?>, Class<?>, Boolean> innerCompareFunction ) {

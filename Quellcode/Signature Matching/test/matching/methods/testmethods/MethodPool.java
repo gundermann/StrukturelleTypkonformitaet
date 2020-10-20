@@ -3,7 +3,7 @@ package matching.methods.testmethods;
 import java.lang.reflect.Method;
 import java.math.BigInteger;
 
-interface MethodPool {
+public interface MethodPool {
 
   boolean getTrue();
 
@@ -39,7 +39,7 @@ interface MethodPool {
 
   Number addSpec( Number a, BigInteger b );
 
-  static Method getMethod( String methodName ) {
+  public static Method getMethod( String methodName ) {
     try {
       for ( Method m : MethodPool.class.getMethods() ) {
         if ( m.getName().equals( methodName ) ) {

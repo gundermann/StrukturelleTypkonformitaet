@@ -18,6 +18,11 @@ public class CombinedMethodMatcher implements MethodMatcher {
   private boolean argumentsMatches( MethodStructure ms1, MethodStructure ms2 ) {
     Class<?>[] sortedArgumentTypes1 = ms1.getSortedArgumentTypes();
     Class<?>[] sortedArgumentTypes2 = ms2.getSortedArgumentTypes();
+
+    // Wenn der ContaineredArgumentMatcher hinzukommt, dann muss das hier wieder weg
+    if ( ms1.getSortedArgumentTypes().length != ms2.getSortedArgumentTypes().length ) {
+      return false;
+    }
     return new ParamPermMethodMatcher().matchPermutedArguments( sortedArgumentTypes1, sortedArgumentTypes2,
         this::typesMatches );
   }
