@@ -1,11 +1,12 @@
 package tester.querytypes.tests;
 
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
-import matching.modules.testmodules.Interface2;
 import tester.annotation.QueryTypeInstanceSetter;
+import tester.querytypes.Interface2;
 
 public class Interface2Test {
 
@@ -18,17 +19,17 @@ public class Interface2Test {
 
   @Test
   void getOne() {
-    assertTrue( testInterface.getOne() == 1 );
+    assertThat( testInterface.getOne(), equalTo( 1 ) );
   }
 
   @Test
   void getTrue() {
-    assertTrue( testInterface.getTrue() );
+    assertThat( testInterface.getTrue(), equalTo( true ) );
   }
 
   @Test
   void getFalse() {
-    assertTrue( !testInterface.getTrue() );
+    assertThat( testInterface.getFalse(), equalTo( false ) );
   }
 
 }
