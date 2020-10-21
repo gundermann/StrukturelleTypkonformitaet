@@ -6,10 +6,8 @@ import org.junit.Test;
 
 import matching.modules.testmodules.Interface2;
 import tester.annotation.QueryTypeInstanceSetter;
-import tester.annotation.QueryTypeTest;
 
-@QueryTypeTest( queryType = Interface2.class )
-class Interface2Test {
+public class Interface2Test {
 
   private Interface2 testInterface;
 

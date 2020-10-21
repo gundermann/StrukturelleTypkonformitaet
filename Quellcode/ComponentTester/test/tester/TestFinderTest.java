@@ -1,64 +1,30 @@
 package tester;
 
-import java.math.BigInteger;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertThat;
+
+import java.util.Collection;
 
 import org.junit.Test;
 
 import tester.finder.TestFinder;
 import tester.querytypes.Interface1;
+import tester.querytypes.Interface2;
 
-class TestFinderTest {
+public class TestFinderTest {
+
+  @Test
+  public void findTests_interface2() {
+    TestFinder<Interface2> testFinder = new TestFinder<>( Interface2.class );
+    Collection<Class<?>> testClassesOfQueryType = testFinder.findTestClassesOfQueryType();
+    assertThat( testClassesOfQueryType.size(), equalTo( 1 ) );
+  }
 
   @Test
   public void findTests_interface1() {
-    TestFinder<Interface1> testFinder = new TestFinder<>();
-    ImplementedInterface1 component = new ImplementedInterface1();
-    testFinder.findTestClassesOfComponent( component );
+    TestFinder<Interface1> testFinder = new TestFinder<>( Interface1.class );
+    Collection<Class<?>> testClassesOfQueryType = testFinder.findTestClassesOfQueryType();
+    assertThat( testClassesOfQueryType.size(), equalTo( 2 ) );
   }
 
-  private static class ImplementedInterface1 implements Interface1 {
-
-    @Override
-    public boolean getTrue() {
-      // TODO Auto-generated method stub
-      return false;
-    }
-
-    @Override
-    public boolean getFalse() {
-      // TODO Auto-generated method stub
-      return false;
-    }
-
-    @Override
-    public int getOne() {
-      // TODO Auto-generated method stub
-      return 0;
-    }
-
-    @Override
-    public int addPartlyNativeWrapped( Integer a, int b ) {
-      // TODO Auto-generated method stub
-      return 0;
-    }
-
-    @Override
-    public int subPartlyNativeWrapped( int a, Integer b ) {
-      // TODO Auto-generated method stub
-      return 0;
-    }
-
-    @Override
-    public int addPartlyWrapped( BigInteger a, int b ) {
-      // TODO Auto-generated method stub
-      return 0;
-    }
-
-    @Override
-    public int subPartlyWrapped( int a, BigInteger b ) {
-      // TODO Auto-generated method stub
-      return 0;
-    }
-
-  }
 }

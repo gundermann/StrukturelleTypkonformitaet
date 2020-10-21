@@ -8,12 +8,10 @@ import java.util.Collection;
 import org.junit.Test;
 
 import tester.annotation.QueryTypeInstanceSetter;
-import tester.finder.TestFinder;
 
 public class Tester<T> {
 
-  public void testComponent( T component ) {
-    Collection<Class<?>> testClasses = findTestClasses( component );
+  public void testComponent( T component, Collection<Class<?>> testClasses ) {
     for ( Class<?> testClass : testClasses ) {
       try {
         Object testInstance = testClass.newInstance();
@@ -57,7 +55,4 @@ public class Tester<T> {
     return null;
   }
 
-  private Collection<Class<?>> findTestClasses( T component ) {
-    return new TestFinder<T>().findTestClassesOfComponent( component );
-  }
 }
