@@ -1,4 +1,4 @@
-package tester.finder;
+package tester;
 
 import java.util.ArrayList;
 import java.util.Collection;

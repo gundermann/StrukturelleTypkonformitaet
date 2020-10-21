@@ -7,7 +7,6 @@ import java.util.Collection;
 
 import org.junit.Test;
 
-import tester.finder.TestFinder;
 import tester.querytypes.Interface1;
 import tester.querytypes.Interface2;
 
