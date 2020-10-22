@@ -113,24 +113,24 @@ public class WrappedTypeMethodMatcher implements MethodMatcher {
     return false;
   }
 
-  @Deprecated
-  private boolean containsMethodWithType( Class<?> checkingClass, Class<?> returnType ) {
-    // Frage: Sollen hier nur auf sichtbare Methoden geprüft werden
-    // Antwort: Ja, denn die Methoden müssen später durch den Glue-Code aufgerufen werden
-    // Anschlussfrage: Warum ist das notwendig? Der Glue-Code verwendet Reflection. Damit interessiert die Sichtbarkeit
-    // der Methoden nicht. Wenn man das weiter denkt, dann sind nicht einmal die Methoden relevant, weil:
-    // 1. Die Attribute per Relflection abgegriffen werden können
-    // 2. Nicht sichergestellt werden kann, dass eine Methode, die den ein Objekt zurückgibt, welches es gleichen Typ,
-    // wie ein Attribut hat, auch genau dieses Attribut zurückggibt.
-    Method[] methodsOfWrapper = checkingClass.getDeclaredMethods();
-    for ( Method method : methodsOfWrapper ) {
-      if ( method.getReturnType().equals( returnType ) ) {
-        return true;
-      }
-    }
-
-    return false;
-  }
+  // @Deprecated
+  // private boolean containsMethodWithType( Class<?> checkingClass, Class<?> returnType ) {
+  // // Frage: Sollen hier nur auf sichtbare Methoden geprüft werden
+  // // Antwort: Ja, denn die Methoden müssen später durch den Glue-Code aufgerufen werden
+  // // Anschlussfrage: Warum ist das notwendig? Der Glue-Code verwendet Reflection. Damit interessiert die Sichtbarkeit
+  // // der Methoden nicht. Wenn man das weiter denkt, dann sind nicht einmal die Methoden relevant, weil:
+  // // 1. Die Attribute per Relflection abgegriffen werden können
+  // // 2. Nicht sichergestellt werden kann, dass eine Methode, die den ein Objekt zurückgibt, welches es gleichen Typ,
+  // // wie ein Attribut hat, auch genau dieses Attribut zurückggibt.
+  // Method[] methodsOfWrapper = checkingClass.getDeclaredMethods();
+  // for ( Method method : methodsOfWrapper ) {
+  // if ( method.getReturnType().equals( returnType ) ) {
+  // return true;
+  // }
+  // }
+  //
+  // return false;
+  // }
 
   private boolean containsFieldWithType( Class<?> checkingClass, Class<?> fieldType,
       BiFunction<Class<?>, Class<?>, Boolean> compareFunction ) {

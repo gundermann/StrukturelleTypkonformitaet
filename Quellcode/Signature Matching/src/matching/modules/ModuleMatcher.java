@@ -4,8 +4,10 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import matching.Logger;
 import matching.methods.CombinedMethodMatcher;
@@ -47,6 +49,17 @@ public class ModuleMatcher {
     Map<Method, Collection<Method>> possibleMatches = collectPossibleMatches( queryMethods, checkType.getMethods() );
     printPossibleMatches( possibleMatches );
     return possibleMatches.values().stream().anyMatch( l -> !l.isEmpty() );
+  }
+
+  /**
+   * Diese Methode stellt alle möglichen Kombinationen von Matches der beiden übergebenen Typen her.
+   * 
+   * @param checkType
+   * @param queryType
+   * @return
+   */
+  public Set<ModuleMatchingInfo> calculateMatchingInfos( Class<?> checkType, Class<?> queryType ) {
+    return new HashSet<>();
   }
 
   /**
