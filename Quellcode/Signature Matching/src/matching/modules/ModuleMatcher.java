@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import matching.Logger;
 import matching.methods.CombinedMethodMatcher;
 import matching.methods.MethodMatcher;
 
@@ -24,7 +25,7 @@ public class ModuleMatcher {
     if ( !queryType.isInterface() ) {
       throw new RuntimeException( "Query-Type must be an interface" );
     }
-    System.out.println( String.format( "%s MATCH? %s", checkType.getSimpleName(), queryType.getSimpleName() ) );
+    Logger.info( String.format( "%s MATCH? %s", checkType.getSimpleName(), queryType.getSimpleName() ) );
     Method[] queryMethods = getQueryMethods( queryType );
     Map<Method, Collection<Method>> possibleMatches = collectPossibleMatches( queryMethods, checkType.getMethods() );
     printPossibleMatches( possibleMatches );
@@ -41,7 +42,7 @@ public class ModuleMatcher {
     if ( !queryType.isInterface() ) {
       throw new RuntimeException( "Query-Type must be an interface" );
     }
-    System.out.println( String.format( "%s MATCH? %s", checkType.getSimpleName(), queryType.getSimpleName() ) );
+    Logger.info( String.format( "%s MATCH? %s", checkType.getSimpleName(), queryType.getSimpleName() ) );
     Method[] queryMethods = getQueryMethods( queryType );
     Map<Method, Collection<Method>> possibleMatches = collectPossibleMatches( queryMethods, checkType.getMethods() );
     printPossibleMatches( possibleMatches );
@@ -126,9 +127,9 @@ public class ModuleMatcher {
 
   private void printPossibleMatches( Map<Method, Collection<Method>> possibleMatches ) {
     for ( Entry<Method, Collection<Method>> entry : possibleMatches.entrySet() ) {
-      System.out.println( String.format( "QUERYM: %s", entry.getKey().getName() ) );
+      Logger.info( String.format( "QUERYM: %s", entry.getKey().getName() ) );
       for ( Method match : entry.getValue() ) {
-        System.out.println( String.format( "    MATCHM: %s", match.getName() ) );
+        Logger.info( String.format( "    MATCHM: %s", match.getName() ) );
       }
     }
 
