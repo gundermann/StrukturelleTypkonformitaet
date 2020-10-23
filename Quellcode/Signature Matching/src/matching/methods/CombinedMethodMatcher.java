@@ -1,6 +1,7 @@
 package matching.methods;
 
 import java.lang.reflect.Method;
+import java.util.Set;
 
 public class CombinedMethodMatcher implements MethodMatcher {
 
@@ -42,6 +43,12 @@ public class CombinedMethodMatcher implements MethodMatcher {
     }
     return wrappedTypeMethodMatcher.matchesWrapped( returnType1, returnType2,
         ( t1, t2 ) -> typeMatches( t1, t2 ) );
+  }
+
+  @Override
+  public Set<MethodMatchingInfo> calculateMatchingInfos( Method m1, Method m2 ) {
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }

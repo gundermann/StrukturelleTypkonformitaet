@@ -12,6 +12,7 @@ import java.util.Set;
 import matching.Logger;
 import matching.methods.CombinedMethodMatcher;
 import matching.methods.MethodMatcher;
+import matching.methods.MethodMatchingInfo;
 
 public class ModuleMatcher {
 
@@ -23,7 +24,7 @@ public class ModuleMatcher {
    *          must be an interface
    * @return checkType >= queryType
    */
-  public boolean matches( Class<?> checkType, Class<?> queryType ) {
+  public <S, T> boolean matches( Class<T> checkType, Class<S> queryType ) {
     if ( !queryType.isInterface() ) {
       throw new RuntimeException( "Query-Type must be an interface" );
     }
@@ -40,7 +41,7 @@ public class ModuleMatcher {
    *          must be an interface
    * @return Exists m1 checkType, m2 in queryType: m1 matches m2
    */
-  public boolean partlyMatches( Class<?> checkType, Class<?> queryType ) {
+  public <S, T> boolean partlyMatches( Class<T> checkType, Class<S> queryType ) {
     if ( !queryType.isInterface() ) {
       throw new RuntimeException( "Query-Type must be an interface" );
     }
@@ -53,13 +54,18 @@ public class ModuleMatcher {
 
   /**
    * Diese Methode stellt alle möglichen Kombinationen von Matches der beiden übergebenen Typen her.
-   * 
+   *
    * @param checkType
    * @param queryType
    * @return
    */
-  public Set<ModuleMatchingInfo> calculateMatchingInfos( Class<?> checkType, Class<?> queryType ) {
-    return new HashSet<>();
+  public <S, T> Set<ModuleMatchingInfo<S, T>> calculateMatchingInfos( Class<T> checkType, Class<S> queryType ) {
+    Method[] queryMethods = getQueryMethods( queryType );
+    Map<Method, Set<MethodMatchingInfo>> possibleMethodMatches = collectMethodMatchingInfos( queryMethods,
+        checkType.getMethods() );
+    ModuleMatchingInfoFactory<S, T> factory = new ModuleMatchingInfoFactory<>( checkType, queryType );
+    return factory.createFromMethodMatchingInfos( possibleMethodMatches );
+
   }
 
   /**
@@ -124,11 +130,11 @@ public class ModuleMatcher {
   // return false;
   // }
 
-  private Map<Method, Collection<Method>> collectPossibleMatches( Method[] queryMethods, Method[] methods ) {
+  private Map<Method, Collection<Method>> collectPossibleMatches( Method[] queryMethods, Method[] checkMethods ) {
     Map<Method, Collection<Method>> matches = new HashMap<>();
     for ( Method queryMethod : queryMethods ) {
       Collection<Method> queryMethodMatches = new ArrayList<>();
-      for ( Method checkMethod : methods ) {
+      for ( Method checkMethod : checkMethods ) {
         if ( methodMatcher.matches( checkMethod, queryMethod ) ) {
           queryMethodMatches.add( checkMethod );
         }
@@ -136,6 +142,21 @@ public class ModuleMatcher {
       matches.put( queryMethod, queryMethodMatches );
     }
     return matches;
+  }
+
+  private Map<Method, Set<MethodMatchingInfo>> collectMethodMatchingInfos( Method[] queryMethods,
+      Method[] checkMethods ) {
+    Map<Method, Set<MethodMatchingInfo>> matches = new HashMap<>();
+    for ( Method queryMethod : queryMethods ) {
+      Set<MethodMatchingInfo> matchingInfosOfQueryMethod = new HashSet<>();
+      for ( Method checkMethod : checkMethods ) {
+        Set<MethodMatchingInfo> matchingInfos = methodMatcher.calculateMatchingInfos( checkMethod, queryMethod );
+        matchingInfosOfQueryMethod.addAll( matchingInfos );
+      }
+      matches.put( queryMethod, matchingInfosOfQueryMethod );
+    }
+    return matches;
+
   }
 
   private void printPossibleMatches( Map<Method, Collection<Method>> possibleMatches ) {

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.BiFunction;
 
+import util.Permuter;
+
 /**
  * Dieser Matcher beachtet, dass die Argumenttypen der beiden Methoden in unterschiedlicher Reihenfolge angegeben sein
  * können.
@@ -43,43 +45,10 @@ public class ParamPermMethodMatcher implements MethodMatcher {
 
   private Collection<Class<?>[]> permuteAgruments( Class<?>[] originalArgumentTypes ) {
     int argumentCount = originalArgumentTypes.length;
-    int permutationCount = fractional( argumentCount );
+    int permutationCount = Permuter.fractional( argumentCount );
     Collection<Class<?>[]> permutations = new ArrayList<>( permutationCount );
-    permuteRecursive( permutationCount, originalArgumentTypes, permutations );
+    Permuter.permuteRecursive( permutationCount, originalArgumentTypes, permutations );
     return permutations;
-  }
-
-  public void permuteRecursive(
-      int n, Class<?>[] arguments, Collection<Class<?>[]> accumulator ) {
-    if ( n == 1 ) {
-      accumulator.add( arguments );
-    }
-    else {
-      for ( int i = 0; i < n - 1; i++ ) {
-        permuteRecursive( n - 1, arguments, accumulator );
-        if ( n % 2 == 0 ) {
-          swap( arguments, i, n - 1 );
-        }
-        else {
-          swap( arguments, 0, n - 1 );
-        }
-      }
-      permuteRecursive( n - 1, arguments, accumulator );
-    }
-  }
-
-  private void swap( Class<?>[] input, int a, int b ) {
-    Class<?> tmp = input[a];
-    input[a] = input[b];
-    input[b] = tmp;
-  }
-
-  private int fractional( int argumentCount ) {
-    int fractional = 1;
-    for ( int i = 1; i <= argumentCount; i++ ) {
-      fractional *= i;
-    }
-    return fractional;
   }
 
   private boolean matchesArgumentTypes( Class<?>[] argumentTypes1, Class<?>[] argumentTypes2 ) {

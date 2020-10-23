@@ -4,13 +4,19 @@ import java.util.Set;
 
 import matching.methods.MethodMatchingInfo;
 
-public class ModuleMatchingInfo {
+public class ModuleMatchingInfo<S, T> {
 
-  private Class<?> source;
+  private final Class<S> source;
 
-  private Class<?> target;
+  private final Class<T> target;
 
-  private Set<MethodMatchingInfo> methodMatchingInfos;
+  private final Set<MethodMatchingInfo> methodMatchingInfos;
+
+  public ModuleMatchingInfo( Class<S> source, Class<T> target, Set<MethodMatchingInfo> methodMatchingInfos ) {
+    this.source = source;
+    this.target = target;
+    this.methodMatchingInfos = methodMatchingInfos;
+  }
 
   /**
    * Diese Methode führt eine Bewertung hinsichtlich der Vollständigkeit bzgl. der erwünschten Methoden. Wenn das target

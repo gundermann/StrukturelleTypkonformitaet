@@ -12,4 +12,9 @@ public class MethodMatchingInfo {
   private TypeMatchingInfo returnTypeMatchingInfo;
 
   private Map<Integer, TypeMatchingInfo> argumentTypeMatchingInfos;
+
+  public MethodMatchingInfo( Method source, Method target, TypeMatchingInfo returnTypeMatchingInfo,
+      Map<Integer, TypeMatchingInfo> argumentTypeMatchingInfos ) {
+
+  }
 }

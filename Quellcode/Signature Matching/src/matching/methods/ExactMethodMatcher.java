@@ -2,7 +2,9 @@ package matching.methods;
 
 import java.lang.reflect.Method;
 import java.util.Comparator;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 public class ExactMethodMatcher implements MethodMatcher, Comparator<MethodStructure> {
 
@@ -31,6 +33,25 @@ public class ExactMethodMatcher implements MethodMatcher, Comparator<MethodStruc
 
   boolean matchesType( Class<?> t1, Class<?> t2 ) {
     return t1.equals( t2 );
+  }
+
+  @Override
+  public Set<MethodMatchingInfo> calculateMatchingInfos( Method m1, Method m2 ) {
+    // da es ein exakter Match sein muss, darf hier nur eine MethodMatchingInfo erzeugt werden
+    MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( m1, m2 );
+    Set<TypeMatchingInfo> returnTypeMatchingInfos = calculateReturnTypeMatchingInfos( m1, m2 );
+    Set<Map<Integer, TypeMatchingInfo>> argumentTypesMatchingInfos = calculateArgumentTypesMatchingInfos( m1, m2 );
+    return factory.createFromTypeMatchingInfos( returnTypeMatchingInfos, argumentTypesMatchingInfos );
+  }
+
+  Set<Map<Integer, TypeMatchingInfo>> calculateArgumentTypesMatchingInfos( Method m1, Method m2 ) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  Set<TypeMatchingInfo> calculateReturnTypeMatchingInfos( Method m1, Method m2 ) {
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }
