@@ -51,7 +51,7 @@ public class MethodMatchingInfoFactoryTest {
         argumentTypesMatchingInfos );
 
     assertThat( infos, notNullValue() );
-    assertThat( infos.size(), equalTo( 2 ) );
+    assertThat( infos.size(), equalTo( 4 ) );
     Iterator<MethodMatchingInfo> iterator = infos.iterator();
     while ( iterator.hasNext() ) {
       MethodMatchingInfo info = iterator.next();
@@ -61,12 +61,11 @@ public class MethodMatchingInfoFactoryTest {
   }
 
   @Test
-  public void createFromTypeMatchingInfos_Fail() {
+  public void createFromTypeMatchingInfos_keineErzeugtWeilEsKeinenReturnTypeGibt() {
     Method source = MethodPool.getMethod( "getOne" );
     Method target = MethodPool.getMethod( "getOneNativeWrapped" );
     MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( source, target );
-    Collection<TypeMatchingInfo<?, ?>> returnTypeMatchingInfos = new ArrayList<>( 1 );
-    returnTypeMatchingInfos.add( typeMatchingInfoFactory.create() );
+    Collection<TypeMatchingInfo<?, ?>> returnTypeMatchingInfos = new ArrayList<>( 0 );
     Collection<Map<Integer, TypeMatchingInfo<?, ?>>> argumentTypesMatchingInfos = new ArrayList<>( 2 );
     argumentTypesMatchingInfos.add( new HashMap<>() );
     argumentTypesMatchingInfos.add( new HashMap<>() );

@@ -1,6 +1,7 @@
 package matching.methods;
 
 import java.lang.reflect.Method;
+import java.util.Set;
 
 /**
  * Dieser {@link MethodMatcher} soll in der Lage sein, zwei Methoden mit einer unterschiedlichen Anzahl von Parametern
@@ -14,6 +15,12 @@ public class ContaineredArgumentMethodMatcher implements MethodMatcher {
   public boolean matches( Method m1, Method m2 ) {
     // TODO Auto-generated method stub
     return false;
+  }
+
+  @Override
+  public Set<MethodMatchingInfo> calculateMatchingInfos( Method m1, Method m2 ) {
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }

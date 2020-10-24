@@ -2,12 +2,10 @@ package matching.methods;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-
-import matching.Logger;
 
 public final class MethodMatchingInfoFactory {
 
@@ -25,24 +23,25 @@ public final class MethodMatchingInfoFactory {
     return new MethodMatchingInfo( source, target, returnTypeMatchingInfo, argumentTypeMatchingInfos );
   }
 
+  /**
+   * @param returnTypeMatchingInfos
+   *          size > 0
+   * @param argumentTypesMatchingInfos
+   *          size >= 0
+   * @return
+   */
   public Set<MethodMatchingInfo> createFromTypeMatchingInfos(
       Collection<TypeMatchingInfo<?, ?>> returnTypeMatchingInfos,
       Collection<Map<Integer, TypeMatchingInfo<?, ?>>> argumentTypesMatchingInfos ) {
     Set<MethodMatchingInfo> methodMatchingInfos = new HashSet<>();
-    if ( returnTypeMatchingInfos.size() != argumentTypesMatchingInfos.size() ) {
-      Logger.info( String.format( "different size of matchingInfos %d != %d", returnTypeMatchingInfos.size(),
-          argumentTypesMatchingInfos.size() ) );
-      return methodMatchingInfos;
+    for ( TypeMatchingInfo<?, ?> selectedRT : returnTypeMatchingInfos ) {
+      if ( argumentTypesMatchingInfos.isEmpty() ) {
+        methodMatchingInfos.add( create( selectedRT, new HashMap<Integer, TypeMatchingInfo<?, ?>>() ) );
+      }
+      for ( Map<Integer, TypeMatchingInfo<?, ?>> selectedAT : argumentTypesMatchingInfos ) {
+        methodMatchingInfos.add( create( selectedRT, selectedAT ) );
+      }
     }
-
-    Iterator<TypeMatchingInfo<?, ?>> returnTypeMIIterator = returnTypeMatchingInfos.iterator();
-    Iterator<Map<Integer, TypeMatchingInfo<?, ?>>> argumentTypesITIterator = argumentTypesMatchingInfos.iterator();
-    while ( returnTypeMIIterator.hasNext() && argumentTypesITIterator.hasNext() ) {
-      TypeMatchingInfo<?, ?> selectedRT = returnTypeMIIterator.next();
-      Map<Integer, TypeMatchingInfo<?, ?>> selectedAT = argumentTypesITIterator.next();
-      methodMatchingInfos.add( create( selectedRT, selectedAT ) );
-    }
-
     return methodMatchingInfos;
   }
 
