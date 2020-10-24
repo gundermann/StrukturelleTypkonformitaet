@@ -1,5 +1,7 @@
 package matching.methods;
 
+import java.util.function.Function;
+
 /**
  * <ul>
  * sourceAttribute == null && targetAttribute == null => S =< T
@@ -7,12 +9,27 @@ package matching.methods;
  */
 public class TypeMatchingInfo<S, T> {
 
-  private Class<S> source;
+  private final Class<S> source;
 
-  private Class<T> target;
+  private final Class<T> target;
 
-  private String sourceAttribute;
+  private final Function<S, T> sourceAttribute;
 
-  private String targetAttribute;
+  private final Function<T, S> targetAttribute;
+
+  public TypeMatchingInfo( Class<S> sourceType, Class<T> targetType ) {
+    source = sourceType;
+    target = targetType;
+    sourceAttribute = null;
+    targetAttribute = null;
+  }
+
+  public Class<?> getSource() {
+    return source;
+  }
+
+  public Class<?> getTarget() {
+    return target;
+  }
 
 }

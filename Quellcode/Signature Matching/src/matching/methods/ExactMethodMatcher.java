@@ -1,7 +1,11 @@
 package matching.methods;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -39,19 +43,31 @@ public class ExactMethodMatcher implements MethodMatcher, Comparator<MethodStruc
   public Set<MethodMatchingInfo> calculateMatchingInfos( Method m1, Method m2 ) {
     // da es ein exakter Match sein muss, darf hier nur eine MethodMatchingInfo erzeugt werden
     MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( m1, m2 );
-    Set<TypeMatchingInfo> returnTypeMatchingInfos = calculateReturnTypeMatchingInfos( m1, m2 );
-    Set<Map<Integer, TypeMatchingInfo>> argumentTypesMatchingInfos = calculateArgumentTypesMatchingInfos( m1, m2 );
+    Collection<TypeMatchingInfo<?, ?>> returnTypeMatchingInfos = calculateReturnTypeMatchingInfos( m1, m2 );
+    Collection<Map<Integer, TypeMatchingInfo<?, ?>>> argumentTypesMatchingInfos = calculateArgumentTypesMatchingInfos(
+        m1,
+        m2 );
     return factory.createFromTypeMatchingInfos( returnTypeMatchingInfos, argumentTypesMatchingInfos );
   }
 
-  Set<Map<Integer, TypeMatchingInfo>> calculateArgumentTypesMatchingInfos( Method m1, Method m2 ) {
-    // TODO Auto-generated method stub
-    return null;
+  Collection<Map<Integer, TypeMatchingInfo<?, ?>>> calculateArgumentTypesMatchingInfos( Method source, Method target ) {
+    Parameter[] sourceParameters = source.getParameters();
+    Parameter[] targetParameters = target.getParameters();
+    Map<Integer, TypeMatchingInfo<?, ?>> matchingInfoMap = new HashMap<>();
+    for ( int i = 0; i < sourceParameters.length; i++ ) {
+      Parameter sourceParameter = sourceParameters[i];
+      Parameter targetParameter = targetParameters[i];
+      TypeMatchingInfoFactory<?, ?> factory = new TypeMatchingInfoFactory<>( sourceParameter.getType(),
+          targetParameter.getType() );
+      matchingInfoMap.put( i, factory.create() );
+    }
+    return Collections.singletonList( matchingInfoMap );
   }
 
-  Set<TypeMatchingInfo> calculateReturnTypeMatchingInfos( Method m1, Method m2 ) {
-    // TODO Auto-generated method stub
-    return null;
+  Collection<TypeMatchingInfo<?, ?>> calculateReturnTypeMatchingInfos( Method source, Method target ) {
+    Class<?> sourceReturnType = source.getReturnType();
+    Class<?> targetReturnType = target.getReturnType();
+    return Collections.singletonList( new TypeMatchingInfoFactory<>( sourceReturnType, targetReturnType ).create() );
   }
 
 }

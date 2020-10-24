@@ -5,16 +5,36 @@ import java.util.Map;
 
 public class MethodMatchingInfo {
 
-  private Method source;
+  private final Method source;
 
-  private Method target;
+  private final Method target;
 
-  private TypeMatchingInfo returnTypeMatchingInfo;
+  private final TypeMatchingInfo<?, ?> returnTypeMatchingInfo;
 
-  private Map<Integer, TypeMatchingInfo> argumentTypeMatchingInfos;
+  private final Map<Integer, TypeMatchingInfo<?, ?>> argumentTypeMatchingInfos;
 
-  public MethodMatchingInfo( Method source, Method target, TypeMatchingInfo returnTypeMatchingInfo,
-      Map<Integer, TypeMatchingInfo> argumentTypeMatchingInfos ) {
-
+  public MethodMatchingInfo( Method source, Method target, TypeMatchingInfo<?, ?> returnTypeMatchingInfo,
+      Map<Integer, TypeMatchingInfo<?, ?>> argumentTypeMatchingInfos ) {
+    this.source = source;
+    this.target = target;
+    this.returnTypeMatchingInfo = returnTypeMatchingInfo;
+    this.argumentTypeMatchingInfos = argumentTypeMatchingInfos;
   }
+
+  public Method getSource() {
+    return source;
+  }
+
+  public Method getTarget() {
+    return target;
+  }
+
+  public TypeMatchingInfo<?, ?> getReturnTypeMatchingInfo() {
+    return returnTypeMatchingInfo;
+  }
+
+  public Map<Integer, TypeMatchingInfo<?, ?>> getArgumentTypeMatchingInfos() {
+    return argumentTypeMatchingInfos;
+  }
+
 }

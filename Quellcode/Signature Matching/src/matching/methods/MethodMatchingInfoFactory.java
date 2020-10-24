@@ -1,6 +1,7 @@
 package matching.methods;
 
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -19,13 +20,14 @@ public final class MethodMatchingInfoFactory {
     this.target = target;
   }
 
-  public MethodMatchingInfo create( TypeMatchingInfo returnTypeMatchingInfo,
-      Map<Integer, TypeMatchingInfo> argumentTypeMatchingInfos ) {
+  public MethodMatchingInfo create( TypeMatchingInfo<?, ?> returnTypeMatchingInfo,
+      Map<Integer, TypeMatchingInfo<?, ?>> argumentTypeMatchingInfos ) {
     return new MethodMatchingInfo( source, target, returnTypeMatchingInfo, argumentTypeMatchingInfos );
   }
 
-  public Set<MethodMatchingInfo> createFromTypeMatchingInfos( Set<TypeMatchingInfo> returnTypeMatchingInfos,
-      Set<Map<Integer, TypeMatchingInfo>> argumentTypesMatchingInfos ) {
+  public Set<MethodMatchingInfo> createFromTypeMatchingInfos(
+      Collection<TypeMatchingInfo<?, ?>> returnTypeMatchingInfos,
+      Collection<Map<Integer, TypeMatchingInfo<?, ?>>> argumentTypesMatchingInfos ) {
     Set<MethodMatchingInfo> methodMatchingInfos = new HashSet<>();
     if ( returnTypeMatchingInfos.size() != argumentTypesMatchingInfos.size() ) {
       Logger.info( String.format( "different size of matchingInfos %d != %d", returnTypeMatchingInfos.size(),
@@ -33,11 +35,11 @@ public final class MethodMatchingInfoFactory {
       return methodMatchingInfos;
     }
 
-    Iterator<TypeMatchingInfo> returnTypeMIIterator = returnTypeMatchingInfos.iterator();
-    Iterator<Map<Integer, TypeMatchingInfo>> argumentTypesITIterator = argumentTypesMatchingInfos.iterator();
+    Iterator<TypeMatchingInfo<?, ?>> returnTypeMIIterator = returnTypeMatchingInfos.iterator();
+    Iterator<Map<Integer, TypeMatchingInfo<?, ?>>> argumentTypesITIterator = argumentTypesMatchingInfos.iterator();
     while ( returnTypeMIIterator.hasNext() && argumentTypesITIterator.hasNext() ) {
-      TypeMatchingInfo selectedRT = returnTypeMIIterator.next();
-      Map<Integer, TypeMatchingInfo> selectedAT = argumentTypesITIterator.next();
+      TypeMatchingInfo<?, ?> selectedRT = returnTypeMIIterator.next();
+      Map<Integer, TypeMatchingInfo<?, ?>> selectedAT = argumentTypesITIterator.next();
       methodMatchingInfos.add( create( selectedRT, selectedAT ) );
     }
 

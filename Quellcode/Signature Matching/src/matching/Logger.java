@@ -2,7 +2,7 @@ package matching;
 
 public class Logger {
 
-  private static boolean isOn = false;
+  private static boolean isOn = true;
 
   public static void switchOn() {
     isOn = true;
