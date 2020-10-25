@@ -10,13 +10,22 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import matching.Logger;
-import matching.methods.CombinedMethodMatcher;
+import matching.methods.GenSpecMethodMatcher;
 import matching.methods.MethodMatcher;
 import matching.methods.MethodMatchingInfo;
 
-public class ModuleMatcher {
+public class ModuleMatcher<S> {
 
-  MethodMatcher methodMatcher = new CombinedMethodMatcher();
+  private final MethodMatcher methodMatcher = new GenSpecMethodMatcher();
+  // TODO das ist das Ziel - die JUnit-Tests funktionieren nur mit dem CombinedMethodMatcher:
+  // new CombinedMethodMatcher();
+
+  private final Class<S> queryType;
+
+  public ModuleMatcher( Class<S> queryType ) {
+    this.queryType = queryType;
+
+  }
 
   /**
    * @param checkType
@@ -24,12 +33,12 @@ public class ModuleMatcher {
    *          must be an interface
    * @return checkType >= queryType
    */
-  public <S, T> boolean matches( Class<T> checkType, Class<S> queryType ) {
+  public <T> boolean matches( Class<T> checkType ) {
     if ( !queryType.isInterface() ) {
       throw new RuntimeException( "Query-Type must be an interface" );
     }
     Logger.info( String.format( "%s MATCH? %s", checkType.getSimpleName(), queryType.getSimpleName() ) );
-    Method[] queryMethods = getQueryMethods( queryType );
+    Method[] queryMethods = getQueryMethods();
     Map<Method, Collection<Method>> possibleMatches = collectPossibleMatches( queryMethods, checkType.getMethods() );
     printPossibleMatches( possibleMatches );
     return possibleMatches.values().stream().noneMatch( Collection::isEmpty );
@@ -41,12 +50,12 @@ public class ModuleMatcher {
    *          must be an interface
    * @return Exists m1 checkType, m2 in queryType: m1 matches m2
    */
-  public <S, T> boolean partlyMatches( Class<T> checkType, Class<S> queryType ) {
+  public <T> boolean partlyMatches( Class<T> checkType ) {
     if ( !queryType.isInterface() ) {
       throw new RuntimeException( "Query-Type must be an interface" );
     }
     Logger.info( String.format( "%s MATCH? %s", checkType.getSimpleName(), queryType.getSimpleName() ) );
-    Method[] queryMethods = getQueryMethods( queryType );
+    Method[] queryMethods = getQueryMethods();
     Map<Method, Collection<Method>> possibleMatches = collectPossibleMatches( queryMethods, checkType.getMethods() );
     printPossibleMatches( possibleMatches );
     return possibleMatches.values().stream().anyMatch( l -> !l.isEmpty() );
@@ -59,8 +68,8 @@ public class ModuleMatcher {
    * @param queryType
    * @return
    */
-  public <S, T> Set<ModuleMatchingInfo<S, T>> calculateMatchingInfos( Class<T> checkType, Class<S> queryType ) {
-    Method[] queryMethods = getQueryMethods( queryType );
+  public <T> Set<ModuleMatchingInfo<S>> calculateMatchingInfos( Class<T> checkType ) {
+    Method[] queryMethods = getQueryMethods();
     Map<Method, Set<MethodMatchingInfo>> possibleMethodMatches = collectMethodMatchingInfos( queryMethods,
         checkType.getMethods() );
     ModuleMatchingInfoFactory<S, T> factory = new ModuleMatchingInfoFactory<>( checkType, queryType );
@@ -74,11 +83,11 @@ public class ModuleMatcher {
    *          must be an interface
    * @return matchende Methoden
    */
-  public Map<Method, Collection<Method>> getMatchingMethods( Class<?> checkType, Class<?> queryType ) {
-    if ( partlyMatches( checkType, queryType ) ) {
+  public Map<Method, Collection<Method>> getMatchingMethods( Class<?> checkType ) {
+    if ( partlyMatches( checkType ) ) {
       throw new RuntimeException( "Check-Type does not match Query-Type" );
     }
-    Method[] queryMethods = getQueryMethods( queryType );
+    Method[] queryMethods = getQueryMethods();
     Map<Method, Collection<Method>> possibleMatches = collectPossibleMatches( queryMethods, checkType.getMethods() );
     return possibleMatches;
   }
@@ -89,7 +98,7 @@ public class ModuleMatcher {
 
   // Einsicht: Das Matching mit Klassen oder Enums als Query-Typ ist etwas kompliziert. Ich beschränke mich erst einmal
   // nur auf Interfaces als Query-Typ. Das ist auch hinsichtlich meines Anwendungsfalls eher relevant.
-  private Method[] getQueryMethods( Class<?> queryType ) {
+  private Method[] getQueryMethods() {
     Method[] queryMethods = queryType.getMethods();
     return queryMethods;
   }

@@ -13,40 +13,49 @@ import matching.modules.testmodules.Interface2;
 
 public class ModuleMatcherTest {
 
-  ModuleMatcher matcher = new ModuleMatcher();
-
   @Test
   public void interface2interface_full_match() {
-    assertTrue( matcher.matches( Interface1.class, Interface2.class ) );
-    assertTrue( matcher.partlyMatches( Interface1.class, Interface2.class ) );
+    ModuleMatcher<Interface2> matcher = new ModuleMatcher<>( Interface2.class );
+    assertTrue( matcher.matches( Interface1.class ) );
+    assertTrue( matcher.partlyMatches( Interface1.class ) );
   }
 
   @Test
   public void enum2interface_full_match() {
-    assertTrue( matcher.matches( Enum1.class, Interface2.class ) );
-    assertTrue( matcher.partlyMatches( Enum1.class, Interface2.class ) );
+    ModuleMatcher<Interface2> matcher = new ModuleMatcher<>( Interface2.class );
+    assertTrue( matcher.matches( Enum1.class ) );
+    assertTrue( matcher.partlyMatches( Enum1.class ) );
   }
 
   @Test
   public void interface2interface_partly_match() {
-    assertTrue( matcher.partlyMatches( Interface2.class, Interface1.class ) );
-    assertTrue( matcher.partlyMatches( Interface1.class, Interface2.class ) );
+    ModuleMatcher<Interface1> matcher1 = new ModuleMatcher<>( Interface1.class );
+    assertTrue( matcher1.partlyMatches( Interface2.class ) );
+
+    ModuleMatcher<Interface2> matcher2 = new ModuleMatcher<>( Interface2.class );
+    assertTrue( matcher2.partlyMatches( Interface1.class ) );
   }
 
   @Test
   public void enum2interface_partly_match() {
-    assertTrue( matcher.partlyMatches( Enum1.class, Interface1.class ) );
-    assertTrue( matcher.partlyMatches( Enum2.class, Interface1.class ) );
-    assertTrue( matcher.partlyMatches( Enum1.class, Interface2.class ) );
-    assertTrue( matcher.partlyMatches( Enum2.class, Interface2.class ) );
+    ModuleMatcher<Interface1> matcher1 = new ModuleMatcher<>( Interface1.class );
+    assertTrue( matcher1.partlyMatches( Enum1.class ) );
+    assertTrue( matcher1.partlyMatches( Enum2.class ) );
+
+    ModuleMatcher<Interface2> matcher2 = new ModuleMatcher<>( Interface2.class );
+    assertTrue( matcher2.partlyMatches( Enum1.class ) );
+    assertTrue( matcher2.partlyMatches( Enum2.class ) );
   }
 
   @Test
   public void class2interface_partly_match() {
-    assertTrue( matcher.partlyMatches( Class1.class, Interface1.class ) );
-    assertTrue( matcher.partlyMatches( Class2.class, Interface1.class ) );
-    assertTrue( matcher.partlyMatches( Class1.class, Interface2.class ) );
-    assertTrue( matcher.partlyMatches( Class2.class, Interface2.class ) );
+    ModuleMatcher<Interface1> matcher1 = new ModuleMatcher<>( Interface1.class );
+    assertTrue( matcher1.partlyMatches( Class1.class ) );
+    assertTrue( matcher1.partlyMatches( Class2.class ) );
+
+    ModuleMatcher<Interface2> matcher2 = new ModuleMatcher<>( Interface2.class );
+    assertTrue( matcher2.partlyMatches( Class1.class ) );
+    assertTrue( matcher2.partlyMatches( Class2.class ) );
   }
 
 }

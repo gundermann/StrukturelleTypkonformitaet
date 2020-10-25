@@ -25,11 +25,11 @@ public class ModuleMatchingInfoFactory<S, T> {
     this.sourceType = sourceType;
   }
 
-  public ModuleMatchingInfo<S, T> create( Set<MethodMatchingInfo> methodMatchingInfos ) {
+  public ModuleMatchingInfo<S> create( Set<MethodMatchingInfo> methodMatchingInfos ) {
     return new ModuleMatchingInfo<>( sourceType, targetType, methodMatchingInfos );
   }
 
-  public Set<ModuleMatchingInfo<S, T>> createFromMethodMatchingInfos(
+  public Set<ModuleMatchingInfo<S>> createFromMethodMatchingInfos(
       Map<Method, Set<MethodMatchingInfo>> possibleMethodMatches ) {
     Set<Set<MethodMatchingInfo>> permutedMethodMatches = generateMethodMatchingCombinations(
         possibleMethodMatches );

@@ -4,15 +4,15 @@ import java.util.Set;
 
 import matching.methods.MethodMatchingInfo;
 
-public class ModuleMatchingInfo<S, T> {
+public class ModuleMatchingInfo<S> {
 
   private final Class<S> source;
 
-  private final Class<T> target;
+  private final Class<?> target;
 
   private final Set<MethodMatchingInfo> methodMatchingInfos;
 
-  public ModuleMatchingInfo( Class<S> source, Class<T> target, Set<MethodMatchingInfo> methodMatchingInfos ) {
+  public ModuleMatchingInfo( Class<S> source, Class<?> target, Set<MethodMatchingInfo> methodMatchingInfos ) {
     this.source = source;
     this.target = target;
     this.methodMatchingInfos = methodMatchingInfos;
@@ -26,7 +26,7 @@ public class ModuleMatchingInfo<S, T> {
    *
    * @return
    */
-  private int getRating() {
+  public int getRating() {
     int desiredMethodCount = source.getMethods().length;
     int matchedMethodCount = methodMatchingInfos.size();
     return matchedMethodCount / desiredMethodCount * 100;

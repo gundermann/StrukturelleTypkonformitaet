@@ -9,9 +9,9 @@ import org.junit.Test;
 
 import tester.annotation.QueryTypeInstanceSetter;
 
-public class Tester {
+class Tester {
 
-  public boolean testComponent( Object component, Collection<Class<?>> testClasses ) {
+  boolean testComponent( Object component, Collection<Class<?>> testClasses ) {
     for ( Class<?> testClass : testClasses ) {
       try {
         Object testInstance = testClass.newInstance();

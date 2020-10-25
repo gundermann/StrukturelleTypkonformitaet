@@ -5,15 +5,15 @@ import java.util.Collection;
 
 import tester.annotation.QueryTypeTestReference;
 
-public class TestFinder<T> {
+class TestFinder<T> {
 
   private Class<T> qt;
 
-  public TestFinder( Class<T> queryType ) {
+  TestFinder( Class<T> queryType ) {
     this.qt = queryType;
   }
 
-  public Collection<Class<?>> findTestClassesOfQueryType() {
+  Collection<Class<?>> findTestClassesOfQueryType() {
     Collection<Class<?>> testClasses = new ArrayList<>();
     // Die Annotation ist nur eine Übergangslösung.
     // Es funktioniert auch ohne diese Annotation, wenn der ClassLoader des queryTypes verwendet wird, um dessen Projekt
