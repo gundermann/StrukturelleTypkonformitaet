@@ -15,6 +15,8 @@ import java.util.Set;
 import org.junit.Test;
 
 import matching.methods.testmethods.MethodPool;
+import matching.types.TypeMatchingInfo;
+import matching.types.TypeMatchingInfoFactory;
 
 public class MethodMatchingInfoFactoryTest {
 

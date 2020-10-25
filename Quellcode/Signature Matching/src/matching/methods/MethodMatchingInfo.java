@@ -3,6 +3,8 @@ package matching.methods;
 import java.lang.reflect.Method;
 import java.util.Map;
 
+import matching.types.TypeMatchingInfo;
+
 public class MethodMatchingInfo {
 
   private final Method source;

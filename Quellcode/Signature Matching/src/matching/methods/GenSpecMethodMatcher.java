@@ -10,6 +10,9 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 
+import matching.types.TypeMatchingInfo;
+import matching.types.TypeMatchingInfoFactory;
+
 /**
  * Dieser Matcher achtet darauf, dass die Typen (Return- und Argumenttypen) der beiden Methoden auch Generelisierungen
  * bzw. Spezialisierungen von einander sein können.
@@ -111,6 +114,16 @@ public class GenSpecMethodMatcher implements MethodMatcher {
       if ( sourceAT.equals( targetAT ) ) {
         matchingMap.put( i, factory.create() );
       }
+      else if ( sourceAT.isAssignableFrom( targetAT ) || sourceAT.equals( Object.class ) ) {
+        // Gen: sourceAT
+        // Spec: targetAT
+        matchingMap.put( i, factory.create() );
+      }
+      else if ( targetAT.isAssignableFrom( sourceAT ) || targetAT.equals( Object.class ) ) {
+        // Gen: targetAT
+        // Spec: sourceAT
+        matchingMap.put( i, factory.create() );
+      }
     }
 
     return Collections.singletonList( matchingMap );
@@ -120,6 +133,16 @@ public class GenSpecMethodMatcher implements MethodMatcher {
       Class<?> targetRT ) {
     TypeMatchingInfoFactory<?, ?> factory = new TypeMatchingInfoFactory<>( sourceRT, targetRT );
     if ( sourceRT.equals( targetRT ) ) {
+      return Collections.singletonList( factory.create() );
+    }
+    else if ( sourceRT.isAssignableFrom( targetRT ) || sourceRT.equals( Object.class ) ) {
+      // Gen: sourceRT
+      // Spec: targetRT
+      return Collections.singletonList( factory.create() );
+    }
+    else if ( targetRT.isAssignableFrom( sourceRT ) || targetRT.equals( Object.class ) ) {
+      // Gen: targetRT
+      // Spec: sourceRT
       return Collections.singletonList( factory.create() );
     }
     return new ArrayList<>();

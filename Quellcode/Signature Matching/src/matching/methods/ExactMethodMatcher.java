@@ -10,6 +10,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import matching.types.TypeMatchingInfo;
+import matching.types.TypeMatchingInfoFactory;
+
 public class ExactMethodMatcher implements MethodMatcher, Comparator<MethodStructure> {
 
   @Override

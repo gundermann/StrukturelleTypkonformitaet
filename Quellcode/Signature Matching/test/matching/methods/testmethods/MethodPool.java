@@ -39,6 +39,8 @@ public interface MethodPool {
 
   Number addSpec( Number a, BigInteger b );
 
+  BigInteger addSpecReturnSpec( Number a, BigInteger b );
+
   public static Method getMethod( String methodName ) {
     try {
       for ( Method m : MethodPool.class.getMethods() ) {

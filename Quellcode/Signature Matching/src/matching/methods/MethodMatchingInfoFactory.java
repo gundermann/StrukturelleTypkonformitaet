@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import matching.types.TypeMatchingInfo;
+
 public final class MethodMatchingInfoFactory {
 
   private final Method source;

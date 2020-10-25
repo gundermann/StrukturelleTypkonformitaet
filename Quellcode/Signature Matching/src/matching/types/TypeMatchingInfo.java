@@ -1,4 +1,4 @@
-package matching.methods;
+package matching.types;
 
 import java.util.function.Function;
 
