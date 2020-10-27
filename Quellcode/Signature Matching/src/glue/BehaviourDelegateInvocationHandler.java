@@ -25,7 +25,9 @@ public class BehaviourDelegateInvocationHandler<T> implements InvocationHandler 
       Method targetMethod = matchingInfo.get().getTarget();
       return targetMethod.invoke( component, args );
     }
-    throw new NoSuchMethodException();
+
+    // Default-Methoden
+    return method.invoke( component, args );
   }
 
   private Optional<MethodMatchingInfo> getMethodMatchingInfo( Method method ) {
