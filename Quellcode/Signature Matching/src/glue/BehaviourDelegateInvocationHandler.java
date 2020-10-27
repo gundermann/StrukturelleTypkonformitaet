@@ -22,14 +22,14 @@ public class BehaviourDelegateInvocationHandler<T> implements InvocationHandler 
   public Object invoke( Object proxy, Method method, Object[] args ) throws Throwable {
     Optional<MethodMatchingInfo> matchingInfo = getMethodMatchingInfo( method );
     if ( matchingInfo.isPresent() ) {
-      Method targetMethod = matchingInfo.get().getSource();
+      Method targetMethod = matchingInfo.get().getTarget();
       return targetMethod.invoke( component, args );
     }
     throw new NoSuchMethodException();
   }
 
   private Optional<MethodMatchingInfo> getMethodMatchingInfo( Method method ) {
-    return matchingInfos.getMethodMatchingInfos().stream().filter( info -> info.getTarget().equals( method ) )
+    return matchingInfos.getMethodMatchingInfos().stream().filter( info -> info.getSource().equals( method ) )
         .findFirst();
   }
 

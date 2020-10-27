@@ -5,23 +5,23 @@ import java.math.BigInteger;
 public enum Enum2 {
   CONSTANT_1;
 
-  Boolean getTrue() {
+  public Boolean getTrue() {
     return true;
   }
 
-  Boolean getFalse() {
+  public Boolean getFalse() {
     return false;
   }
 
-  Integer getOne() {
+  public Integer getOne() {
     return 1;
   }
 
-  int subPartlyNativeWrapped( int a, Integer b ) {
+  public int subPartlyNativeWrapped( int a, Integer b ) {
     return a - b;
   }
 
-  int addPartlyWrapped( BigInteger a, int b ) {
+  public int addPartlyWrapped( BigInteger a, int b ) {
     return a.intValue() + b;
   }
 

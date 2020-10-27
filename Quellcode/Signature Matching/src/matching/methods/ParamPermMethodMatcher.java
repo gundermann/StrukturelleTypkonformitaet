@@ -35,6 +35,9 @@ public class ParamPermMethodMatcher implements MethodMatcher {
   boolean matchPermutedArguments( Class<?>[] sortedArgumentTypes1, Class<?>[] sortedArgumentTypes2,
       BiFunction<Class<?>[], Class<?>[], Boolean> matchingFunction ) {
     Collection<Class<?>[]> permutations = permuteAgruments( sortedArgumentTypes1 );
+    if ( permutations.isEmpty() ) {
+      return true;
+    }
     for ( Class<?>[] combination : permutations ) {
       if ( matchingFunction.apply( combination, sortedArgumentTypes2 ) ) {
         return true;
@@ -47,7 +50,9 @@ public class ParamPermMethodMatcher implements MethodMatcher {
     int argumentCount = originalArgumentTypes.length;
     int permutationCount = Permuter.fractional( argumentCount );
     Collection<Class<?>[]> permutations = new ArrayList<>( permutationCount );
-    Permuter.permuteRecursive( argumentCount, originalArgumentTypes, permutations );
+    if ( argumentCount > 0 ) {
+      Permuter.permuteRecursive( argumentCount, originalArgumentTypes, permutations );
+    }
     return permutations;
   }
 

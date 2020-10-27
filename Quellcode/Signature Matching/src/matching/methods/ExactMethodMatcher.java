@@ -17,42 +17,43 @@ import matching.modules.ModuleMatchingInfoFactory;
 public class ExactMethodMatcher implements MethodMatcher, Comparator<MethodStructure> {
 
   @Override
-  public boolean matches( Method m1, Method m2 ) {
-    MethodStructure ms1 = MethodStructure.createFromDeclaredMethod( m1 );
-    MethodStructure ms2 = MethodStructure.createFromDeclaredMethod( m2 );
-    return Objects.compare( ms1, ms2, this ) == 0;
+  public boolean matches( Method checkMethod, Method queryMethod ) {
+    MethodStructure cms1 = MethodStructure.createFromDeclaredMethod( checkMethod );
+    MethodStructure qms2 = MethodStructure.createFromDeclaredMethod( queryMethod );
+    return Objects.compare( cms1, qms2, this ) == 0;
   }
 
   @Override
-  public int compare( MethodStructure o1, MethodStructure o2 ) {
-    if ( !matchesType( o1.getReturnType(), o2.getReturnType() ) ) {
+  public int compare( MethodStructure check, MethodStructure query ) {
+    if ( !matchesType( check.getReturnType(), query.getReturnType() ) ) {
       return 1;
     }
-    if ( o1.getSortedArgumentTypes().length != o2.getSortedArgumentTypes().length ) {
+    if ( check.getSortedArgumentTypes().length != query.getSortedArgumentTypes().length ) {
       return 1;
     }
-    for ( int i = 0; i < o1.getSortedArgumentTypes().length; i++ ) {
-      if ( o1.getSortedArgumentTypes()[i] != o2.getSortedArgumentTypes()[i] ) {
+    for ( int i = 0; i < check.getSortedArgumentTypes().length; i++ ) {
+      if ( check.getSortedArgumentTypes()[i] != query.getSortedArgumentTypes()[i] ) {
         return 1;
       }
     }
     return 0;
   }
 
-  boolean matchesType( Class<?> t1, Class<?> t2 ) {
-    return t1.equals( t2 );
+  boolean matchesType( Class<?> checkType, Class<?> queryType ) {
+    return checkType.equals( queryType );
   }
 
   @Override
-  public Set<MethodMatchingInfo> calculateMatchingInfos( Method m1, Method m2 ) {
-    if ( !matches( m1, m2 ) ) {
+  public Set<MethodMatchingInfo> calculateMatchingInfos( Method checkMethod, Method queryMethod ) {
+    if ( !matches( checkMethod, queryMethod ) ) {
       return new HashSet<>();
     }
     // da es ein exakter Match sein muss, darf hier nur eine MethodMatchingInfo erzeugt werden
-    MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( m1, m2 );
-    Collection<ModuleMatchingInfo<?>> returnTypeMatchingInfos = calculateReturnTypeMatchingInfos( m1, m2 );
+    MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( checkMethod, queryMethod );
+    Collection<ModuleMatchingInfo<?>> returnTypeMatchingInfos = calculateReturnTypeMatchingInfos( checkMethod,
+        queryMethod );
     Collection<Map<Integer, ModuleMatchingInfo<?>>> argumentTypesMatchingInfos = calculateArgumentMatchingInfos(
-        m1, m2 );
+        checkMethod, queryMethod );
     return factory.createFromTypeMatchingInfos( returnTypeMatchingInfos, argumentTypesMatchingInfos );
   }
 
@@ -70,9 +71,9 @@ public class ExactMethodMatcher implements MethodMatcher, Comparator<MethodStruc
     return Collections.singletonList( matchingInfoMap );
   }
 
-  Collection<ModuleMatchingInfo<?>> calculateReturnTypeMatchingInfos( Method source, Method target ) {
-    Class<?> sourceReturnType = source.getReturnType();
-    Class<?> targetReturnType = target.getReturnType();
+  Collection<ModuleMatchingInfo<?>> calculateReturnTypeMatchingInfos( Method checkMethod, Method queryMethod ) {
+    Class<?> sourceReturnType = queryMethod.getReturnType();
+    Class<?> targetReturnType = checkMethod.getReturnType();
     return Collections
         .singletonList( new ModuleMatchingInfoFactory<>( targetReturnType, sourceReturnType ).create() );
   }

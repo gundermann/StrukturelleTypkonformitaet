@@ -16,15 +16,27 @@ import matching.methods.MethodMatchingInfo;
 
 public class ModuleMatcher<S> {
 
-  private final MethodMatcher methodMatcher = new ExactMethodMatcher();
-  // TODO das ist das Ziel - die JUnit-Tests funktionieren nur mit dem CombinedMethodMatcher:
-  // new CombinedMethodMatcher();
+  private final MethodMatcher methodMatcher;
 
   private final Class<S> queryType;
 
+  /**
+   * Nur für TestSupport
+   *
+   * @param queryType
+   * @param methodMatcher
+   */
+  ModuleMatcher( Class<S> queryType, MethodMatcher methodMatcher ) {
+    this.queryType = queryType;
+    this.methodMatcher = methodMatcher;
+
+  }
+
   public ModuleMatcher( Class<S> queryType ) {
     this.queryType = queryType;
-
+    this.methodMatcher = new ExactMethodMatcher();
+    // TODO das ist das Ziel - die JUnit-Tests funktionieren nur mit dem CombinedMethodMatcher:
+    // new CombinedMethodMatcher();
   }
 
   /**
@@ -78,20 +90,20 @@ public class ModuleMatcher<S> {
 
   }
 
-  /**
-   * @param checkType
-   * @param queryType
-   *          must be an interface
-   * @return matchende Methoden
-   */
-  public Map<Method, Collection<Method>> getMatchingMethods( Class<?> checkType ) {
-    if ( partlyMatches( checkType ) ) {
-      throw new RuntimeException( "Check-Type does not match Query-Type" );
-    }
-    Method[] queryMethods = getQueryMethods();
-    Map<Method, Collection<Method>> possibleMatches = collectPossibleMatches( queryMethods, checkType.getMethods() );
-    return possibleMatches;
-  }
+  // /**
+  // * @param checkType
+  // * @param queryType
+  // * must be an interface
+  // * @return matchende Methoden
+  // */
+  // public Map<Method, Collection<Method>> getMatchingMethods( Class<?> checkType ) {
+  // if ( partlyMatches( checkType ) ) {
+  // throw new RuntimeException( "Check-Type does not match Query-Type" );
+  // }
+  // Method[] queryMethods = getQueryMethods();
+  // Map<Method, Collection<Method>> possibleMatches = collectPossibleMatches( queryMethods, checkType.getMethods() );
+  // return possibleMatches;
+  // }
 
   // Hier müssen alle Methoden der Klasse Object herausgefiltert werden, weil:
   // 1. ohnehin alle Objekte mit diesen Methoden umgehen könne
@@ -103,42 +115,6 @@ public class ModuleMatcher<S> {
     Method[] queryMethods = queryType.getMethods();
     return queryMethods;
   }
-  // Method[] irrelevantMethods = getIrrelevantMethods( Object.class.getMethods() );
-  // int relevantMethodsCount = queryType.length - irrelevantMethods.length;
-  // if ( relevantMethodsCount < 0 ) {
-  // return queryType;
-  // }
-  // Method[] relevantMethods = new Method[relevantMethodsCount];
-  // int currentIndex = 0;
-  // for ( Method m : queryType ) {
-  // if ( !containsEqualMethod( irrelevantMethods, m ) ) {
-  // relevantMethods[currentIndex] = m;
-  // currentIndex++;
-  // }
-  // }
-  // return relevantMethods;
-  // }
-  //
-  // private boolean containsEqualMethod( Method[] irrelevantMethods, Method m ) {
-  // for ( Method irrelevantMethod : irrelevantMethods ) {
-  // String name = irrelevantMethod.getName();
-  // if ( !name.equals( m.getName() ) ) {
-  // continue;
-  // }
-  // Class<?> returnType = irrelevantMethod.getReturnType();
-  // if ( returnType.equals( m.getReturnType() ) ) {
-  // continue;
-  // }
-  // Class<?>[] parameterTypes = irrelevantMethod.getParameterTypes();
-  // for ( int i = 0; i < parameterTypes.length; i++ ) {
-  // if ( !parameterTypes[i].equals( m.getParameterTypes()[i] ) ) {
-  // continue;
-  // }
-  // }
-  // return true;
-  // }
-  // return false;
-  // }
 
   private Map<Method, Collection<Method>> collectPossibleMatches( Method[] queryMethods, Method[] checkMethods ) {
     Map<Method, Collection<Method>> matches = new HashMap<>();

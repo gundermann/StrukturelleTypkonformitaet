@@ -5,7 +5,7 @@ import java.util.Set;
 
 public interface MethodMatcher {
 
-  boolean matches( Method m1, Method m2 );
+  boolean matches( Method checkMethod, Method queryMethod );
 
-  Set<MethodMatchingInfo> calculateMatchingInfos( Method m1, Method m2 );
+  Set<MethodMatchingInfo> calculateMatchingInfos( Method checkMethod, Method queryMethod );
 }

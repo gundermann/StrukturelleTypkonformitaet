@@ -15,9 +15,9 @@ public final class MethodMatchingInfoFactory {
 
   private final Method target;
 
-  public MethodMatchingInfoFactory( Method source, Method target ) {
-    this.source = source;
+  public MethodMatchingInfoFactory( Method target, Method source ) {
     this.target = target;
+    this.source = source;
   }
 
   public MethodMatchingInfo create( ModuleMatchingInfo<?> returnTypeMatchingInfo,
