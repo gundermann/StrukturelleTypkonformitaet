@@ -11,6 +11,7 @@ public class ComponentTester<S> {
   }
 
   public <T> boolean testComponent( T component ) {
+    System.out.println( String.format( "test component: %s", component.getClass().getName() ) );
     TestFinder<S> testFinder = new TestFinder<>( queryType );
     Collection<Class<?>> testClasses = testFinder.findTestClassesOfQueryType();
     if ( testClasses.isEmpty() ) {

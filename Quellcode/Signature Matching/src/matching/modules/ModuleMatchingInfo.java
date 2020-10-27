@@ -27,8 +27,14 @@ public class ModuleMatchingInfo<S> {
    * @return
    */
   public int getRating() {
+    // Der Algorithmus muss noch angepasst werden!!!!
     int desiredMethodCount = source.getMethods().length;
     int matchedMethodCount = methodMatchingInfos.size();
     return matchedMethodCount / desiredMethodCount * 100;
   }
+
+  public Set<MethodMatchingInfo> getMethodMatchingInfos() {
+    return methodMatchingInfos;
+  }
+
 }

@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -44,6 +45,9 @@ public class ExactMethodMatcher implements MethodMatcher, Comparator<MethodStruc
 
   @Override
   public Set<MethodMatchingInfo> calculateMatchingInfos( Method m1, Method m2 ) {
+    if ( !matches( m1, m2 ) ) {
+      return new HashSet<>();
+    }
     // da es ein exakter Match sein muss, darf hier nur eine MethodMatchingInfo erzeugt werden
     MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( m1, m2 );
     Collection<TypeMatchingInfo<?, ?>> returnTypeMatchingInfos = calculateReturnTypeMatchingInfos( m1, m2 );

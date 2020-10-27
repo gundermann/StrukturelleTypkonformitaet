@@ -4,5 +4,8 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="C:/Users/ngundermann/Desktop/MA/Repo/StrukturelleTypkonformitaet/Quellcode/Signature Matching/lib/easymock-3.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/ngundermann/Desktop/MA/Repo/StrukturelleTypkonformitaet/Quellcode/Signature Matching/lib/cglib-nodep-3.3.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/ngundermann/Desktop/MA/Repo/StrukturelleTypkonformitaet/Quellcode/Signature Matching/lib/objenesis-3.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

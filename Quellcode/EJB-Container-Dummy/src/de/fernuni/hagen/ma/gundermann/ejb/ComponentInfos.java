@@ -7,22 +7,21 @@ import matching.modules.ModuleMatchingInfo;
 
 public class ComponentInfos<S> {
 
-  private Set<ModuleMatchingInfo<S>> moduleMatchingInfos = new HashSet<>();
-
   private Class<?> componentClass;
 
-  private Set<ModuleMatchingInfo<S>> matchingInfos;
+  private Set<ModuleMatchingInfo<S>> matchingInfos = new HashSet<>();
 
   public ComponentInfos( Class<?> componentClass ) {
     this.componentClass = componentClass;
   }
 
   int getRank() {
-    return moduleMatchingInfos.stream().map( ModuleMatchingInfo::getRating ).max( Integer::compare ).orElse( 0 );
+    return matchingInfos.stream().map( ModuleMatchingInfo::getRating ).max( Integer::compare ).orElse( 0 );
   }
 
   public void setModuleMatchingInfos( Set<ModuleMatchingInfo<S>> matchingInfos ) {
-    this.matchingInfos = matchingInfos;
+    this.matchingInfos.clear();
+    this.matchingInfos.addAll( matchingInfos );
 
   }
 

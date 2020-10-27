@@ -2,12 +2,12 @@ package matching.methods;
 
 import java.lang.reflect.Method;
 
-class MethodStructure {
+public class MethodStructure {
   private final Class<?> returnType;
 
   private final Class<?>[] sortedArgumentTypes;
 
-  static MethodStructure createFromDeclaredMethod( Method method ) {
+  public static MethodStructure createFromDeclaredMethod( Method method ) {
     return new MethodStructure( method.getReturnType(), method.getParameterTypes() );
   }
 

@@ -13,7 +13,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import glue.StructureBySignatureTypeConverter;
+import DE.data_experts.profi.profilcs.antrag2015.eler.ft.stammdaten.ejb.ElerFTStammdatenAuskunftService;
+import glue.SignatureMatchingTypeConverter;
 import matching.modules.ModuleMatcher;
 import matching.modules.ModuleMatchingInfo;
 import tester.ComponentTester;
@@ -58,12 +59,16 @@ public enum EJBContainer {
     } );
   }
 
+  private Collection<?> getBeans( Class<?> componentClass ) {
+    return containerMap.get( componentClass );
+  }
+
   public <DesiredInterface> DesiredInterface getDesiredBean(
       Class<DesiredInterface> desiredInterface ) {
     Collection<Class<?>> matchingBeanInterfaces = findBeansBySignatureMatching( desiredInterface );
-    System.out.println( "Matching Bean-Interfaces of " + desiredInterface.getName() );
-    matchingBeanInterfaces.stream().map( Class::getName ).forEach( System.out::println );
-    System.out.println( String.format( "count: %d", matchingBeanInterfaces.size() ) );
+    // System.out.println( "Matching Bean-Interfaces of " + desiredInterface.getName() );
+    // matchingBeanInterfaces.stream().map( Class::getName ).forEach( System.out::println );
+    // System.out.println( String.format( "count: %d", matchingBeanInterfaces.size() ) );
 
     // Hier können weitere Filter und Heuristiken eingebaut werden
 
@@ -74,8 +79,12 @@ public enum EJBContainer {
       Class<DesiredInterface> desiredInterface, Collection<Class<?>> matchingBeanInterfaces ) {
     Set<ComponentInfos<DesiredInterface>> rankedComponentInfos = getSortedModuleMatchingInfos( desiredInterface,
         matchingBeanInterfaces );
+    System.out.println( String.format( "ranking of relevant components" ) );
+    rankedComponentInfos.stream().forEach( c -> System.out
+        .println( String.format( "rank: %d component: %s", c.getRank(), c.getComponentClass().getName() ) ) );
     List<ComponentInfos<DesiredInterface>> fullMatchedComponents = rankedComponentInfos.stream()
-        .filter( c -> c.getRank() == 100 ).collect( Collectors.toList() );
+        .filter( c -> c.getRank() >= 100 // !!! Achtung: Das Ranking muss angepasst werden !!!
+        ).collect( Collectors.toList() );
     if ( !fullMatchedComponents.isEmpty() ) {
       DesiredInterface component = getFullMatchedTestedComponent( fullMatchedComponents, desiredInterface );
       if ( component != null ) {
@@ -88,25 +97,22 @@ public enum EJBContainer {
 
   private <DesiredInterface> DesiredInterface getFullMatchedTestedComponent(
       List<ComponentInfos<DesiredInterface>> fullMatchedComponents, Class<DesiredInterface> desiredInterface ) {
-    StructureBySignatureTypeConverter<DesiredInterface> converter = new StructureBySignatureTypeConverter<>(
+    SignatureMatchingTypeConverter<DesiredInterface> converter = new SignatureMatchingTypeConverter<>(
         desiredInterface );
     ComponentTester<DesiredInterface> componentTester = new ComponentTester<>( desiredInterface );
 
     for ( ComponentInfos<DesiredInterface> componentInfo : fullMatchedComponents ) {
       Class<?> componentClass = componentInfo.getComponentClass();
-      Object component = getEJB( componentClass );
+      Collection<?> components = getBeans( componentClass );
       for ( ModuleMatchingInfo<DesiredInterface> matchingInfo : componentInfo.getMatchingInfos() ) {
-        DesiredInterface convertedComponent = converter.convertStructural( component, matchingInfo );
-        if ( componentTester.testComponent( convertedComponent ) ) {
-          return convertedComponent;
+        for ( Object component : components ) {
+          DesiredInterface convertedComponent = converter.convert( component, matchingInfo );
+          if ( componentTester.testComponent( convertedComponent ) ) {
+            return convertedComponent;
+          }
         }
       }
     }
-    return null;
-  }
-
-  private Object getEJB( Class<?> componentClass ) {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -115,6 +121,9 @@ public enum EJBContainer {
     List<ComponentInfos<DesiredInterface>> componentInfoSet = new ArrayList<>();
     ModuleMatcher<DesiredInterface> moduleMatcher = new ModuleMatcher<>( desiredInterface );
     for ( Class<?> matchingBeanInterface : matchingBeanInterfaces ) {
+      if ( matchingBeanInterface.equals( ElerFTStammdatenAuskunftService.class ) ) {
+        System.out.println( "hwg" );
+      }
       Set<ModuleMatchingInfo<DesiredInterface>> matchingInfos = moduleMatcher
           .calculateMatchingInfos( matchingBeanInterface );
       ComponentInfos<DesiredInterface> componentInfos = new ComponentInfos<>( matchingBeanInterface );
@@ -136,10 +145,10 @@ public enum EJBContainer {
       // }
       boolean matchesFull = moduleMatcher.matches( beanInterfaces );
       if ( !matchesFull ) {
-        boolean partlyMatches = moduleMatcher.partlyMatches( beanInterfaces );
-        if ( !partlyMatches ) {
-          continue;
-        }
+        // boolean partlyMatches = moduleMatcher.partlyMatches( beanInterfaces );
+        // if ( !partlyMatches ) {
+        continue;
+        // }
       }
       matchedBeans.add( beanInterfaces );
     }

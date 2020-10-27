@@ -1,9 +1,6 @@
 package matching.modules;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -12,7 +9,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import matching.methods.MethodMatchingInfo;
-import util.Permuter;
 
 public class ModuleMatchingInfoFactory<S, T> {
 
@@ -38,33 +34,31 @@ public class ModuleMatchingInfoFactory<S, T> {
 
   private Set<Set<MethodMatchingInfo>> generateMethodMatchingCombinations(
       Map<Method, Set<MethodMatchingInfo>> possibleMethodMatches ) {
-    Set<Set<MethodMatchingInfo>> permutedValues = new HashSet<>();
-    // Kopie der ursprünglichen Map erstellen
-    Map<Method, Set<MethodMatchingInfo>> localMethodMatches = new HashMap<>( possibleMethodMatches );
+    Set<Set<MethodMatchingInfo>> combinations = new HashSet<>();
     // erste Methode holen
     Iterator<Method> iterator = possibleMethodMatches.keySet().iterator();
     if ( !iterator.hasNext() ) {
       // keine Methode mehr übrig
-      return permutedValues;
+      return combinations;
     }
     Method selectedMethod = iterator.next();
     // possibleMethodMatches abbauen
+    // Kopie der ursprünglichen Map erstellen
+    Map<Method, Set<MethodMatchingInfo>> localMethodMatches = new HashMap<>( possibleMethodMatches );
     Set<MethodMatchingInfo> selectedMethodMatches = localMethodMatches.remove( selectedMethod );
-    // selektierte Matches permutieren
-    Collection<MethodMatchingInfo[]> permutations = new ArrayList<>();
-    int permutationCount = Permuter.fractional( selectedMethodMatches.size() );
-    Permuter.permuteRecursive( permutationCount, selectedMethodMatches.toArray( new MethodMatchingInfo[] {} ),
-        permutations );
-
-    // ueber Permutationen iterieren
-    for ( MethodMatchingInfo[] permutationItem : permutations ) {
-      Set<Set<MethodMatchingInfo>> valuePermutationsWithoutSelected = generateMethodMatchingCombinations(
-          localMethodMatches );
-      for ( Set<MethodMatchingInfo> permutationWithoutSelected : valuePermutationsWithoutSelected ) {
-        permutationWithoutSelected.addAll( Arrays.asList( permutationItem ) );
-        permutedValues.add( permutationWithoutSelected );
+    for ( MethodMatchingInfo info : selectedMethodMatches ) {
+      Set<Set<MethodMatchingInfo>> otherCombinations = generateMethodMatchingCombinations( localMethodMatches );
+      if ( otherCombinations.isEmpty() ) {
+        Set<MethodMatchingInfo> singleInfos = new HashSet<>();
+        singleInfos.add( info );
+        combinations.add( singleInfos );
+        continue;
       }
+      for ( Set<MethodMatchingInfo> otherInfos : otherCombinations ) {
+        otherInfos.add( info );
+      }
+      combinations.addAll( otherCombinations );
     }
-    return permutedValues;
+    return combinations;
   }
 }

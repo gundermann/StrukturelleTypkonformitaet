@@ -1,5 +1,6 @@
 package de.fernuni.hagen.ma.gundermann.ejb.beanimplementations;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
@@ -66,8 +67,7 @@ public class EftSTDAuskunftImpl implements ElerFTStammdatenAuskunftService {
 
   @Override
   public Collection<ElerFTFoerderprogramm> getAlleFreigegebenenFoerderprogramme() {
-    // TODO Auto-generated method stub
-    return null;
+    return new ArrayList<>();
   }
 
   @Override

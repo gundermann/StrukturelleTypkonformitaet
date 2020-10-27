@@ -47,7 +47,7 @@ public class ParamPermMethodMatcher implements MethodMatcher {
     int argumentCount = originalArgumentTypes.length;
     int permutationCount = Permuter.fractional( argumentCount );
     Collection<Class<?>[]> permutations = new ArrayList<>( permutationCount );
-    Permuter.permuteRecursive( permutationCount, originalArgumentTypes, permutations );
+    Permuter.permuteRecursive( argumentCount, originalArgumentTypes, permutations );
     return permutations;
   }
 

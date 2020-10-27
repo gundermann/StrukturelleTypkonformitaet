@@ -1,6 +1,6 @@
 package de.fernuni.hagen.ma.gundermann.ejb.desiredinterfaces.tests;
 
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 import java.util.Collection;

@@ -10,13 +10,13 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import matching.Logger;
-import matching.methods.GenSpecMethodMatcher;
+import matching.methods.ExactMethodMatcher;
 import matching.methods.MethodMatcher;
 import matching.methods.MethodMatchingInfo;
 
 public class ModuleMatcher<S> {
 
-  private final MethodMatcher methodMatcher = new GenSpecMethodMatcher();
+  private final MethodMatcher methodMatcher = new ExactMethodMatcher();
   // TODO das ist das Ziel - die JUnit-Tests funktionieren nur mit dem CombinedMethodMatcher:
   // new CombinedMethodMatcher();
 
@@ -70,8 +70,9 @@ public class ModuleMatcher<S> {
    */
   public <T> Set<ModuleMatchingInfo<S>> calculateMatchingInfos( Class<T> checkType ) {
     Method[] queryMethods = getQueryMethods();
+    Map<Method, Collection<Method>> possibleMatches = collectPossibleMatches( queryMethods, checkType.getMethods() );
     Map<Method, Set<MethodMatchingInfo>> possibleMethodMatches = collectMethodMatchingInfos( queryMethods,
-        checkType.getMethods() );
+        possibleMatches );
     ModuleMatchingInfoFactory<S, T> factory = new ModuleMatchingInfoFactory<>( checkType, queryType );
     return factory.createFromMethodMatchingInfos( possibleMethodMatches );
 
@@ -154,11 +155,11 @@ public class ModuleMatcher<S> {
   }
 
   private Map<Method, Set<MethodMatchingInfo>> collectMethodMatchingInfos( Method[] queryMethods,
-      Method[] checkMethods ) {
+      Map<Method, Collection<Method>> possibleMatches ) {
     Map<Method, Set<MethodMatchingInfo>> matches = new HashMap<>();
     for ( Method queryMethod : queryMethods ) {
       Set<MethodMatchingInfo> matchingInfosOfQueryMethod = new HashSet<>();
-      for ( Method checkMethod : checkMethods ) {
+      for ( Method checkMethod : possibleMatches.get( queryMethod ) ) {
         Set<MethodMatchingInfo> matchingInfos = methodMatcher.calculateMatchingInfos( checkMethod, queryMethod );
         matchingInfosOfQueryMethod.addAll( matchingInfos );
       }
