@@ -11,7 +11,7 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import matching.types.TypeMatchingInfo;
+import matching.modules.ModuleMatchingInfo;
 
 public class GenSpecMethodMatcherMatchingInfosTest {
 
@@ -104,10 +104,10 @@ public class GenSpecMethodMatcherMatchingInfosTest {
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 1 ) );
     matchingInfos.forEach( info -> {
-      TypeMatchingInfo<?, ?> returnTypeMatchingInfo = info.getReturnTypeMatchingInfo();
+      ModuleMatchingInfo<?> returnTypeMatchingInfo = info.getReturnTypeMatchingInfo();
       assertThat( returnTypeMatchingInfo, notNullValue() );
       assertThat( returnTypeMatchingInfo.getSource(), equalTo( sourceMethod.getReturnType() ) );
-      Map<Integer, TypeMatchingInfo<?, ?>> argumentTypeMatchingInfos = info.getArgumentTypeMatchingInfos();
+      Map<Integer, ModuleMatchingInfo<?>> argumentTypeMatchingInfos = info.getArgumentTypeMatchingInfos();
       assertThat( argumentTypeMatchingInfos, notNullValue() );
       assertThat( argumentTypeMatchingInfos.size(), equalTo( 2 ) );
       int index = 0;
@@ -154,10 +154,10 @@ public class GenSpecMethodMatcherMatchingInfosTest {
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 1 ) );
     matchingInfos.forEach( info -> {
-      TypeMatchingInfo<?, ?> returnTypeMatchingInfo = info.getReturnTypeMatchingInfo();
+      ModuleMatchingInfo<?> returnTypeMatchingInfo = info.getReturnTypeMatchingInfo();
       assertThat( returnTypeMatchingInfo, notNullValue() );
       assertThat( returnTypeMatchingInfo.getSource(), equalTo( sourceMethod.getReturnType() ) );
-      Map<Integer, TypeMatchingInfo<?, ?>> argumentTypeMatchingInfos = info.getArgumentTypeMatchingInfos();
+      Map<Integer, ModuleMatchingInfo<?>> argumentTypeMatchingInfos = info.getArgumentTypeMatchingInfos();
       assertThat( argumentTypeMatchingInfos, notNullValue() );
       assertThat( argumentTypeMatchingInfos.size(), equalTo( 2 ) );
       int index = 0;
@@ -201,10 +201,10 @@ public class GenSpecMethodMatcherMatchingInfosTest {
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 1 ) );
     matchingInfos.forEach( info -> {
-      TypeMatchingInfo<?, ?> returnTypeMatchingInfo = info.getReturnTypeMatchingInfo();
+      ModuleMatchingInfo<?> returnTypeMatchingInfo = info.getReturnTypeMatchingInfo();
       assertThat( returnTypeMatchingInfo, notNullValue() );
       assertThat( returnTypeMatchingInfo.getSource(), equalTo( sourceMethod.getReturnType() ) );
-      Map<Integer, TypeMatchingInfo<?, ?>> argumentTypeMatchingInfos = info.getArgumentTypeMatchingInfos();
+      Map<Integer, ModuleMatchingInfo<?>> argumentTypeMatchingInfos = info.getArgumentTypeMatchingInfos();
       assertThat( argumentTypeMatchingInfos, notNullValue() );
       assertThat( argumentTypeMatchingInfos.size(), equalTo( 2 ) );
       int index = 0;

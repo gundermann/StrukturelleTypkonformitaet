@@ -37,4 +37,12 @@ public class ModuleMatchingInfo<S> {
     return methodMatchingInfos;
   }
 
+  public Class<S> getSource() {
+    return source;
+  }
+
+  public Class<?> getTarget() {
+    return target;
+  }
+
 }

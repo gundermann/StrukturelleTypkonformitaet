@@ -45,35 +45,29 @@ public class ExactMethodMatcherMatchingInfosTest {
 
   @Test
   public void test3() {
-    // Auch wenn die beiden hinsichtlich des Matchers nicht übereinstimmen, kommt es hier zu einem Ergebnis.
-    // Es wird nämlich nicht nocheinmal geprüft, ob die Typen matchen
     Method sourceMethod = getMethod( "getTrue" );
     Method targetMethod = getMethod( "getOne" );
     Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( sourceMethod, targetMethod );
     assertThat( matchingInfos, notNullValue() );
-    assertThat( matchingInfos.size(), equalTo( 1 ) );
+    assertThat( matchingInfos.size(), equalTo( 0 ) );
   }
 
   @Test
   public void test4() {
-    // Auch wenn die beiden hinsichtlich des Matchers nicht übereinstimmen, kommt es hier zu einem Ergebnis.
-    // Es wird nämlich nicht nocheinmal geprüft, ob die Typen matchen
     Method sourceMethod = getMethod( "getOneNativeWrapped" );
     Method targetMethod = getMethod( "getOne" );
     Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( sourceMethod, targetMethod );
     assertThat( matchingInfos, notNullValue() );
-    assertThat( matchingInfos.size(), equalTo( 1 ) );
+    assertThat( matchingInfos.size(), equalTo( 0 ) );
   }
 
   @Test
   public void test5() {
-    // Auch wenn die beiden hinsichtlich des Matchers nicht übereinstimmen, kommt es hier zu einem Ergebnis.
-    // Es wird nämlich nicht nocheinmal geprüft, ob die Typen matchen
     Method sourceMethod = getMethod( "setBool" );
     Method targetMethod = getMethod( "setBoolNativeWrapped" );
     Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( sourceMethod, targetMethod );
     assertThat( matchingInfos, notNullValue() );
-    assertThat( matchingInfos.size(), equalTo( 1 ) );
+    assertThat( matchingInfos.size(), equalTo( 0 ) );
   }
 
   @Test
@@ -120,41 +114,33 @@ public class ExactMethodMatcherMatchingInfosTest {
 
   @Test
   public void test8() {
-    // Auch wenn die beiden hinsichtlich des Matchers nicht übereinstimmen, kommt es hier zu einem Ergebnis.
-    // Es wird nämlich nicht nocheinmal geprüft, ob die Typen matchen
     Method sourceMethod = getMethod( "addPartlyNativeWrapped" );
     Method targetMethod = getMethod( "subPartlyNativeWrapped" );
     Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( sourceMethod, targetMethod );
     assertThat( matchingInfos, notNullValue() );
-    assertThat( matchingInfos.size(), equalTo( 1 ) );
+    assertThat( matchingInfos.size(), equalTo( 0 ) );
   }
 
   @Test
   public void test9() {
-    // Auch wenn die beiden hinsichtlich des Matchers nicht übereinstimmen, kommt es hier zu einem Ergebnis.
-    // Es wird nämlich nicht nocheinmal geprüft, ob die Typen matchen
     Method sourceMethod = getMethod( "addPartlyWrapped" );
     Method targetMethod = getMethod( "subPartlyWrapped" );
     Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( sourceMethod, targetMethod );
     assertThat( matchingInfos, notNullValue() );
-    assertThat( matchingInfos.size(), equalTo( 1 ) );
+    assertThat( matchingInfos.size(), equalTo( 0 ) );
   }
 
   @Test
   public void test10() {
-    // Auch wenn die beiden hinsichtlich des Matchers nicht übereinstimmen, kommt es hier zu einem Ergebnis.
-    // Es wird nämlich nicht nocheinmal geprüft, ob die Typen matchen
     Method sourceMethod = getMethod( "addSpec" );
     Method targetMethod = getMethod( "addGen" );
     Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( sourceMethod, targetMethod );
     assertThat( matchingInfos, notNullValue() );
-    assertThat( matchingInfos.size(), equalTo( 1 ) );
+    assertThat( matchingInfos.size(), equalTo( 0 ) );
   }
 
-  @Test( expected = ArrayIndexOutOfBoundsException.class )
+  @Test( )
   public void test11() {
-    // Dieser Test ist interessant, weil hier unterschiedliche Anzahlen von Parametern verwendet werden.
-    // Das Ergebnis sollte hier wirklich eine Exception sein
     Method sourceMethod = getMethod( "addSpec" );
     Method targetMethod = getMethod( "getTrue" );
     Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( sourceMethod, targetMethod );

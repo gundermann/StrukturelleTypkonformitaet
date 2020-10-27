@@ -1,5 +1,6 @@
 package matching.types;
 
+@Deprecated
 public class TypeMatchingInfoFactory<S, T> {
 
   private final Class<S> sourceType;

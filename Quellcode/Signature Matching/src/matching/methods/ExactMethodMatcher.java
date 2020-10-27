@@ -11,8 +11,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import matching.types.TypeMatchingInfo;
-import matching.types.TypeMatchingInfoFactory;
+import matching.modules.ModuleMatchingInfo;
+import matching.modules.ModuleMatchingInfoFactory;
 
 public class ExactMethodMatcher implements MethodMatcher, Comparator<MethodStructure> {
 
@@ -50,31 +50,31 @@ public class ExactMethodMatcher implements MethodMatcher, Comparator<MethodStruc
     }
     // da es ein exakter Match sein muss, darf hier nur eine MethodMatchingInfo erzeugt werden
     MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( m1, m2 );
-    Collection<TypeMatchingInfo<?, ?>> returnTypeMatchingInfos = calculateReturnTypeMatchingInfos( m1, m2 );
-    Collection<Map<Integer, TypeMatchingInfo<?, ?>>> argumentTypesMatchingInfos = calculateArgumentTypesMatchingInfos(
-        m1,
-        m2 );
+    Collection<ModuleMatchingInfo<?>> returnTypeMatchingInfos = calculateReturnTypeMatchingInfos( m1, m2 );
+    Collection<Map<Integer, ModuleMatchingInfo<?>>> argumentTypesMatchingInfos = calculateArgumentMatchingInfos(
+        m1, m2 );
     return factory.createFromTypeMatchingInfos( returnTypeMatchingInfos, argumentTypesMatchingInfos );
   }
 
-  Collection<Map<Integer, TypeMatchingInfo<?, ?>>> calculateArgumentTypesMatchingInfos( Method source, Method target ) {
+  Collection<Map<Integer, ModuleMatchingInfo<?>>> calculateArgumentMatchingInfos( Method source, Method target ) {
     Parameter[] sourceParameters = source.getParameters();
     Parameter[] targetParameters = target.getParameters();
-    Map<Integer, TypeMatchingInfo<?, ?>> matchingInfoMap = new HashMap<>();
+    Map<Integer, ModuleMatchingInfo<?>> matchingInfoMap = new HashMap<>();
     for ( int i = 0; i < sourceParameters.length; i++ ) {
       Parameter sourceParameter = sourceParameters[i];
       Parameter targetParameter = targetParameters[i];
-      TypeMatchingInfoFactory<?, ?> factory = new TypeMatchingInfoFactory<>( sourceParameter.getType(),
-          targetParameter.getType() );
+      ModuleMatchingInfoFactory<?, ?> factory = new ModuleMatchingInfoFactory<>(
+          targetParameter.getType(), sourceParameter.getType() );
       matchingInfoMap.put( i, factory.create() );
     }
     return Collections.singletonList( matchingInfoMap );
   }
 
-  Collection<TypeMatchingInfo<?, ?>> calculateReturnTypeMatchingInfos( Method source, Method target ) {
+  Collection<ModuleMatchingInfo<?>> calculateReturnTypeMatchingInfos( Method source, Method target ) {
     Class<?> sourceReturnType = source.getReturnType();
     Class<?> targetReturnType = target.getReturnType();
-    return Collections.singletonList( new TypeMatchingInfoFactory<>( sourceReturnType, targetReturnType ).create() );
+    return Collections
+        .singletonList( new ModuleMatchingInfoFactory<>( targetReturnType, sourceReturnType ).create() );
   }
 
 }

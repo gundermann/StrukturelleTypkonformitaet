@@ -7,6 +7,8 @@ import java.util.function.Function;
  * sourceAttribute == null && targetAttribute == null => S =< T
  * </ul>
  */
+// Idee: Kann anstelle der TypeMatchingInfo nicht einfach die ModuleMatchingInfo verwendet werden?
+@Deprecated
 public class TypeMatchingInfo<S, T> {
 
   private final Class<S> source;

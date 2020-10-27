@@ -10,8 +10,8 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 
-import matching.types.TypeMatchingInfo;
-import matching.types.TypeMatchingInfoFactory;
+import matching.modules.ModuleMatchingInfo;
+import matching.modules.ModuleMatchingInfoFactory;
 
 /**
  * Dieser Matcher achtet darauf, dass die Typen (Return- und Argumenttypen) der beiden Methoden auch Generelisierungen
@@ -97,20 +97,20 @@ public class GenSpecMethodMatcher implements MethodMatcher {
     MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( source, target );
     MethodStructure sourceStruct = MethodStructure.createFromDeclaredMethod( source );
     MethodStructure targetStruct = MethodStructure.createFromDeclaredMethod( target );
-    Collection<TypeMatchingInfo<?, ?>> returnTypeMatchingInfos = calculateReturnTypeMatchingInfos(
+    Collection<ModuleMatchingInfo<?>> returnTypeMatchingInfos = calculateReturnTypeMatchingInfos(
         sourceStruct.getReturnType(), targetStruct.getReturnType() );
-    Collection<Map<Integer, TypeMatchingInfo<?, ?>>> argumentTypesMatchingInfos = calculateArgumentTypesMatchingInfos(
+    Collection<Map<Integer, ModuleMatchingInfo<?>>> argumentTypesMatchingInfos = calculateArgumentTypesMatchingInfos(
         sourceStruct.getSortedArgumentTypes(), targetStruct.getSortedArgumentTypes() );
     return factory.createFromTypeMatchingInfos( returnTypeMatchingInfos, argumentTypesMatchingInfos );
   }
 
-  private Collection<Map<Integer, TypeMatchingInfo<?, ?>>> calculateArgumentTypesMatchingInfos(
+  private Collection<Map<Integer, ModuleMatchingInfo<?>>> calculateArgumentTypesMatchingInfos(
       Class<?>[] sourceATs, Class<?>[] targetATs ) {
-    Map<Integer, TypeMatchingInfo<?, ?>> matchingMap = new HashMap<>();
+    Map<Integer, ModuleMatchingInfo<?>> matchingMap = new HashMap<>();
     for ( int i = 0; i < sourceATs.length; i++ ) {
       Class<?> sourceAT = sourceATs[i];
       Class<?> targetAT = targetATs[i];
-      TypeMatchingInfoFactory<?, ?> factory = new TypeMatchingInfoFactory<>( sourceAT, targetAT );
+      ModuleMatchingInfoFactory<?, ?> factory = new ModuleMatchingInfoFactory<>( targetAT, sourceAT );
       if ( sourceAT.equals( targetAT ) ) {
         matchingMap.put( i, factory.create() );
       }
@@ -129,9 +129,9 @@ public class GenSpecMethodMatcher implements MethodMatcher {
     return Collections.singletonList( matchingMap );
   }
 
-  private Collection<TypeMatchingInfo<?, ?>> calculateReturnTypeMatchingInfos( Class<?> sourceRT,
+  private Collection<ModuleMatchingInfo<?>> calculateReturnTypeMatchingInfos( Class<?> sourceRT,
       Class<?> targetRT ) {
-    TypeMatchingInfoFactory<?, ?> factory = new TypeMatchingInfoFactory<>( sourceRT, targetRT );
+    ModuleMatchingInfoFactory<?, ?> factory = new ModuleMatchingInfoFactory<>( targetRT, sourceRT );
     if ( sourceRT.equals( targetRT ) ) {
       return Collections.singletonList( factory.create() );
     }

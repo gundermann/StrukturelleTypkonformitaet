@@ -18,6 +18,17 @@ import matching.methods.MethodMatchingInfo;
 public class ModuleMatchingInfoFactoryTest {
 
   @Test
+  public void create() {
+    ModuleMatchingInfoFactory<Object, Object> factory = new ModuleMatchingInfoFactory<>( Object.class,
+        Object.class );
+    ModuleMatchingInfo<Object> matchingInfo = factory.create();
+    assertThat( matchingInfo, notNullValue() );
+    assertThat( matchingInfo.getRating(), equalTo( 0 ) );
+    assertThat( matchingInfo.getMethodMatchingInfos(), notNullValue() );
+    assertThat( matchingInfo.getMethodMatchingInfos().size(), equalTo( 0 ) );
+  }
+
+  @Test
   public void create_emptyMethodMatchingInfos() {
     ModuleMatchingInfoFactory<Object, Object> factory = new ModuleMatchingInfoFactory<>( Object.class,
         Object.class );

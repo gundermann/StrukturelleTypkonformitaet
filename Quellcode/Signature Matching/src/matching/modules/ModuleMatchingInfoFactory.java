@@ -21,6 +21,10 @@ public class ModuleMatchingInfoFactory<S, T> {
     this.sourceType = sourceType;
   }
 
+  public ModuleMatchingInfo<S> create() {
+    return this.create( new HashSet<>() );
+  }
+
   public ModuleMatchingInfo<S> create( Set<MethodMatchingInfo> methodMatchingInfos ) {
     return new ModuleMatchingInfo<>( sourceType, targetType, methodMatchingInfos );
   }
@@ -61,4 +65,5 @@ public class ModuleMatchingInfoFactory<S, T> {
     }
     return combinations;
   }
+
 }

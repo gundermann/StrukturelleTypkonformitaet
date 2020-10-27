@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import matching.types.TypeMatchingInfo;
+import matching.modules.ModuleMatchingInfo;
 
 public final class MethodMatchingInfoFactory {
 
@@ -20,8 +20,8 @@ public final class MethodMatchingInfoFactory {
     this.target = target;
   }
 
-  public MethodMatchingInfo create( TypeMatchingInfo<?, ?> returnTypeMatchingInfo,
-      Map<Integer, TypeMatchingInfo<?, ?>> argumentTypeMatchingInfos ) {
+  public MethodMatchingInfo create( ModuleMatchingInfo<?> returnTypeMatchingInfo,
+      Map<Integer, ModuleMatchingInfo<?>> argumentTypeMatchingInfos ) {
     return new MethodMatchingInfo( source, target, returnTypeMatchingInfo, argumentTypeMatchingInfos );
   }
 
@@ -33,14 +33,14 @@ public final class MethodMatchingInfoFactory {
    * @return
    */
   public Set<MethodMatchingInfo> createFromTypeMatchingInfos(
-      Collection<TypeMatchingInfo<?, ?>> returnTypeMatchingInfos,
-      Collection<Map<Integer, TypeMatchingInfo<?, ?>>> argumentTypesMatchingInfos ) {
+      Collection<ModuleMatchingInfo<?>> returnTypeMatchingInfos,
+      Collection<Map<Integer, ModuleMatchingInfo<?>>> argumentTypesMatchingInfos ) {
     Set<MethodMatchingInfo> methodMatchingInfos = new HashSet<>();
-    for ( TypeMatchingInfo<?, ?> selectedRT : returnTypeMatchingInfos ) {
+    for ( ModuleMatchingInfo<?> selectedRT : returnTypeMatchingInfos ) {
       if ( argumentTypesMatchingInfos.isEmpty() ) {
-        methodMatchingInfos.add( create( selectedRT, new HashMap<Integer, TypeMatchingInfo<?, ?>>() ) );
+        methodMatchingInfos.add( create( selectedRT, new HashMap<Integer, ModuleMatchingInfo<?>>() ) );
       }
-      for ( Map<Integer, TypeMatchingInfo<?, ?>> selectedAT : argumentTypesMatchingInfos ) {
+      for ( Map<Integer, ModuleMatchingInfo<?>> selectedAT : argumentTypesMatchingInfos ) {
         methodMatchingInfos.add( create( selectedRT, selectedAT ) );
       }
     }
