@@ -195,29 +195,58 @@ public class GenSpecMethodMatcherMatchingInfosTest {
 
   @Test
   public void test12() {
-    Method sourceMethod = getMethod( "addSpec" );
-    Method targetMethod = getMethod( "addSpecReturnSpec" );
-    Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( sourceMethod, targetMethod );
+    Method checkMethod = getMethod( "addSpec" );
+    Method queryMethod = getMethod( "addSpecReturnSpec" );
+    Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 1 ) );
     matchingInfos.forEach( info -> {
       ModuleMatchingInfo<?> returnTypeMatchingInfo = info.getReturnTypeMatchingInfo();
       assertThat( returnTypeMatchingInfo, notNullValue() );
-      assertThat( returnTypeMatchingInfo.getSource(), equalTo( sourceMethod.getReturnType() ) );
+      assertThat( returnTypeMatchingInfo.getSource(), equalTo( queryMethod.getReturnType() ) );
       Map<Integer, ModuleMatchingInfo<?>> argumentTypeMatchingInfos = info.getArgumentTypeMatchingInfos();
       assertThat( argumentTypeMatchingInfos, notNullValue() );
       assertThat( argumentTypeMatchingInfos.size(), equalTo( 2 ) );
       int index = 0;
       assertThat( argumentTypeMatchingInfos.get( index ).getSource(),
-          equalTo( sourceMethod.getParameterTypes()[index] ) );
+          equalTo( queryMethod.getParameterTypes()[index] ) );
       assertThat( argumentTypeMatchingInfos.get( index ).getTarget(),
-          equalTo( targetMethod.getParameterTypes()[index] ) );
+          equalTo( checkMethod.getParameterTypes()[index] ) );
       index = 1;
       assertThat( argumentTypeMatchingInfos.get( index ).getSource(),
-          equalTo( sourceMethod.getParameterTypes()[index] ) );
+          equalTo( queryMethod.getParameterTypes()[index] ) );
       assertThat( argumentTypeMatchingInfos.get( index ).getTarget(),
-          equalTo( targetMethod.getParameterTypes()[index] ) );
+          equalTo( checkMethod.getParameterTypes()[index] ) );
 
     } );
+  }
+
+  @Test
+  public void test13() {
+    Method queryMethod = getMethod( "addSpec" );
+    Method checkMethod = getMethod( "addSpecReturnSpec" );
+    Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
+    assertThat( matchingInfos, notNullValue() );
+    assertThat( matchingInfos.size(), equalTo( 1 ) );
+    matchingInfos.forEach( info -> {
+      ModuleMatchingInfo<?> returnTypeMatchingInfo = info.getReturnTypeMatchingInfo();
+      assertThat( returnTypeMatchingInfo, notNullValue() );
+      assertThat( returnTypeMatchingInfo.getSource(), equalTo( queryMethod.getReturnType() ) );
+      Map<Integer, ModuleMatchingInfo<?>> argumentTypeMatchingInfos = info.getArgumentTypeMatchingInfos();
+      assertThat( argumentTypeMatchingInfos, notNullValue() );
+      assertThat( argumentTypeMatchingInfos.size(), equalTo( 2 ) );
+      int index = 0;
+      assertThat( argumentTypeMatchingInfos.get( index ).getSource(),
+          equalTo( queryMethod.getParameterTypes()[index] ) );
+      assertThat( argumentTypeMatchingInfos.get( index ).getTarget(),
+          equalTo( checkMethod.getParameterTypes()[index] ) );
+      index = 1;
+      assertThat( argumentTypeMatchingInfos.get( index ).getSource(),
+          equalTo( queryMethod.getParameterTypes()[index] ) );
+      assertThat( argumentTypeMatchingInfos.get( index ).getTarget(),
+          equalTo( checkMethod.getParameterTypes()[index] ) );
+
+    } );
+
   }
 }

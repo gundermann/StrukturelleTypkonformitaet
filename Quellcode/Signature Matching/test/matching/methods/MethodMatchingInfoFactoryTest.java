@@ -26,7 +26,7 @@ public class MethodMatchingInfoFactoryTest {
   public void create() {
     Method source = MethodPool.getMethod( "getOne" );
     Method target = MethodPool.getMethod( "getOneNativeWrapped" );
-    MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( source, target );
+    MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( target, source );
     ModuleMatchingInfo<?> returnTypeMatchingInfo = moduleMatchingInfoFactory.create();
     MethodMatchingInfo info = factory.create( returnTypeMatchingInfo, new HashMap<>() );
     assertThat( info, notNullValue() );
@@ -42,7 +42,7 @@ public class MethodMatchingInfoFactoryTest {
   public void createFromTypeMatchingInfos() {
     Method source = MethodPool.getMethod( "getOne" );
     Method target = MethodPool.getMethod( "getOneNativeWrapped" );
-    MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( source, target );
+    MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( target, source );
     Collection<ModuleMatchingInfo<?>> returnTypeMatchingInfos = new ArrayList<>( 2 );
     returnTypeMatchingInfos.add( moduleMatchingInfoFactory.create() );
     returnTypeMatchingInfos.add( moduleMatchingInfoFactory.create() );
@@ -66,7 +66,7 @@ public class MethodMatchingInfoFactoryTest {
   public void createFromTypeMatchingInfos_keineErzeugtWeilEsKeinenReturnTypeGibt() {
     Method source = MethodPool.getMethod( "getOne" );
     Method target = MethodPool.getMethod( "getOneNativeWrapped" );
-    MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( source, target );
+    MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( target, source );
     Collection<ModuleMatchingInfo<?>> returnTypeMatchingInfos = new ArrayList<>( 0 );
     Collection<Map<Integer, ModuleMatchingInfo<?>>> argumentTypesMatchingInfos = new ArrayList<>( 2 );
     argumentTypesMatchingInfos.add( new HashMap<>() );

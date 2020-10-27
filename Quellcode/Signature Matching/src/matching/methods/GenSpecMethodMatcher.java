@@ -25,28 +25,28 @@ public class GenSpecMethodMatcher implements MethodMatcher {
   Map<Class<?>[], Boolean> cachedGenSpecTypesChecks = new HashMap<>();
 
   @Override
-  public boolean matches( Method m1, Method m2 ) {
-    MethodStructure ms1 = MethodStructure.createFromDeclaredMethod( m1 );
-    MethodStructure ms2 = MethodStructure.createFromDeclaredMethod( m2 );
-    return matches( ms1, ms2 );
+  public boolean matches( Method checkMethod, Method queryMethod ) {
+    MethodStructure cms1 = MethodStructure.createFromDeclaredMethod( checkMethod );
+    MethodStructure qms2 = MethodStructure.createFromDeclaredMethod( queryMethod );
+    return matches( cms1, qms2 );
   }
 
-  private boolean matches( MethodStructure ms1, MethodStructure ms2 ) {
-    if ( ms1.getSortedArgumentTypes().length != ms2.getSortedArgumentTypes().length ) {
+  private boolean matches( MethodStructure cms1, MethodStructure qms2 ) {
+    if ( cms1.getSortedArgumentTypes().length != qms2.getSortedArgumentTypes().length ) {
       return false;
     }
-    if ( !machtesGenSpecType( ms1.getReturnType(), ms2.getReturnType() ) ) {
+    if ( !machtesGenSpecType( cms1.getReturnType(), qms2.getReturnType() ) ) {
       return false;
     }
-    for ( int i = 0; i < ms1.getSortedArgumentTypes().length; i++ ) {
-      if ( !machtesGenSpecType( ms1.getSortedArgumentTypes()[i], ms2.getSortedArgumentTypes()[i] ) ) {
+    for ( int i = 0; i < cms1.getSortedArgumentTypes().length; i++ ) {
+      if ( !machtesGenSpecType( cms1.getSortedArgumentTypes()[i], qms2.getSortedArgumentTypes()[i] ) ) {
         return false;
       }
     }
     return true;
   }
 
-  boolean machtesGenSpecType( Class<?> t1, Class<?> t2 ) {
+  boolean machtesGenSpecType( Class<?> checkType, Class<?> queryType ) {
     // Versuch 1: Über die Methode isAssignableFrom feststellen, ob die Typen voneinander erben.
     // Problem: native Typen erben nicht von Object
     // #####################Frage: Ist das wirklich ein Problem, oder ist das so korrekt????????#####################
@@ -57,15 +57,16 @@ public class GenSpecMethodMatcher implements MethodMatcher {
     // || t2.isAssignableFrom( t1 );
 
     // Versuch 3: wie Versuch 2 mit Cache
-    Class<?>[] cacheKey = new Class<?>[] { t1, t2 };
+    Class<?>[] cacheKey = new Class<?>[] { checkType, queryType };
     if ( isCombinationCached( cacheKey ) ) {
       // false, weil die Überprüfung noch nicht stattgefunden bzw. wenn sie bereits true ermittelt hatte, dann wäre die
       // Überprüfung bereits erfolgreich gewesen
       return getResultFromCache( cacheKey );
     }
     cachedGenSpecTypesChecks.put( cacheKey, null );
-    boolean result = t1.equals( Object.class ) || t2.equals( Object.class ) || t1.isAssignableFrom( t2 )
-        || t2.isAssignableFrom( t1 );
+    boolean result = checkType.equals( Object.class ) || queryType.equals( Object.class )
+        || checkType.isAssignableFrom( queryType )
+        || queryType.isAssignableFrom( checkType );
     cachedGenSpecTypesChecks.put( cacheKey, result );
     return result;
   }
@@ -93,14 +94,14 @@ public class GenSpecMethodMatcher implements MethodMatcher {
   }
 
   @Override
-  public Set<MethodMatchingInfo> calculateMatchingInfos( Method source, Method target ) {
-    MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( source, target );
-    MethodStructure sourceStruct = MethodStructure.createFromDeclaredMethod( source );
-    MethodStructure targetStruct = MethodStructure.createFromDeclaredMethod( target );
+  public Set<MethodMatchingInfo> calculateMatchingInfos( Method checkMethod, Method queryMethod ) {
+    MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( checkMethod, queryMethod );
+    MethodStructure checkStruct = MethodStructure.createFromDeclaredMethod( checkMethod );
+    MethodStructure queryStruct = MethodStructure.createFromDeclaredMethod( queryMethod );
     Collection<ModuleMatchingInfo<?>> returnTypeMatchingInfos = calculateReturnTypeMatchingInfos(
-        sourceStruct.getReturnType(), targetStruct.getReturnType() );
+        checkStruct.getReturnType(), queryStruct.getReturnType() );
     Collection<Map<Integer, ModuleMatchingInfo<?>>> argumentTypesMatchingInfos = calculateArgumentTypesMatchingInfos(
-        sourceStruct.getSortedArgumentTypes(), targetStruct.getSortedArgumentTypes() );
+        checkStruct.getSortedArgumentTypes(), queryStruct.getSortedArgumentTypes() );
     return factory.createFromTypeMatchingInfos( returnTypeMatchingInfos, argumentTypesMatchingInfos );
   }
 
@@ -129,10 +130,10 @@ public class GenSpecMethodMatcher implements MethodMatcher {
     return Collections.singletonList( matchingMap );
   }
 
-  private Collection<ModuleMatchingInfo<?>> calculateReturnTypeMatchingInfos( Class<?> sourceRT,
-      Class<?> targetRT ) {
+  private Collection<ModuleMatchingInfo<?>> calculateReturnTypeMatchingInfos( Class<?> targetRT,
+      Class<?> sourceRT ) {
     ModuleMatchingInfoFactory<?, ?> factory = new ModuleMatchingInfoFactory<>( targetRT, sourceRT );
-    if ( sourceRT.equals( targetRT ) ) {
+    if ( targetRT.equals( sourceRT ) ) {
       return Collections.singletonList( factory.create() );
     }
     else if ( sourceRT.isAssignableFrom( targetRT ) || sourceRT.equals( Object.class ) ) {
