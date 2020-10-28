@@ -52,23 +52,23 @@ public class ExactMethodMatcher implements MethodMatcher, Comparator<MethodStruc
     MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( checkMethod, queryMethod );
     Collection<ModuleMatchingInfo<?>> returnTypeMatchingInfos = calculateReturnTypeMatchingInfos( checkMethod,
         queryMethod );
-    Collection<Map<Integer, ModuleMatchingInfo<?>>> argumentTypesMatchingInfos = calculateArgumentMatchingInfos(
+    Map<Integer, Collection<ModuleMatchingInfo<?>>> argumentTypesMatchingInfos = calculateArgumentMatchingInfos(
         checkMethod, queryMethod );
     return factory.createFromTypeMatchingInfos( returnTypeMatchingInfos, argumentTypesMatchingInfos );
   }
 
-  Collection<Map<Integer, ModuleMatchingInfo<?>>> calculateArgumentMatchingInfos( Method source, Method target ) {
+  Map<Integer, Collection<ModuleMatchingInfo<?>>> calculateArgumentMatchingInfos( Method source, Method target ) {
     Parameter[] sourceParameters = source.getParameters();
     Parameter[] targetParameters = target.getParameters();
-    Map<Integer, ModuleMatchingInfo<?>> matchingInfoMap = new HashMap<>();
+    Map<Integer, Collection<ModuleMatchingInfo<?>>> matchingInfoMap = new HashMap<>();
     for ( int i = 0; i < sourceParameters.length; i++ ) {
       Parameter sourceParameter = sourceParameters[i];
       Parameter targetParameter = targetParameters[i];
       ModuleMatchingInfoFactory<?, ?> factory = new ModuleMatchingInfoFactory<>(
           targetParameter.getType(), sourceParameter.getType() );
-      matchingInfoMap.put( i, factory.create() );
+      matchingInfoMap.put( i, Collections.singletonList( factory.create() ) );
     }
-    return Collections.singletonList( matchingInfoMap );
+    return matchingInfoMap;
   }
 
   Collection<ModuleMatchingInfo<?>> calculateReturnTypeMatchingInfos( Method checkMethod, Method queryMethod ) {

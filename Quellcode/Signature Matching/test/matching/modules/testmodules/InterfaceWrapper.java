@@ -1,6 +1,6 @@
 package matching.modules.testmodules;
 
-public interface Interface2 {
+public interface InterfaceWrapper {
 
   Boolean getTrue();
 

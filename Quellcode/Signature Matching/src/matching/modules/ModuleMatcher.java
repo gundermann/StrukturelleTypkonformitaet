@@ -10,7 +10,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import matching.Logger;
-import matching.methods.ExactMethodMatcher;
+import matching.methods.GenSpecMethodMatcher;
 import matching.methods.MethodMatcher;
 import matching.methods.MethodMatchingInfo;
 
@@ -34,7 +34,7 @@ public class ModuleMatcher<S> {
 
   public ModuleMatcher( Class<S> queryType ) {
     this.queryType = queryType;
-    this.methodMatcher = new ExactMethodMatcher();
+    this.methodMatcher = new GenSpecMethodMatcher(); // enthaelt auch den ExactMethodMatcher
     // TODO das ist das Ziel - die JUnit-Tests funktionieren nur mit dem CombinedMethodMatcher:
     // new CombinedMethodMatcher();
   }
@@ -111,6 +111,8 @@ public class ModuleMatcher<S> {
 
   // Einsicht: Das Matching mit Klassen oder Enums als Query-Typ ist etwas kompliziert. Ich beschränke mich erst einmal
   // nur auf Interfaces als Query-Typ. Das ist auch hinsichtlich meines Anwendungsfalls eher relevant.
+
+  // Weiteres Problem: Native Typen haben keine Methoden!!!
   private Method[] getQueryMethods() {
     Method[] queryMethods = queryType.getMethods();
     return queryMethods;

@@ -50,6 +50,9 @@ public class ModuleMatchingInfoFactory<S, T> {
     // Kopie der ursprünglichen Map erstellen
     Map<Method, Set<MethodMatchingInfo>> localMethodMatches = new HashMap<>( possibleMethodMatches );
     Set<MethodMatchingInfo> selectedMethodMatches = localMethodMatches.remove( selectedMethod );
+    if ( selectedMethodMatches.isEmpty() ) {
+      return generateMethodMatchingCombinations( localMethodMatches );
+    }
     for ( MethodMatchingInfo info : selectedMethodMatches ) {
       Set<Set<MethodMatchingInfo>> otherCombinations = generateMethodMatchingCombinations( localMethodMatches );
       if ( otherCombinations.isEmpty() ) {

@@ -39,4 +39,9 @@ public class MethodMatchingInfo {
     return argumentTypeMatchingInfos;
   }
 
+  @Override
+  public String toString() {
+    return String.format( "%s -> %s", source.getName(), target.getName() );
+  }
+
 }

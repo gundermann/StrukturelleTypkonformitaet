@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 
+import matching.modules.ModuleMatcher;
 import matching.modules.ModuleMatchingInfo;
 import matching.modules.ModuleMatchingInfoFactory;
 
@@ -98,53 +99,51 @@ public class GenSpecMethodMatcher implements MethodMatcher {
     MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( checkMethod, queryMethod );
     MethodStructure checkStruct = MethodStructure.createFromDeclaredMethod( checkMethod );
     MethodStructure queryStruct = MethodStructure.createFromDeclaredMethod( queryMethod );
-    Collection<ModuleMatchingInfo<?>> returnTypeMatchingInfos = calculateReturnTypeMatchingInfos(
+    Collection<?> returnTypeMatchingInfos = calculateReturnTypeMatchingInfos(
         checkStruct.getReturnType(), queryStruct.getReturnType() );
-    Collection<Map<Integer, ModuleMatchingInfo<?>>> argumentTypesMatchingInfos = calculateArgumentTypesMatchingInfos(
+    Map<Integer, Collection<ModuleMatchingInfo<?>>> argumentTypesMatchingInfos = calculateArgumentTypesMatchingInfos(
         checkStruct.getSortedArgumentTypes(), queryStruct.getSortedArgumentTypes() );
-    return factory.createFromTypeMatchingInfos( returnTypeMatchingInfos, argumentTypesMatchingInfos );
+    return factory.createFromTypeMatchingInfos( (Collection<ModuleMatchingInfo<?>>) returnTypeMatchingInfos,
+        argumentTypesMatchingInfos );
   }
 
-  private Collection<Map<Integer, ModuleMatchingInfo<?>>> calculateArgumentTypesMatchingInfos(
+  private Map<Integer, Collection<ModuleMatchingInfo<?>>> calculateArgumentTypesMatchingInfos(
       Class<?>[] sourceATs, Class<?>[] targetATs ) {
-    Map<Integer, ModuleMatchingInfo<?>> matchingMap = new HashMap<>();
+    Map<Integer, Collection<ModuleMatchingInfo<?>>> matchingMap = new HashMap<>();
     for ( int i = 0; i < sourceATs.length; i++ ) {
       Class<?> sourceAT = sourceATs[i];
       Class<?> targetAT = targetATs[i];
-      ModuleMatchingInfoFactory<?, ?> factory = new ModuleMatchingInfoFactory<>( targetAT, sourceAT );
-      if ( sourceAT.equals( targetAT ) ) {
-        matchingMap.put( i, factory.create() );
-      }
-      else if ( sourceAT.isAssignableFrom( targetAT ) || sourceAT.equals( Object.class ) ) {
-        // Gen: sourceAT
-        // Spec: targetAT
-        matchingMap.put( i, factory.create() );
-      }
-      else if ( targetAT.isAssignableFrom( sourceAT ) || targetAT.equals( Object.class ) ) {
-        // Gen: targetAT
-        // Spec: sourceAT
-        matchingMap.put( i, factory.create() );
-      }
+      Collection<?> infos = calculateReturnTypeMatchingInfos( targetAT, sourceAT );
+      matchingMap.put( i, (Collection<ModuleMatchingInfo<?>>) infos );
     }
 
-    return Collections.singletonList( matchingMap );
+    return matchingMap;
   }
 
-  private Collection<ModuleMatchingInfo<?>> calculateReturnTypeMatchingInfos( Class<?> targetRT,
-      Class<?> sourceRT ) {
-    ModuleMatchingInfoFactory<?, ?> factory = new ModuleMatchingInfoFactory<>( targetRT, sourceRT );
+  private <S, T> Collection<ModuleMatchingInfo<S>> calculateReturnTypeMatchingInfos( Class<T> targetRT,
+      Class<S> sourceRT ) {
+    ModuleMatchingInfoFactory<S, T> factory = new ModuleMatchingInfoFactory<>( targetRT, sourceRT );
     if ( targetRT.equals( sourceRT ) ) {
       return Collections.singletonList( factory.create() );
     }
-    else if ( sourceRT.isAssignableFrom( targetRT ) || sourceRT.equals( Object.class ) ) {
+    else if ( sourceRT.isAssignableFrom( targetRT )
+    // Wurde nur für native Typen gemacht
+    // || sourceRT.equals( Object.class )
+    ) {
+      // sourceRT > targetRT
       // Gen: sourceRT
       // Spec: targetRT
       return Collections.singletonList( factory.create() );
+
     }
-    else if ( targetRT.isAssignableFrom( sourceRT ) || targetRT.equals( Object.class ) ) {
+    else if ( targetRT.isAssignableFrom( sourceRT )
+    // Wurde nur für native Typen gemacht
+    // || sourceRT.equals( Object.class )
+    ) {
+      // sourceRT < targetRT
       // Gen: targetRT
       // Spec: sourceRT
-      return Collections.singletonList( factory.create() );
+      return new ModuleMatcher<>( sourceRT ).calculateMatchingInfos( targetRT );
     }
     return new ArrayList<>();
   }
