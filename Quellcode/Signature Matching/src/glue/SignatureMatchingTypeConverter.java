@@ -13,14 +13,14 @@ public class SignatureMatchingTypeConverter<T> {
     // this.targetStructure = targetStructure;
     // Grundlagen pruefen:
     // Interface oder Klasse
-    // if ( this.targetStructure.isInterface() ) {
-    proxyFactory = new InterfaceProxyFactory<>( targetStructure );
-    // }
-    // else {
-    // // keine finalisierte Klasse
-    // // Default-Kontruktor vorhanden
-    // proxyFactory = new ClassProxyFactory<>( targetStructure );
-    // }
+    if ( targetStructure.isInterface() ) {
+      proxyFactory = new InterfaceProxyFactory<>( targetStructure );
+    }
+    else {
+      // keine finalisierte Klasse
+      // Default-Kontruktor vorhanden
+      proxyFactory = new ClassProxyFactory<>( targetStructure );
+    }
   }
 
   public T convert( Object component, ModuleMatchingInfo<T> matchingInfo ) {

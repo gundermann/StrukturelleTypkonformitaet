@@ -2,10 +2,11 @@ package matching.modules.testmodules;
 
 public interface InterfaceGen {
 
-  boolean getTrue();
+  Number add( Number a, Number b );
 
-  boolean getFalse();
+  Number sub( Number a, Number b );
 
-  int getOne();
+  Number div( Number a, Number b );
 
+  Number mult( Number a, Number b );
 }

@@ -1,6 +1,6 @@
 package matching.modules.testmodules;
 
-public enum Enum1 {
+public enum EnumNative {
   CONSTANT_1;
 
   public boolean getTrue() {

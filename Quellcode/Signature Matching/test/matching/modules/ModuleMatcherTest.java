@@ -7,7 +7,7 @@ import org.junit.Test;
 import matching.methods.CombinedMethodMatcher;
 import matching.modules.testmodules.Class1;
 import matching.modules.testmodules.Class2;
-import matching.modules.testmodules.Enum1;
+import matching.modules.testmodules.EnumNative;
 import matching.modules.testmodules.Enum2;
 import matching.modules.testmodules.Interface1;
 import matching.modules.testmodules.InterfaceWrapper;
@@ -25,8 +25,8 @@ public class ModuleMatcherTest {
   public void enum2interface_full_match() {
     ModuleMatcher<InterfaceWrapper> matcher = ModuleMatcherTestSupport.createModuleMatcher( InterfaceWrapper.class,
         new CombinedMethodMatcher() );
-    assertTrue( matcher.matches( Enum1.class ) );
-    assertTrue( matcher.partlyMatches( Enum1.class ) );
+    assertTrue( matcher.matches( EnumNative.class ) );
+    assertTrue( matcher.partlyMatches( EnumNative.class ) );
   }
 
   @Test
@@ -44,12 +44,12 @@ public class ModuleMatcherTest {
   public void enum2interface_partly_match() {
     ModuleMatcher<Interface1> matcher1 = ModuleMatcherTestSupport.createModuleMatcher( Interface1.class,
         new CombinedMethodMatcher() );
-    assertTrue( matcher1.partlyMatches( Enum1.class ) );
+    assertTrue( matcher1.partlyMatches( EnumNative.class ) );
     assertTrue( matcher1.partlyMatches( Enum2.class ) );
 
     ModuleMatcher<InterfaceWrapper> matcher2 = ModuleMatcherTestSupport.createModuleMatcher( InterfaceWrapper.class,
         new CombinedMethodMatcher() );
-    assertTrue( matcher2.partlyMatches( Enum1.class ) );
+    assertTrue( matcher2.partlyMatches( EnumNative.class ) );
     assertTrue( matcher2.partlyMatches( Enum2.class ) );
   }
 

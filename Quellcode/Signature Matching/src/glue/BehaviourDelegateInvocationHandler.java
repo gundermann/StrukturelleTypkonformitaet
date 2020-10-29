@@ -2,6 +2,8 @@ package glue;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 
 import matching.methods.MethodMatchingInfo;
@@ -24,14 +26,15 @@ public class BehaviourDelegateInvocationHandler<T> implements InvocationHandler 
     if ( optMatchingInfo.isPresent() ) {
       MethodMatchingInfo methodMatchingInfo = optMatchingInfo.get();
       Method targetMethod = methodMatchingInfo.getTarget();
-      Object returnValue = targetMethod.invoke( component, args );
+      Object[] convertedArgs = convertArgs( args, methodMatchingInfo.getArgumentTypeMatchingInfos() );
+      Object returnValue = targetMethod.invoke( component, convertedArgs );
       ModuleMatchingInfo<?> returnTypeMatchingInfo = methodMatchingInfo.getReturnTypeMatchingInfo();
       if ( returnTypeMatchingInfo == null ) {
         return returnValue;
       }
       // Bei einem allgemeineren returnValue des Targets (Target.retrunValue > Source.returnValue) muss der ReturnType
       // ebenfalls gemocked werden
-      return convertReturnType( returnValue, returnTypeMatchingInfo );
+      return convertType( returnValue, returnTypeMatchingInfo );
     }
 
     // Default-Methode
@@ -40,21 +43,54 @@ public class BehaviourDelegateInvocationHandler<T> implements InvocationHandler 
     return method.invoke( component, args );
   }
 
+  private Object[] convertArgs( Object[] args, Map<Integer, ModuleMatchingInfo<?>> argMMI ) {
+    Object[] convertedArgs = new Object[args.length];
+    for ( int i = 0; i < args.length; i++ ) {
+      if ( argMMI.containsKey( i ) ) {
+        ModuleMatchingInfo<?> moduleMatchingInfo = argMMI.get( i );
+        Object convertedArg = convertType( args[i], moduleMatchingInfo );
+        convertedArgs[i] = convertedArg;
+      }
+      else {
+        // Keine Konvertierung notwendig
+        convertedArgs[i] = args[i];
+      }
+    }
+    return convertedArgs;
+  }
+
   /**
    * Rekursiver Aufruf des gesamten Konvertierungsprozesses
    *
    * @param returnValue
-   * @param returnTypeMatchingInfo
+   * @param moduleMatchingInfo
    * @return
    */
-  private <RT> RT convertReturnType( Object returnValue, ModuleMatchingInfo<RT> returnTypeMatchingInfo ) {
-    return new SignatureMatchingTypeConverter<>( returnTypeMatchingInfo.getSource() ).convert( returnValue,
-        returnTypeMatchingInfo );
+  private <RT> RT convertType( Object returnValue, ModuleMatchingInfo<RT> moduleMatchingInfo ) {
+    return new SignatureMatchingTypeConverter<>( moduleMatchingInfo.getSource() ).convert( returnValue,
+        moduleMatchingInfo );
   }
 
   private Optional<MethodMatchingInfo> getMethodMatchingInfo( Method method ) {
-    return matchingInfos.getMethodMatchingInfos().stream().filter( info -> info.getSource().equals( method ) )
-        .findFirst();
+    for ( MethodMatchingInfo mmi : matchingInfos.getMethodMatchingInfos() ) {
+      if ( mmi.getSource().getName().equals( method.getName() ) && agrumentsMatches( mmi, method ) ) {
+        return Optional.of( mmi );
+      }
+    }
+    return Optional.empty();
+  }
+
+  private boolean agrumentsMatches( MethodMatchingInfo mmi, Method method ) {
+    for ( Entry<Integer, ModuleMatchingInfo<?>> argMMIEntry : mmi.getArgumentTypeMatchingInfos().entrySet() ) {
+      if ( method.getParameterCount() <= argMMIEntry.getKey() ) {
+        throw new RuntimeException( "wrong parameter count" );
+      }
+      Class<?> parameterType = method.getParameterTypes()[argMMIEntry.getKey()];
+      if ( !parameterType.equals( argMMIEntry.getValue().getTarget() ) ) {
+        return false;
+      }
+    }
+    return true;
   }
 
 }
