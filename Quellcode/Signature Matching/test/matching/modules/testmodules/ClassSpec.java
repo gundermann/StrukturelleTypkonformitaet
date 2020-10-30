@@ -1,22 +1,20 @@
 package matching.modules.testmodules;
 
-import java.math.BigInteger;
-
 public class ClassSpec {
 
-  public Number add( BigInteger a, BigInteger b ) {
-    return a.add( b );
+  public Number add( Double a, Double b ) {
+    return a + b;
   }
 
-  public BigInteger sub( Number a, Number b ) {
-    return BigInteger.valueOf( a.longValue() - b.longValue() );
+  public Double sub( Number a, Number b ) {
+    return a.doubleValue() - b.doubleValue();
   }
 
-  public Number div( BigInteger a, Number b ) {
-    return a.divide( BigInteger.valueOf( b.longValue() ) );
+  public Number div( Double a, Number b ) {
+    return a / b.doubleValue();
   }
 
-  public BigInteger mult( Number a, BigInteger b ) {
-    return b.multiply( BigInteger.valueOf( a.longValue() ) );
+  public Double mult( Number a, Double b ) {
+    return b * a.doubleValue();
   }
 }

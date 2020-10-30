@@ -6,6 +6,7 @@ import matching.methods.MethodMatchingInfo;
 
 public class ModuleMatchingInfo<S> {
 
+  // TODO Source und Target müssen umgedreht werden
   private final Class<S> source;
 
   private final Class<?> target;

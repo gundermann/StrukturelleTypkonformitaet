@@ -5,7 +5,6 @@ import static org.junit.Assert.assertThat;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -34,23 +33,23 @@ public class GenSpecSignatureMatchingTypeConverterTest {
     Set<MethodMatchingInfo> methodMatchingInfos = new HashSet<>();
     MethodMatchingInfo mmiAdd = EasyMock.createNiceMock( MethodMatchingInfo.class );
     EasyMock.expect( mmiAdd.getTarget() )
-        .andReturn( target.getDeclaredMethod( "add", BigInteger.class, BigInteger.class ) )
+        .andReturn( target.getDeclaredMethod( "add", Double.class, Double.class ) )
         .anyTimes();
     EasyMock.expect( mmiAdd.getSource() ).andReturn( source.getMethod( "add", Number.class, Number.class ) ).anyTimes();
-    // EasyMock.expect( mmiAdd.getReturnTypeMatchingInfo() ).andReturn( createMMI_N2N() )
-    // .anyTimes();
+    EasyMock.expect( mmiAdd.getReturnTypeMatchingInfo() ).andReturn( createMMI_N2N() )
+        .anyTimes();
     EasyMock.expect( mmiAdd.getArgumentTypeMatchingInfos() )
         .andReturn(
-            createMMIMap( createMMI_B2N(),
-                createMMI_B2N() ) )
+            createMMIMap( createMMI_N2D(),
+                createMMI_N2D() ) )
         .anyTimes();
 
     MethodMatchingInfo mmiSub = EasyMock.createNiceMock( MethodMatchingInfo.class );
     EasyMock.expect( mmiSub.getTarget() ).andReturn( target.getDeclaredMethod( "sub", Number.class, Number.class ) )
         .anyTimes();
     EasyMock.expect( mmiSub.getSource() ).andReturn( source.getMethod( "sub", Number.class, Number.class ) ).anyTimes();
-    // EasyMock.expect( mmiSub.getReturnTypeMatchingInfo() ).andReturn( createMMI_B2N() )
-    // .anyTimes();
+    EasyMock.expect( mmiSub.getReturnTypeMatchingInfo() ).andReturn( createMMI_D2N() )
+        .anyTimes();
     EasyMock.expect( mmiSub.getArgumentTypeMatchingInfos() )
         .andReturn(
             createMMIMap( createMMI_N2N(),
@@ -58,29 +57,29 @@ public class GenSpecSignatureMatchingTypeConverterTest {
         .anyTimes();
 
     MethodMatchingInfo mmiDiv = EasyMock.createNiceMock( MethodMatchingInfo.class );
-    EasyMock.expect( mmiDiv.getTarget() ).andReturn( target.getDeclaredMethod( "div", BigInteger.class, Number.class ) )
+    EasyMock.expect( mmiDiv.getTarget() ).andReturn( target.getDeclaredMethod( "div", Double.class, Number.class ) )
         .anyTimes();
     EasyMock.expect( mmiDiv.getSource() ).andReturn( source.getMethod( "div", Number.class, Number.class ) ).anyTimes();
-    // EasyMock.expect( mmiDiv.getReturnTypeMatchingInfo() ).andReturn( createMMI_N2N() )
-    // .anyTimes();
+    EasyMock.expect( mmiDiv.getReturnTypeMatchingInfo() ).andReturn( createMMI_N2N() )
+        .anyTimes();
     EasyMock.expect( mmiDiv.getArgumentTypeMatchingInfos() )
         .andReturn(
-            createMMIMap( createMMI_B2N(),
+            createMMIMap( createMMI_N2D(),
                 createMMI_N2N() ) )
         .anyTimes();
 
     MethodMatchingInfo mmiMult = EasyMock.createNiceMock( MethodMatchingInfo.class );
     EasyMock.expect( mmiMult.getTarget() )
-        .andReturn( target.getDeclaredMethod( "mult", Number.class, BigInteger.class ) )
+        .andReturn( target.getDeclaredMethod( "mult", Number.class, Double.class ) )
         .anyTimes();
     EasyMock.expect( mmiMult.getSource() ).andReturn( source.getMethod( "mult", Number.class, Number.class ) )
         .anyTimes();
-    // EasyMock.expect( mmiMult.getReturnTypeMatchingInfo() ).andReturn( createMMI_B2N() )
-    // .anyTimes();
+    EasyMock.expect( mmiMult.getReturnTypeMatchingInfo() ).andReturn( createMMI_D2N() )
+        .anyTimes();
     EasyMock.expect( mmiMult.getArgumentTypeMatchingInfos() )
         .andReturn(
             createMMIMap( createMMI_N2N(),
-                createMMI_B2N() ) )
+                createMMI_N2D() ) )
         .anyTimes();
     EasyMock.replay( mmiAdd, mmiSub,
         mmiMult, mmiDiv );
@@ -95,13 +94,8 @@ public class GenSpecSignatureMatchingTypeConverterTest {
     EasyMock.replay( moduleMatchingInfo );
 
     InterfaceGen converted = converter.convert( convertationObject, moduleMatchingInfo );
-
-    // Der automatische Up- und Down-Cast funktioniert an dieser Stelle nicht. Diese Tests schlagen fehl!!!
-    // assertThat( converted.sub( 2 , 1 ), equalTo( 1 ) );
-    // assertThat( converted.sub( 2l , 1l ), equalTo( 1l ) );
-
-    assertThat( converted.sub( BigInteger.valueOf( 2 ), BigInteger.valueOf( 1 ) ), equalTo( BigInteger.valueOf( 1 ) ) );
-    assertThat( converted.add( 1l, 2l ), equalTo( 3l ) );
+    assertThat( converted.sub( 2, 1 ), equalTo( 1 ) );
+    assertThat( converted.add( 10, 2 ), equalTo( 3 ) );
     assertThat( converted.div( 4l, 2l ), equalTo( 2l ) );
     assertThat( converted.mult( 4l, 2l ), equalTo( 8l ) );
     checkInvokationOfAllNonParametrizedMethods( converted );
@@ -124,20 +118,36 @@ public class GenSpecSignatureMatchingTypeConverterTest {
     return mmi;
   }
 
-  private ModuleMatchingInfo createMMI_N2B() {
+  private ModuleMatchingInfo createMMI_N2D() throws NoSuchMethodException, SecurityException {
     ModuleMatchingInfo mmit = EasyMock.createNiceMock( ModuleMatchingInfo.class );
-    EasyMock.expect( mmit.getSource() ).andReturn( Number.class ).anyTimes();
-    EasyMock.expect( mmit.getTarget() ).andReturn( BigInteger.class ).anyTimes();
-    EasyMock.expect( mmit.getMethodMatchingInfos() ).andReturn( new HashSet<>() ).anyTimes();
+    EasyMock.expect( mmit.getSource() ).andReturn( Double.class ).anyTimes();
+    EasyMock.expect( mmit.getTarget() ).andReturn( Number.class ).anyTimes();
+    Set methodInfos = new HashSet<>();
+    MethodMatchingInfo doubleValueMethod = EasyMock.createNiceMock( MethodMatchingInfo.class );
+    EasyMock.expect( doubleValueMethod.getSource() ).andReturn( Number.class.getMethod( "doubleValue" ) )
+        .anyTimes();
+    EasyMock.expect( doubleValueMethod.getTarget() ).andReturn( Double.class.getMethod( "doubleValue" ) )
+        .anyTimes();
+    EasyMock.expect( doubleValueMethod.getArgumentTypeMatchingInfos() ).andReturn( new HashMap<>() ).anyTimes();
+    methodInfos.add( doubleValueMethod );
+    EasyMock.expect( mmit.getMethodMatchingInfos() ).andReturn( methodInfos ).anyTimes();
     EasyMock.replay( mmit );
     return mmit;
   }
 
-  private ModuleMatchingInfo createMMI_B2N() {
+  private ModuleMatchingInfo createMMI_D2N() throws NoSuchMethodException, SecurityException {
     ModuleMatchingInfo mmit = EasyMock.createNiceMock( ModuleMatchingInfo.class );
-    EasyMock.expect( mmit.getSource() ).andReturn( BigInteger.class ).anyTimes();
-    EasyMock.expect( mmit.getTarget() ).andReturn( Number.class ).anyTimes();
-    EasyMock.expect( mmit.getMethodMatchingInfos() ).andReturn( new HashSet<>() ).anyTimes();
+    EasyMock.expect( mmit.getTarget() ).andReturn( Double.class ).anyTimes();
+    EasyMock.expect( mmit.getSource() ).andReturn( Number.class ).anyTimes();
+    Set methodInfos = new HashSet<>();
+    MethodMatchingInfo doubleValueMethod = EasyMock.createNiceMock( MethodMatchingInfo.class );
+    EasyMock.expect( doubleValueMethod.getSource() ).andReturn( Double.class.getMethod( "doubleValue" ) )
+        .anyTimes();
+    EasyMock.expect( doubleValueMethod.getTarget() ).andReturn( Number.class.getMethod( "doubleValue" ) )
+        .anyTimes();
+    EasyMock.expect( doubleValueMethod.getArgumentTypeMatchingInfos() ).andReturn( new HashMap<>() ).anyTimes();
+    methodInfos.add( doubleValueMethod );
+    EasyMock.expect( mmit.getMethodMatchingInfos() ).andReturn( methodInfos ).anyTimes();
     EasyMock.replay( mmit );
     return mmit;
   }
