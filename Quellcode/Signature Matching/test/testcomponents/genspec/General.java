@@ -2,7 +2,9 @@ package testcomponents.genspec;
 
 public class General {
 
-	private final String stringAttr;
+	private 
+	final 
+	String stringAttr;
 
 	private int intAttr;
 
