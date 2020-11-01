@@ -6,7 +6,7 @@ public class OfferedSpecClass {
 		return spec.getStringAttr().concat(s.getStringAttr());
 	}
 
-	public Specific add(Specific spec, int i) {
+	public Specific add(Specific spec, Integer i) {
 		int sum = spec.getIntAttr() + i;
 		return new Specific(spec.getStringAttr(), sum);
 	}
@@ -16,7 +16,7 @@ public class OfferedSpecClass {
 		return new Specific(spec.getStringAttr(), sum);
 	}
 
-	public Long getLong(Specific spec) {
+	public Long getBoxedLongAttr(Specific spec) {
 		return spec.getBoxedLongAttr();
 	}
 
