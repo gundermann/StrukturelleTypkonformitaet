@@ -152,14 +152,23 @@ public class GenSpecSignatureMatchingTypeConverterTest {
 				.anyTimes();
 		EasyMock.expect(mmiGetLong.getSource()).andReturn(source.getMethod("getBoxedLongAttr", Specific.class)).anyTimes();
 		EasyMock.expect(mmiGetLong.getReturnTypeMatchingInfo()).andReturn(createMMI_Long2Long()).anyTimes();
-		EasyMock.expect(mmiGetLong.getArgumentTypeMatchingInfos()).andReturn(createMMIMap()).anyTimes();
+		EasyMock.expect(mmiGetLong.getArgumentTypeMatchingInfos()).andReturn(createMMIMap(createMMI_S2S())).anyTimes();
 
-		EasyMock.replay(mmiConcat, mmiAddInt, mmiAddGen, mmiGetLong);
+		MethodMatchingInfo mmiAnd= EasyMock.createNiceMock(MethodMatchingInfo.class);
+		EasyMock.expect(mmiAnd.getTarget()).andReturn(target.getDeclaredMethod("and", Specific.class, Boolean.class))
+				.anyTimes();
+		EasyMock.expect(mmiAnd.getSource()).andReturn(source.getMethod("and", Specific.class, Boolean.class)).anyTimes();
+		EasyMock.expect(mmiAnd.getReturnTypeMatchingInfo()).andReturn(createMMI_Boolean2Boolean()).anyTimes();
+		EasyMock.expect(mmiAnd.getArgumentTypeMatchingInfos()).andReturn(createMMIMap(createMMI_S2S(), createMMI_Boolean2Boolean())).anyTimes();
+
+		
+		EasyMock.replay(mmiConcat, mmiAddInt, mmiAddGen, mmiGetLong, mmiAnd);
 
 		methodMatchingInfos.add(mmiConcat);
 		methodMatchingInfos.add(mmiAddInt);
 		methodMatchingInfos.add(mmiAddGen);
 		methodMatchingInfos.add(mmiGetLong);
+		methodMatchingInfos.add(mmiAnd);
 
 		ModuleMatchingInfo<DesiredSpecInterface> moduleMatchingInfo = EasyMock.createNiceMock(ModuleMatchingInfo.class);
 		EasyMock.expect(moduleMatchingInfo.getMethodMatchingInfos()).andReturn(methodMatchingInfos).anyTimes();
@@ -204,6 +213,16 @@ public class GenSpecSignatureMatchingTypeConverterTest {
 		EasyMock.replay(mmi);
 		return mmi;
 	}
+	
+	private ModuleMatchingInfo createMMI_Boolean2Boolean() {
+		ModuleMatchingInfo mmi = EasyMock.createNiceMock(ModuleMatchingInfo.class);
+		EasyMock.expect(mmi.getSource()).andReturn(Boolean.class).anyTimes();
+		EasyMock.expect(mmi.getTarget()).andReturn(Boolean.class).anyTimes();
+		EasyMock.expect(mmi.getMethodMatchingInfos()).andReturn(new HashSet<>()).anyTimes();
+		EasyMock.replay(mmi);
+		return mmi;
+	}
+
 
 	private ModuleMatchingInfo createMMI_Str2Str() {
 		ModuleMatchingInfo mmi = EasyMock.createNiceMock(ModuleMatchingInfo.class);
