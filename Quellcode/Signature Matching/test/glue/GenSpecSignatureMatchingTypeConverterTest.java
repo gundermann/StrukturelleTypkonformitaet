@@ -35,27 +35,41 @@ public class GenSpecSignatureMatchingTypeConverterTest {
 		SignatureMatchingTypeConverter<DesiredGenInterface> converter = new SignatureMatchingTypeConverter<>(source);
 
 		Set<MethodMatchingInfo> methodMatchingInfos = new HashSet<>();
+
 		MethodMatchingInfo mmiConcat = EasyMock.createNiceMock(MethodMatchingInfo.class);
 		EasyMock.expect(mmiConcat.getTarget())
-				.andReturn(target.getDeclaredMethod("concat", Specific.class, String.class)).anyTimes();
-		EasyMock.expect(mmiConcat.getSource()).andReturn(source.getMethod("concat", General.class, String.class))
+				.andReturn(target.getDeclaredMethod("concat", Specific.class, Specific.class)).anyTimes();
+		EasyMock.expect(mmiConcat.getSource()).andReturn(source.getMethod("concat", General.class, General.class))
 				.anyTimes();
 		EasyMock.expect(mmiConcat.getReturnTypeMatchingInfo()).andReturn(createMMI_Str2Str()).anyTimes();
 		EasyMock.expect(mmiConcat.getArgumentTypeMatchingInfos())
-				.andReturn(createMMIMap(createMMI_G2S(), createMMI_Str2Str())).anyTimes();
+				.andReturn(createMMIMap(createMMI_G2S(), createMMI_G2S())).anyTimes();
 
-//
-//    MethodMatchingInfo mmiSub = EasyMock.createNiceMock( MethodMatchingInfo.class );
-//    EasyMock.expect( mmiSub.getTarget() ).andReturn( target.getDeclaredMethod( "sub", Number.class, Number.class ) )
-//        .anyTimes();
-//    EasyMock.expect( mmiSub.getSource() ).andReturn( source.getMethod( "sub", Number.class, Number.class ) ).anyTimes();
-//    EasyMock.expect( mmiSub.getReturnTypeMatchingInfo() ).andReturn( createMMI_D2N() )
-//        .anyTimes();
-//    EasyMock.expect( mmiSub.getArgumentTypeMatchingInfos() )
-//        .andReturn(
-//            createMMIMap( createMMI_N2N(),
-//                createMMI_N2N() ) )
-//        .anyTimes();
+		MethodMatchingInfo mmiAddInt = EasyMock.createNiceMock(MethodMatchingInfo.class);
+		EasyMock.expect(mmiAddInt.getTarget()).andReturn(target.getDeclaredMethod("add", Specific.class, Integer.class))
+				.anyTimes();
+		EasyMock.expect(mmiAddInt.getSource()).andReturn(source.getMethod("add", General.class, Integer.class))
+				.anyTimes();
+		EasyMock.expect(mmiAddInt.getReturnTypeMatchingInfo()).andReturn(createMMI_S2G()).anyTimes();
+		EasyMock.expect(mmiAddInt.getArgumentTypeMatchingInfos())
+				.andReturn(createMMIMap(createMMI_G2S(), createMMI_Int2Int())).anyTimes();
+
+		MethodMatchingInfo mmiAddGen = EasyMock.createNiceMock(MethodMatchingInfo.class);
+		EasyMock.expect(mmiAddGen.getTarget())
+				.andReturn(target.getDeclaredMethod("add", Specific.class, Specific.class)).anyTimes();
+		EasyMock.expect(mmiAddGen.getSource()).andReturn(source.getMethod("add", General.class, General.class))
+				.anyTimes();
+		EasyMock.expect(mmiAddGen.getReturnTypeMatchingInfo()).andReturn(createMMI_S2G()).anyTimes();
+		EasyMock.expect(mmiAddGen.getArgumentTypeMatchingInfos())
+				.andReturn(createMMIMap(createMMI_G2S(), createMMI_G2S())).anyTimes();
+
+		MethodMatchingInfo mmiGetLong = EasyMock.createNiceMock(MethodMatchingInfo.class);
+		EasyMock.expect(mmiGetLong.getTarget()).andReturn(target.getDeclaredMethod("getBoxedLongAttr", Specific.class))
+				.anyTimes();
+		EasyMock.expect(mmiGetLong.getSource()).andReturn(source.getMethod("getBoxedLongAttr", General.class)).anyTimes();
+		EasyMock.expect(mmiGetLong.getReturnTypeMatchingInfo()).andReturn(createMMI_Long2Long()).anyTimes();
+		EasyMock.expect(mmiGetLong.getArgumentTypeMatchingInfos()).andReturn(createMMIMap(createMMI_G2S())).anyTimes();
+
 //
 //    MethodMatchingInfo mmiDiv = EasyMock.createNiceMock( MethodMatchingInfo.class );
 //    EasyMock.expect( mmiDiv.getTarget() ).andReturn( target.getDeclaredMethod( "div", Double.class, Number.class ) )
@@ -82,12 +96,14 @@ public class GenSpecSignatureMatchingTypeConverterTest {
 //            createMMIMap( createMMI_N2N(),
 //                createMMI_N2D() ) )
 //        .anyTimes();
-		EasyMock.replay(mmiConcat);
+		EasyMock.replay(mmiConcat, mmiAddInt, mmiAddGen, mmiGetLong);
 //    , mmiSub,
 //        mmiMult, mmiDiv );
 //
 		methodMatchingInfos.add(mmiConcat);
-//    methodMatchingInfos.add( mmiSub );
+		methodMatchingInfos.add(mmiAddInt);
+		methodMatchingInfos.add(mmiAddGen);
+		methodMatchingInfos.add(mmiGetLong);
 //    methodMatchingInfos.add( mmiDiv );
 //    methodMatchingInfos.add( mmiMult );
 
@@ -96,8 +112,34 @@ public class GenSpecSignatureMatchingTypeConverterTest {
 		EasyMock.replay(moduleMatchingInfo);
 
 		DesiredGenInterface converted = converter.convert(convertationObject, moduleMatchingInfo);
-		System.out.println(converted.concat(new General("hello"), "world"));
-//    assertThat( converted.concat(new General("hello"), "world"), equalTo( 1 ) );
+		General hello_1_10_Gen = new General("hello", 1, 10L);
+		General world_5_44_Gen = new General("world", 5, 44L);
+		Specific hello_2_Spec = new Specific("hello", 2);
+		Specific world_99_Spec = new Specific("world", 99);
+
+		assertThat(converted.concat(hello_1_10_Gen, world_5_44_Gen), equalTo("helloworld"));
+		assertThat(converted.concat(hello_2_Spec, world_99_Spec), equalTo("helloworld"));
+
+		General result_2 = converted.add(hello_1_10_Gen, 1);
+		assertThat(result_2.getIntAttr(), equalTo(2));
+
+		General result_109 = converted.add(world_99_Spec, 10);
+		assertThat(result_109.getIntAttr(), equalTo(109));
+
+		General result_6 = converted.add(hello_1_10_Gen, world_5_44_Gen);
+		assertThat(result_6.getIntAttr(), equalTo(6));
+
+		General result_101 = converted.add(world_99_Spec, hello_2_Spec);
+		assertThat(result_101.getIntAttr(), equalTo(101));
+
+		General result_3 = converted.add(hello_1_10_Gen, hello_2_Spec);
+		assertThat(result_3.getIntAttr(), equalTo(3));
+		
+		assertThat(converted.getBoxedLongAttr(world_5_44_Gen), equalTo(44L));
+		assertThat(converted.getBoxedLongAttr(hello_1_10_Gen), equalTo(10L));
+		assertThat(converted.getBoxedLongAttr(world_99_Spec), equalTo(99L));
+		assertThat(converted.getBoxedLongAttr(hello_2_Spec), equalTo(2L));
+
 //    assertThat( converted.add( 10, 2 ), equalTo( 3 ) );
 //    assertThat( converted.div( 4l, 2l ), equalTo( 2l ) );
 //    assertThat( converted.mult( 4l, 2l ), equalTo( 8l ) );
@@ -112,10 +154,10 @@ public class GenSpecSignatureMatchingTypeConverterTest {
 		return map;
 	}
 
-	private ModuleMatchingInfo createMMI_N2N() {
+	private ModuleMatchingInfo createMMI_Int2Int() {
 		ModuleMatchingInfo mmi = EasyMock.createNiceMock(ModuleMatchingInfo.class);
-		EasyMock.expect(mmi.getSource()).andReturn(Number.class).anyTimes();
-		EasyMock.expect(mmi.getTarget()).andReturn(Number.class).anyTimes();
+		EasyMock.expect(mmi.getSource()).andReturn(Integer.class).anyTimes();
+		EasyMock.expect(mmi.getTarget()).andReturn(Integer.class).anyTimes();
 		EasyMock.expect(mmi.getMethodMatchingInfos()).andReturn(new HashSet<>()).anyTimes();
 		EasyMock.replay(mmi);
 		return mmi;
@@ -129,6 +171,15 @@ public class GenSpecSignatureMatchingTypeConverterTest {
 		EasyMock.replay(mmi);
 		return mmi;
 	}
+	
+	private ModuleMatchingInfo createMMI_Long2Long() {
+		ModuleMatchingInfo mmi = EasyMock.createNiceMock(ModuleMatchingInfo.class);
+		EasyMock.expect(mmi.getSource()).andReturn(Long.class).anyTimes();
+		EasyMock.expect(mmi.getTarget()).andReturn(Long.class).anyTimes();
+		EasyMock.expect(mmi.getMethodMatchingInfos()).andReturn(new HashSet<>()).anyTimes();
+		EasyMock.replay(mmi);
+		return mmi;
+	}
 
 	private ModuleMatchingInfo createMMI_G2S() throws NoSuchMethodException, SecurityException {
 		ModuleMatchingInfo mmit = EasyMock.createNiceMock(ModuleMatchingInfo.class);
@@ -138,23 +189,62 @@ public class GenSpecSignatureMatchingTypeConverterTest {
 		MethodMatchingInfo concatMethod = EasyMock.createNiceMock(MethodMatchingInfo.class);
 		EasyMock.expect(concatMethod.getSource()).andReturn(Specific.class.getMethod("getStringAttr")).anyTimes();
 		EasyMock.expect(concatMethod.getTarget()).andReturn(General.class.getMethod("getStringAttr")).anyTimes();
+		EasyMock.expect(concatMethod.getReturnTypeMatchingInfo()).andReturn(createMMI_Str2Str()).anyTimes();
 		EasyMock.expect(concatMethod.getArgumentTypeMatchingInfos()).andReturn(new HashMap<>()).anyTimes();
+		EasyMock.replay(concatMethod);
 		methodInfos.add(concatMethod);
+
+		MethodMatchingInfo addMethod = EasyMock.createNiceMock(MethodMatchingInfo.class);
+		EasyMock.expect(addMethod.getSource()).andReturn(Specific.class.getMethod("getIntAttr")).anyTimes();
+		EasyMock.expect(addMethod.getTarget()).andReturn(General.class.getMethod("getIntAttr")).anyTimes();
+		EasyMock.expect(addMethod.getReturnTypeMatchingInfo()).andReturn(createMMI_Int2Int()).anyTimes();
+		EasyMock.expect(addMethod.getArgumentTypeMatchingInfos()).andReturn(new HashMap<>()).anyTimes();
+		EasyMock.replay(addMethod);
+		methodInfos.add(addMethod);
+		
+		MethodMatchingInfo getLongMethod = EasyMock.createNiceMock(MethodMatchingInfo.class);
+		EasyMock.expect(getLongMethod.getSource()).andReturn(Specific.class.getMethod("getBoxedLongAttr")).anyTimes();
+		EasyMock.expect(getLongMethod.getTarget()).andReturn(General.class.getMethod("getBoxedLongAttr")).anyTimes();
+		EasyMock.expect(getLongMethod.getReturnTypeMatchingInfo()).andReturn(createMMI_Long2Long()).anyTimes();
+		EasyMock.expect(getLongMethod.getArgumentTypeMatchingInfos()).andReturn(new HashMap<>()).anyTimes();
+		EasyMock.replay(getLongMethod);
+		methodInfos.add(getLongMethod);
+
 		EasyMock.expect(mmit.getMethodMatchingInfos()).andReturn(methodInfos).anyTimes();
-		EasyMock.replay(mmit, concatMethod);
+		EasyMock.replay(mmit);
 		return mmit;
 	}
 
-	private ModuleMatchingInfo createMMI_D2N() throws NoSuchMethodException, SecurityException {
+	private ModuleMatchingInfo createMMI_S2G() throws NoSuchMethodException, SecurityException {
 		ModuleMatchingInfo mmit = EasyMock.createNiceMock(ModuleMatchingInfo.class);
-		EasyMock.expect(mmit.getTarget()).andReturn(Double.class).anyTimes();
-		EasyMock.expect(mmit.getSource()).andReturn(Number.class).anyTimes();
+		EasyMock.expect(mmit.getSource()).andReturn(General.class).anyTimes();
+		EasyMock.expect(mmit.getTarget()).andReturn(Specific.class).anyTimes();
 		Set methodInfos = new HashSet<>();
-		MethodMatchingInfo doubleValueMethod = EasyMock.createNiceMock(MethodMatchingInfo.class);
-		EasyMock.expect(doubleValueMethod.getSource()).andReturn(Double.class.getMethod("doubleValue")).anyTimes();
-		EasyMock.expect(doubleValueMethod.getTarget()).andReturn(Number.class.getMethod("doubleValue")).anyTimes();
-		EasyMock.expect(doubleValueMethod.getArgumentTypeMatchingInfos()).andReturn(new HashMap<>()).anyTimes();
-		methodInfos.add(doubleValueMethod);
+		
+		MethodMatchingInfo concatMethod = EasyMock.createNiceMock(MethodMatchingInfo.class);
+		EasyMock.expect(concatMethod.getSource()).andReturn(General.class.getMethod("getStringAttr")).anyTimes();
+		EasyMock.expect(concatMethod.getTarget()).andReturn(Specific.class.getMethod("getStringAttr")).anyTimes();
+		EasyMock.expect(concatMethod.getReturnTypeMatchingInfo()).andReturn(createMMI_Str2Str()).anyTimes();
+		EasyMock.expect(concatMethod.getArgumentTypeMatchingInfos()).andReturn(new HashMap<>()).anyTimes();
+		EasyMock.replay(concatMethod);
+		methodInfos.add(concatMethod);
+
+		MethodMatchingInfo addMethod = EasyMock.createNiceMock(MethodMatchingInfo.class);
+		EasyMock.expect(addMethod.getSource()).andReturn(General.class.getMethod("getIntAttr")).anyTimes();
+		EasyMock.expect(addMethod.getTarget()).andReturn(Specific.class.getMethod("getIntAttr")).anyTimes();
+		EasyMock.expect(addMethod.getReturnTypeMatchingInfo()).andReturn(createMMI_Int2Int()).anyTimes();
+		EasyMock.expect(addMethod.getArgumentTypeMatchingInfos()).andReturn(new HashMap<>()).anyTimes();
+		EasyMock.replay(addMethod);
+		methodInfos.add(addMethod);
+		
+		MethodMatchingInfo getLongMethod = EasyMock.createNiceMock(MethodMatchingInfo.class);
+		EasyMock.expect(getLongMethod.getSource()).andReturn(General.class.getMethod("getBoxedLongAttr")).anyTimes();
+		EasyMock.expect(getLongMethod.getTarget()).andReturn(Specific.class.getMethod("getBoxedLongAttr")).anyTimes();
+		EasyMock.expect(getLongMethod.getReturnTypeMatchingInfo()).andReturn(createMMI_Long2Long()).anyTimes();
+		EasyMock.expect(getLongMethod.getArgumentTypeMatchingInfos()).andReturn(new HashMap<>()).anyTimes();
+		EasyMock.replay(getLongMethod);
+		methodInfos.add(getLongMethod);
+		
 		EasyMock.expect(mmit.getMethodMatchingInfos()).andReturn(methodInfos).anyTimes();
 		EasyMock.replay(mmit);
 		return mmit;
