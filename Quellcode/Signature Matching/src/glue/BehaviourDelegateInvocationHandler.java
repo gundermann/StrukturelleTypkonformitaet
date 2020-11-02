@@ -46,6 +46,9 @@ public class BehaviourDelegateInvocationHandler<T> implements InvocationHandler 
   }
 
   private Object[] convertArgs( Object[] args, Map<Integer, ModuleMatchingInfo<?>> argMMI ) {
+    if ( args == null ) {
+      return null;
+    }
     Object[] convertedArgs = new Object[args.length];
     for ( int i = 0; i < args.length; i++ ) {
       if ( argMMI.containsKey( i ) ) {

@@ -7,7 +7,7 @@ import java.util.Collection;
 
 import org.junit.Test;
 
-import DE.data_experts.profi.profilcs.antrag2015.eler.ft.stammdaten.business.ElerFTFoerderprogramm;
+import DE.data_experts.profi.profilcs.antrag2015.stammdaten.business.impl.Foerderprogramm;
 import de.fernuni.hagen.ma.gundermann.ejb.desiredinterfaces.FoerderprogrammeProvider;
 import tester.annotation.QueryTypeInstanceSetter;
 
@@ -22,7 +22,7 @@ public class FoerderprogrammProviderTest {
 
   @Test
   public void testEmptyCollection() {
-    Collection<ElerFTFoerderprogramm> alleFreigegebenenFPs = provider.getAlleFreigegebenenFPs();
+    Collection<Foerderprogramm> alleFreigegebenenFPs = provider.getAlleFreigegebenenFPs();
     assertThat( alleFreigegebenenFPs, notNullValue() );
   }
 }

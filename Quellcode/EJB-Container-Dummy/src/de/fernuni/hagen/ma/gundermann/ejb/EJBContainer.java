@@ -68,7 +68,7 @@ public enum EJBContainer {
     Collection<Class<?>> matchingBeanInterfaces = findBeansBySignatureMatching( desiredInterface );
     // System.out.println( "Matching Bean-Interfaces of " + desiredInterface.getName() );
     // matchingBeanInterfaces.stream().map( Class::getName ).forEach( System.out::println );
-    // System.out.println( String.format( "count: %d", matchingBeanInterfaces.size() ) );
+    System.out.println( String.format( "count: %d", matchingBeanInterfaces.size() ) );
 
     // Hier können weitere Filter und Heuristiken eingebaut werden
 
