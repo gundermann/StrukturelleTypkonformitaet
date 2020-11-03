@@ -81,11 +81,18 @@ public class ModuleMatcher<S> {
    * @return
    */
   public <T> Set<ModuleMatchingInfo<S>> calculateMatchingInfos( Class<T> checkType ) {
+    ModuleMatchingInfoFactory<S, T> factory = new ModuleMatchingInfoFactory<>( checkType, queryType );
+    if ( queryType.equals( Object.class ) ) {
+      // Dieser Spezialfall führt ohne diese Sonderregelung in einen Stackoverflow, da Object als Typ immer wieder
+      // auftaucht. Es ist also eine Abbruchbedingung.
+      Set<ModuleMatchingInfo<S>> singleResult = new HashSet<>();
+      singleResult.add( factory.create() );
+      return singleResult;
+    }
     Method[] queryMethods = getQueryMethods();
     Map<Method, Collection<Method>> possibleMatches = collectPossibleMatches( queryMethods, checkType.getMethods() );
     Map<Method, Set<MethodMatchingInfo>> possibleMethodMatches = collectMethodMatchingInfos( queryMethods,
         possibleMatches );
-    ModuleMatchingInfoFactory<S, T> factory = new ModuleMatchingInfoFactory<>( checkType, queryType );
     return factory.createFromMethodMatchingInfos( possibleMethodMatches );
 
   }

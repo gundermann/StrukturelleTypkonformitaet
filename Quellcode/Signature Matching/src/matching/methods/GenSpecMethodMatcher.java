@@ -135,17 +135,16 @@ public class GenSpecMethodMatcher implements MethodMatcher {
       // sourceRT > targetRT
       // Gen: sourceRT
       // Spec: targetRT
-      return Collections.singletonList( factory.create() );
-
+      return new ModuleMatcher<>( sourceRT ).calculateMatchingInfos( targetRT );
     }
     else if ( targetRT.isAssignableFrom( sourceRT )
     // Wurde nur für native Typen gemacht
-    // || sourceRT.equals( Object.class )
+    // || targetRT.equals( Object.class )
     ) {
       // sourceRT < targetRT
       // Gen: targetRT
       // Spec: sourceRT
-      return new ModuleMatcher<>( sourceRT ).calculateMatchingInfos( targetRT );
+      return Collections.singletonList( factory.create() );
     }
     return new ArrayList<>();
   }

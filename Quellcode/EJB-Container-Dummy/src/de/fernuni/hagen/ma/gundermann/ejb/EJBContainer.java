@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import DE.data_experts.profi.profilcs.antrag2015.eler.ft.stammdaten.ejb.ElerFTStammdatenAuskunftService;
 import glue.SignatureMatchingTypeConverter;
 import matching.modules.ModuleMatcher;
 import matching.modules.ModuleMatchingInfo;
@@ -121,9 +120,6 @@ public enum EJBContainer {
     List<ComponentInfos<DesiredInterface>> componentInfoSet = new ArrayList<>();
     ModuleMatcher<DesiredInterface> moduleMatcher = new ModuleMatcher<>( desiredInterface );
     for ( Class<?> matchingBeanInterface : matchingBeanInterfaces ) {
-      if ( matchingBeanInterface.equals( ElerFTStammdatenAuskunftService.class ) ) {
-        System.out.println( "hwg" );
-      }
       Set<ModuleMatchingInfo<DesiredInterface>> matchingInfos = moduleMatcher
           .calculateMatchingInfos( matchingBeanInterface );
       ComponentInfos<DesiredInterface> componentInfos = new ComponentInfos<>( matchingBeanInterface );

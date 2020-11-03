@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 
+import org.easymock.EasyMock;
+
 import DE.data_experts.profi.fp.dv.AntragsVorgangsTyp;
 import DE.data_experts.profi.profilcs.antrag.dv.business.DvFoerdergegenstand;
 import DE.data_experts.profi.profilcs.antrag2015.eler.ft.stammdaten.business.DvEftOekoFoerdergegenstandGruppe;
@@ -49,8 +51,10 @@ public class EftSTDAuskunftImpl implements ElerFTStammdatenAuskunftService {
 
   @Override
   public ElerFTFoerderprogramm getFoerderprogramm( DvAntragsJahr jahr, DvFoerderprogramm fp, Date date ) {
-    // TODO Auto-generated method stub
-    return null;
+    ElerFTFoerderprogramm fpMock = EasyMock.createNiceMock( ElerFTFoerderprogramm.class );
+    EasyMock.expect( fpMock.getFoerderprogramm() ).andReturn( fp ).anyTimes();
+    EasyMock.replay( fpMock );
+    return fpMock;
   }
 
   @Override
