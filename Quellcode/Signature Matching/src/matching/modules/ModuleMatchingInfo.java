@@ -6,7 +6,6 @@ import matching.methods.MethodMatchingInfo;
 
 public class ModuleMatchingInfo<S> {
 
-  // TODO Source und Target müssen umgedreht werden
   private final Class<S> source;
 
   private final Class<?> target;
@@ -25,8 +24,10 @@ public class ModuleMatchingInfo<S> {
    * partlyMatches), dann wird hier ein niedrigerer Wert geliefert, als wenn das target vollständig die source matched
    * (siehe {@link ModuleMatcher}-> matches).
    *
+   * @deprecated TODO das muss woanders hin verschobenw reden
    * @return
    */
+  @Deprecated
   public int getRating() {
     // Der Algorithmus muss noch angepasst werden!!!!
     int desiredMethodCount = source.getMethods().length;
@@ -34,6 +35,9 @@ public class ModuleMatchingInfo<S> {
     return matchedMethodCount / desiredMethodCount * 100;
   }
 
+  /**
+   * @return empty Set, if the source type is the same, or a superclass or a superinterface of the target type
+   */
   public Set<MethodMatchingInfo> getMethodMatchingInfos() {
     return methodMatchingInfos;
   }

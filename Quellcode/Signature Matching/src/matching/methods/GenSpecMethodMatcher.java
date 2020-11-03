@@ -96,11 +96,13 @@ public class GenSpecMethodMatcher implements MethodMatcher {
 
   @Override
   public Set<MethodMatchingInfo> calculateMatchingInfos( Method checkMethod, Method queryMethod ) {
+    // TODO leeres Set zurückgeben, wenn !matches(checkMethod, queryMethod)
+
     MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( checkMethod, queryMethod );
     MethodStructure checkStruct = MethodStructure.createFromDeclaredMethod( checkMethod );
     MethodStructure queryStruct = MethodStructure.createFromDeclaredMethod( queryMethod );
     Collection<?> returnTypeMatchingInfos = calculateReturnTypeMatchingInfos(
-        checkStruct.getReturnType(), queryStruct.getReturnType() );
+        queryStruct.getReturnType(), checkStruct.getReturnType() );
     Map<Integer, Collection<ModuleMatchingInfo<?>>> argumentTypesMatchingInfos = calculateArgumentTypesMatchingInfos(
         checkStruct.getSortedArgumentTypes(), queryStruct.getSortedArgumentTypes() );
     return factory.createFromTypeMatchingInfos( (Collection<ModuleMatchingInfo<?>>) returnTypeMatchingInfos,
@@ -108,12 +110,12 @@ public class GenSpecMethodMatcher implements MethodMatcher {
   }
 
   private Map<Integer, Collection<ModuleMatchingInfo<?>>> calculateArgumentTypesMatchingInfos(
-      Class<?>[] sourceATs, Class<?>[] targetATs ) {
+      Class<?>[] checkATs, Class<?>[] queryATs ) {
     Map<Integer, Collection<ModuleMatchingInfo<?>>> matchingMap = new HashMap<>();
-    for ( int i = 0; i < sourceATs.length; i++ ) {
-      Class<?> sourceAT = sourceATs[i];
-      Class<?> targetAT = targetATs[i];
-      Collection<?> infos = calculateReturnTypeMatchingInfos( targetAT, sourceAT );
+    for ( int i = 0; i < checkATs.length; i++ ) {
+      Class<?> checkAT = checkATs[i];
+      Class<?> queryAT = queryATs[i];
+      Collection<?> infos = calculateReturnTypeMatchingInfos( checkAT, queryAT );
       matchingMap.put( i, (Collection<ModuleMatchingInfo<?>>) infos );
     }
 
