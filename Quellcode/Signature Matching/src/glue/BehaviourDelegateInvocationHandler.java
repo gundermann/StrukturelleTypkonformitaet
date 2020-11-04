@@ -45,14 +45,14 @@ public class BehaviourDelegateInvocationHandler<T> implements InvocationHandler 
     return method.invoke( component, args );
   }
 
-  private Object[] convertArgs( Object[] args, Map<Integer, ModuleMatchingInfo<?>> argMMI ) {
+  private Object[] convertArgs( Object[] args, Map<Integer, ModuleMatchingInfo> argMMI ) {
     if ( args == null ) {
       return null;
     }
     Object[] convertedArgs = new Object[args.length];
     for ( int i = 0; i < args.length; i++ ) {
       if ( argMMI.containsKey( i ) ) {
-        ModuleMatchingInfo<?> moduleMatchingInfo = argMMI.get( i );
+        ModuleMatchingInfo moduleMatchingInfo = argMMI.get( i );
         Object convertedArg = convertType( args[i], moduleMatchingInfo );
         convertedArgs[i] = convertedArg;
       }
@@ -91,7 +91,7 @@ public class BehaviourDelegateInvocationHandler<T> implements InvocationHandler 
   }
 
   private boolean agrumentsMatches( MethodMatchingInfo mmi, Method method ) {
-    for ( Entry<Integer, ModuleMatchingInfo<?>> argMMIEntry : mmi.getArgumentTypeMatchingInfos().entrySet() ) {
+    for ( Entry<Integer, ModuleMatchingInfo> argMMIEntry : mmi.getArgumentTypeMatchingInfos().entrySet() ) {
       if ( method.getParameterCount() <= argMMIEntry.getKey() ) {
         throw new RuntimeException( "wrong parameter count" );
       }

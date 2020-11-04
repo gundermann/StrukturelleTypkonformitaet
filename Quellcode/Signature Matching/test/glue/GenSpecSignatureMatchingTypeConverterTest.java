@@ -440,8 +440,8 @@ public class GenSpecSignatureMatchingTypeConverterTest {
   }
 
   @SuppressWarnings( "rawtypes" )
-  private Map<Integer, ModuleMatchingInfo<?>> createMMIMap( ModuleMatchingInfo... infos ) {
-    Map<Integer, ModuleMatchingInfo<?>> map = new HashMap<>();
+  private Map<Integer, ModuleMatchingInfo> createMMIMap( ModuleMatchingInfo... infos ) {
+    Map<Integer, ModuleMatchingInfo> map = new HashMap<>();
     for ( int i = 0; i < infos.length; i++ ) {
       map.put( i, infos[i] );
     }

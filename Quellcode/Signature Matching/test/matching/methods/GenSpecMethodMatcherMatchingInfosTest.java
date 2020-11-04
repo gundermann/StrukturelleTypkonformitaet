@@ -68,13 +68,11 @@ public class GenSpecMethodMatcherMatchingInfosTest {
 
   @Test
   public void test5() {
-    // Da die MethodMatchingInfoFactory eine Info erzeugt, sobald eine TypeMatchingInfo für den Returntype existiert,
-    // wird hier auch ein Element erzeugt. Denn void== void
     Method checkMethod = getMethod( "setBool" );
     Method queryMethod = getMethod( "setBoolNativeWrapped" );
     Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
     assertThat( matchingInfos, notNullValue() );
-    assertThat( matchingInfos.size(), equalTo( 1 ) );
+    assertThat( matchingInfos.size(), equalTo( 0 ) );
   }
 
   @Test
@@ -109,7 +107,7 @@ public class GenSpecMethodMatcherMatchingInfosTest {
       assertThat( returnTypeMatchingInfo, notNullValue() );
       assertThat( returnTypeMatchingInfo.getSource(), equalTo( checkMethod.getReturnType() ) );
       assertThat( returnTypeMatchingInfo.getTarget(), equalTo( queryMethod.getReturnType() ) );
-      Map<Integer, ModuleMatchingInfo<?>> argumentTypeMatchingInfos = info.getArgumentTypeMatchingInfos();
+      Map<Integer, ModuleMatchingInfo> argumentTypeMatchingInfos = info.getArgumentTypeMatchingInfos();
       assertThat( argumentTypeMatchingInfos, notNullValue() );
       assertThat( argumentTypeMatchingInfos.size(), equalTo( 2 ) );
       int index = 0;
@@ -128,24 +126,20 @@ public class GenSpecMethodMatcherMatchingInfosTest {
 
   @Test
   public void test8() {
-    // Da die MethodMatchingInfoFactory eine Info erzeugt, sobald eine TypeMatchingInfo für den Returntype existiert,
-    // wird hier auch ein Element erzeugt. Denn int == int
     Method checkMethod = getMethod( "addPartlyNativeWrapped" );
     Method queryMethod = getMethod( "subPartlyNativeWrapped" );
     Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
     assertThat( matchingInfos, notNullValue() );
-    assertThat( matchingInfos.size(), equalTo( 1 ) );
+    assertThat( matchingInfos.size(), equalTo( 0 ) );
   }
 
   @Test
   public void test9() {
-    // Da die MethodMatchingInfoFactory eine Info erzeugt, sobald eine TypeMatchingInfo für den Returntype existiert,
-    // wird hier auch ein Element erzeugt. Denn int == int
     Method checkMethod = getMethod( "addPartlyWrapped" );
     Method queryMethod = getMethod( "subPartlyWrapped" );
     Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
     assertThat( matchingInfos, notNullValue() );
-    assertThat( matchingInfos.size(), equalTo( 1 ) );
+    assertThat( matchingInfos.size(), equalTo( 0 ) );
   }
 
   @Test
@@ -160,7 +154,7 @@ public class GenSpecMethodMatcherMatchingInfosTest {
       assertThat( returnTypeMatchingInfo, notNullValue() );
       assertThat( returnTypeMatchingInfo.getSource(), equalTo( checkMethod.getReturnType() ) );
       assertThat( returnTypeMatchingInfo.getTarget(), equalTo( queryMethod.getReturnType() ) );
-      Map<Integer, ModuleMatchingInfo<?>> argumentTypeMatchingInfos = info.getArgumentTypeMatchingInfos();
+      Map<Integer, ModuleMatchingInfo> argumentTypeMatchingInfos = info.getArgumentTypeMatchingInfos();
       assertThat( argumentTypeMatchingInfos, notNullValue() );
       assertThat( argumentTypeMatchingInfos.size(), equalTo( 2 ) );
 
@@ -218,7 +212,7 @@ public class GenSpecMethodMatcherMatchingInfosTest {
       assertThat( methodMatchingInfosOfReturnType.isEmpty(), equalTo( true ) );
 
       // Parameter prüfen
-      Map<Integer, ModuleMatchingInfo<?>> argumentTypeMatchingInfos = info.getArgumentTypeMatchingInfos();
+      Map<Integer, ModuleMatchingInfo> argumentTypeMatchingInfos = info.getArgumentTypeMatchingInfos();
       assertThat( argumentTypeMatchingInfos, notNullValue() );
       assertThat( argumentTypeMatchingInfos.size(), equalTo( 2 ) );
       int index = 0;
@@ -252,7 +246,7 @@ public class GenSpecMethodMatcherMatchingInfosTest {
       assertThat( methodMatchingInfosOfReturnType.isEmpty(), equalTo( false ) );
 
       // Parameter prüfen
-      Map<Integer, ModuleMatchingInfo<?>> argumentTypeMatchingInfos = info.getArgumentTypeMatchingInfos();
+      Map<Integer, ModuleMatchingInfo> argumentTypeMatchingInfos = info.getArgumentTypeMatchingInfos();
       assertThat( argumentTypeMatchingInfos, notNullValue() );
       assertThat( argumentTypeMatchingInfos.size(), equalTo( 2 ) );
       int index = 0;
