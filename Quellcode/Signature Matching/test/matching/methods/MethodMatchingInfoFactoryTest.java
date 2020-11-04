@@ -20,14 +20,14 @@ import matching.modules.ModuleMatchingInfoFactory;
 
 public class MethodMatchingInfoFactoryTest {
 
-  private ModuleMatchingInfoFactory<?, ?> moduleMatchingInfoFactory = new ModuleMatchingInfoFactory<>( null, null );
+  private ModuleMatchingInfoFactory moduleMatchingInfoFactory = new ModuleMatchingInfoFactory( null, null );
 
   @Test
   public void create() {
     Method source = MethodPool.getMethod( "getOne" );
     Method target = MethodPool.getMethod( "getOneNativeWrapped" );
     MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( target, source );
-    ModuleMatchingInfo<?> returnTypeMatchingInfo = moduleMatchingInfoFactory.create();
+    ModuleMatchingInfo returnTypeMatchingInfo = moduleMatchingInfoFactory.create();
     MethodMatchingInfo info = factory.create( returnTypeMatchingInfo, new HashMap<>() );
     assertThat( info, notNullValue() );
     assertThat( info.getReturnTypeMatchingInfo(), equalTo( returnTypeMatchingInfo ) );

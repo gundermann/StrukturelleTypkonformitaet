@@ -74,7 +74,7 @@ public class ExactMethodMatcher implements MethodMatcher, Comparator<MethodStruc
   public Collection<ModuleMatchingInfo> calculateTypeMatchingInfos( Class<?> targetType,
       Class<?> sourceType ) {
     return Collections
-        .singletonList( new ModuleMatchingInfoFactory<>( targetType, sourceType ).create() );
+        .singletonList( new ModuleMatchingInfoFactory( targetType, sourceType ).create() );
   }
 
 }

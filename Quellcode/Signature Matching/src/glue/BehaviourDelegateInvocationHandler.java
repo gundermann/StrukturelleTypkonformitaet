@@ -13,9 +13,9 @@ public class BehaviourDelegateInvocationHandler<T> implements InvocationHandler 
 
   private Object component;
 
-  private ModuleMatchingInfo<T> matchingInfos;
+  private ModuleMatchingInfo matchingInfos;
 
-  public BehaviourDelegateInvocationHandler( Object component, ModuleMatchingInfo<T> matchingInfos ) {
+  public BehaviourDelegateInvocationHandler( Object component, ModuleMatchingInfo matchingInfos ) {
     this.component = component;
     this.matchingInfos = matchingInfos;
   }
@@ -28,7 +28,7 @@ public class BehaviourDelegateInvocationHandler<T> implements InvocationHandler 
       Method targetMethod = methodMatchingInfo.getTarget();
       Object[] convertedArgs = convertArgs( args, methodMatchingInfo.getArgumentTypeMatchingInfos() );
       Object returnValue = targetMethod.invoke( component, convertedArgs );
-      ModuleMatchingInfo<?> returnTypeMatchingInfo = methodMatchingInfo.getReturnTypeMatchingInfo();
+      ModuleMatchingInfo returnTypeMatchingInfo = methodMatchingInfo.getReturnTypeMatchingInfo();
       if ( returnTypeMatchingInfo == null ) {
         return returnValue;
       }
@@ -71,13 +71,13 @@ public class BehaviourDelegateInvocationHandler<T> implements InvocationHandler 
    * @param moduleMatchingInfo
    * @return
    */
-  private <RT> RT convertType( Object returnValue, ModuleMatchingInfo<RT> moduleMatchingInfo ) {
+  private <RT> RT convertType( Object returnValue, ModuleMatchingInfo moduleMatchingInfo ) {
     System.out.println( String.format( "convert type %s -> %s", moduleMatchingInfo.getTarget().getName(),
         moduleMatchingInfo.getSource().getName() ) );
     if ( moduleMatchingInfo.getMethodMatchingInfos().isEmpty() ) {
       return (RT) returnValue;
     }
-    return new SignatureMatchingTypeConverter<>( moduleMatchingInfo.getSource() ).convert( returnValue,
+    return new SignatureMatchingTypeConverter<>( (Class<RT>) moduleMatchingInfo.getSource() ).convert( returnValue,
         moduleMatchingInfo );
   }
 

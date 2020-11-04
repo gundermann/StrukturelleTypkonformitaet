@@ -128,7 +128,7 @@ public class GenSpecMethodMatcher implements MethodMatcher {
   @Override
   public Collection<ModuleMatchingInfo> calculateTypeMatchingInfos( Class<?> checkType,
       Class<?> queryType ) {
-    ModuleMatchingInfoFactory<?, ?> factory = new ModuleMatchingInfoFactory<>( checkType, queryType );
+    ModuleMatchingInfoFactory factory = new ModuleMatchingInfoFactory( checkType, queryType );
     if ( checkType.equals( queryType ) ) {
       return Collections.singletonList( factory.create() );
     }
@@ -139,7 +139,7 @@ public class GenSpecMethodMatcher implements MethodMatcher {
       // queryType > checkType
       // Gen: queryType
       // Spec: checkType
-      return new ModuleMatcher( queryType ).calculateMatchingInfos( checkType );
+      return new ModuleMatcher<>( queryType ).calculateMatchingInfos( checkType );
     }
     else if ( checkType.isAssignableFrom( queryType )
     // Wurde nur für native Typen gemacht

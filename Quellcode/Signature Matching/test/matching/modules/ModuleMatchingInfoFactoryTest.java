@@ -19,9 +19,9 @@ public class ModuleMatchingInfoFactoryTest {
 
   @Test
   public void create() {
-    ModuleMatchingInfoFactory<Object, Object> factory = new ModuleMatchingInfoFactory<>( Object.class,
+    ModuleMatchingInfoFactory factory = new ModuleMatchingInfoFactory( Object.class,
         Object.class );
-    ModuleMatchingInfo<Object> matchingInfo = factory.create();
+    ModuleMatchingInfo matchingInfo = factory.create();
     assertThat( matchingInfo, notNullValue() );
     assertThat( matchingInfo.getRating(), equalTo( 0 ) );
     assertThat( matchingInfo.getMethodMatchingInfos(), notNullValue() );
@@ -30,9 +30,9 @@ public class ModuleMatchingInfoFactoryTest {
 
   @Test
   public void create_emptyMethodMatchingInfos() {
-    ModuleMatchingInfoFactory<Object, Object> factory = new ModuleMatchingInfoFactory<>( Object.class,
+    ModuleMatchingInfoFactory factory = new ModuleMatchingInfoFactory( Object.class,
         Object.class );
-    ModuleMatchingInfo<Object> matchingInfo = factory.create( new HashSet<>() );
+    ModuleMatchingInfo matchingInfo = factory.create( new HashSet<>() );
     assertThat( matchingInfo, notNullValue() );
     assertThat( matchingInfo.getRating(), equalTo( 0 ) );
     assertThat( matchingInfo.getMethodMatchingInfos(), notNullValue() );
@@ -41,11 +41,11 @@ public class ModuleMatchingInfoFactoryTest {
 
   @Test
   public void create_withMethodMatchingInfos() {
-    ModuleMatchingInfoFactory<Object, Object> factory = new ModuleMatchingInfoFactory<>( Object.class,
+    ModuleMatchingInfoFactory factory = new ModuleMatchingInfoFactory( Object.class,
         Object.class );
     Set<MethodMatchingInfo> methodMatchingInfos = new HashSet<>();
     methodMatchingInfos.add( mockMethodMatchingInfo() );
-    ModuleMatchingInfo<Object> matchingInfo = factory.create( methodMatchingInfos );
+    ModuleMatchingInfo matchingInfo = factory.create( methodMatchingInfos );
     assertThat( matchingInfo, notNullValue() );
     // assertThat( matchingInfo.getRating(), equalTo( 0 ) );
     assertThat( matchingInfo.getMethodMatchingInfos(), notNullValue() );
@@ -54,7 +54,7 @@ public class ModuleMatchingInfoFactoryTest {
 
   @Test
   public void create_withMultipleMethodMatchingInfos() {
-    ModuleMatchingInfoFactory<Object, Object> factory = new ModuleMatchingInfoFactory<>( Object.class,
+    ModuleMatchingInfoFactory factory = new ModuleMatchingInfoFactory( Object.class,
         Object.class );
     Set<MethodMatchingInfo> method1MatchingInfos = new HashSet<>();
     method1MatchingInfos.add( mockMethodMatchingInfo() );
@@ -66,11 +66,11 @@ public class ModuleMatchingInfoFactoryTest {
     possibleMethodMatches.put( Object.class.getMethods()[0], method1MatchingInfos );
     possibleMethodMatches.put( Object.class.getMethods()[1], method2MatchingInfos );
 
-    Set<ModuleMatchingInfo<Object>> matchingInfos = factory.createFromMethodMatchingInfos( possibleMethodMatches );
+    Set<ModuleMatchingInfo> matchingInfos = factory.createFromMethodMatchingInfos( possibleMethodMatches );
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 1 ) );
     // assertThat( matchingInfo.getRating(), equalTo( 0 ) );
-    for ( ModuleMatchingInfo<Object> info : matchingInfos ) {
+    for ( ModuleMatchingInfo info : matchingInfos ) {
       assertThat( info.getMethodMatchingInfos(), notNullValue() );
       assertThat( info.getMethodMatchingInfos().size(), equalTo( 2 ) );
     }
@@ -78,7 +78,7 @@ public class ModuleMatchingInfoFactoryTest {
 
   @Test
   public void create_withMultipleMethodMatchingInfosForOneMethod() {
-    ModuleMatchingInfoFactory<Object, Object> factory = new ModuleMatchingInfoFactory<>( Object.class,
+    ModuleMatchingInfoFactory factory = new ModuleMatchingInfoFactory( Object.class,
         Object.class );
     Set<MethodMatchingInfo> method1MatchingInfos = new HashSet<>();
     method1MatchingInfos.add( mockMethodMatchingInfo() );
@@ -97,11 +97,11 @@ public class ModuleMatchingInfoFactoryTest {
     possibleMethodMatches.put( Object.class.getMethods()[1], method2MatchingInfos );
     possibleMethodMatches.put( Object.class.getMethods()[2], method3MatchingInfos );
 
-    Set<ModuleMatchingInfo<Object>> matchingInfos = factory.createFromMethodMatchingInfos( possibleMethodMatches );
+    Set<ModuleMatchingInfo> matchingInfos = factory.createFromMethodMatchingInfos( possibleMethodMatches );
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 6 ) );
     // assertThat( matchingInfo.getRating(), equalTo( 0 ) );
-    for ( ModuleMatchingInfo<Object> info : matchingInfos ) {
+    for ( ModuleMatchingInfo info : matchingInfos ) {
       Set<MethodMatchingInfo> methodMatchingInfos = info.getMethodMatchingInfos();
       assertThat( methodMatchingInfos, notNullValue() );
       assertThat( methodMatchingInfos.size(), equalTo( 3 ) );

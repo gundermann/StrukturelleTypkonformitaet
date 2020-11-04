@@ -1,7 +1,6 @@
 package glue;
 
 import org.objenesis.Objenesis;
-import org.objenesis.ObjenesisHelper;
 import org.objenesis.ObjenesisStd;
 import org.objenesis.instantiator.ObjectInstantiator;
 
@@ -20,7 +19,7 @@ public class ClassProxyFactory<T> implements ProxyFactory<T> {
   }
 
   @Override
-  public T createProxy( Object component, ModuleMatchingInfo<T> matchingInfo ) {
+  public T createProxy( Object component, ModuleMatchingInfo matchingInfo ) {
     Enhancer enhancer = new Enhancer();
     enhancer.setSuperclass( targetStrcture );
     BehaviourDelegateInvocationHandler<T> handler = new BehaviourDelegateInvocationHandler<>( component,
@@ -29,11 +28,11 @@ public class ClassProxyFactory<T> implements ProxyFactory<T> {
     MethodInterceptor methodInterceptor = ( obj, method, args, proxy ) -> handler.invoke( proxy, method, args );
     enhancer.setCallbackType( methodInterceptor.getClass() );
     Class<T> enhancedClass = enhancer.createClass();
-    
+
     Objenesis objenesis = new ObjenesisStd();
-    ObjectInstantiator<?> instantiator = objenesis.getInstantiatorOf(enhancedClass);
+    ObjectInstantiator<?> instantiator = objenesis.getInstantiatorOf( enhancedClass );
     Object proxyInstance = instantiator.newInstance();
-    ((Factory) proxyInstance).setCallbacks(new Callback[]{methodInterceptor});
+    ( (Factory) proxyInstance ).setCallbacks( new Callback[] { methodInterceptor } );
     return (T) proxyInstance;
   }
 

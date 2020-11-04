@@ -38,7 +38,7 @@ public final class MethodMatchingInfoFactory {
       Collection<ModuleMatchingInfo> returnTypeMatchingInfos,
       Map<Integer, Collection<ModuleMatchingInfo>> argumentTypesMatchingInfos ) {
     Set<MethodMatchingInfo> methodMatchingInfos = new HashSet<>();
-    for ( ModuleMatchingInfo<?> selectedRT : returnTypeMatchingInfos ) {
+    for ( ModuleMatchingInfo selectedRT : returnTypeMatchingInfos ) {
       Collection<Map<Integer, ModuleMatchingInfo>> restructMap = restructureArgumentTypeMatchingInfos(
           argumentTypesMatchingInfos );
 

@@ -3,6 +3,7 @@ package glue;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,19 +28,25 @@ public class ExactSignatureMatchingTypeConverterTest {
     MethodMatchingInfo methodMatchingInfoGetFalse = EasyMock.createNiceMock( MethodMatchingInfo.class );
     EasyMock.expect( methodMatchingInfoGetFalse.getTarget() ).andReturn( target.getMethod( "getFalse" ) ).anyTimes();
     EasyMock.expect( methodMatchingInfoGetFalse.getSource() ).andReturn( source.getMethod( "getFalse" ) ).anyTimes();
+    EasyMock.expect( methodMatchingInfoGetFalse.getArgumentTypeMatchingInfos() )
+        .andReturn( new HashMap<Integer, ModuleMatchingInfo>() ).anyTimes();
     methodMatchingInfos.add( methodMatchingInfoGetFalse );
 
     MethodMatchingInfo methodMatchingInfoGetTrue = EasyMock.createNiceMock( MethodMatchingInfo.class );
     EasyMock.expect( methodMatchingInfoGetTrue.getTarget() ).andReturn( target.getMethod( "getTrue" ) ).anyTimes();
     EasyMock.expect( methodMatchingInfoGetTrue.getSource() ).andReturn( source.getMethod( "getTrue" ) ).anyTimes();
+    EasyMock.expect( methodMatchingInfoGetTrue.getArgumentTypeMatchingInfos() )
+        .andReturn( new HashMap<Integer, ModuleMatchingInfo>() ).anyTimes();
     methodMatchingInfos.add( methodMatchingInfoGetTrue );
 
     MethodMatchingInfo methodMatchingInfoGetOne = EasyMock.createNiceMock( MethodMatchingInfo.class );
     EasyMock.expect( methodMatchingInfoGetOne.getTarget() ).andReturn( target.getMethod( "getOne" ) ).anyTimes();
     EasyMock.expect( methodMatchingInfoGetOne.getSource() ).andReturn( source.getMethod( "getOne" ) ).anyTimes();
+    EasyMock.expect( methodMatchingInfoGetOne.getArgumentTypeMatchingInfos() )
+        .andReturn( new HashMap<Integer, ModuleMatchingInfo>() ).anyTimes();
     methodMatchingInfos.add( methodMatchingInfoGetOne );
 
-    ModuleMatchingInfo<InterfaceWrapper> moduleMatchingInfo = EasyMock.createNiceMock( ModuleMatchingInfo.class );
+    ModuleMatchingInfo moduleMatchingInfo = EasyMock.createNiceMock( ModuleMatchingInfo.class );
     EasyMock.expect( moduleMatchingInfo.getMethodMatchingInfos() ).andReturn( methodMatchingInfos ).anyTimes();
     EasyMock.replay( moduleMatchingInfo, methodMatchingInfoGetFalse, methodMatchingInfoGetTrue,
         methodMatchingInfoGetOne );

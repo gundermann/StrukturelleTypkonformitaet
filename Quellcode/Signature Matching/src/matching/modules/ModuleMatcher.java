@@ -80,12 +80,12 @@ public class ModuleMatcher<S> {
    * @param queryType
    * @return
    */
-  public <T> Set<ModuleMatchingInfo<S>> calculateMatchingInfos( Class<T> checkType ) {
-    ModuleMatchingInfoFactory<S, T> factory = new ModuleMatchingInfoFactory<>( checkType, queryType );
+  public  Set<ModuleMatchingInfo> calculateMatchingInfos( Class<?> checkType ) {
+    ModuleMatchingInfoFactory factory = new ModuleMatchingInfoFactory( checkType, queryType );
     if ( queryType.equals( Object.class ) ) {
       // Dieser Spezialfall führt ohne diese Sonderregelung in einen Stackoverflow, da Object als Typ immer wieder
       // auftaucht. Es ist also eine Abbruchbedingung.
-      Set<ModuleMatchingInfo<S>> singleResult = new HashSet<>();
+      Set<ModuleMatchingInfo> singleResult = new HashSet<>();
       singleResult.add( factory.create() );
       return singleResult;
     }

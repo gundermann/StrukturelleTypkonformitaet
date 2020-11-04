@@ -10,26 +10,26 @@ import java.util.stream.Collectors;
 
 import matching.methods.MethodMatchingInfo;
 
-public class ModuleMatchingInfoFactory<S, T> {
+public class ModuleMatchingInfoFactory {
 
-  private final Class<T> targetType;
+  private final Class<?> targetType;
 
-  private final Class<S> sourceType;
+  private final Class<?> sourceType;
 
-  public ModuleMatchingInfoFactory( Class<T> targetType, Class<S> sourceType ) {
+  public ModuleMatchingInfoFactory( Class<?> targetType, Class<?> sourceType ) {
     this.targetType = targetType;
     this.sourceType = sourceType;
   }
 
-  public ModuleMatchingInfo<S> create() {
+  public ModuleMatchingInfo create() {
     return this.create( new HashSet<>() );
   }
 
-  public ModuleMatchingInfo<S> create( Set<MethodMatchingInfo> methodMatchingInfos ) {
-    return new ModuleMatchingInfo<>( sourceType, targetType, methodMatchingInfos );
+  public ModuleMatchingInfo create( Set<MethodMatchingInfo> methodMatchingInfos ) {
+    return new ModuleMatchingInfo( sourceType, targetType, methodMatchingInfos );
   }
 
-  public Set<ModuleMatchingInfo<S>> createFromMethodMatchingInfos(
+  public Set<ModuleMatchingInfo> createFromMethodMatchingInfos(
       Map<Method, Set<MethodMatchingInfo>> possibleMethodMatches ) {
     Set<Set<MethodMatchingInfo>> permutedMethodMatches = generateMethodMatchingCombinations(
         possibleMethodMatches );

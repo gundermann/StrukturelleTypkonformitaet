@@ -81,7 +81,7 @@ public class GenSpecSignatureMatchingTypeConverterTest {
     methodMatchingInfos.add( mmiAddGen );
     methodMatchingInfos.add( mmiGetLong );
 
-    ModuleMatchingInfo<DesiredGenInterface> moduleMatchingInfo = EasyMock.createNiceMock( ModuleMatchingInfo.class );
+    ModuleMatchingInfo moduleMatchingInfo = EasyMock.createNiceMock( ModuleMatchingInfo.class );
     EasyMock.expect( moduleMatchingInfo.getMethodMatchingInfos() ).andReturn( methodMatchingInfos ).anyTimes();
     EasyMock.replay( moduleMatchingInfo );
 
@@ -187,7 +187,7 @@ public class GenSpecSignatureMatchingTypeConverterTest {
     methodMatchingInfos.add( mmiAddGen );
     methodMatchingInfos.add( mmiGetLong );
 
-    ModuleMatchingInfo<DesiredGenInterface> moduleMatchingInfo = EasyMock.createNiceMock( ModuleMatchingInfo.class );
+    ModuleMatchingInfo moduleMatchingInfo = EasyMock.createNiceMock( ModuleMatchingInfo.class );
     EasyMock.expect( moduleMatchingInfo.getMethodMatchingInfos() ).andReturn( methodMatchingInfos ).anyTimes();
     EasyMock.replay( moduleMatchingInfo );
 
@@ -237,7 +237,7 @@ public class GenSpecSignatureMatchingTypeConverterTest {
   @Test
   public void specSourceSpecTargetMatching() throws NoSuchMethodException, SecurityException, IllegalAccessException,
       IllegalArgumentException, InvocationTargetException {
-    Class<DesiredSpecInterface> source = DesiredSpecInterface.class;
+    Class source = DesiredSpecInterface.class;
     Class<OfferedSpecClass> target = OfferedSpecClass.class;
     OfferedSpecClass convertationObject = new OfferedSpecClass();
     SignatureMatchingTypeConverter<DesiredSpecInterface> converter = new SignatureMatchingTypeConverter<>( source );
@@ -307,7 +307,7 @@ public class GenSpecSignatureMatchingTypeConverterTest {
     methodMatchingInfos.add( mmiGetLong );
     methodMatchingInfos.add( mmiAnd );
 
-    ModuleMatchingInfo<DesiredSpecInterface> moduleMatchingInfo = EasyMock.createNiceMock( ModuleMatchingInfo.class );
+    ModuleMatchingInfo moduleMatchingInfo = EasyMock.createNiceMock( ModuleMatchingInfo.class );
     EasyMock.expect( moduleMatchingInfo.getMethodMatchingInfos() ).andReturn( methodMatchingInfos ).anyTimes();
     EasyMock.replay( moduleMatchingInfo );
 
@@ -348,7 +348,7 @@ public class GenSpecSignatureMatchingTypeConverterTest {
   @Test
   public void specSourceGenTargetMatching() throws NoSuchMethodException, SecurityException, IllegalAccessException,
       IllegalArgumentException, InvocationTargetException {
-    Class<DesiredSpecInterface> source = DesiredSpecInterface.class;
+    Class source = DesiredSpecInterface.class;
     Class<OfferedGenClass> target = OfferedGenClass.class;
     OfferedGenClass convertationObject = new OfferedGenClass();
     SignatureMatchingTypeConverter<DesiredSpecInterface> converter = new SignatureMatchingTypeConverter<>( source );
@@ -407,7 +407,7 @@ public class GenSpecSignatureMatchingTypeConverterTest {
     methodMatchingInfos.add( mmiAddGen );
     methodMatchingInfos.add( mmiGetLong );
 
-    ModuleMatchingInfo<DesiredSpecInterface> moduleMatchingInfo = EasyMock.createNiceMock( ModuleMatchingInfo.class );
+    ModuleMatchingInfo moduleMatchingInfo = EasyMock.createNiceMock( ModuleMatchingInfo.class );
     EasyMock.expect( moduleMatchingInfo.getMethodMatchingInfos() ).andReturn( methodMatchingInfos ).anyTimes();
     EasyMock.replay( moduleMatchingInfo );
 
@@ -450,8 +450,8 @@ public class GenSpecSignatureMatchingTypeConverterTest {
 
   private ModuleMatchingInfo createMMI_SameTypes( Class<?> type ) {
     ModuleMatchingInfo mmi = EasyMock.createNiceMock( ModuleMatchingInfo.class );
-    EasyMock.expect( mmi.getSource() ).andReturn( type ).anyTimes();
-    EasyMock.expect( mmi.getTarget() ).andReturn( type ).anyTimes();
+    EasyMock.expect( mmi.getSource() ).andReturn( (Class) type ).anyTimes();
+    EasyMock.expect( mmi.getTarget() ).andReturn( (Class) type ).anyTimes();
     EasyMock.expect( mmi.getMethodMatchingInfos() ).andReturn( new HashSet<>() ).anyTimes();
     EasyMock.replay( mmi );
     return mmi;
@@ -459,8 +459,8 @@ public class GenSpecSignatureMatchingTypeConverterTest {
 
   private ModuleMatchingInfo createMMI_G2S() throws NoSuchMethodException, SecurityException {
     ModuleMatchingInfo mmit = EasyMock.createNiceMock( ModuleMatchingInfo.class );
-    EasyMock.expect( mmit.getSource() ).andReturn( Specific.class ).anyTimes();
-    EasyMock.expect( mmit.getTarget() ).andReturn( General.class ).anyTimes();
+    EasyMock.expect( mmit.getSource() ).andReturn( (Class) Specific.class ).anyTimes();
+    EasyMock.expect( mmit.getTarget() ).andReturn( (Class) General.class ).anyTimes();
     Set methodInfos = new HashSet<>();
     MethodMatchingInfo concatMethod = EasyMock.createNiceMock( MethodMatchingInfo.class );
     EasyMock.expect( concatMethod.getSource() ).andReturn( Specific.class.getMethod( "getStringAttr" ) ).anyTimes();
@@ -496,8 +496,8 @@ public class GenSpecSignatureMatchingTypeConverterTest {
 
   private ModuleMatchingInfo createMMI_S2G() throws NoSuchMethodException, SecurityException {
     ModuleMatchingInfo mmit = EasyMock.createNiceMock( ModuleMatchingInfo.class );
-    EasyMock.expect( mmit.getSource() ).andReturn( General.class ).anyTimes();
-    EasyMock.expect( mmit.getTarget() ).andReturn( Specific.class ).anyTimes();
+    EasyMock.expect( mmit.getSource() ).andReturn( (Class) General.class ).anyTimes();
+    EasyMock.expect( mmit.getTarget() ).andReturn( (Class) Specific.class ).anyTimes();
     Set methodInfos = new HashSet<>();
 
     MethodMatchingInfo concatMethod = EasyMock.createNiceMock( MethodMatchingInfo.class );

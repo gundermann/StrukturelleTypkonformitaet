@@ -103,7 +103,7 @@ public class GenSpecMethodMatcherMatchingInfosTest {
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 1 ) );
     matchingInfos.forEach( info -> {
-      ModuleMatchingInfo<?> returnTypeMatchingInfo = info.getReturnTypeMatchingInfo();
+      ModuleMatchingInfo returnTypeMatchingInfo = info.getReturnTypeMatchingInfo();
       assertThat( returnTypeMatchingInfo, notNullValue() );
       assertThat( returnTypeMatchingInfo.getSource(), equalTo( checkMethod.getReturnType() ) );
       assertThat( returnTypeMatchingInfo.getTarget(), equalTo( queryMethod.getReturnType() ) );
@@ -150,7 +150,7 @@ public class GenSpecMethodMatcherMatchingInfosTest {
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size() > 0, equalTo( true ) );
     for ( MethodMatchingInfo info : matchingInfos ) {
-      ModuleMatchingInfo<?> returnTypeMatchingInfo = info.getReturnTypeMatchingInfo();
+      ModuleMatchingInfo returnTypeMatchingInfo = info.getReturnTypeMatchingInfo();
       assertThat( returnTypeMatchingInfo, notNullValue() );
       assertThat( returnTypeMatchingInfo.getSource(), equalTo( checkMethod.getReturnType() ) );
       assertThat( returnTypeMatchingInfo.getTarget(), equalTo( queryMethod.getReturnType() ) );
@@ -204,7 +204,7 @@ public class GenSpecMethodMatcherMatchingInfosTest {
     assertThat( matchingInfos.size() > 0, equalTo( true ) );
     for ( MethodMatchingInfo info : matchingInfos ) {
       // Returntype prüfen
-      ModuleMatchingInfo<?> returnTypeMatchingInfo = info.getReturnTypeMatchingInfo();
+      ModuleMatchingInfo returnTypeMatchingInfo = info.getReturnTypeMatchingInfo();
       assertThat( returnTypeMatchingInfo, notNullValue() );
       assertThat( returnTypeMatchingInfo.getSource(), equalTo( checkMethod.getReturnType() ) );
       assertThat( returnTypeMatchingInfo.getTarget(), equalTo( queryMethod.getReturnType() ) );
@@ -238,7 +238,7 @@ public class GenSpecMethodMatcherMatchingInfosTest {
     assertThat( matchingInfos.size() > 0, equalTo( true ) );
     for ( MethodMatchingInfo info : matchingInfos ) {
       // Returntype prüfen
-      ModuleMatchingInfo<?> returnTypeMatchingInfo = info.getReturnTypeMatchingInfo();
+      ModuleMatchingInfo returnTypeMatchingInfo = info.getReturnTypeMatchingInfo();
       assertThat( returnTypeMatchingInfo, notNullValue() );
       assertThat( returnTypeMatchingInfo.getSource(), equalTo( checkMethod.getReturnType() ) );
       assertThat( returnTypeMatchingInfo.getTarget(), equalTo( queryMethod.getReturnType() ) );

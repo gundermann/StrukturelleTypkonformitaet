@@ -23,7 +23,7 @@ public class SignatureMatchingTypeConverter<T> {
     }
   }
 
-  public T convert( Object component, ModuleMatchingInfo<T> matchingInfo ) {
+  public T convert( Object component, ModuleMatchingInfo matchingInfo ) {
     T targetInstance = proxyFactory.createProxy( component, matchingInfo );
     return targetInstance;
   }
