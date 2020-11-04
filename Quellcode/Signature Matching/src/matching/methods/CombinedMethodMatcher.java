@@ -1,7 +1,10 @@
 package matching.methods;
 
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.Set;
+
+import matching.modules.ModuleMatchingInfo;
 
 public class CombinedMethodMatcher implements MethodMatcher {
   ExactMethodMatcher exactMethodMatcher = new ExactMethodMatcher();
@@ -58,6 +61,11 @@ public class CombinedMethodMatcher implements MethodMatcher {
   @Override
   public boolean matchesType( Class<?> checkType, Class<?> queryType ) {
     return combination.matchesType( checkType, queryType );
+  }
+
+  @Override
+  public Collection<ModuleMatchingInfo> calculateTypeMatchingInfos( Class<?> checkType, Class<?> queryType ) {
+    return combination.calculateTypeMatchingInfos( checkType, queryType );
   }
 
 }

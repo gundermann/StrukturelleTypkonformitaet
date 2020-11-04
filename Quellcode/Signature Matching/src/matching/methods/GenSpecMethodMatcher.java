@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -97,54 +98,56 @@ public class GenSpecMethodMatcher implements MethodMatcher {
 
   @Override
   public Set<MethodMatchingInfo> calculateMatchingInfos( Method checkMethod, Method queryMethod ) {
-    // TODO leeres Set zurückgeben, wenn !matches(checkMethod, queryMethod)
-
+    if ( !matches( checkMethod, queryMethod ) ) {
+      return new HashSet<>();
+    }
     MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( checkMethod, queryMethod );
     MethodStructure checkStruct = MethodStructure.createFromDeclaredMethod( checkMethod );
     MethodStructure queryStruct = MethodStructure.createFromDeclaredMethod( queryMethod );
-    Collection<?> returnTypeMatchingInfos = calculateReturnTypeMatchingInfos(
+    Collection<?> returnTypeMatchingInfos = calculateTypeMatchingInfos(
         queryStruct.getReturnType(), checkStruct.getReturnType() );
-    Map<Integer, Collection<ModuleMatchingInfo<?>>> argumentTypesMatchingInfos = calculateArgumentTypesMatchingInfos(
+    Map<Integer, Collection<ModuleMatchingInfo>> argumentTypesMatchingInfos = calculateArgumentTypesMatchingInfos(
         checkStruct.getSortedArgumentTypes(), queryStruct.getSortedArgumentTypes() );
-    return factory.createFromTypeMatchingInfos( (Collection<ModuleMatchingInfo<?>>) returnTypeMatchingInfos,
+    return factory.createFromTypeMatchingInfos( (Collection<ModuleMatchingInfo>) returnTypeMatchingInfos,
         argumentTypesMatchingInfos );
   }
 
-  private Map<Integer, Collection<ModuleMatchingInfo<?>>> calculateArgumentTypesMatchingInfos(
+  private Map<Integer, Collection<ModuleMatchingInfo>> calculateArgumentTypesMatchingInfos(
       Class<?>[] checkATs, Class<?>[] queryATs ) {
-    Map<Integer, Collection<ModuleMatchingInfo<?>>> matchingMap = new HashMap<>();
+    Map<Integer, Collection<ModuleMatchingInfo>> matchingMap = new HashMap<>();
     for ( int i = 0; i < checkATs.length; i++ ) {
       Class<?> checkAT = checkATs[i];
       Class<?> queryAT = queryATs[i];
-      Collection<?> infos = calculateReturnTypeMatchingInfos( checkAT, queryAT );
-      matchingMap.put( i, (Collection<ModuleMatchingInfo<?>>) infos );
+      Collection<?> infos = calculateTypeMatchingInfos( checkAT, queryAT );
+      matchingMap.put( i, (Collection<ModuleMatchingInfo>) infos );
     }
 
     return matchingMap;
   }
 
-  private <S, T> Collection<ModuleMatchingInfo<S>> calculateReturnTypeMatchingInfos( Class<T> targetRT,
-      Class<S> sourceRT ) {
-    ModuleMatchingInfoFactory<S, T> factory = new ModuleMatchingInfoFactory<>( targetRT, sourceRT );
-    if ( targetRT.equals( sourceRT ) ) {
+  @Override
+  public Collection<ModuleMatchingInfo> calculateTypeMatchingInfos( Class<?> checkType,
+      Class<?> queryType ) {
+    ModuleMatchingInfoFactory<?, ?> factory = new ModuleMatchingInfoFactory<>( checkType, queryType );
+    if ( checkType.equals( queryType ) ) {
       return Collections.singletonList( factory.create() );
     }
-    else if ( sourceRT.isAssignableFrom( targetRT )
+    else if ( queryType.isAssignableFrom( checkType )
     // Wurde nur für native Typen gemacht
-    // || sourceRT.equals( Object.class )
+    // || queryType.equals( Object.class )
     ) {
-      // sourceRT > targetRT
-      // Gen: sourceRT
-      // Spec: targetRT
-      return new ModuleMatcher<>( sourceRT ).calculateMatchingInfos( targetRT );
+      // queryType > checkType
+      // Gen: queryType
+      // Spec: checkType
+      return new ModuleMatcher( queryType ).calculateMatchingInfos( checkType );
     }
-    else if ( targetRT.isAssignableFrom( sourceRT )
+    else if ( checkType.isAssignableFrom( queryType )
     // Wurde nur für native Typen gemacht
-    // || targetRT.equals( Object.class )
+    // || checkType.equals( Object.class )
     ) {
-      // sourceRT < targetRT
-      // Gen: targetRT
-      // Spec: sourceRT
+      // queryType < checkType
+      // Gen: checkType
+      // Spec: queryType
       return Collections.singletonList( factory.create() );
     }
     return new ArrayList<>();

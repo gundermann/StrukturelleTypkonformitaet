@@ -2,12 +2,15 @@ package matching.methods;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Supplier;
+
+import matching.modules.ModuleMatchingInfo;
 
 /**
  * Dieser Matcher beachtet, dass die Typen (Return- und Argumenttypen) einer der beiden Methoden in einem Typ der
@@ -150,6 +153,12 @@ public class WrappedTypeMethodMatcher implements MethodMatcher {
 
   @Override
   public Set<MethodMatchingInfo> calculateMatchingInfos( Method checkMethod, Method queryMethod ) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Collection<ModuleMatchingInfo> calculateTypeMatchingInfos( Class<?> checkType, Class<?> queryType ) {
     // TODO Auto-generated method stub
     return null;
   }

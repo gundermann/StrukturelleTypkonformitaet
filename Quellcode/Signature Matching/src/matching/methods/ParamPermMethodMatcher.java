@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
+import matching.modules.ModuleMatchingInfo;
 import util.Permuter;
 
 /**
@@ -75,13 +76,17 @@ public class ParamPermMethodMatcher implements MethodMatcher {
 
   @Override
   public Set<MethodMatchingInfo> calculateMatchingInfos( Method checkMethod, Method queryMethod ) {
-    // TODO Auto-generated method stub
-    return null;
+    return innerMethodMatcherSupplier.get().calculateMatchingInfos( checkMethod, queryMethod );
   }
 
   @Override
   public boolean matchesType( Class<?> checkType, Class<?> queryType ) {
     return innerMethodMatcherSupplier.get().matchesType( checkType, queryType );
+  }
+
+  @Override
+  public Collection<ModuleMatchingInfo> calculateTypeMatchingInfos( Class<?> checkType, Class<?> queryType ) {
+    return innerMethodMatcherSupplier.get().calculateTypeMatchingInfos( checkType, queryType );
   }
 
 }

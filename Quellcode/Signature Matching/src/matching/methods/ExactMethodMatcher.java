@@ -51,32 +51,30 @@ public class ExactMethodMatcher implements MethodMatcher, Comparator<MethodStruc
     }
     // da es ein exakter Match sein muss, darf hier nur eine MethodMatchingInfo erzeugt werden
     MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( checkMethod, queryMethod );
-    Collection<ModuleMatchingInfo<?>> returnTypeMatchingInfos = calculateReturnTypeMatchingInfos( checkMethod,
-        queryMethod );
-    Map<Integer, Collection<ModuleMatchingInfo<?>>> argumentTypesMatchingInfos = calculateArgumentMatchingInfos(
+    Collection<ModuleMatchingInfo> returnTypeMatchingInfos = calculateTypeMatchingInfos(
+        queryMethod.getReturnType(), checkMethod.getReturnType() );
+    Map<Integer, Collection<ModuleMatchingInfo>> argumentTypesMatchingInfos = calculateArgumentMatchingInfos(
         checkMethod, queryMethod );
     return factory.createFromTypeMatchingInfos( returnTypeMatchingInfos, argumentTypesMatchingInfos );
   }
 
-  Map<Integer, Collection<ModuleMatchingInfo<?>>> calculateArgumentMatchingInfos( Method source, Method target ) {
+  Map<Integer, Collection<ModuleMatchingInfo>> calculateArgumentMatchingInfos( Method source, Method target ) {
     Parameter[] sourceParameters = source.getParameters();
     Parameter[] targetParameters = target.getParameters();
-    Map<Integer, Collection<ModuleMatchingInfo<?>>> matchingInfoMap = new HashMap<>();
+    Map<Integer, Collection<ModuleMatchingInfo>> matchingInfoMap = new HashMap<>();
     for ( int i = 0; i < sourceParameters.length; i++ ) {
       Parameter sourceParameter = sourceParameters[i];
       Parameter targetParameter = targetParameters[i];
-      ModuleMatchingInfoFactory<?, ?> factory = new ModuleMatchingInfoFactory<>(
-          targetParameter.getType(), sourceParameter.getType() );
-      matchingInfoMap.put( i, Collections.singletonList( factory.create() ) );
+      matchingInfoMap.put( i, calculateTypeMatchingInfos( targetParameter.getType(), sourceParameter.getType() ) );
     }
     return matchingInfoMap;
   }
 
-  Collection<ModuleMatchingInfo<?>> calculateReturnTypeMatchingInfos( Method checkMethod, Method queryMethod ) {
-    Class<?> sourceReturnType = queryMethod.getReturnType();
-    Class<?> targetReturnType = checkMethod.getReturnType();
+  @Override
+  public Collection<ModuleMatchingInfo> calculateTypeMatchingInfos( Class<?> targetType,
+      Class<?> sourceType ) {
     return Collections
-        .singletonList( new ModuleMatchingInfoFactory<>( targetReturnType, sourceReturnType ).create() );
+        .singletonList( new ModuleMatchingInfoFactory<>( targetType, sourceType ).create() );
   }
 
 }

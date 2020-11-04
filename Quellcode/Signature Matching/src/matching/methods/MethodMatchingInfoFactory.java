@@ -22,8 +22,8 @@ public final class MethodMatchingInfoFactory {
     this.source = source;
   }
 
-  public MethodMatchingInfo create( ModuleMatchingInfo<?> returnTypeMatchingInfo,
-      Map<Integer, ModuleMatchingInfo<?>> argumentTypeMatchingInfos ) {
+  public MethodMatchingInfo create( ModuleMatchingInfo returnTypeMatchingInfo,
+      Map<Integer, ModuleMatchingInfo> argumentTypeMatchingInfos ) {
     return new MethodMatchingInfo( source, target, returnTypeMatchingInfo, argumentTypeMatchingInfos );
   }
 
@@ -35,47 +35,47 @@ public final class MethodMatchingInfoFactory {
    * @return
    */
   public Set<MethodMatchingInfo> createFromTypeMatchingInfos(
-      Collection<ModuleMatchingInfo<?>> returnTypeMatchingInfos,
-      Map<Integer, Collection<ModuleMatchingInfo<?>>> argumentTypesMatchingInfos ) {
+      Collection<ModuleMatchingInfo> returnTypeMatchingInfos,
+      Map<Integer, Collection<ModuleMatchingInfo>> argumentTypesMatchingInfos ) {
     Set<MethodMatchingInfo> methodMatchingInfos = new HashSet<>();
     for ( ModuleMatchingInfo<?> selectedRT : returnTypeMatchingInfos ) {
-      Collection<Map<Integer, ModuleMatchingInfo<?>>> restructMap = restructureArgumentTypeMatchingInfos(
+      Collection<Map<Integer, ModuleMatchingInfo>> restructMap = restructureArgumentTypeMatchingInfos(
           argumentTypesMatchingInfos );
 
       if ( restructMap.isEmpty() ) {
-        methodMatchingInfos.add( create( selectedRT, new HashMap<Integer, ModuleMatchingInfo<?>>() ) );
+        methodMatchingInfos.add( create( selectedRT, new HashMap<Integer, ModuleMatchingInfo>() ) );
       }
 
-      for ( Map<Integer, ModuleMatchingInfo<?>> selectedAT : restructMap ) {
+      for ( Map<Integer, ModuleMatchingInfo> selectedAT : restructMap ) {
         methodMatchingInfos.add( create( selectedRT, selectedAT ) );
       }
     }
     return methodMatchingInfos;
   }
 
-  private Collection<Map<Integer, ModuleMatchingInfo<?>>> restructureArgumentTypeMatchingInfos(
-      Map<Integer, Collection<ModuleMatchingInfo<?>>> argumentTypesMatchingInfos ) {
-    Collection<Map<Integer, ModuleMatchingInfo<?>>> result = new ArrayList<>();
-    Map<Integer, Collection<ModuleMatchingInfo<?>>> localInfos = new HashMap<>( argumentTypesMatchingInfos );
+  private Collection<Map<Integer, ModuleMatchingInfo>> restructureArgumentTypeMatchingInfos(
+      Map<Integer, Collection<ModuleMatchingInfo>> argumentTypesMatchingInfos ) {
+    Collection<Map<Integer, ModuleMatchingInfo>> result = new ArrayList<>();
+    Map<Integer, Collection<ModuleMatchingInfo>> localInfos = new HashMap<>( argumentTypesMatchingInfos );
     Iterator<Integer> keyIterator = localInfos.keySet().iterator();
     if ( !keyIterator.hasNext() ) {
       return result;
     }
     Integer selectedKey = keyIterator.next();
-    Collection<ModuleMatchingInfo<?>> selectedArgumentTypeInfos = localInfos.remove( selectedKey );
+    Collection<ModuleMatchingInfo> selectedArgumentTypeInfos = localInfos.remove( selectedKey );
     if ( selectedArgumentTypeInfos.isEmpty() ) {
       return restructureArgumentTypeMatchingInfos( localInfos );
     }
-    for ( ModuleMatchingInfo<?> selectedArgumentTypeInfo : selectedArgumentTypeInfos ) {
-      Collection<Map<Integer, ModuleMatchingInfo<?>>> otherRestructInfos = restructureArgumentTypeMatchingInfos(
+    for ( ModuleMatchingInfo selectedArgumentTypeInfo : selectedArgumentTypeInfos ) {
+      Collection<Map<Integer, ModuleMatchingInfo>> otherRestructInfos = restructureArgumentTypeMatchingInfos(
           localInfos );
       if ( otherRestructInfos.isEmpty() ) {
-        Map<Integer, ModuleMatchingInfo<?>> singleMap = new HashMap<>();
+        Map<Integer, ModuleMatchingInfo> singleMap = new HashMap<>();
         singleMap.put( selectedKey, selectedArgumentTypeInfo );
         result.add( singleMap );
         continue;
       }
-      for ( Map<Integer, ModuleMatchingInfo<?>> otherRestructInfo : otherRestructInfos ) {
+      for ( Map<Integer, ModuleMatchingInfo> otherRestructInfo : otherRestructInfos ) {
         otherRestructInfo.put( selectedKey, selectedArgumentTypeInfo );
       }
       result.addAll( otherRestructInfos );

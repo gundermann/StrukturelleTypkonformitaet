@@ -11,12 +11,12 @@ public class MethodMatchingInfo {
 
   private final Method target;
 
-  private final ModuleMatchingInfo<?> returnTypeMatchingInfo;
+  private final ModuleMatchingInfo returnTypeMatchingInfo;
 
-  private final Map<Integer, ModuleMatchingInfo<?>> argumentTypeMatchingInfos;
+  private final Map<Integer, ModuleMatchingInfo> argumentTypeMatchingInfos;
 
-  public MethodMatchingInfo( Method source, Method target, ModuleMatchingInfo<?> returnTypeMatchingInfo,
-      Map<Integer, ModuleMatchingInfo<?>> argumentTypeMatchingInfos ) {
+  public MethodMatchingInfo( Method source, Method target, ModuleMatchingInfo returnTypeMatchingInfo,
+      Map<Integer, ModuleMatchingInfo> argumentTypeMatchingInfos ) {
     this.source = source;
     this.target = target;
     this.returnTypeMatchingInfo = returnTypeMatchingInfo;
@@ -31,11 +31,11 @@ public class MethodMatchingInfo {
     return target;
   }
 
-  public ModuleMatchingInfo<?> getReturnTypeMatchingInfo() {
+  public ModuleMatchingInfo getReturnTypeMatchingInfo() {
     return returnTypeMatchingInfo;
   }
 
-  public Map<Integer, ModuleMatchingInfo<?>> getArgumentTypeMatchingInfos() {
+  public Map<Integer, ModuleMatchingInfo> getArgumentTypeMatchingInfos() {
     return argumentTypeMatchingInfos;
   }
 
