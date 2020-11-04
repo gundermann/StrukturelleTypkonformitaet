@@ -3,6 +3,9 @@ package matching.methods;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
@@ -41,7 +44,7 @@ public class ParamPermMethodMatcher implements MethodMatcher {
         this::matchesArgumentTypes );
   }
 
-  boolean matchPermutedArguments( Class<?>[] sortedArgumentTypes1, Class<?>[] sortedArgumentTypes2,
+  private boolean matchPermutedArguments( Class<?>[] sortedArgumentTypes1, Class<?>[] sortedArgumentTypes2,
       BiFunction<Class<?>[], Class<?>[], Boolean> matchingFunction ) {
     Collection<Class<?>[]> permutations = permuteAgruments( sortedArgumentTypes1 );
     if ( permutations.isEmpty() ) {
@@ -76,7 +79,35 @@ public class ParamPermMethodMatcher implements MethodMatcher {
 
   @Override
   public Set<MethodMatchingInfo> calculateMatchingInfos( Method checkMethod, Method queryMethod ) {
-    return innerMethodMatcherSupplier.get().calculateMatchingInfos( checkMethod, queryMethod );
+    if ( !matches( checkMethod, queryMethod ) ) {
+      return new HashSet<>();
+    }
+    MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( checkMethod, queryMethod );
+    Collection<ModuleMatchingInfo> returnTypeMatchingInfos = innerMethodMatcherSupplier.get()
+        .calculateTypeMatchingInfos(
+            queryMethod.getReturnType(), checkMethod.getReturnType() );
+
+    Map<Integer, Collection<ModuleMatchingInfo>> argumentTypesMatchingInfos = calculateArgumentMatchingInfos(
+        checkMethod.getParameterTypes(), queryMethod.getParameterTypes() );
+    return factory.createFromTypeMatchingInfos( returnTypeMatchingInfos, argumentTypesMatchingInfos );
+  }
+
+  private Map<Integer, Collection<ModuleMatchingInfo>> calculateArgumentMatchingInfos( Class<?>[] checkArgs,
+      Class<?>[] queryArgs ) {
+
+    Map<Integer, Collection<ModuleMatchingInfo>> infos = new HashMap<>();
+    Collection<Class<?>[]> permutations = permuteAgruments( checkArgs );
+    if ( permutations.isEmpty() ) {
+      return infos;
+    }
+    for ( Class<?>[] combination : permutations ) {
+      for ( int i = 0; i < combination.length; i++ ) {
+        Class<?> checkParameter = combination[i];
+        Class<?> queryParameter = queryArgs[i];
+        infos.put( i, calculateTypeMatchingInfos( checkParameter, queryParameter ) );
+      }
+    }
+    return infos;
   }
 
   @Override

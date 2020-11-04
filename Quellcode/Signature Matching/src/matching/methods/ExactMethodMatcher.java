@@ -58,7 +58,7 @@ public class ExactMethodMatcher implements MethodMatcher, Comparator<MethodStruc
     return factory.createFromTypeMatchingInfos( returnTypeMatchingInfos, argumentTypesMatchingInfos );
   }
 
-  Map<Integer, Collection<ModuleMatchingInfo>> calculateArgumentMatchingInfos( Method source, Method target ) {
+  private Map<Integer, Collection<ModuleMatchingInfo>> calculateArgumentMatchingInfos( Method source, Method target ) {
     Parameter[] sourceParameters = source.getParameters();
     Parameter[] targetParameters = target.getParameters();
     Map<Integer, Collection<ModuleMatchingInfo>> matchingInfoMap = new HashMap<>();
