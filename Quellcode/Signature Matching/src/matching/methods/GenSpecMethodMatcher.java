@@ -36,18 +36,19 @@ public class GenSpecMethodMatcher implements MethodMatcher {
     if ( cms1.getSortedArgumentTypes().length != qms2.getSortedArgumentTypes().length ) {
       return false;
     }
-    if ( !machtesGenSpecType( cms1.getReturnType(), qms2.getReturnType() ) ) {
+    if ( !matchesType( cms1.getReturnType(), qms2.getReturnType() ) ) {
       return false;
     }
     for ( int i = 0; i < cms1.getSortedArgumentTypes().length; i++ ) {
-      if ( !machtesGenSpecType( cms1.getSortedArgumentTypes()[i], qms2.getSortedArgumentTypes()[i] ) ) {
+      if ( !matchesType( cms1.getSortedArgumentTypes()[i], qms2.getSortedArgumentTypes()[i] ) ) {
         return false;
       }
     }
     return true;
   }
 
-  boolean machtesGenSpecType( Class<?> checkType, Class<?> queryType ) {
+  @Override
+  public boolean matchesType( Class<?> checkType, Class<?> queryType ) {
     // Versuch 1: Über die Methode isAssignableFrom feststellen, ob die Typen voneinander erben.
     // Problem: native Typen erben nicht von Object
     // #####################Frage: Ist das wirklich ein Problem, oder ist das so korrekt????????#####################
@@ -148,4 +149,5 @@ public class GenSpecMethodMatcher implements MethodMatcher {
     }
     return new ArrayList<>();
   }
+
 }

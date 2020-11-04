@@ -39,7 +39,8 @@ public class ExactMethodMatcher implements MethodMatcher, Comparator<MethodStruc
     return 0;
   }
 
-  boolean matchesType( Class<?> checkType, Class<?> queryType ) {
+  @Override
+  public boolean matchesType( Class<?> checkType, Class<?> queryType ) {
     return checkType.equals( queryType );
   }
 

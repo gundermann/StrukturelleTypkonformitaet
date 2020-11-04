@@ -8,7 +8,7 @@ import org.junit.Test;
 
 public class ParamPermMethodMatcherTest {
 
-  MethodMatcher matcher = new ParamPermMethodMatcher();
+  MethodMatcher matcher = new ParamPermMethodMatcher( () -> new ExactMethodMatcher() );
 
   @Test
   public void test1() {

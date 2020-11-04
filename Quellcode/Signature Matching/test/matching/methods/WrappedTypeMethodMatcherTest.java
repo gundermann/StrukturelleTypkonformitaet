@@ -12,7 +12,7 @@ public class WrappedTypeMethodMatcherTest {
 
   @Before
   public void setup() {
-    matcher = new WrappedTypeMethodMatcher();
+    matcher = new WrappedTypeMethodMatcher( () -> new ExactMethodMatcher() );
   }
 
   @Test

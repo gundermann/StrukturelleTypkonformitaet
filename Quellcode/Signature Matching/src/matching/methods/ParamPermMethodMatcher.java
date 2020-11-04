@@ -3,7 +3,9 @@ package matching.methods;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Set;
 import java.util.function.BiFunction;
+import java.util.function.Supplier;
 
 import util.Permuter;
 
@@ -13,6 +15,12 @@ import util.Permuter;
  */
 public class ParamPermMethodMatcher implements MethodMatcher {
 
+  private final Supplier<MethodMatcher> innerMethodMatcherSupplier;
+
+  public ParamPermMethodMatcher( Supplier<MethodMatcher> innerMethodMatcherSupplier ) {
+    this.innerMethodMatcherSupplier = innerMethodMatcherSupplier;
+  }
+
   @Override
   public boolean matches( Method m1, Method m2 ) {
     MethodStructure ms1 = MethodStructure.createFromDeclaredMethod( m1 );
@@ -21,7 +29,7 @@ public class ParamPermMethodMatcher implements MethodMatcher {
   }
 
   private boolean matches( MethodStructure ms1, MethodStructure ms2 ) {
-    if ( ms1.getReturnType() != ms2.getReturnType() ) {
+    if ( !matchesType( ms1.getReturnType(), ms2.getReturnType() ) ) {
       return false;
     }
     if ( ms1.getSortedArgumentTypes().length != ms2.getSortedArgumentTypes().length ) {
@@ -58,11 +66,22 @@ public class ParamPermMethodMatcher implements MethodMatcher {
 
   private boolean matchesArgumentTypes( Class<?>[] argumentTypes1, Class<?>[] argumentTypes2 ) {
     for ( int i = 0; i < argumentTypes1.length; i++ ) {
-      if ( argumentTypes1[i] != argumentTypes2[i] ) {
+      if ( !matchesType( argumentTypes1[i], argumentTypes2[i] ) ) {
         return false;
       }
     }
     return true;
+  }
+
+  @Override
+  public Set<MethodMatchingInfo> calculateMatchingInfos( Method checkMethod, Method queryMethod ) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public boolean matchesType( Class<?> checkType, Class<?> queryType ) {
+    return innerMethodMatcherSupplier.get().matchesType( checkType, queryType );
   }
 
 }

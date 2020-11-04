@@ -6,7 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.function.BiFunction;
+import java.util.Set;
+import java.util.function.Supplier;
 
 /**
  * Dieser Matcher beachtet, dass die Typen (Return- und Argumenttypen) einer der beiden Methoden in einem Typ der
@@ -18,7 +19,13 @@ public class WrappedTypeMethodMatcher implements MethodMatcher {
   // Grund: Bei der Wrapped-Prüfung von boolean und Boolean über den CombinedMethodMatcher kam es zu einem StackOverflow
   // Idee: Die geprüften Kombinationen werden gecached. Sofern eine gecachedte Kombination nochmal geprüft wird, wird
   // die Prüfung einfach übersprungen.
-  Map<Class<?>[], Boolean> cachedWrappedTypeChecks = new HashMap<>();
+  final Map<Class<?>[], Boolean> cachedWrappedTypeChecks = new HashMap<>();
+
+  private final Supplier<MethodMatcher> innerMethodMatcherSupplier;
+
+  public WrappedTypeMethodMatcher( Supplier<MethodMatcher> innerMethodMatcherSupplier ) {
+    this.innerMethodMatcherSupplier = innerMethodMatcherSupplier;
+  }
 
   @Override
   public boolean matches( Method m1, Method m2 ) {
@@ -31,11 +38,11 @@ public class WrappedTypeMethodMatcher implements MethodMatcher {
     if ( ms1.getSortedArgumentTypes().length != ms2.getSortedArgumentTypes().length ) {
       return false;
     }
-    if ( !matchesWrapped( ms1.getReturnType(), ms2.getReturnType(), Objects::equals ) ) {
+    if ( !matchesType( ms1.getReturnType(), ms2.getReturnType() ) ) {
       return false;
     }
     for ( int i = 0; i < ms1.getSortedArgumentTypes().length; i++ ) {
-      if ( !matchesWrapped( ms1.getSortedArgumentTypes()[i], ms2.getSortedArgumentTypes()[i], Objects::equals ) ) {
+      if ( !matchesType( ms1.getSortedArgumentTypes()[i], ms2.getSortedArgumentTypes()[i] ) ) {
         return false;
       }
     }
@@ -49,10 +56,11 @@ public class WrappedTypeMethodMatcher implements MethodMatcher {
    * @param t2
    * @return t1 = t2 || t1 > t2 || t2 > t1
    */
-  boolean matchesWrapped( Class<?> t1, Class<?> t2,
-      BiFunction<Class<?>, Class<?>, Boolean> innerCompareFunction ) {
-    return t1.equals( t2 ) || isWrappedIn( t1, t2, innerCompareFunction )
-        || isWrappedIn( t2, t1, innerCompareFunction );
+
+  @Override
+  public boolean matchesType( Class<?> t1, Class<?> t2 ) {
+    return t1.equals( t2 ) || isWrappedIn( t1, t2 )
+        || isWrappedIn( t2, t1 );
   }
 
   /**
@@ -62,13 +70,11 @@ public class WrappedTypeMethodMatcher implements MethodMatcher {
    * @param t2
    * @return t1 = t2 || t1 in t2
    */
-  boolean matchesWrappedOneDirection( Class<?> t1, Class<?> t2,
-      BiFunction<Class<?>, Class<?>, Boolean> innerCompareFunction ) {
-    return t1.equals( t2 ) || isWrappedIn( t1, t2, innerCompareFunction );
+  boolean matchesWrappedOneDirection( Class<?> t1, Class<?> t2 ) {
+    return t1.equals( t2 ) || isWrappedIn( t1, t2 );
   }
 
-  private boolean isWrappedIn( Class<?> wrappedType, Class<?> wrapperType,
-      BiFunction<Class<?>, Class<?>, Boolean> innerCompareFunction ) {
+  private boolean isWrappedIn( Class<?> checkType, Class<?> queryType ) {
     // Hier ist die Frage, ob nur ein Attribut vom Typ des wrappedType im Wrapper vorhanden sein muss, oder nur eine
     // Methode mit den Rückgabewert des wrappedType, oder sogar beides.
 
@@ -81,14 +87,14 @@ public class WrappedTypeMethodMatcher implements MethodMatcher {
     // return containsFieldWithType( wrapperType, wrappedType, innerCompareFunction );
 
     // Dritter Versuch: wie zweiter Versucht nur mit Cache.
-    Class<?>[] cacheKey = new Class<?>[] { wrappedType, wrapperType };
+    Class<?>[] cacheKey = new Class<?>[] { checkType, queryType };
     if ( isCombinationCached( cacheKey ) ) {
       // false, weil die Überprüfung noch nicht stattgefunden bzw. wenn sie bereits true ermittelt hatte, dann wäre die
       // Überprüfung bereits erfolgreich gewesen
       return getResultFromCache( cacheKey );
     }
     cachedWrappedTypeChecks.put( cacheKey, null );
-    boolean result = containsFieldWithType( wrapperType, wrappedType, innerCompareFunction );
+    boolean result = containsFieldWithType( queryType, checkType );
     cachedWrappedTypeChecks.put( cacheKey, result );
     return result;
 
@@ -132,15 +138,20 @@ public class WrappedTypeMethodMatcher implements MethodMatcher {
   // return false;
   // }
 
-  private boolean containsFieldWithType( Class<?> checkingClass, Class<?> fieldType,
-      BiFunction<Class<?>, Class<?>, Boolean> compareFunction ) {
+  private boolean containsFieldWithType( Class<?> checkingClass, Class<?> fieldType ) {
     Field[] fieldsOfWrapper = checkingClass.getDeclaredFields();
     for ( Field field : fieldsOfWrapper ) {
-      if ( compareFunction.apply( field.getType(), fieldType ) ) {
+      if ( innerMethodMatcherSupplier.get().matchesType( field.getType(), fieldType ) ) {
         return true;
       }
     }
     return false;
+  }
+
+  @Override
+  public Set<MethodMatchingInfo> calculateMatchingInfos( Method checkMethod, Method queryMethod ) {
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }
