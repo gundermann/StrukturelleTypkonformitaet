@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 
+import matching.methods.MethodMatchingInfo.ParamPosition;
 import matching.modules.ModuleMatcher;
 import matching.modules.ModuleMatchingInfo;
 import matching.modules.ModuleMatchingInfoFactory;
@@ -106,20 +107,20 @@ public class GenSpecMethodMatcher implements MethodMatcher {
     MethodStructure queryStruct = MethodStructure.createFromDeclaredMethod( queryMethod );
     Collection<?> returnTypeMatchingInfos = calculateTypeMatchingInfos(
         queryStruct.getReturnType(), checkStruct.getReturnType() );
-    Map<Integer, Collection<ModuleMatchingInfo>> argumentTypesMatchingInfos = calculateArgumentTypesMatchingInfos(
+    Map<ParamPosition, Collection<ModuleMatchingInfo>> argumentTypesMatchingInfos = calculateArgumentTypesMatchingInfos(
         checkStruct.getSortedArgumentTypes(), queryStruct.getSortedArgumentTypes() );
     return factory.createFromTypeMatchingInfos( (Collection<ModuleMatchingInfo>) returnTypeMatchingInfos,
-        argumentTypesMatchingInfos );
+        Collections.singletonList( argumentTypesMatchingInfos ) );
   }
 
-  private Map<Integer, Collection<ModuleMatchingInfo>> calculateArgumentTypesMatchingInfos(
+  private Map<ParamPosition, Collection<ModuleMatchingInfo>> calculateArgumentTypesMatchingInfos(
       Class<?>[] checkATs, Class<?>[] queryATs ) {
-    Map<Integer, Collection<ModuleMatchingInfo>> matchingMap = new HashMap<>();
+    Map<ParamPosition, Collection<ModuleMatchingInfo>> matchingMap = new HashMap<>();
     for ( int i = 0; i < checkATs.length; i++ ) {
       Class<?> checkAT = checkATs[i];
       Class<?> queryAT = queryATs[i];
       Collection<?> infos = calculateTypeMatchingInfos( checkAT, queryAT );
-      matchingMap.put( i, (Collection<ModuleMatchingInfo>) infos );
+      matchingMap.put( new ParamPosition( i, i ), (Collection<ModuleMatchingInfo>) infos );
     }
 
     return matchingMap;

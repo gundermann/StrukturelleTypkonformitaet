@@ -13,10 +13,10 @@ public class MethodMatchingInfo {
 
   private final ModuleMatchingInfo returnTypeMatchingInfo;
 
-  private final Map<Integer, ModuleMatchingInfo> argumentTypeMatchingInfos;
+  private final Map<ParamPosition, ModuleMatchingInfo> argumentTypeMatchingInfos;
 
   public MethodMatchingInfo( Method source, Method target, ModuleMatchingInfo returnTypeMatchingInfo,
-      Map<Integer, ModuleMatchingInfo> argumentTypeMatchingInfos ) {
+      Map<ParamPosition, ModuleMatchingInfo> argumentTypeMatchingInfos ) {
     this.source = source;
     this.target = target;
     this.returnTypeMatchingInfo = returnTypeMatchingInfo;
@@ -35,13 +35,33 @@ public class MethodMatchingInfo {
     return returnTypeMatchingInfo;
   }
 
-  public Map<Integer, ModuleMatchingInfo> getArgumentTypeMatchingInfos() {
+  public Map<ParamPosition, ModuleMatchingInfo> getArgumentTypeMatchingInfos() {
     return argumentTypeMatchingInfos;
   }
 
   @Override
   public String toString() {
     return String.format( "%s -> %s", source.getName(), target.getName() );
+  }
+
+  public static class ParamPosition {
+
+    private final Integer sourceParamPosition;
+
+    private final Integer targetParamPosition;
+
+    public ParamPosition( Integer sourceParamPosition, Integer targetParamPosition ) {
+      this.sourceParamPosition = sourceParamPosition;
+      this.targetParamPosition = targetParamPosition;
+    }
+
+    public Integer getTargetParamPosition() {
+      return targetParamPosition;
+    }
+
+    public Integer getSourceParamPosition() {
+      return sourceParamPosition;
+    }
   }
 
 }

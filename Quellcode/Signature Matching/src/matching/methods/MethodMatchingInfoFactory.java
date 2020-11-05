@@ -8,7 +8,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import matching.methods.MethodMatchingInfo.ParamPosition;
 import matching.modules.ModuleMatchingInfo;
 
 public final class MethodMatchingInfoFactory {
@@ -23,7 +25,7 @@ public final class MethodMatchingInfoFactory {
   }
 
   public MethodMatchingInfo create( ModuleMatchingInfo returnTypeMatchingInfo,
-      Map<Integer, ModuleMatchingInfo> argumentTypeMatchingInfos ) {
+      Map<ParamPosition, ModuleMatchingInfo> argumentTypeMatchingInfos ) {
     return new MethodMatchingInfo( source, target, returnTypeMatchingInfo, argumentTypeMatchingInfos );
   }
 
@@ -36,46 +38,53 @@ public final class MethodMatchingInfoFactory {
    */
   public Set<MethodMatchingInfo> createFromTypeMatchingInfos(
       Collection<ModuleMatchingInfo> returnTypeMatchingInfos,
-      Map<Integer, Collection<ModuleMatchingInfo>> argumentTypesMatchingInfos ) {
+      Collection<Map<ParamPosition, Collection<ModuleMatchingInfo>>> argumentTypesMatchingInfos ) {
     Set<MethodMatchingInfo> methodMatchingInfos = new HashSet<>();
     for ( ModuleMatchingInfo selectedRT : returnTypeMatchingInfos ) {
-      Collection<Map<Integer, ModuleMatchingInfo>> restructMap = restructureArgumentTypeMatchingInfos(
+      Collection<Map<ParamPosition, ModuleMatchingInfo>> restructMap = restructureArgumentTypeMatchingInfos(
           argumentTypesMatchingInfos );
 
       if ( restructMap.isEmpty() ) {
-        methodMatchingInfos.add( create( selectedRT, new HashMap<Integer, ModuleMatchingInfo>() ) );
+        methodMatchingInfos.add( create( selectedRT, new HashMap<ParamPosition, ModuleMatchingInfo>() ) );
       }
 
-      for ( Map<Integer, ModuleMatchingInfo> selectedAT : restructMap ) {
+      for ( Map<ParamPosition, ModuleMatchingInfo> selectedAT : restructMap ) {
         methodMatchingInfos.add( create( selectedRT, selectedAT ) );
       }
     }
     return methodMatchingInfos;
   }
 
-  private Collection<Map<Integer, ModuleMatchingInfo>> restructureArgumentTypeMatchingInfos(
-      Map<Integer, Collection<ModuleMatchingInfo>> argumentTypesMatchingInfos ) {
-    Collection<Map<Integer, ModuleMatchingInfo>> result = new ArrayList<>();
-    Map<Integer, Collection<ModuleMatchingInfo>> localInfos = new HashMap<>( argumentTypesMatchingInfos );
-    Iterator<Integer> keyIterator = localInfos.keySet().iterator();
+  private Collection<Map<ParamPosition, ModuleMatchingInfo>> restructureArgumentTypeMatchingInfos(
+      Collection<Map<ParamPosition, Collection<ModuleMatchingInfo>>> argumentTypesMatchingInfos ) {
+    return argumentTypesMatchingInfos.stream()
+        .flatMap( elem -> restructureArgumentTypeMatchingInfosWithParamPosition( elem ).stream() )
+        .collect( Collectors.toList() );
+  }
+
+  private Collection<Map<ParamPosition, ModuleMatchingInfo>> restructureArgumentTypeMatchingInfosWithParamPosition(
+      Map<ParamPosition, Collection<ModuleMatchingInfo>> argumentTypesMatchingInfos ) {
+    Collection<Map<ParamPosition, ModuleMatchingInfo>> result = new ArrayList<>();
+    Map<ParamPosition, Collection<ModuleMatchingInfo>> localInfos = new HashMap<>( argumentTypesMatchingInfos );
+    Iterator<ParamPosition> keyIterator = localInfos.keySet().iterator();
     if ( !keyIterator.hasNext() ) {
       return result;
     }
-    Integer selectedKey = keyIterator.next();
+    ParamPosition selectedKey = keyIterator.next();
     Collection<ModuleMatchingInfo> selectedArgumentTypeInfos = localInfos.remove( selectedKey );
     if ( selectedArgumentTypeInfos.isEmpty() ) {
-      return restructureArgumentTypeMatchingInfos( localInfos );
+      return restructureArgumentTypeMatchingInfosWithParamPosition( localInfos );
     }
     for ( ModuleMatchingInfo selectedArgumentTypeInfo : selectedArgumentTypeInfos ) {
-      Collection<Map<Integer, ModuleMatchingInfo>> otherRestructInfos = restructureArgumentTypeMatchingInfos(
+      Collection<Map<ParamPosition, ModuleMatchingInfo>> otherRestructInfos = restructureArgumentTypeMatchingInfosWithParamPosition(
           localInfos );
       if ( otherRestructInfos.isEmpty() ) {
-        Map<Integer, ModuleMatchingInfo> singleMap = new HashMap<>();
+        Map<ParamPosition, ModuleMatchingInfo> singleMap = new HashMap<>();
         singleMap.put( selectedKey, selectedArgumentTypeInfo );
         result.add( singleMap );
         continue;
       }
-      for ( Map<Integer, ModuleMatchingInfo> otherRestructInfo : otherRestructInfos ) {
+      for ( Map<ParamPosition, ModuleMatchingInfo> otherRestructInfo : otherRestructInfos ) {
         otherRestructInfo.put( selectedKey, selectedArgumentTypeInfo );
       }
       result.addAll( otherRestructInfos );
@@ -84,4 +93,11 @@ public final class MethodMatchingInfoFactory {
 
   }
 
+  private Set<ParamPosition> generateDefaultParamPosition( Set<Integer> paramIdices ) {
+    Set<ParamPosition> paramPositions = new HashSet<>();
+    for ( Integer index : paramIdices ) {
+      paramPositions.add( new ParamPosition( index, index ) );
+    }
+    return paramPositions;
+  }
 }

@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import matching.methods.MethodMatchingInfo.ParamPosition;
 import matching.modules.ModuleMatchingInfo;
 import matching.modules.ModuleMatchingInfoFactory;
 
@@ -53,19 +54,22 @@ public class ExactMethodMatcher implements MethodMatcher, Comparator<MethodStruc
     MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( checkMethod, queryMethod );
     Collection<ModuleMatchingInfo> returnTypeMatchingInfos = calculateTypeMatchingInfos(
         queryMethod.getReturnType(), checkMethod.getReturnType() );
-    Map<Integer, Collection<ModuleMatchingInfo>> argumentTypesMatchingInfos = calculateArgumentMatchingInfos(
+    Map<ParamPosition, Collection<ModuleMatchingInfo>> argumentTypesMatchingInfos = calculateArgumentMatchingInfos(
         checkMethod, queryMethod );
-    return factory.createFromTypeMatchingInfos( returnTypeMatchingInfos, argumentTypesMatchingInfos );
+    return factory.createFromTypeMatchingInfos( returnTypeMatchingInfos,
+        Collections.singletonList( argumentTypesMatchingInfos ) );
   }
 
-  private Map<Integer, Collection<ModuleMatchingInfo>> calculateArgumentMatchingInfos( Method source, Method target ) {
+  private Map<ParamPosition, Collection<ModuleMatchingInfo>> calculateArgumentMatchingInfos( Method source,
+      Method target ) {
     Parameter[] sourceParameters = source.getParameters();
     Parameter[] targetParameters = target.getParameters();
-    Map<Integer, Collection<ModuleMatchingInfo>> matchingInfoMap = new HashMap<>();
+    Map<ParamPosition, Collection<ModuleMatchingInfo>> matchingInfoMap = new HashMap<>();
     for ( int i = 0; i < sourceParameters.length; i++ ) {
       Parameter sourceParameter = sourceParameters[i];
       Parameter targetParameter = targetParameters[i];
-      matchingInfoMap.put( i, calculateTypeMatchingInfos( targetParameter.getType(), sourceParameter.getType() ) );
+      matchingInfoMap.put( new ParamPosition( i, i ),
+          calculateTypeMatchingInfos( targetParameter.getType(), sourceParameter.getType() ) );
     }
     return matchingInfoMap;
   }

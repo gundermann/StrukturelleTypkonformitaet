@@ -15,6 +15,7 @@ import org.easymock.EasyMock;
 import org.junit.Test;
 
 import matching.methods.MethodMatchingInfo;
+import matching.methods.MethodMatchingInfo.ParamPosition;
 import matching.modules.ModuleMatchingInfo;
 import testcomponents.genspec.DesiredGenInterface;
 import testcomponents.genspec.DesiredSpecInterface;
@@ -439,11 +440,10 @@ public class GenSpecSignatureMatchingTypeConverterTest {
     checkInvokationOfAllNonParametrizedMethods( converted );
   }
 
-  @SuppressWarnings( "rawtypes" )
-  private Map<Integer, ModuleMatchingInfo> createMMIMap( ModuleMatchingInfo... infos ) {
-    Map<Integer, ModuleMatchingInfo> map = new HashMap<>();
+  private Map<ParamPosition, ModuleMatchingInfo> createMMIMap( ModuleMatchingInfo... infos ) {
+    Map<ParamPosition, ModuleMatchingInfo> map = new HashMap<>();
     for ( int i = 0; i < infos.length; i++ ) {
-      map.put( i, infos[i] );
+      map.put( new ParamPosition( i, i ), infos[i] );
     }
     return map;
   }

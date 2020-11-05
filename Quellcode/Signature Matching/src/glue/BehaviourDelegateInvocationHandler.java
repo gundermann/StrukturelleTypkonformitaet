@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 import java.util.Optional;
 
 import matching.methods.MethodMatchingInfo;
+import matching.methods.MethodMatchingInfo.ParamPosition;
 import matching.modules.ModuleMatchingInfo;
 
 public class BehaviourDelegateInvocationHandler<T> implements InvocationHandler {
@@ -45,14 +46,14 @@ public class BehaviourDelegateInvocationHandler<T> implements InvocationHandler 
     return method.invoke( component, args );
   }
 
-  private Object[] convertArgs( Object[] args, Map<Integer, ModuleMatchingInfo> argMMI ) {
+  private Object[] convertArgs( Object[] args, Map<ParamPosition, ModuleMatchingInfo> argMMI ) {
     if ( args == null ) {
       return null;
     }
     Object[] convertedArgs = new Object[args.length];
     for ( int i = 0; i < args.length; i++ ) {
-      if ( argMMI.containsKey( i ) ) {
-        ModuleMatchingInfo moduleMatchingInfo = argMMI.get( i );
+      ModuleMatchingInfo moduleMatchingInfo = getParameterWithRepectToPosition( i, argMMI );
+      if ( moduleMatchingInfo != null ) {
         Object convertedArg = convertType( args[i], moduleMatchingInfo );
         convertedArgs[i] = convertedArg;
       }
@@ -62,6 +63,12 @@ public class BehaviourDelegateInvocationHandler<T> implements InvocationHandler 
       }
     }
     return convertedArgs;
+  }
+
+  private ModuleMatchingInfo getParameterWithRepectToPosition( int sourceParamPosition,
+      Map<ParamPosition, ModuleMatchingInfo> argMMI ) {
+    return argMMI.entrySet().stream().filter( e -> e.getKey().getSourceParamPosition().equals( sourceParamPosition ) )
+        .findFirst().map( e -> e.getValue() ).orElse( null );
   }
 
   /**
@@ -91,11 +98,11 @@ public class BehaviourDelegateInvocationHandler<T> implements InvocationHandler 
   }
 
   private boolean agrumentsMatches( MethodMatchingInfo mmi, Method method ) {
-    for ( Entry<Integer, ModuleMatchingInfo> argMMIEntry : mmi.getArgumentTypeMatchingInfos().entrySet() ) {
-      if ( method.getParameterCount() <= argMMIEntry.getKey() ) {
+    for ( Entry<ParamPosition, ModuleMatchingInfo> argMMIEntry : mmi.getArgumentTypeMatchingInfos().entrySet() ) {
+      if ( method.getParameterCount() <= argMMIEntry.getKey().getSourceParamPosition() ) {
         throw new RuntimeException( "wrong parameter count" );
       }
-      Class<?> parameterType = method.getParameterTypes()[argMMIEntry.getKey()];
+      Class<?> parameterType = method.getParameterTypes()[argMMIEntry.getKey().getSourceParamPosition()];
       if ( !parameterType.equals( argMMIEntry.getValue().getTarget() ) ) {
         return false;
       }

@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
+import matching.methods.MethodMatchingInfo.ParamPosition;
 import matching.modules.ModuleMatchingInfo;
 import util.Permuter;
 
@@ -87,15 +88,15 @@ public class ParamPermMethodMatcher implements MethodMatcher {
         .calculateTypeMatchingInfos(
             queryMethod.getReturnType(), checkMethod.getReturnType() );
 
-    Map<Integer, Collection<ModuleMatchingInfo>> argumentTypesMatchingInfos = calculateArgumentMatchingInfos(
+    Map<ParamPosition, Collection<ModuleMatchingInfo>> argumentTypesMatchingInfos = calculateArgumentMatchingInfos(
         checkMethod.getParameterTypes(), queryMethod.getParameterTypes() );
     return factory.createFromTypeMatchingInfos( returnTypeMatchingInfos, argumentTypesMatchingInfos );
   }
 
-  private Map<Integer, Collection<ModuleMatchingInfo>> calculateArgumentMatchingInfos( Class<?>[] checkArgs,
+  private Map<ParamPosition, Collection<ModuleMatchingInfo>> calculateArgumentMatchingInfos( Class<?>[] checkArgs,
       Class<?>[] queryArgs ) {
 
-    Map<Integer, Collection<ModuleMatchingInfo>> infos = new HashMap<>();
+    Map<ParamPosition, Collection<ModuleMatchingInfo>> infos = new HashMap<>();
     Collection<Class<?>[]> permutations = permuteAgruments( checkArgs );
     if ( permutations.isEmpty() ) {
       return infos;
