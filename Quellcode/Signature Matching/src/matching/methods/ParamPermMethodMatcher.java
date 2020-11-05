@@ -5,10 +5,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import matching.methods.MethodMatchingInfo.ParamPosition;
 import matching.modules.ModuleMatchingInfo;
@@ -47,7 +51,7 @@ public class ParamPermMethodMatcher implements MethodMatcher {
 
   private boolean matchPermutedArguments( Class<?>[] sortedArgumentTypes1, Class<?>[] sortedArgumentTypes2,
       BiFunction<Class<?>[], Class<?>[], Boolean> matchingFunction ) {
-    Collection<Class<?>[]> permutations = permuteAgruments( sortedArgumentTypes1 );
+    Collection<Class<?>[]> permutations = permuteAgruments( sortedArgumentTypes1 ).values();
     if ( permutations.isEmpty() ) {
       return true;
     }
@@ -59,14 +63,23 @@ public class ParamPermMethodMatcher implements MethodMatcher {
     return false;
   }
 
-  private Collection<Class<?>[]> permuteAgruments( Class<?>[] originalArgumentTypes ) {
+  private Map<Integer[], Class<?>[]> permuteAgruments( Class<?>[] originalArgumentTypes ) {
     int argumentCount = originalArgumentTypes.length;
     int permutationCount = Permuter.fractional( argumentCount );
-    Collection<Class<?>[]> permutations = new ArrayList<>( permutationCount );
+    List<Class<?>[]> permutations = new ArrayList<>( permutationCount );
+    List<Integer[]> positions = new ArrayList<>( permutationCount );
     if ( argumentCount > 0 ) {
-      Permuter.permuteRecursive( argumentCount, originalArgumentTypes, permutations );
+      Permuter.permuteRecursiveWithOriginalPositionCached( argumentCount, originalArgumentTypes,
+          IntStream.range( 0, originalArgumentTypes.length ).boxed().collect( Collectors.toList() )
+              .toArray( new Integer[] {} ),
+          permutations,
+          positions );
     }
-    return permutations;
+    Map<Integer[], Class<?>[]> map = new HashMap<>();
+    for ( int i = 0; i < positions.size(); i++ ) {
+      map.put( positions.get( i ), permutations.get( i ) );
+    }
+    return map;
   }
 
   private boolean matchesArgumentTypes( Class<?>[] argumentTypes1, Class<?>[] argumentTypes2 ) {
@@ -88,25 +101,29 @@ public class ParamPermMethodMatcher implements MethodMatcher {
         .calculateTypeMatchingInfos(
             queryMethod.getReturnType(), checkMethod.getReturnType() );
 
-    Map<ParamPosition, Collection<ModuleMatchingInfo>> argumentTypesMatchingInfos = calculateArgumentMatchingInfos(
+    Collection<Map<ParamPosition, Collection<ModuleMatchingInfo>>> argumentTypesMatchingInfos = calculateArgumentMatchingInfos(
         checkMethod.getParameterTypes(), queryMethod.getParameterTypes() );
     return factory.createFromTypeMatchingInfos( returnTypeMatchingInfos, argumentTypesMatchingInfos );
   }
 
-  private Map<ParamPosition, Collection<ModuleMatchingInfo>> calculateArgumentMatchingInfos( Class<?>[] checkArgs,
+  private Collection<Map<ParamPosition, Collection<ModuleMatchingInfo>>> calculateArgumentMatchingInfos(
+      Class<?>[] checkArgs,
       Class<?>[] queryArgs ) {
 
-    Map<ParamPosition, Collection<ModuleMatchingInfo>> infos = new HashMap<>();
-    Collection<Class<?>[]> permutations = permuteAgruments( checkArgs );
+    Collection<Map<ParamPosition, Collection<ModuleMatchingInfo>>> infos = new ArrayList<>();
+    Map<Integer[], Class<?>[]> permutations = permuteAgruments( checkArgs );
     if ( permutations.isEmpty() ) {
       return infos;
     }
-    for ( Class<?>[] combination : permutations ) {
-      for ( int i = 0; i < combination.length; i++ ) {
-        Class<?> checkParameter = combination[i];
+    for ( Entry<Integer[], Class<?>[]> combination : permutations.entrySet() ) {
+      Map<ParamPosition, Collection<ModuleMatchingInfo>> infoMap = new HashMap<>();
+      for ( int i = 0; i < combination.getValue().length; i++ ) {
+        Class<?> checkParameter = combination.getValue()[i];
         Class<?> queryParameter = queryArgs[i];
-        infos.put( i, calculateTypeMatchingInfos( checkParameter, queryParameter ) );
+        infoMap.put( new ParamPosition( i, combination.getKey()[i] ),
+            calculateTypeMatchingInfos( checkParameter, queryParameter ) );
       }
+      infos.add( infoMap );
     }
     return infos;
   }
