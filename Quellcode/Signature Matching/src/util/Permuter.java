@@ -1,5 +1,6 @@
 package util;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 public final class Permuter {
@@ -9,23 +10,30 @@ public final class Permuter {
   }
 
   public static <T> void permuteRecursiveWithOriginalPositionCached(
-      int n, T[] arguments, Integer[] originalPositions, Collection<T[]> accumulator,
+      int n, T[] arguments, Integer[] positions, Collection<T[]> accumulator,
       Collection<Integer[]> positionAccumulator ) {
     if ( n == 1 ) {
       accumulator.add( arguments );
+      positionAccumulator.add( Arrays.asList( positions ).toArray( new Integer[] {} ) );
     }
     else {
       for ( int i = 0; i < n - 1; i++ ) {
-        permuteRecursiveWithOriginalPositionCached( n - 1, arguments, originalPositions, accumulator,
+        permuteRecursiveWithOriginalPositionCached( n - 1, arguments, positions, accumulator,
             positionAccumulator );
         if ( n % 2 == 0 ) {
-          swapWithOriginalPositionCached( arguments, i, n - 1, originalPositions );
+          swap( arguments, i, n - 1 );
+          Integer tmpPos = positions[i];
+          positions[i] = positions[n - 1];
+          positions[n - 1] = tmpPos;
         }
         else {
-          swapWithOriginalPositionCached( arguments, 0, n - 1, originalPositions );
+          swap( arguments, 0, n - 1 );
+          Integer tmpPos = positions[0];
+          positions[0] = positions[n - 1];
+          positions[n - 1] = tmpPos;
         }
       }
-      permuteRecursiveWithOriginalPositionCached( n - 1, arguments, originalPositions, accumulator,
+      permuteRecursiveWithOriginalPositionCached( n - 1, arguments, positions, accumulator,
           positionAccumulator );
     }
   }
@@ -53,15 +61,6 @@ public final class Permuter {
     T tmp = input[a];
     input[a] = input[b];
     input[b] = tmp;
-  }
-
-  private static <T> void swapWithOriginalPositionCached( T[] input, int a, int b, Integer[] positions ) {
-    T tmp = input[a];
-    input[a] = input[b];
-    input[b] = tmp;
-    positions[a] = b;
-    positions[b] = a;
-
   }
 
   public static int fractional( int argumentCount ) {

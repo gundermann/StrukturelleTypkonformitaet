@@ -11,8 +11,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import matching.methods.MethodMatchingInfo.ParamPosition;
 import matching.modules.ModuleMatchingInfo;
@@ -68,10 +66,15 @@ public class ParamPermMethodMatcher implements MethodMatcher {
     int permutationCount = Permuter.fractional( argumentCount );
     List<Class<?>[]> permutations = new ArrayList<>( permutationCount );
     List<Integer[]> positions = new ArrayList<>( permutationCount );
+
+    Integer[] orinialPos = new Integer[argumentCount];
+    for ( int i = 0; i < argumentCount; i++ ) {
+      orinialPos[i] = i;
+    }
+
     if ( argumentCount > 0 ) {
       Permuter.permuteRecursiveWithOriginalPositionCached( argumentCount, originalArgumentTypes,
-          IntStream.range( 0, originalArgumentTypes.length ).boxed().collect( Collectors.toList() )
-              .toArray( new Integer[] {} ),
+          orinialPos,
           permutations,
           positions );
     }
