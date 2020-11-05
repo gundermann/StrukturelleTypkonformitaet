@@ -5,11 +5,11 @@ import java.util.Set;
 
 import matching.modules.ModuleMatchingInfo;
 
-public class ComponentInfos<S> {
+public class ComponentInfos {
 
   private Class<?> componentClass;
 
-  private Set<ModuleMatchingInfo<S>> matchingInfos = new HashSet<>();
+  private Set<ModuleMatchingInfo> matchingInfos = new HashSet<>();
 
   public ComponentInfos( Class<?> componentClass ) {
     this.componentClass = componentClass;
@@ -19,13 +19,13 @@ public class ComponentInfos<S> {
     return matchingInfos.stream().map( ModuleMatchingInfo::getRating ).max( Integer::compare ).orElse( 0 );
   }
 
-  public void setModuleMatchingInfos( Set<ModuleMatchingInfo<S>> matchingInfos ) {
+  public void setModuleMatchingInfos( Set<ModuleMatchingInfo> matchingInfos ) {
     this.matchingInfos.clear();
     this.matchingInfos.addAll( matchingInfos );
 
   }
 
-  public Set<ModuleMatchingInfo<S>> getMatchingInfos() {
+  public Set<ModuleMatchingInfo> getMatchingInfos() {
     return matchingInfos;
   }
 

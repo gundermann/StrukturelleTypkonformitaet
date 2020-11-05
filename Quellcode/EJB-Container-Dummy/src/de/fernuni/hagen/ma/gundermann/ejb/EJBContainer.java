@@ -76,12 +76,12 @@ public enum EJBContainer {
 
   private <DesiredInterface> DesiredInterface getComposedBean(
       Class<DesiredInterface> desiredInterface, Collection<Class<?>> matchingBeanInterfaces ) {
-    Set<ComponentInfos<DesiredInterface>> rankedComponentInfos = getSortedModuleMatchingInfos( desiredInterface,
+    Set<ComponentInfos> rankedComponentInfos = getSortedModuleMatchingInfos( desiredInterface,
         matchingBeanInterfaces );
     System.out.println( String.format( "ranking of relevant components" ) );
     rankedComponentInfos.stream().forEach( c -> System.out
         .println( String.format( "rank: %d component: %s", c.getRank(), c.getComponentClass().getName() ) ) );
-    List<ComponentInfos<DesiredInterface>> fullMatchedComponents = rankedComponentInfos.stream()
+    List<ComponentInfos> fullMatchedComponents = rankedComponentInfos.stream()
         .filter( c -> c.getRank() >= 100 // !!! Achtung: Das Ranking muss angepasst werden !!!
         ).collect( Collectors.toList() );
     if ( !fullMatchedComponents.isEmpty() ) {
@@ -95,15 +95,15 @@ public enum EJBContainer {
   }
 
   private <DesiredInterface> DesiredInterface getFullMatchedTestedComponent(
-      List<ComponentInfos<DesiredInterface>> fullMatchedComponents, Class<DesiredInterface> desiredInterface ) {
+      List<ComponentInfos> fullMatchedComponents, Class<DesiredInterface> desiredInterface ) {
     SignatureMatchingTypeConverter<DesiredInterface> converter = new SignatureMatchingTypeConverter<>(
         desiredInterface );
     ComponentTester<DesiredInterface> componentTester = new ComponentTester<>( desiredInterface );
 
-    for ( ComponentInfos<DesiredInterface> componentInfo : fullMatchedComponents ) {
+    for ( ComponentInfos componentInfo : fullMatchedComponents ) {
       Class<?> componentClass = componentInfo.getComponentClass();
       Collection<?> components = getBeans( componentClass );
-      for ( ModuleMatchingInfo<DesiredInterface> matchingInfo : componentInfo.getMatchingInfos() ) {
+      for ( ModuleMatchingInfo matchingInfo : componentInfo.getMatchingInfos() ) {
         for ( Object component : components ) {
           DesiredInterface convertedComponent = converter.convert( component, matchingInfo );
           if ( componentTester.testComponent( convertedComponent ) ) {
@@ -115,14 +115,14 @@ public enum EJBContainer {
     return null;
   }
 
-  private <DesiredInterface> Set<ComponentInfos<DesiredInterface>> getSortedModuleMatchingInfos(
+  private <DesiredInterface> Set<ComponentInfos> getSortedModuleMatchingInfos(
       Class<DesiredInterface> desiredInterface, Collection<Class<?>> matchingBeanInterfaces ) {
-    List<ComponentInfos<DesiredInterface>> componentInfoSet = new ArrayList<>();
+    List<ComponentInfos> componentInfoSet = new ArrayList<>();
     ModuleMatcher<DesiredInterface> moduleMatcher = new ModuleMatcher<>( desiredInterface );
     for ( Class<?> matchingBeanInterface : matchingBeanInterfaces ) {
-      Set<ModuleMatchingInfo<DesiredInterface>> matchingInfos = moduleMatcher
+      Set<ModuleMatchingInfo> matchingInfos = moduleMatcher
           .calculateMatchingInfos( matchingBeanInterface );
-      ComponentInfos<DesiredInterface> componentInfos = new ComponentInfos<>( matchingBeanInterface );
+      ComponentInfos componentInfos = new ComponentInfos( matchingBeanInterface );
       componentInfos.setModuleMatchingInfos( matchingInfos );
       componentInfoSet.add( componentInfos );
     }
