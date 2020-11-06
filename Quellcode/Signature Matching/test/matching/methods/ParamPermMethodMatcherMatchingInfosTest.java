@@ -4,7 +4,6 @@ import static matching.methods.testmethods.MethodPool.getMethod;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.Method;
 import java.util.Iterator;
@@ -131,18 +130,99 @@ public class ParamPermMethodMatcherMatchingInfosTest {
 
   @Test
   public void test8() {
-    // assertTrue( matcher.matches( getMethod( "addPartlyNativeWrapped" ), getMethod( "subPartlyNativeWrapped" ) ) );
+    Method checkMethod = getMethod( "addPartlyNativeWrapped" );
+    Method queryMethod = getMethod( "subPartlyNativeWrapped" );
+
+    Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
+    assertThat( matchingInfos, notNullValue() );
+    assertThat( matchingInfos.size(), equalTo( 2 ) );
+    for ( MethodMatchingInfo info : matchingInfos ) {
+      ModuleMatchingInfo returnTypeMatchingInfo = info.getReturnTypeMatchingInfo();
+      assertThat( returnTypeMatchingInfo, notNullValue() );
+      assertThat( returnTypeMatchingInfo.getSource(), equalTo( checkMethod.getReturnType() ) );
+      assertThat( returnTypeMatchingInfo.getTarget(), equalTo( queryMethod.getReturnType() ) );
+      Map<ParamPosition, ModuleMatchingInfo> argumentTypeMatchingInfos = info.getArgumentTypeMatchingInfos();
+      assertThat( argumentTypeMatchingInfos, notNullValue() );
+      assertThat( argumentTypeMatchingInfos.size(), equalTo( 2 ) );
+
+      Iterator<Entry<ParamPosition, ModuleMatchingInfo>> iterator = info.getArgumentTypeMatchingInfos().entrySet()
+          .iterator();
+      while ( iterator.hasNext() ) {
+        Entry<ParamPosition, ModuleMatchingInfo> argInfoEntry = iterator.next();
+        assertThat( argInfoEntry.getValue().getSource(),
+            equalTo( queryMethod.getParameterTypes()[argInfoEntry.getKey().getSourceParamPosition()] ) );
+        assertThat( argInfoEntry.getValue().getTarget(),
+            equalTo( checkMethod.getParameterTypes()[argInfoEntry.getKey().getTargetParamPosition()] ) );
+      }
+    }
   }
 
   @Test
   public void test9() {
-    // assertTrue( matcher.matches( getMethod( "addPartlyWrapped" ), getMethod( "subPartlyWrapped" ) ) );
+    Method checkMethod = getMethod( "addPartlyWrapped" );
+    Method queryMethod = getMethod( "subPartlyWrapped" );
+
+    Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
+    assertThat( matchingInfos, notNullValue() );
+    assertThat( matchingInfos.size(), equalTo( 2 ) );
+    for ( MethodMatchingInfo info : matchingInfos ) {
+      ModuleMatchingInfo returnTypeMatchingInfo = info.getReturnTypeMatchingInfo();
+      assertThat( returnTypeMatchingInfo, notNullValue() );
+      assertThat( returnTypeMatchingInfo.getSource(), equalTo( checkMethod.getReturnType() ) );
+      assertThat( returnTypeMatchingInfo.getTarget(), equalTo( queryMethod.getReturnType() ) );
+      Map<ParamPosition, ModuleMatchingInfo> argumentTypeMatchingInfos = info.getArgumentTypeMatchingInfos();
+      assertThat( argumentTypeMatchingInfos, notNullValue() );
+      assertThat( argumentTypeMatchingInfos.size(), equalTo( 2 ) );
+
+      Iterator<Entry<ParamPosition, ModuleMatchingInfo>> iterator = info.getArgumentTypeMatchingInfos().entrySet()
+          .iterator();
+      while ( iterator.hasNext() ) {
+        Entry<ParamPosition, ModuleMatchingInfo> argInfoEntry = iterator.next();
+        assertThat( argInfoEntry.getValue().getSource(),
+            equalTo( queryMethod.getParameterTypes()[argInfoEntry.getKey().getSourceParamPosition()] ) );
+        assertThat( argInfoEntry.getValue().getTarget(),
+            equalTo( checkMethod.getParameterTypes()[argInfoEntry.getKey().getTargetParamPosition()] ) );
+      }
+    }
   }
 
   @Test
   public void test10() {
-    // Das dieser Test richtig ist, war eigentlich nicht meine Intension.
-    // Aber es ist nachvollziehbar, dass das Ergebnis durch eine Parameter-Permutation positiv ausfällt.
-    assertTrue( matcher.matches( getMethod( "addSpec" ), getMethod( "addGen" ) ) );
+    Method checkMethod = getMethod( "addSpec" );
+    Method queryMethod = getMethod( "addGen" );
+
+    Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
+    assertThat( matchingInfos, notNullValue() );
+    assertThat( matchingInfos.size(), equalTo( 2 ) );
+    for ( MethodMatchingInfo info : matchingInfos ) {
+      ModuleMatchingInfo returnTypeMatchingInfo = info.getReturnTypeMatchingInfo();
+      assertThat( returnTypeMatchingInfo, notNullValue() );
+      assertThat( returnTypeMatchingInfo.getSource(), equalTo( checkMethod.getReturnType() ) );
+      assertThat( returnTypeMatchingInfo.getTarget(), equalTo( queryMethod.getReturnType() ) );
+      Map<ParamPosition, ModuleMatchingInfo> argumentTypeMatchingInfos = info.getArgumentTypeMatchingInfos();
+      assertThat( argumentTypeMatchingInfos, notNullValue() );
+      assertThat( argumentTypeMatchingInfos.size(), equalTo( 2 ) );
+
+      Iterator<Entry<ParamPosition, ModuleMatchingInfo>> iterator = info.getArgumentTypeMatchingInfos().entrySet()
+          .iterator();
+      while ( iterator.hasNext() ) {
+        Entry<ParamPosition, ModuleMatchingInfo> argInfoEntry = iterator.next();
+        assertThat( argInfoEntry.getValue().getSource(),
+            equalTo( queryMethod.getParameterTypes()[argInfoEntry.getKey().getSourceParamPosition()] ) );
+        assertThat( argInfoEntry.getValue().getTarget(),
+            equalTo( checkMethod.getParameterTypes()[argInfoEntry.getKey().getTargetParamPosition()] ) );
+      }
+    }
   }
+
+  @Test
+  public void test11() {
+    Method queryMethod = getMethod( "addSpec" );
+    Method checkMethod = getMethod( "addSpecReturnSpec" );
+    Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
+    assertThat( matchingInfos, notNullValue() );
+    assertThat( matchingInfos.size(), equalTo( 0 ) );
+
+  }
+
 }

@@ -13,7 +13,7 @@ public final class Permuter {
       int n, T[] arguments, Integer[] positions, Collection<T[]> accumulator,
       Collection<Integer[]> positionAccumulator ) {
     if ( n == 1 ) {
-      accumulator.add( arguments );
+      accumulator.add( (T[]) Arrays.asList( arguments ).toArray() );
       positionAccumulator.add( Arrays.asList( positions ).toArray( new Integer[] {} ) );
     }
     else {
