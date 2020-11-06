@@ -52,10 +52,14 @@ public class BehaviourDelegateInvocationHandler<T> implements InvocationHandler 
     }
     Object[] convertedArgs = new Object[args.length];
     for ( int i = 0; i < args.length; i++ ) {
-      ModuleMatchingInfo moduleMatchingInfo = getParameterWithRepectToPosition( i, argMMI );
-      if ( moduleMatchingInfo != null ) {
-        Object convertedArg = convertType( args[i], moduleMatchingInfo );
-        convertedArgs[i] = convertedArg;
+      Entry<ParamPosition, ModuleMatchingInfo> moduleMatchingInfoEntry = getParameterWithRepectToPosition( i, argMMI );
+      if ( moduleMatchingInfoEntry != null && moduleMatchingInfoEntry.getValue() != null
+          && moduleMatchingInfoEntry.getKey() != null ) {
+        ParamPosition paramPosition = moduleMatchingInfoEntry.getKey();
+        ModuleMatchingInfo moduleMatchingInfo = moduleMatchingInfoEntry.getValue();
+        Object convertedArg = convertType( args[paramPosition.getSourceParamPosition()],
+            moduleMatchingInfo );
+        convertedArgs[paramPosition.getTargetParamPosition()] = convertedArg;
       }
       else {
         // Keine Konvertierung notwendig
@@ -65,26 +69,26 @@ public class BehaviourDelegateInvocationHandler<T> implements InvocationHandler 
     return convertedArgs;
   }
 
-  private ModuleMatchingInfo getParameterWithRepectToPosition( int sourceParamPosition,
+  private Entry<ParamPosition, ModuleMatchingInfo> getParameterWithRepectToPosition( int sourceParamPosition,
       Map<ParamPosition, ModuleMatchingInfo> argMMI ) {
     return argMMI.entrySet().stream().filter( e -> e.getKey().getSourceParamPosition().equals( sourceParamPosition ) )
-        .findFirst().map( e -> e.getValue() ).orElse( null );
+        .findFirst().orElse( null );
   }
 
   /**
    * Rekursiver Aufruf des gesamten Konvertierungsprozesses
    *
-   * @param returnValue
+   * @param sourceType
    * @param moduleMatchingInfo
    * @return
    */
-  private <RT> RT convertType( Object returnValue, ModuleMatchingInfo moduleMatchingInfo ) {
+  private <RT> RT convertType( Object sourceType, ModuleMatchingInfo moduleMatchingInfo ) {
     System.out.println( String.format( "convert type %s -> %s", moduleMatchingInfo.getTarget().getName(),
         moduleMatchingInfo.getSource().getName() ) );
     if ( moduleMatchingInfo.getMethodMatchingInfos().isEmpty() ) {
-      return (RT) returnValue;
+      return (RT) sourceType;
     }
-    return new SignatureMatchingTypeConverter<>( (Class<RT>) moduleMatchingInfo.getSource() ).convert( returnValue,
+    return new SignatureMatchingTypeConverter<>( (Class<RT>) moduleMatchingInfo.getSource() ).convert( sourceType,
         moduleMatchingInfo );
   }
 

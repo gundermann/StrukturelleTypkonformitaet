@@ -10,9 +10,12 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import matching.Logger;
+import matching.methods.ExactMethodMatcher;
 import matching.methods.GenSpecMethodMatcher;
+import matching.methods.MatcherCombiner;
 import matching.methods.MethodMatcher;
 import matching.methods.MethodMatchingInfo;
+import matching.methods.ParamPermMethodMatcher;
 
 public class ModuleMatcher<S> {
 
@@ -34,7 +37,8 @@ public class ModuleMatcher<S> {
 
   public ModuleMatcher( Class<S> queryType ) {
     this.queryType = queryType;
-    this.methodMatcher = new GenSpecMethodMatcher(); // enthaelt auch den ExactMethodMatcher
+    this.methodMatcher = new ParamPermMethodMatcher(
+        MatcherCombiner.combine( new GenSpecMethodMatcher(), new ExactMethodMatcher() ) );
     // TODO das ist das Ziel - die JUnit-Tests funktionieren nur mit dem CombinedMethodMatcher:
     // new CombinedMethodMatcher();
   }
@@ -80,7 +84,7 @@ public class ModuleMatcher<S> {
    * @param queryType
    * @return
    */
-  public  Set<ModuleMatchingInfo> calculateMatchingInfos( Class<?> checkType ) {
+  public Set<ModuleMatchingInfo> calculateMatchingInfos( Class<?> checkType ) {
     ModuleMatchingInfoFactory factory = new ModuleMatchingInfoFactory( checkType, queryType );
     if ( queryType.equals( Object.class ) ) {
       // Dieser Spezialfall führt ohne diese Sonderregelung in einen Stackoverflow, da Object als Typ immer wieder
