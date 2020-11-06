@@ -10,12 +10,61 @@ public class ModuleMatchingInfo {
 
   private final Class<?> target;
 
+  // Benoetigt, wenn die Source das Target enthaelt (Target in Source)
+  private final String sourceDelegateAttribute;
+
+  // Benoetigt, wenn das Target die Source enthaelt (Source in Target)
+  private final String targetDelegateAttribute;
+
   private final Set<MethodMatchingInfo> methodMatchingInfos;
 
+  /**
+   * Konstruktor fuer ModuleMatchings, bei denen zwischen Source und Target keine Contains-Assoziation besteht
+   *
+   * @param source
+   * @param target
+   * @param methodMatchingInfos
+   */
   public ModuleMatchingInfo( Class<?> source, Class<?> target, Set<MethodMatchingInfo> methodMatchingInfos ) {
     this.source = source;
     this.target = target;
     this.methodMatchingInfos = methodMatchingInfos;
+    this.sourceDelegateAttribute = null;
+    this.targetDelegateAttribute = null;
+  }
+
+  /**
+   * Konstruktor fuer ModuleMatchings, bei denen die Source im Target enthalten ist. (Source in Target)
+   *
+   * @param source
+   * @param target
+   * @param targetDelegate
+   * @param methodMatchingInfos
+   */
+  public ModuleMatchingInfo( Class<?> source, Class<?> target, String targetDelegate,
+      Set<MethodMatchingInfo> methodMatchingInfos ) {
+    this.source = source;
+    this.target = target;
+    this.methodMatchingInfos = methodMatchingInfos;
+    this.sourceDelegateAttribute = null;
+    this.targetDelegateAttribute = targetDelegate;
+  }
+
+  /**
+   * Konstruktor fuer ModuleMatchings, bei denen das Target in der Source enthalten ist. (Target in Source)
+   *
+   * @param source
+   * @param sourceDelegate
+   * @param target
+   * @param methodMatchingInfos
+   */
+  public ModuleMatchingInfo( Class<?> source, String sourceDelegate, Class<?> target,
+      Set<MethodMatchingInfo> methodMatchingInfos ) {
+    this.source = source;
+    this.target = target;
+    this.methodMatchingInfos = methodMatchingInfos;
+    this.sourceDelegateAttribute = sourceDelegate;
+    this.targetDelegateAttribute = null;
   }
 
   /**
@@ -48,6 +97,20 @@ public class ModuleMatchingInfo {
 
   public Class<?> getTarget() {
     return target;
+  }
+
+  /**
+   * @return <code> null </code> wenn das Target nicht in der Source enthalten ist.
+   */
+  public String getSourceDelegateAttribute() {
+    return sourceDelegateAttribute;
+  }
+
+  /**
+   * @return <code> null </code> wenn die Source nicht im Target enthalten ist.
+   */
+  public String getTargetDelegateAttribute() {
+    return targetDelegateAttribute;
   }
 
 }

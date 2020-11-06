@@ -2,14 +2,17 @@ package matching.methods;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Supplier;
 
+import matching.methods.MethodMatchingInfo.ParamPosition;
 import matching.modules.ModuleMatchingInfo;
 
 /**
@@ -62,7 +65,10 @@ public class WrappedTypeMethodMatcher implements MethodMatcher {
 
   @Override
   public boolean matchesType( Class<?> t1, Class<?> t2 ) {
-    return t1.equals( t2 ) || isWrappedIn( t1, t2 )
+    return
+    // Darf die Gleichheit hier geprüft werden?
+    t1.equals( t2 ) ||
+        isWrappedIn( t1, t2 )
         || isWrappedIn( t2, t1 );
   }
 
@@ -153,8 +159,18 @@ public class WrappedTypeMethodMatcher implements MethodMatcher {
 
   @Override
   public Set<MethodMatchingInfo> calculateMatchingInfos( Method checkMethod, Method queryMethod ) {
-    // TODO Auto-generated method stub
-    return null;
+    if ( !matches( checkMethod, queryMethod ) ) {
+      return new HashSet<>();
+    }
+    MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( checkMethod, queryMethod );
+    Collection<ModuleMatchingInfo> returnTypeMatchingInfos = innerMethodMatcherSupplier.get()
+        .calculateTypeMatchingInfos(
+            queryMethod.getReturnType(), checkMethod.getReturnType() );
+
+    Collection<Map<ParamPosition, Collection<ModuleMatchingInfo>>> argumentTypesMatchingInfos = new ArrayList<>();
+    // calculateArgumentMatchingInfos(
+    // checkMethod.getParameterTypes(), queryMethod.getParameterTypes() );
+    return factory.createFromTypeMatchingInfos( returnTypeMatchingInfos, argumentTypesMatchingInfos );
   }
 
   @Override
