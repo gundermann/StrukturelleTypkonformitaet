@@ -16,5 +16,5 @@ public interface FoerderprogrammeProvider {
   Collection<Foerderprogramm> getAlleFreigegebenenFPs();
 
   // Versuch 2: diese Methode wurde zusätzlich deklariert => 3/885 relevanten Beans
-  Foerderprogramm getFoerderprogramm( DvAntragsJahr jahr, DvFoerderprogramm fp, Date date );
+  Foerderprogramm getFoerderprogramm( DvFoerderprogramm fp, DvAntragsJahr jahr, Date date );
 }
