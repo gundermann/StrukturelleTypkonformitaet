@@ -14,6 +14,7 @@ import java.util.function.Supplier;
 
 import matching.methods.MethodMatchingInfo.ParamPosition;
 import matching.modules.ModuleMatchingInfo;
+import matching.modules.ModuleMatchingInfoFactory;
 
 /**
  * Dieser Matcher beachtet, dass die Typen (Return- und Argumenttypen) einer der beiden Methoden in einem Typ der
@@ -147,10 +148,10 @@ public class WrappedTypeMethodMatcher implements MethodMatcher {
   // return false;
   // }
 
-  private boolean containsFieldWithType( Class<?> checkingClass, Class<?> fieldType ) {
-    Field[] fieldsOfWrapper = checkingClass.getDeclaredFields();
+  private boolean containsFieldWithType( Class<?> wrapperClass, Class<?> wrappedType ) {
+    Field[] fieldsOfWrapper = wrapperClass.getDeclaredFields();
     for ( Field field : fieldsOfWrapper ) {
-      if ( innerMethodMatcherSupplier.get().matchesType( field.getType(), fieldType ) ) {
+      if ( innerMethodMatcherSupplier.get().matchesType( field.getType(), wrappedType ) ) {
         return true;
       }
     }
@@ -163,9 +164,8 @@ public class WrappedTypeMethodMatcher implements MethodMatcher {
       return new HashSet<>();
     }
     MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( checkMethod, queryMethod );
-    Collection<ModuleMatchingInfo> returnTypeMatchingInfos = innerMethodMatcherSupplier.get()
-        .calculateTypeMatchingInfos(
-            queryMethod.getReturnType(), checkMethod.getReturnType() );
+    Collection<ModuleMatchingInfo> returnTypeMatchingInfos = calculateTypeMatchingInfos( queryMethod.getReturnType(),
+        checkMethod.getReturnType() );
 
     Collection<Map<ParamPosition, Collection<ModuleMatchingInfo>>> argumentTypesMatchingInfos = new ArrayList<>();
     // calculateArgumentMatchingInfos(
@@ -175,8 +175,48 @@ public class WrappedTypeMethodMatcher implements MethodMatcher {
 
   @Override
   public Collection<ModuleMatchingInfo> calculateTypeMatchingInfos( Class<?> checkType, Class<?> queryType ) {
-    // TODO Auto-generated method stub
-    return null;
+    MethodMatcher innerMethodMatcher = innerMethodMatcherSupplier.get();
+    if ( innerMethodMatcher.matchesType( checkType, queryType ) ) {
+      return innerMethodMatcher.calculateTypeMatchingInfos( checkType, queryType );
+    }
+
+    if ( isWrappedIn( checkType, queryType ) ) {
+      return calculateWrappedTypeMatchingInfos( checkType, queryType );
+    }
+    if ( isWrappedIn( queryType, checkType ) ) {
+      return calculateWrappedTypeMatchingInfos( queryType, checkType );
+    }
+    return new ArrayList<>();
+  }
+
+  private Collection<ModuleMatchingInfo> calculateWrappedTypeMatchingInfos( Class<?> wrapperClass,
+      Class<?> wrappedType, boolean isTargetWrapper ) {
+    Field[] fieldsOfWrapper = wrapperClass.getDeclaredFields();
+    MethodMatcher innerMethodMatcher = innerMethodMatcherSupplier.get();
+    for ( Field field : fieldsOfWrapper ) {
+      if ( innerMethodMatcher.matchesType( field.getType(), wrappedType ) ) {
+        Collection<ModuleMatchingInfo> infosFromInnerMatcher = innerMethodMatcher
+            .calculateTypeMatchingInfos( field.getType(), wrappedType );
+        final ModuleMatchingInfoFactory factory;
+        if ( isTargetWrapper ) {
+          factory = new ModuleMatchingInfoFactory( wrapperClass, wrappedType );
+        }
+        else {
+          factory = new ModuleMatchingInfoFactory( wrappedType, wrapperClass );
+        }
+        return enhanceInfosWithDelegate( infosFromInnerMatcher, factory, isTargetWrapper );
+      }
+    }
+    return new ArrayList<>();
+  }
+
+  private Collection<ModuleMatchingInfo> enhanceInfosWithDelegate( Collection<ModuleMatchingInfo> infos,
+      ModuleMatchingInfoFactory factory, boolean isWrapperTarget ) {
+    Collection<ModuleMatchingInfo> enhancedInfos = new ArrayList<>();
+    for ( ModuleMatchingInfo mmi : infos ) {
+    }
+
+    return enhancedInfos;
   }
 
 }

@@ -3,6 +3,7 @@ package matching.methods;
 import static matching.methods.testmethods.MethodPool.getMethod;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 import java.lang.reflect.Method;
@@ -10,6 +11,8 @@ import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import matching.modules.ModuleMatchingInfo;
 
 public class WrappedTypeMethodMatcherMatchingInfosTest {
   MethodMatcher matcher;
@@ -36,12 +39,29 @@ public class WrappedTypeMethodMatcherMatchingInfosTest {
 
   @Test
   public void test4() {
-    Method sourceMethod = getMethod( "getOneNativeWrapped" );
-    Method targetMethod = getMethod( "getOne" );
-    Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( sourceMethod, targetMethod );
+    Method checkMethod = getMethod( "getOneNativeWrapped" );
+    Method queryMethod = getMethod( "getOne" );
+    Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 1 ) );
-    // TODO
+    for ( MethodMatchingInfo mmi : matchingInfos ) {
+      assertThat( mmi.getSource(), equalTo( queryMethod ) );
+      assertThat( mmi.getTarget(), equalTo( checkMethod ) );
+      ModuleMatchingInfo rtMatchingInfo = mmi.getReturnTypeMatchingInfo();
+      assertThat( rtMatchingInfo, notNullValue() );
+      assertThat( rtMatchingInfo.getSource(), notNullValue() );
+      assertThat( rtMatchingInfo.getSource(), equalTo( Integer.class ) );
+      assertThat( rtMatchingInfo.getSourceDelegateAttribute(), notNullValue() );
+
+      assertThat( rtMatchingInfo.getTarget(), notNullValue() );
+      assertThat( rtMatchingInfo.getTarget(), equalTo( int.class ) );
+      assertThat( rtMatchingInfo.getTargetDelegateAttribute(), nullValue() );
+
+      assertThat( mmi.getArgumentTypeMatchingInfos(), notNullValue() );
+      assertThat( mmi.getArgumentTypeMatchingInfos().size(), equalTo( 0 ) );
+      ModuleMatchingInfo returnTypeMatchingInfo = mmi.getReturnTypeMatchingInfo();
+      // TODO
+    }
 
   }
 

@@ -16,9 +16,29 @@ public class ModuleMatchingInfoFactory {
 
   private final Class<?> sourceType;
 
+  private final String sourceDelegateAttribute;
+
+  private final String targetDelegateAttribute;
+
   public ModuleMatchingInfoFactory( Class<?> targetType, Class<?> sourceType ) {
     this.targetType = targetType;
+    this.targetDelegateAttribute = null;
     this.sourceType = sourceType;
+    this.sourceDelegateAttribute = null;
+  }
+
+  public ModuleMatchingInfoFactory( Class<?> targetType, Class<?> sourceType, String sourceDelegateAttribute ) {
+    this.targetType = targetType;
+    this.targetDelegateAttribute = null;
+    this.sourceType = sourceType;
+    this.sourceDelegateAttribute = sourceDelegateAttribute;
+  }
+
+  public ModuleMatchingInfoFactory( Class<?> targetType, String targetDelegateAttribute, Class<?> sourceType ) {
+    this.targetType = targetType;
+    this.targetDelegateAttribute = targetDelegateAttribute;
+    this.sourceType = sourceType;
+    this.sourceDelegateAttribute = null;
   }
 
   public ModuleMatchingInfo create() {
@@ -26,7 +46,16 @@ public class ModuleMatchingInfoFactory {
   }
 
   public ModuleMatchingInfo create( Set<MethodMatchingInfo> methodMatchingInfos ) {
-    return new ModuleMatchingInfo( sourceType, targetType, methodMatchingInfos );
+    if ( sourceDelegateAttribute != null && targetDelegateAttribute == null ) {
+      return new ModuleMatchingInfo( sourceType, sourceDelegateAttribute, targetType, methodMatchingInfos );
+    }
+    else if ( sourceDelegateAttribute == null && targetDelegateAttribute != null ) {
+      return new ModuleMatchingInfo( sourceType, targetType, targetDelegateAttribute, methodMatchingInfos );
+    }
+    else if ( sourceDelegateAttribute == null && targetDelegateAttribute == null ) {
+      return new ModuleMatchingInfo( sourceType, targetType, methodMatchingInfos );
+    }
+    return null;
   }
 
   public Set<ModuleMatchingInfo> createFromMethodMatchingInfos(

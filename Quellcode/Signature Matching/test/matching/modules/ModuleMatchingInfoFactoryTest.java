@@ -2,6 +2,7 @@ package matching.modules;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 import java.lang.reflect.Method;
@@ -26,6 +27,36 @@ public class ModuleMatchingInfoFactoryTest {
     assertThat( matchingInfo.getRating(), equalTo( 0 ) );
     assertThat( matchingInfo.getMethodMatchingInfos(), notNullValue() );
     assertThat( matchingInfo.getMethodMatchingInfos().size(), equalTo( 0 ) );
+    assertThat( matchingInfo.getSourceDelegateAttribute(), nullValue() );
+    assertThat( matchingInfo.getTargetDelegateAttribute(), nullValue() );
+  }
+
+  @Test
+  public void create_WithSourceDelegateAttr() {
+    ModuleMatchingInfoFactory factory = new ModuleMatchingInfoFactory( Object.class,
+        Object.class, "SOURCE" );
+    ModuleMatchingInfo matchingInfo = factory.create();
+    assertThat( matchingInfo, notNullValue() );
+    assertThat( matchingInfo.getRating(), equalTo( 0 ) );
+    assertThat( matchingInfo.getMethodMatchingInfos(), notNullValue() );
+    assertThat( matchingInfo.getMethodMatchingInfos().size(), equalTo( 0 ) );
+    assertThat( matchingInfo.getSourceDelegateAttribute(), notNullValue() );
+    assertThat( matchingInfo.getSourceDelegateAttribute(), equalTo( "SOURCE" ) );
+    assertThat( matchingInfo.getTargetDelegateAttribute(), nullValue() );
+  }
+
+  @Test
+  public void create_WithTargetDelegateAttr() {
+    ModuleMatchingInfoFactory factory = new ModuleMatchingInfoFactory( Object.class, "TARGET",
+        Object.class );
+    ModuleMatchingInfo matchingInfo = factory.create();
+    assertThat( matchingInfo, notNullValue() );
+    assertThat( matchingInfo.getRating(), equalTo( 0 ) );
+    assertThat( matchingInfo.getMethodMatchingInfos(), notNullValue() );
+    assertThat( matchingInfo.getMethodMatchingInfos().size(), equalTo( 0 ) );
+    assertThat( matchingInfo.getSourceDelegateAttribute(), nullValue() );
+    assertThat( matchingInfo.getTargetDelegateAttribute(), notNullValue() );
+    assertThat( matchingInfo.getTargetDelegateAttribute(), equalTo( "TARGET" ) );
   }
 
   @Test
