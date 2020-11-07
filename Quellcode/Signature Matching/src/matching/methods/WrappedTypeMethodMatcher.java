@@ -2,8 +2,10 @@ package matching.methods;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -11,6 +13,8 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import matching.methods.MethodMatchingInfo.ParamPosition;
 import matching.modules.ModuleMatchingInfo;
@@ -36,12 +40,16 @@ public class WrappedTypeMethodMatcher implements MethodMatcher {
 
   @Override
   public boolean matches( Method m1, Method m2 ) {
+    if ( innerMethodMatcherSupplier.get().matches( m1, m2 ) ) {
+      return true;
+    }
     MethodStructure ms1 = MethodStructure.createFromDeclaredMethod( m1 );
     MethodStructure ms2 = MethodStructure.createFromDeclaredMethod( m2 );
     return matches( ms1, ms2 );
   }
 
   private boolean matches( MethodStructure ms1, MethodStructure ms2 ) {
+
     if ( ms1.getSortedArgumentTypes().length != ms2.getSortedArgumentTypes().length ) {
       return false;
     }
@@ -68,8 +76,9 @@ public class WrappedTypeMethodMatcher implements MethodMatcher {
   public boolean matchesType( Class<?> t1, Class<?> t2 ) {
     return
     // Darf die Gleichheit hier geprüft werden?
-    t1.equals( t2 ) ||
-        isWrappedIn( t1, t2 )
+    // NEIN: Das ist wenn überhaupt die Aufgabe des inneren Matchers
+    // t1.equals( t2 ) ||
+    isWrappedIn( t1, t2 )
         || isWrappedIn( t2, t1 );
   }
 
@@ -149,7 +158,7 @@ public class WrappedTypeMethodMatcher implements MethodMatcher {
   // }
 
   private boolean containsFieldWithType( Class<?> wrapperClass, Class<?> wrappedType ) {
-    Field[] fieldsOfWrapper = wrapperClass.getDeclaredFields();
+    Field[] fieldsOfWrapper = filterStaticFields( wrapperClass.getDeclaredFields() );
     for ( Field field : fieldsOfWrapper ) {
       if ( innerMethodMatcherSupplier.get().matchesType( field.getType(), wrappedType ) ) {
         return true;
@@ -167,55 +176,88 @@ public class WrappedTypeMethodMatcher implements MethodMatcher {
     Collection<ModuleMatchingInfo> returnTypeMatchingInfos = calculateTypeMatchingInfos( queryMethod.getReturnType(),
         checkMethod.getReturnType() );
 
-    Collection<Map<ParamPosition, Collection<ModuleMatchingInfo>>> argumentTypesMatchingInfos = new ArrayList<>();
-    // calculateArgumentMatchingInfos(
-    // checkMethod.getParameterTypes(), queryMethod.getParameterTypes() );
+    Collection<Map<ParamPosition, Collection<ModuleMatchingInfo>>> argumentTypesMatchingInfos = calculateArgumentMatchingInfos(
+        checkMethod.getParameterTypes(), queryMethod.getParameterTypes() );
     return factory.createFromTypeMatchingInfos( returnTypeMatchingInfos, argumentTypesMatchingInfos );
+  }
+
+  private Collection<Map<ParamPosition, Collection<ModuleMatchingInfo>>> calculateArgumentMatchingInfos(
+      Class<?>[] checkATs, Class<?>[] queryATs ) {
+    Map<ParamPosition, Collection<ModuleMatchingInfo>> matchingMap = new HashMap<>();
+    for ( int i = 0; i < checkATs.length; i++ ) {
+      Class<?> checkAT = checkATs[i];
+      Class<?> queryAT = queryATs[i];
+      Collection<?> infos = calculateTypeMatchingInfos( checkAT, queryAT );
+      matchingMap.put( new ParamPosition( i, i ), (Collection<ModuleMatchingInfo>) infos );
+    }
+    return Collections.singletonList( matchingMap );
   }
 
   @Override
   public Collection<ModuleMatchingInfo> calculateTypeMatchingInfos( Class<?> checkType, Class<?> queryType ) {
+    Collection<ModuleMatchingInfo> allMatchingInfos = new ArrayList<>();
+
     MethodMatcher innerMethodMatcher = innerMethodMatcherSupplier.get();
     if ( innerMethodMatcher.matchesType( checkType, queryType ) ) {
-      return innerMethodMatcher.calculateTypeMatchingInfos( checkType, queryType );
+      Collection<ModuleMatchingInfo> matchingInfos = innerMethodMatcher.calculateTypeMatchingInfos( checkType,
+          queryType );
+      allMatchingInfos.addAll( matchingInfos );
     }
-
     if ( isWrappedIn( checkType, queryType ) ) {
-      return calculateWrappedTypeMatchingInfos( checkType, queryType );
+      Collection<ModuleMatchingInfo> matchingInfos = calculateWrappedTypeMatchingInfos( queryType, checkType, false );
+      allMatchingInfos.addAll( matchingInfos );
     }
     if ( isWrappedIn( queryType, checkType ) ) {
-      return calculateWrappedTypeMatchingInfos( queryType, checkType );
+      Collection<ModuleMatchingInfo> matchingInfos = calculateWrappedTypeMatchingInfos( checkType, queryType, true );
+      allMatchingInfos.addAll( matchingInfos );
     }
-    return new ArrayList<>();
+    return allMatchingInfos;
   }
 
   private Collection<ModuleMatchingInfo> calculateWrappedTypeMatchingInfos( Class<?> wrapperClass,
       Class<?> wrappedType, boolean isTargetWrapper ) {
-    Field[] fieldsOfWrapper = wrapperClass.getDeclaredFields();
+    Collection<ModuleMatchingInfo> allMatchingInfos = new ArrayList<>();
+    Field[] fieldsOfWrapper = filterStaticFields( wrapperClass.getDeclaredFields() );
     MethodMatcher innerMethodMatcher = innerMethodMatcherSupplier.get();
     for ( Field field : fieldsOfWrapper ) {
+      // TODO hier wird nur auf der ersten Ebene geprüft. Eine tiefere Verschachtelung wird noch nicht ermöglicht.
+      // ABER: Der ganze Matcher macht das noch nicht. Auch beim Prüfen des Matchings wird nur auf der obersten Ebene
+      // geprüft.
       if ( innerMethodMatcher.matchesType( field.getType(), wrappedType ) ) {
         Collection<ModuleMatchingInfo> infosFromInnerMatcher = innerMethodMatcher
             .calculateTypeMatchingInfos( field.getType(), wrappedType );
         final ModuleMatchingInfoFactory factory;
         if ( isTargetWrapper ) {
-          factory = new ModuleMatchingInfoFactory( wrapperClass, wrappedType );
+          factory = new ModuleMatchingInfoFactory( wrapperClass, field.getName(), wrappedType );
         }
         else {
-          factory = new ModuleMatchingInfoFactory( wrappedType, wrapperClass );
+          factory = new ModuleMatchingInfoFactory( wrappedType, wrapperClass, field.getName() );
         }
-        return enhanceInfosWithDelegate( infosFromInnerMatcher, factory, isTargetWrapper );
+        allMatchingInfos.addAll( enhanceInfosWithDelegate( infosFromInnerMatcher, factory ) );
       }
     }
-    return new ArrayList<>();
+    return allMatchingInfos;
+  }
+
+  /**
+   * Die statischen Felder müssen herausgefiltert werden.
+   *
+   * @param declaredFields
+   * @return
+   */
+  private Field[] filterStaticFields( Field[] declaredFields ) {
+    return Stream.of( declaredFields ).filter( f -> !Modifier.isStatic( f.getModifiers() ) )
+        .collect( Collectors.toList() )
+        .toArray( new Field[] {} );
   }
 
   private Collection<ModuleMatchingInfo> enhanceInfosWithDelegate( Collection<ModuleMatchingInfo> infos,
-      ModuleMatchingInfoFactory factory, boolean isWrapperTarget ) {
+      ModuleMatchingInfoFactory factory ) {
     Collection<ModuleMatchingInfo> enhancedInfos = new ArrayList<>();
     for ( ModuleMatchingInfo mmi : infos ) {
+      ModuleMatchingInfo enhancedInfo = factory.create( mmi.getMethodMatchingInfos() );
+      enhancedInfos.add( enhancedInfo );
     }
-
     return enhancedInfos;
   }
 

@@ -30,6 +30,9 @@ public class ParamPermMethodMatcher implements MethodMatcher {
 
   @Override
   public boolean matches( Method m1, Method m2 ) {
+    if ( innerMethodMatcherSupplier.get().matches( m1, m2 ) ) {
+      return true;
+    }
     MethodStructure ms1 = MethodStructure.createFromDeclaredMethod( m1 );
     MethodStructure ms2 = MethodStructure.createFromDeclaredMethod( m2 );
     return matches( ms1, ms2 );

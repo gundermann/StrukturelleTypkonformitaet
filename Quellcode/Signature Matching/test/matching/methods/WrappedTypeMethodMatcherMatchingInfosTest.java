@@ -7,11 +7,13 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 import java.lang.reflect.Method;
+import java.util.Map;
 import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import matching.methods.MethodMatchingInfo.ParamPosition;
 import matching.modules.ModuleMatchingInfo;
 
 public class WrappedTypeMethodMatcherMatchingInfosTest {
@@ -52,22 +54,90 @@ public class WrappedTypeMethodMatcherMatchingInfosTest {
       assertThat( rtMatchingInfo.getSource(), notNullValue() );
       assertThat( rtMatchingInfo.getSource(), equalTo( Integer.class ) );
       assertThat( rtMatchingInfo.getSourceDelegateAttribute(), notNullValue() );
+      assertThat( rtMatchingInfo.getSourceDelegateAttribute(), equalTo( "value" ) );
 
       assertThat( rtMatchingInfo.getTarget(), notNullValue() );
       assertThat( rtMatchingInfo.getTarget(), equalTo( int.class ) );
       assertThat( rtMatchingInfo.getTargetDelegateAttribute(), nullValue() );
 
+      Set<MethodMatchingInfo> rtMethodMI = rtMatchingInfo.getMethodMatchingInfos();
+      assertThat( rtMethodMI, notNullValue() );
+      assertThat( rtMethodMI.size(), equalTo( 0 ) ); // Denn die Typen sind identisch
+
       assertThat( mmi.getArgumentTypeMatchingInfos(), notNullValue() );
       assertThat( mmi.getArgumentTypeMatchingInfos().size(), equalTo( 0 ) );
-      ModuleMatchingInfo returnTypeMatchingInfo = mmi.getReturnTypeMatchingInfo();
-      // TODO
     }
+  }
 
+  @Test
+  public void test4_turned() {
+    Method queryMethod = getMethod( "getOneNativeWrapped" );
+    Method checkMethod = getMethod( "getOne" );
+    Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
+    assertThat( matchingInfos, notNullValue() );
+    assertThat( matchingInfos.size(), equalTo( 1 ) );
+    for ( MethodMatchingInfo mmi : matchingInfos ) {
+      assertThat( mmi.getSource(), equalTo( queryMethod ) );
+      assertThat( mmi.getTarget(), equalTo( checkMethod ) );
+      ModuleMatchingInfo rtMatchingInfo = mmi.getReturnTypeMatchingInfo();
+      assertThat( rtMatchingInfo, notNullValue() );
+      assertThat( rtMatchingInfo.getTarget(), notNullValue() );
+      assertThat( rtMatchingInfo.getTarget(), equalTo( Integer.class ) );
+      assertThat( rtMatchingInfo.getTargetDelegateAttribute(), notNullValue() );
+      assertThat( rtMatchingInfo.getTargetDelegateAttribute(), equalTo( "value" ) );
+
+      assertThat( rtMatchingInfo.getSource(), notNullValue() );
+      assertThat( rtMatchingInfo.getSource(), equalTo( int.class ) );
+      assertThat( rtMatchingInfo.getSourceDelegateAttribute(), nullValue() );
+
+      Set<MethodMatchingInfo> rtMethodMI = rtMatchingInfo.getMethodMatchingInfos();
+      assertThat( rtMethodMI, notNullValue() );
+      assertThat( rtMethodMI.size(), equalTo( 0 ) ); // Denn die Typen sind identisch
+
+      assertThat( mmi.getArgumentTypeMatchingInfos(), notNullValue() );
+      assertThat( mmi.getArgumentTypeMatchingInfos().size(), equalTo( 0 ) );
+    }
   }
 
   @Test
   public void test5() {
-    // assertTrue( matcher.matches( getMethod( "setBool" ), getMethod( "setBoolNativeWrapped" ) ) );
+    Method checkMethod = getMethod( "setBoolNativeWrapped" );
+    Method queryMethod = getMethod( "setBool" );
+    Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
+    assertThat( matchingInfos, notNullValue() );
+    assertThat( matchingInfos.size(), equalTo( 1 ) );
+    for ( MethodMatchingInfo mmi : matchingInfos ) {
+      assertThat( mmi.getSource(), equalTo( queryMethod ) );
+      assertThat( mmi.getTarget(), equalTo( checkMethod ) );
+      ModuleMatchingInfo rtMatchingInfo = mmi.getReturnTypeMatchingInfo();
+      assertThat( rtMatchingInfo, notNullValue() );
+      assertThat( rtMatchingInfo.getSource(), notNullValue() );
+      assertThat( rtMatchingInfo.getSource(), equalTo( void.class ) );
+      assertThat( rtMatchingInfo.getSourceDelegateAttribute(), nullValue() );
+
+      assertThat( rtMatchingInfo.getTarget(), notNullValue() );
+      assertThat( rtMatchingInfo.getTarget(), equalTo( void.class ) );
+      assertThat( rtMatchingInfo.getTargetDelegateAttribute(), nullValue() );
+
+      Set<MethodMatchingInfo> rtMethodMI = rtMatchingInfo.getMethodMatchingInfos();
+      assertThat( rtMethodMI, notNullValue() );
+      assertThat( rtMethodMI.size(), equalTo( 0 ) ); // Denn die Typen sind identisch
+
+      Map<ParamPosition, ModuleMatchingInfo> argumentTypeMatchingInfos = mmi.getArgumentTypeMatchingInfos();
+      assertThat( argumentTypeMatchingInfos, notNullValue() );
+      assertThat( argumentTypeMatchingInfos.size(), equalTo( 1 ) );
+      for ( ModuleMatchingInfo argMMI : argumentTypeMatchingInfos.values() ) {
+        assertThat( argMMI, notNullValue() );
+        assertThat( argMMI.getSource(), notNullValue() );
+        assertThat( argMMI.getSourceDelegateAttribute(), nullValue() );
+        assertThat( argMMI.getTarget(), notNullValue() );
+        assertThat( argMMI.getTargetDelegateAttribute(), notNullValue() );
+        assertThat( argMMI.getTargetDelegateAttribute(), equalTo( "value" ) );
+        Set<MethodMatchingInfo> argMethodMI = argMMI.getMethodMatchingInfos();
+        assertThat( argMethodMI, notNullValue() );
+        assertThat( argMethodMI.size(), equalTo( 0 ) ); // Denn die Typen sind identisch
+      }
+    }
   }
 
   @Test
