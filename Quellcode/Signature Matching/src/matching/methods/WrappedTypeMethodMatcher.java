@@ -78,7 +78,8 @@ public class WrappedTypeMethodMatcher implements MethodMatcher {
     // Darf die Gleichheit hier geprüft werden?
     // NEIN: Das ist wenn überhaupt die Aufgabe des inneren Matchers
     // t1.equals( t2 ) ||
-    isWrappedIn( t1, t2 )
+    innerMethodMatcherSupplier.get().matchesType( t1, t2 ) ||
+        isWrappedIn( t1, t2 )
         || isWrappedIn( t2, t1 );
   }
 
@@ -187,8 +188,8 @@ public class WrappedTypeMethodMatcher implements MethodMatcher {
     for ( int i = 0; i < checkATs.length; i++ ) {
       Class<?> checkAT = checkATs[i];
       Class<?> queryAT = queryATs[i];
-      Collection<?> infos = calculateTypeMatchingInfos( checkAT, queryAT );
-      matchingMap.put( new ParamPosition( i, i ), (Collection<ModuleMatchingInfo>) infos );
+      Collection<ModuleMatchingInfo> infos = calculateTypeMatchingInfos( checkAT, queryAT );
+      matchingMap.put( new ParamPosition( i, i ), infos );
     }
     return Collections.singletonList( matchingMap );
   }
