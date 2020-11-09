@@ -10,7 +10,7 @@ import matching.methods.MethodMatchingInfo;
 import matching.methods.MethodMatchingInfo.ParamPosition;
 import matching.modules.ModuleMatchingInfo;
 
-public class BehaviourDelegateInvocationHandler<T> implements InvocationHandler {
+public class BehaviourDelegateInvocationHandler implements InvocationHandler {
 
   private Object component;
 
@@ -82,6 +82,7 @@ public class BehaviourDelegateInvocationHandler<T> implements InvocationHandler 
    * @param moduleMatchingInfo
    * @return
    */
+  @SuppressWarnings( "unchecked" )
   private <RT> RT convertType( Object sourceType, ModuleMatchingInfo moduleMatchingInfo ) {
     System.out.println( String.format( "convert type %s -> %s", moduleMatchingInfo.getTarget().getName(),
         moduleMatchingInfo.getSource().getName() ) );

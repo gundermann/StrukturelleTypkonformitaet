@@ -18,11 +18,12 @@ public class ClassProxyFactory<T> implements ProxyFactory<T> {
     this.targetStrcture = targetStrcture;
   }
 
+  @SuppressWarnings( "unchecked" )
   @Override
   public T createProxy( Object component, ModuleMatchingInfo matchingInfo ) {
     Enhancer enhancer = new Enhancer();
     enhancer.setSuperclass( targetStrcture );
-    BehaviourDelegateInvocationHandler<T> handler = new BehaviourDelegateInvocationHandler<>( component,
+    BehaviourDelegateInvocationHandler handler = new BehaviourDelegateInvocationHandler( component,
         matchingInfo );
 
     MethodInterceptor methodInterceptor = ( obj, method, args, proxy ) -> handler.invoke( proxy, method, args );

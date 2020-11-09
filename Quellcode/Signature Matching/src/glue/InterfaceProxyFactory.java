@@ -16,7 +16,7 @@ public class InterfaceProxyFactory<T> implements ProxyFactory<T> {
   @SuppressWarnings( "unchecked" )
   @Override
   public T createProxy( Object component, ModuleMatchingInfo matchingInfo ) {
-    InvocationHandler invocationHandler = new BehaviourDelegateInvocationHandler<T>( component, matchingInfo );
+    InvocationHandler invocationHandler = new BehaviourDelegateInvocationHandler( component, matchingInfo );
 
     // TODO kl�ren, welcher Classloader in verteilten Systemen verwendet werden muss.
     return (T) Proxy.newProxyInstance( ClassLoader.getSystemClassLoader(),
