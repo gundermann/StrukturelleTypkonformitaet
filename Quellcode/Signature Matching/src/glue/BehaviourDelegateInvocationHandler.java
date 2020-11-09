@@ -1,5 +1,6 @@
 package glue;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -84,13 +85,28 @@ public class BehaviourDelegateInvocationHandler implements InvocationHandler {
    */
   @SuppressWarnings( "unchecked" )
   private <RT> RT convertType( Object sourceType, ModuleMatchingInfo moduleMatchingInfo ) {
-    System.out.println( String.format( "convert type %s -> %s", moduleMatchingInfo.getTarget().getName(),
+    System.out.println( String.format( "convert type %s <- %s", moduleMatchingInfo.getTarget().getName(),
         moduleMatchingInfo.getSource().getName() ) );
     if ( moduleMatchingInfo.getMethodMatchingInfos().isEmpty() ) {
       return (RT) sourceType;
     }
-    return new SignatureMatchingTypeConverter<>( (Class<RT>) moduleMatchingInfo.getSource() ).convert( sourceType,
+    Object source = getSourceRefFromModuleMatchingInfo( sourceType, moduleMatchingInfo );
+    return new SignatureMatchingTypeConverter<>( (Class<RT>) moduleMatchingInfo.getTarget() ).convert( source,
         moduleMatchingInfo );
+  }
+
+  private Object getSourceRefFromModuleMatchingInfo( Object type, ModuleMatchingInfo moduleMatchingInfo ) {
+    if ( moduleMatchingInfo.getSourceDelegateAttribute() == null ) {
+      return type;
+    }
+    try {
+      Field sourceField = type.getClass().getField( moduleMatchingInfo.getSourceDelegateAttribute() );
+      return sourceField.get( type );
+    }
+    catch ( NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e ) {
+      e.printStackTrace();
+      return null;
+    }
   }
 
   private Optional<MethodMatchingInfo> getMethodMatchingInfo( Method method ) {
@@ -108,7 +124,7 @@ public class BehaviourDelegateInvocationHandler implements InvocationHandler {
         throw new RuntimeException( "wrong parameter count" );
       }
       Class<?> parameterType = method.getParameterTypes()[argMMIEntry.getKey().getSourceParamPosition()];
-      if ( !parameterType.equals( argMMIEntry.getValue().getTarget() ) ) {
+      if ( !parameterType.equals( argMMIEntry.getValue().getSource() ) ) {
         return false;
       }
     }
