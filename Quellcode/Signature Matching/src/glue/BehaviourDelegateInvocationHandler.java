@@ -13,13 +13,16 @@ import matching.modules.ModuleMatchingInfo;
 
 public class BehaviourDelegateInvocationHandler implements InvocationHandler {
 
-  private Object component;
+  private final Object component;
 
-  private ModuleMatchingInfo matchingInfos;
+  private final ModuleMatchingInfo matchingInfos;
+
+  private final String targetDelegationComponent;
 
   public BehaviourDelegateInvocationHandler( Object component, ModuleMatchingInfo matchingInfos ) {
     this.component = component;
     this.matchingInfos = matchingInfos;
+    this.targetDelegationComponent = matchingInfos.getTargetDelegateAttribute();
   }
 
   @Override
@@ -87,7 +90,9 @@ public class BehaviourDelegateInvocationHandler implements InvocationHandler {
   private <RT> RT convertType( Object sourceType, ModuleMatchingInfo moduleMatchingInfo ) {
     System.out.println( String.format( "convert type %s <- %s", moduleMatchingInfo.getTarget().getName(),
         moduleMatchingInfo.getSource().getName() ) );
-    if ( moduleMatchingInfo.getMethodMatchingInfos().isEmpty() ) {
+    if ( moduleMatchingInfo.getMethodMatchingInfos().isEmpty()
+        && moduleMatchingInfo.getTargetDelegateAttribute() != null
+        && moduleMatchingInfo.getSourceDelegateAttribute() != null ) {
       return (RT) sourceType;
     }
     Object source = getSourceRefFromModuleMatchingInfo( sourceType, moduleMatchingInfo );
@@ -102,6 +107,20 @@ public class BehaviourDelegateInvocationHandler implements InvocationHandler {
     try {
       Field sourceField = type.getClass().getField( moduleMatchingInfo.getSourceDelegateAttribute() );
       return sourceField.get( type );
+    }
+    catch ( NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e ) {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+  private Object getTargetRefFromModuleMatchingInfo( Object o, ModuleMatchingInfo moduleMatchingInfo ) {
+    if ( moduleMatchingInfo.getTargetDelegateAttribute() == null ) {
+      return o;
+    }
+    try {
+      Field targetField = o.getClass().getField( moduleMatchingInfo.getSourceDelegateAttribute() );
+      return targetField.get( o );
     }
     catch ( NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e ) {
       e.printStackTrace();
