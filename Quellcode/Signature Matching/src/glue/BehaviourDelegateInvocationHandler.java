@@ -105,7 +105,8 @@ public class BehaviourDelegateInvocationHandler implements InvocationHandler {
       return type;
     }
     try {
-      Field sourceField = type.getClass().getField( moduleMatchingInfo.getSourceDelegateAttribute() );
+      Field sourceField = type.getClass().getDeclaredField( moduleMatchingInfo.getSourceDelegateAttribute() );
+      sourceField.setAccessible( true );
       return sourceField.get( type );
     }
     catch ( NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e ) {
@@ -119,7 +120,8 @@ public class BehaviourDelegateInvocationHandler implements InvocationHandler {
       return o;
     }
     try {
-      Field targetField = o.getClass().getField( moduleMatchingInfo.getSourceDelegateAttribute() );
+      Field targetField = o.getClass().getDeclaredField( moduleMatchingInfo.getSourceDelegateAttribute() );
+      targetField.setAccessible( true );
       return targetField.get( o );
     }
     catch ( NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e ) {

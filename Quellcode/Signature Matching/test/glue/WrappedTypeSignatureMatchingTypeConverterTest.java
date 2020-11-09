@@ -36,11 +36,11 @@ public class WrappedTypeSignatureMatchingTypeConverterTest {
     EasyMock.expect( mmiConcat.getSource() ).andReturn( source.getMethod( "concat", Wrapped.class, Wrapped.class ) )
         .anyTimes();
     EasyMock.expect( mmiConcat.getReturnTypeMatchingInfo() )
-        .andReturn( MatchingInfoTestUtil.createMMI_Wrapper2Wrapped( "w" ) )
+        .andReturn( MatchingInfoTestUtil.createMMI_Wrapper2Wrapped( "wrapped" ) )
         .anyTimes();
     EasyMock.expect( mmiConcat.getArgumentTypeMatchingInfos() )
-        .andReturn( MatchingInfoTestUtil.createMMIMap( MatchingInfoTestUtil.createMMI_Wrapped2Wrapper( "w" ),
-            MatchingInfoTestUtil.createMMI_Wrapped2Wrapper( "w" ) ) )
+        .andReturn( MatchingInfoTestUtil.createMMIMap( MatchingInfoTestUtil.createMMI_Wrapped2Wrapper( "wrapped" ),
+            MatchingInfoTestUtil.createMMI_Wrapped2Wrapper( "wrapped" ) ) )
         .anyTimes();
 
     MethodMatchingInfo mmiGetString = EasyMock.createNiceMock( MethodMatchingInfo.class );
@@ -52,7 +52,7 @@ public class WrappedTypeSignatureMatchingTypeConverterTest {
         .andReturn( MatchingInfoTestUtil.createMMI_SameTypes( String.class ) )
         .anyTimes();
     EasyMock.expect( mmiGetString.getArgumentTypeMatchingInfos() )
-        .andReturn( MatchingInfoTestUtil.createMMIMap( MatchingInfoTestUtil.createMMI_Wrapped2Wrapper( "w" ) ) )
+        .andReturn( MatchingInfoTestUtil.createMMIMap( MatchingInfoTestUtil.createMMI_Wrapped2Wrapper( "wrapped" ) ) )
         .anyTimes();
 
     EasyMock.replay( mmiGetString, mmiConcat );
@@ -89,11 +89,11 @@ public class WrappedTypeSignatureMatchingTypeConverterTest {
     EasyMock.expect( mmiConnect.getSource() ).andReturn( source.getMethod( "connect", Wrapper.class, Wrapper.class ) )
         .anyTimes();
     EasyMock.expect( mmiConnect.getReturnTypeMatchingInfo() )
-        .andReturn( MatchingInfoTestUtil.createMMI_Wrapped2Wrapper( "w" ) )
+        .andReturn( MatchingInfoTestUtil.createMMI_Wrapped2Wrapper( "wrapped" ) )
         .anyTimes();
     EasyMock.expect( mmiConnect.getArgumentTypeMatchingInfos() )
-        .andReturn( MatchingInfoTestUtil.createMMIMap( MatchingInfoTestUtil.createMMI_Wrapper2Wrapped( "w" ),
-            MatchingInfoTestUtil.createMMI_Wrapper2Wrapped( "w" ) ) )
+        .andReturn( MatchingInfoTestUtil.createMMIMap( MatchingInfoTestUtil.createMMI_Wrapper2Wrapped( "wrapped" ),
+            MatchingInfoTestUtil.createMMI_Wrapper2Wrapped( "wrapped" ) ) )
         .anyTimes();
 
     MethodMatchingInfo mmiValue = EasyMock.createNiceMock( MethodMatchingInfo.class );
@@ -105,7 +105,7 @@ public class WrappedTypeSignatureMatchingTypeConverterTest {
         .andReturn( MatchingInfoTestUtil.createMMI_SameTypes( String.class ) )
         .anyTimes();
     EasyMock.expect( mmiValue.getArgumentTypeMatchingInfos() )
-        .andReturn( MatchingInfoTestUtil.createMMIMap( MatchingInfoTestUtil.createMMI_Wrapper2Wrapped( "w" ) ) )
+        .andReturn( MatchingInfoTestUtil.createMMIMap( MatchingInfoTestUtil.createMMI_Wrapper2Wrapped( "wrapped" ) ) )
         .anyTimes();
 
     EasyMock.replay( mmiValue, mmiConnect );
