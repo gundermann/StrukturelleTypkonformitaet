@@ -17,9 +17,22 @@ public class Logger {
   }
 
   private static void log( String prefix, String msg ) {
+    log( prefix, msg, false );
+  }
+
+  private static void log( String prefix, String msg, boolean error ) {
     if ( isOn ) {
-      System.out.println( String.format( "%s %s", prefix, msg ) );
+      if ( !error ) {
+        System.out.println( String.format( "%s %s", prefix, msg ) );
+      }
+      else {
+        System.err.println( String.format( "%s %s", prefix, msg ) );
+      }
     }
+  }
+
+  public static void err( String format ) {
+    log( "ERR", format, true );
   }
 
 }

@@ -8,7 +8,7 @@ public class Wrapped {
     this.s = s;
   }
 
-  String get() {
+  public String get() {
     return s;
   }
 

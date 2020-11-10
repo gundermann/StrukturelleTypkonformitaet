@@ -3,6 +3,7 @@ package glue;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -10,8 +11,10 @@ import java.util.Optional;
 import matching.methods.MethodMatchingInfo;
 import matching.methods.MethodMatchingInfo.ParamPosition;
 import matching.modules.ModuleMatchingInfo;
+import net.sf.cglib.proxy.MethodInterceptor;
+import net.sf.cglib.proxy.MethodProxy;
 
-public class BehaviourDelegateInvocationHandler implements InvocationHandler {
+public class BehaviourDelegateInvocationHandler implements MethodInterceptor, InvocationHandler {
 
   private final Object component;
 
@@ -26,7 +29,7 @@ public class BehaviourDelegateInvocationHandler implements InvocationHandler {
   }
 
   @Override
-  public Object invoke( Object proxy, Method method, Object[] args ) throws Throwable {
+  public Object invoke( Object methodProxy, Method method, Object[] args ) throws Throwable {
     Optional<MethodMatchingInfo> optMatchingInfo = getMethodMatchingInfo( method );
     if ( optMatchingInfo.isPresent() ) {
       MethodMatchingInfo methodMatchingInfo = optMatchingInfo.get();
@@ -88,11 +91,11 @@ public class BehaviourDelegateInvocationHandler implements InvocationHandler {
    */
   @SuppressWarnings( "unchecked" )
   private <RT> RT convertType( Object sourceType, ModuleMatchingInfo moduleMatchingInfo ) {
-    System.out.println( String.format( "convert type %s <- %s", moduleMatchingInfo.getTarget().getName(),
-        moduleMatchingInfo.getSource().getName() ) );
+    System.out.println( String.format( "convert type %s -> %s",
+        moduleMatchingInfo.getSource().getName(), moduleMatchingInfo.getTarget().getName() ) );
     if ( moduleMatchingInfo.getMethodMatchingInfos().isEmpty()
-        && moduleMatchingInfo.getTargetDelegateAttribute() != null
-        && moduleMatchingInfo.getSourceDelegateAttribute() != null ) {
+        && moduleMatchingInfo.getTargetDelegateAttribute() == null
+        && moduleMatchingInfo.getSourceDelegateAttribute() == null ) {
       return (RT) sourceType;
     }
     Object source = getSourceRefFromModuleMatchingInfo( sourceType, moduleMatchingInfo );
@@ -105,7 +108,10 @@ public class BehaviourDelegateInvocationHandler implements InvocationHandler {
       return type;
     }
     try {
-      Field sourceField = type.getClass().getDeclaredField( moduleMatchingInfo.getSourceDelegateAttribute() );
+      Field sourceField = moduleMatchingInfo.getSource()
+          .getDeclaredField( moduleMatchingInfo.getSourceDelegateAttribute() );
+      // Field sourceField = getDeclaredFieldFromClass( type.getClass(), moduleMatchingInfo.getSourceDelegateAttribute()
+      // );
       sourceField.setAccessible( true );
       return sourceField.get( type );
     }
@@ -113,6 +119,24 @@ public class BehaviourDelegateInvocationHandler implements InvocationHandler {
       e.printStackTrace();
       return null;
     }
+  }
+
+  /**
+   * Es muss zwischen echten Klassen und Proxies unterschieden werden. Bei einem Proxy ist das Feld nämlich in der
+   * Oberklasse zu suchen
+   *
+   * @param targetClass
+   * @param fieldName
+   * @return
+   * @throws SecurityException
+   * @throws NoSuchFieldException
+   */
+  private Field getDeclaredFieldFromClass( Class<? extends Object> searchClass, String fieldName )
+      throws NoSuchFieldException, SecurityException {
+    if ( Proxy.isProxyClass( searchClass ) ) {
+      return searchClass.getSuperclass().getDeclaredField( fieldName );
+    }
+    return searchClass.getDeclaredField( fieldName );
   }
 
   private Object getTargetRefFromModuleMatchingInfo( Object o, ModuleMatchingInfo moduleMatchingInfo ) {
@@ -150,6 +174,31 @@ public class BehaviourDelegateInvocationHandler implements InvocationHandler {
       }
     }
     return true;
+  }
+
+  @Override
+  public Object intercept( Object callObject, Method method, Object[] args, MethodProxy methodProxy ) throws Throwable {
+    Optional<MethodMatchingInfo> optMatchingInfo = getMethodMatchingInfo( method );
+    if ( optMatchingInfo.isPresent() ) {
+      MethodMatchingInfo methodMatchingInfo = optMatchingInfo.get();
+      Method targetMethod = methodMatchingInfo.getTarget();
+      Object[] convertedArgs = convertArgs( args, methodMatchingInfo.getArgumentTypeMatchingInfos() );
+      Object returnValue = targetMethod.invoke( component, convertedArgs );
+      ModuleMatchingInfo returnTypeMatchingInfo = methodMatchingInfo.getReturnTypeMatchingInfo();
+      if ( returnTypeMatchingInfo == null ) {
+        return returnValue;
+      }
+      // Bei einem allgemeineren returnValue des Targets (Target.retrunValue >
+      // Source.returnValue) muss der ReturnType
+      // ebenfalls gemocked werden
+      return convertType( returnValue, returnTypeMatchingInfo );
+    }
+
+    // Default-Methode
+    if ( matchingInfos.getTargetDelegateAttribute() == null ) {
+      return method.invoke( component, args );
+    }
+    return methodProxy.invokeSuper( callObject, args );
   }
 
 }
