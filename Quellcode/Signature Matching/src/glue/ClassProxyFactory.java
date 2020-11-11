@@ -6,12 +6,12 @@ import org.objenesis.Objenesis;
 import org.objenesis.ObjenesisStd;
 import org.objenesis.instantiator.ObjectInstantiator;
 
-import matching.Logger;
 import matching.modules.ModuleMatchingInfo;
 import net.sf.cglib.proxy.Callback;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.Factory;
 import net.sf.cglib.proxy.MethodInterceptor;
+import util.Logger;
 
 public class ClassProxyFactory<T> implements ProxyFactory<T> {
 

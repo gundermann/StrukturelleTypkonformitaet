@@ -105,11 +105,11 @@ public class GenSpecMethodMatcher implements MethodMatcher {
     MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( checkMethod, queryMethod );
     MethodStructure checkStruct = MethodStructure.createFromDeclaredMethod( checkMethod );
     MethodStructure queryStruct = MethodStructure.createFromDeclaredMethod( queryMethod );
-    Collection<?> returnTypeMatchingInfos = calculateTypeMatchingInfos(
+    Collection<ModuleMatchingInfo> returnTypeMatchingInfos = calculateTypeMatchingInfos(
         queryStruct.getReturnType(), checkStruct.getReturnType() );
     Map<ParamPosition, Collection<ModuleMatchingInfo>> argumentTypesMatchingInfos = calculateArgumentTypesMatchingInfos(
         checkStruct.getSortedArgumentTypes(), queryStruct.getSortedArgumentTypes() );
-    return factory.createFromTypeMatchingInfos( (Collection<ModuleMatchingInfo>) returnTypeMatchingInfos,
+    return factory.createFromTypeMatchingInfos( returnTypeMatchingInfos,
         Collections.singletonList( argumentTypesMatchingInfos ) );
   }
 
@@ -119,8 +119,8 @@ public class GenSpecMethodMatcher implements MethodMatcher {
     for ( int i = 0; i < checkATs.length; i++ ) {
       Class<?> checkAT = checkATs[i];
       Class<?> queryAT = queryATs[i];
-      Collection<?> infos = calculateTypeMatchingInfos( checkAT, queryAT );
-      matchingMap.put( new ParamPosition( i, i ), (Collection<ModuleMatchingInfo>) infos );
+      Collection<ModuleMatchingInfo> infos = calculateTypeMatchingInfos( checkAT, queryAT );
+      matchingMap.put( new ParamPosition( i, i ), infos );
     }
 
     return matchingMap;
@@ -140,7 +140,10 @@ public class GenSpecMethodMatcher implements MethodMatcher {
       // queryType > checkType
       // Gen: queryType
       // Spec: checkType
-      return new ModuleMatcher<>( queryType ).calculateMatchingInfos( checkType );
+      return new ModuleMatcher<>( queryType, this ).calculateMatchingInfos( checkType );
+      // TODO ich bin mir unsicher, ob die Übergabe von this an dieser Stelle korrekt ist, oder ob die
+      // ModuleMatchingInfos an dieser Stelle nicht auch durch den kombinierten Matcher ermittelt werden müssen. Das
+      // dauert aber sehr lange.
     }
     else if ( checkType.isAssignableFrom( queryType )
     // Wurde nur für native Typen gemacht

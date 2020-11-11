@@ -9,13 +9,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import matching.Logger;
-import matching.methods.ExactMethodMatcher;
-import matching.methods.GenSpecMethodMatcher;
-import matching.methods.MatcherCombiner;
+import matching.methods.CombinedMethodMatcher;
 import matching.methods.MethodMatcher;
 import matching.methods.MethodMatchingInfo;
-import matching.methods.ParamPermMethodMatcher;
+import util.Logger;
 
 public class ModuleMatcher<S> {
 
@@ -29,7 +26,7 @@ public class ModuleMatcher<S> {
    * @param queryType
    * @param methodMatcher
    */
-  ModuleMatcher( Class<S> queryType, MethodMatcher methodMatcher ) {
+  public ModuleMatcher( Class<S> queryType, MethodMatcher methodMatcher ) {
     this.queryType = queryType;
     this.methodMatcher = methodMatcher;
 
@@ -37,10 +34,7 @@ public class ModuleMatcher<S> {
 
   public ModuleMatcher( Class<S> queryType ) {
     this.queryType = queryType;
-    this.methodMatcher = new ParamPermMethodMatcher(
-        MatcherCombiner.combine( new GenSpecMethodMatcher(), new ExactMethodMatcher() ) );
-    // TODO das ist das Ziel - die JUnit-Tests funktionieren nur mit dem CombinedMethodMatcher:
-    // new CombinedMethodMatcher();
+    this.methodMatcher = new CombinedMethodMatcher();
   }
 
   /**

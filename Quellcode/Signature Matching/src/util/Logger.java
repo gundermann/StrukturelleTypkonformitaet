@@ -1,6 +1,5 @@
 package util;
 
-
 public class Logger {
 
   private static boolean isOn = false;
