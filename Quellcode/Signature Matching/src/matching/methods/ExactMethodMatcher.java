@@ -2,14 +2,13 @@ package matching.methods;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 import matching.methods.MethodMatchingInfo.ParamPosition;
 import matching.modules.ModuleMatchingInfo;
@@ -46,9 +45,9 @@ public class ExactMethodMatcher implements MethodMatcher, Comparator<MethodStruc
   }
 
   @Override
-  public Set<MethodMatchingInfo> calculateMatchingInfos( Method checkMethod, Method queryMethod ) {
+  public Collection<MethodMatchingInfo> calculateMatchingInfos( Method checkMethod, Method queryMethod ) {
     if ( !matches( checkMethod, queryMethod ) ) {
-      return new HashSet<>();
+      return new ArrayList<>();
     }
     // da es ein exakter Match sein muss, darf hier nur eine MethodMatchingInfo erzeugt werden
     MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( checkMethod, queryMethod );

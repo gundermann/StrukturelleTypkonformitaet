@@ -1,6 +1,8 @@
 package matching.modules;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -9,6 +11,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import matching.methods.MethodMatchingInfo;
+import util.Logger;
 
 public class ModuleMatchingInfoFactory {
 
@@ -45,7 +48,7 @@ public class ModuleMatchingInfoFactory {
     return this.create( new HashSet<>() );
   }
 
-  public ModuleMatchingInfo create( Set<MethodMatchingInfo> methodMatchingInfos ) {
+  public ModuleMatchingInfo create( Collection<MethodMatchingInfo> methodMatchingInfos ) {
     if ( sourceDelegateAttribute != null && targetDelegateAttribute == null ) {
       return new ModuleMatchingInfo( sourceType, sourceDelegateAttribute, targetType, methodMatchingInfos );
     }
@@ -59,15 +62,16 @@ public class ModuleMatchingInfoFactory {
   }
 
   public Set<ModuleMatchingInfo> createFromMethodMatchingInfos(
-      Map<Method, Set<MethodMatchingInfo>> possibleMethodMatches ) {
-    Set<Set<MethodMatchingInfo>> permutedMethodMatches = generateMethodMatchingCombinations(
+      Map<Method, Collection<MethodMatchingInfo>> possibleMethodMatches ) {
+    Collection<Collection<MethodMatchingInfo>> permutedMethodMatches = generateMethodMatchingCombinations(
         possibleMethodMatches );
+    Logger.infoF( "MethodMatches permuted: %d", permutedMethodMatches.size() );
     return permutedMethodMatches.stream().map( this::create ).collect( Collectors.toSet() );
   }
 
-  private Set<Set<MethodMatchingInfo>> generateMethodMatchingCombinations(
-      Map<Method, Set<MethodMatchingInfo>> possibleMethodMatches ) {
-    Set<Set<MethodMatchingInfo>> combinations = new HashSet<>();
+  private Collection<Collection<MethodMatchingInfo>> generateMethodMatchingCombinations(
+      Map<Method, Collection<MethodMatchingInfo>> possibleMethodMatches ) {
+    Collection<Collection<MethodMatchingInfo>> combinations = new ArrayList<>();
     // erste Methode holen
     Iterator<Method> iterator = possibleMethodMatches.keySet().iterator();
     if ( !iterator.hasNext() ) {
@@ -77,20 +81,21 @@ public class ModuleMatchingInfoFactory {
     Method selectedMethod = iterator.next();
     // possibleMethodMatches abbauen
     // Kopie der ursprünglichen Map erstellen
-    Map<Method, Set<MethodMatchingInfo>> localMethodMatches = new HashMap<>( possibleMethodMatches );
-    Set<MethodMatchingInfo> selectedMethodMatches = localMethodMatches.remove( selectedMethod );
+    Map<Method, Collection<MethodMatchingInfo>> localMethodMatches = new HashMap<>( possibleMethodMatches );
+    Collection<MethodMatchingInfo> selectedMethodMatches = localMethodMatches.remove( selectedMethod );
     if ( selectedMethodMatches.isEmpty() ) {
       return generateMethodMatchingCombinations( localMethodMatches );
     }
     for ( MethodMatchingInfo info : selectedMethodMatches ) {
-      Set<Set<MethodMatchingInfo>> otherCombinations = generateMethodMatchingCombinations( localMethodMatches );
+      Collection<Collection<MethodMatchingInfo>> otherCombinations = generateMethodMatchingCombinations(
+          localMethodMatches );
       if ( otherCombinations.isEmpty() ) {
-        Set<MethodMatchingInfo> singleInfos = new HashSet<>();
+        Collection<MethodMatchingInfo> singleInfos = new ArrayList<>();
         singleInfos.add( info );
         combinations.add( singleInfos );
         continue;
       }
-      for ( Set<MethodMatchingInfo> otherInfos : otherCombinations ) {
+      for ( Collection<MethodMatchingInfo> otherInfos : otherCombinations ) {
         otherInfos.add( info );
       }
       combinations.addAll( otherCombinations );

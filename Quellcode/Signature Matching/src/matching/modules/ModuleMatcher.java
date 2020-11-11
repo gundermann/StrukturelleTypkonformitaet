@@ -8,6 +8,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import matching.methods.CombinedMethodMatcher;
 import matching.methods.MethodMatcher;
@@ -88,9 +90,15 @@ public class ModuleMatcher<S> {
       return singleResult;
     }
     Method[] queryMethods = getQueryMethods();
+    Logger.infoF( "QueryMethods: %s",
+        Stream.of( queryMethods ).map( m -> m.getName() ).collect( Collectors.joining( ", " ) ) );
     Map<Method, Collection<Method>> possibleMatches = collectPossibleMatches( queryMethods, checkType.getMethods() );
-    Map<Method, Set<MethodMatchingInfo>> possibleMethodMatches = collectMethodMatchingInfos( queryMethods,
+    Map<Method, Collection<MethodMatchingInfo>> possibleMethodMatches = collectMethodMatchingInfos( queryMethods,
         possibleMatches );
+    possibleMatches.entrySet()
+        .forEach( e -> Logger.infoF( "MethodMatchingInfos collected - Method: %s | Info count: %d",
+            e.getKey().getName(), e.getValue().size() ) );
+
     return factory.createFromMethodMatchingInfos( possibleMethodMatches );
 
   }
@@ -137,13 +145,13 @@ public class ModuleMatcher<S> {
     return matches;
   }
 
-  private Map<Method, Set<MethodMatchingInfo>> collectMethodMatchingInfos( Method[] queryMethods,
+  private Map<Method, Collection<MethodMatchingInfo>> collectMethodMatchingInfos( Method[] queryMethods,
       Map<Method, Collection<Method>> possibleMatches ) {
-    Map<Method, Set<MethodMatchingInfo>> matches = new HashMap<>();
+    Map<Method, Collection<MethodMatchingInfo>> matches = new HashMap<>();
     for ( Method queryMethod : queryMethods ) {
-      Set<MethodMatchingInfo> matchingInfosOfQueryMethod = new HashSet<>();
+      Collection<MethodMatchingInfo> matchingInfosOfQueryMethod = new ArrayList<>();
       for ( Method checkMethod : possibleMatches.get( queryMethod ) ) {
-        Set<MethodMatchingInfo> matchingInfos = methodMatcher.calculateMatchingInfos( checkMethod, queryMethod );
+        Collection<MethodMatchingInfo> matchingInfos = methodMatcher.calculateMatchingInfos( checkMethod, queryMethod );
         matchingInfosOfQueryMethod.addAll( matchingInfos );
       }
       matches.put( queryMethod, matchingInfosOfQueryMethod );

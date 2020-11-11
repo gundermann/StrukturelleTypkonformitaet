@@ -1,4 +1,4 @@
-package util;
+package de.fernuni.hagen.ma.gundermann.ejb.util;
 
 public class Logger {
 
@@ -33,10 +33,6 @@ public class Logger {
 
   public static void err( String format ) {
     log( "ERR", format, true );
-  }
-
-  public static void infoF( String pattern, Object... args ) {
-    info( String.format( pattern, args ) );
   }
 
 }

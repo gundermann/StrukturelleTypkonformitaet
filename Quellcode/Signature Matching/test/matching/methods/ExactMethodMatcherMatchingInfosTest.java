@@ -6,9 +6,9 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.junit.Test;
 
@@ -21,7 +21,7 @@ public class ExactMethodMatcherMatchingInfosTest {
 
   @Test
   public void test1() {
-    Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( getMethod( "getTrue" ),
+    Collection<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( getMethod( "getTrue" ),
         getMethod( "getTrue" ) );
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 1 ) );
@@ -37,7 +37,7 @@ public class ExactMethodMatcherMatchingInfosTest {
   public void test2() {
     Method sourceMethod = getMethod( "getTrue" );
     Method targetMethod = getMethod( "getFalse" );
-    Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( sourceMethod, targetMethod );
+    Collection<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( sourceMethod, targetMethod );
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 1 ) );
     matchingInfos.forEach( info -> {
@@ -52,7 +52,7 @@ public class ExactMethodMatcherMatchingInfosTest {
   public void test3() {
     Method sourceMethod = getMethod( "getTrue" );
     Method targetMethod = getMethod( "getOne" );
-    Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( sourceMethod, targetMethod );
+    Collection<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( sourceMethod, targetMethod );
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 0 ) );
   }
@@ -61,7 +61,7 @@ public class ExactMethodMatcherMatchingInfosTest {
   public void test4() {
     Method sourceMethod = getMethod( "getOneNativeWrapped" );
     Method targetMethod = getMethod( "getOne" );
-    Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( sourceMethod, targetMethod );
+    Collection<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( sourceMethod, targetMethod );
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 0 ) );
   }
@@ -70,7 +70,7 @@ public class ExactMethodMatcherMatchingInfosTest {
   public void test5() {
     Method sourceMethod = getMethod( "setBool" );
     Method targetMethod = getMethod( "setBoolNativeWrapped" );
-    Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( sourceMethod, targetMethod );
+    Collection<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( sourceMethod, targetMethod );
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 0 ) );
   }
@@ -79,7 +79,7 @@ public class ExactMethodMatcherMatchingInfosTest {
   public void test6() {
     Method checkMethod = getMethod( "addOne" );
     Method queryMethod = getMethod( "subOne" );
-    Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
+    Collection<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 1 ) );
     matchingInfos.forEach( info -> {
@@ -104,7 +104,7 @@ public class ExactMethodMatcherMatchingInfosTest {
   public void test7() {
     Method checkMethod = getMethod( "add" );
     Method queryMethod = getMethod( "sub" );
-    Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
+    Collection<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 1 ) );
     matchingInfos.forEach( info -> {
@@ -130,7 +130,7 @@ public class ExactMethodMatcherMatchingInfosTest {
   public void test8() {
     Method sourceMethod = getMethod( "addPartlyNativeWrapped" );
     Method targetMethod = getMethod( "subPartlyNativeWrapped" );
-    Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( sourceMethod, targetMethod );
+    Collection<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( sourceMethod, targetMethod );
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 0 ) );
   }
@@ -139,7 +139,7 @@ public class ExactMethodMatcherMatchingInfosTest {
   public void test9() {
     Method sourceMethod = getMethod( "addPartlyWrapped" );
     Method targetMethod = getMethod( "subPartlyWrapped" );
-    Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( sourceMethod, targetMethod );
+    Collection<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( sourceMethod, targetMethod );
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 0 ) );
   }
@@ -148,7 +148,7 @@ public class ExactMethodMatcherMatchingInfosTest {
   public void test10() {
     Method sourceMethod = getMethod( "addSpec" );
     Method targetMethod = getMethod( "addGen" );
-    Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( sourceMethod, targetMethod );
+    Collection<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( sourceMethod, targetMethod );
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 0 ) );
   }
@@ -157,7 +157,7 @@ public class ExactMethodMatcherMatchingInfosTest {
   public void test11() {
     Method sourceMethod = getMethod( "addSpec" );
     Method targetMethod = getMethod( "getTrue" );
-    Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( sourceMethod, targetMethod );
+    Collection<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( sourceMethod, targetMethod );
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 0 ) );
   }

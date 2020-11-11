@@ -9,6 +9,7 @@ import DE.data_experts.profi.profilcs.antrag2015.eler.ft.stammdaten.ejb.ElerFTSt
 import de.fernuni.hagen.ma.gundermann.ejb.beanimplementations.EftSTDAuskunftImpl;
 import de.fernuni.hagen.ma.gundermann.ejb.desiredinterfaces.ElerFTFoerderprogrammeProvider;
 import de.fernuni.hagen.ma.gundermann.ejb.desiredinterfaces.FoerderprogrammeProvider;
+import de.fernuni.hagen.ma.gundermann.ejb.desiredinterfaces.MinimalFoerderprogrammeProvider;
 
 public class FindMatchingEJBInterfaceTest {
 
@@ -25,6 +26,14 @@ public class FindMatchingEJBInterfaceTest {
     Class<FoerderprogrammeProvider> desiredInterface = FoerderprogrammeProvider.class;
     EJBContainer.CONTAINER.registerBean( ElerFTStammdatenAuskunftService.class, new EftSTDAuskunftImpl() );
     FoerderprogrammeProvider desiredBean = EJBContainer.CONTAINER.getDesiredBean( desiredInterface );
+    assertThat( desiredBean, notNullValue() );
+  }
+
+  @Test
+  public void findFullMatchingMinimalFoerderprogrammeProvider() {
+    Class<MinimalFoerderprogrammeProvider> desiredInterface = MinimalFoerderprogrammeProvider.class;
+    EJBContainer.CONTAINER.registerBean( ElerFTStammdatenAuskunftService.class, new EftSTDAuskunftImpl() );
+    MinimalFoerderprogrammeProvider desiredBean = EJBContainer.CONTAINER.getDesiredBean( desiredInterface );
     assertThat( desiredBean, notNullValue() );
   }
 }

@@ -7,11 +7,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -169,9 +167,9 @@ public class WrappedTypeMethodMatcher implements MethodMatcher {
   }
 
   @Override
-  public Set<MethodMatchingInfo> calculateMatchingInfos( Method checkMethod, Method queryMethod ) {
+  public Collection<MethodMatchingInfo> calculateMatchingInfos( Method checkMethod, Method queryMethod ) {
     if ( !matches( checkMethod, queryMethod ) ) {
-      return new HashSet<>();
+      return new ArrayList<>();
     }
     MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( checkMethod, queryMethod );
     Collection<ModuleMatchingInfo> returnTypeMatchingInfos = calculateTypeMatchingInfos( queryMethod.getReturnType(),

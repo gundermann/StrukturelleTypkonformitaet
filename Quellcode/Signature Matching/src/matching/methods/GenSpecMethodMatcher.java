@@ -5,14 +5,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.Set;
 
 import matching.methods.MethodMatchingInfo.ParamPosition;
-import matching.modules.ModuleMatcher;
 import matching.modules.ModuleMatchingInfo;
 import matching.modules.ModuleMatchingInfoFactory;
 
@@ -98,9 +95,9 @@ public class GenSpecMethodMatcher implements MethodMatcher {
   }
 
   @Override
-  public Set<MethodMatchingInfo> calculateMatchingInfos( Method checkMethod, Method queryMethod ) {
+  public Collection<MethodMatchingInfo> calculateMatchingInfos( Method checkMethod, Method queryMethod ) {
     if ( !matches( checkMethod, queryMethod ) ) {
-      return new HashSet<>();
+      return new ArrayList<>();
     }
     MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( checkMethod, queryMethod );
     MethodStructure checkStruct = MethodStructure.createFromDeclaredMethod( checkMethod );
@@ -140,10 +137,15 @@ public class GenSpecMethodMatcher implements MethodMatcher {
       // queryType > checkType
       // Gen: queryType
       // Spec: checkType
-      return new ModuleMatcher<>( queryType, this ).calculateMatchingInfos( checkType );
+      // return new ModuleMatcher<>( queryType, this ).calculateMatchingInfos( checkType );
       // TODO ich bin mir unsicher, ob die Übergabe von this an dieser Stelle korrekt ist, oder ob die
       // ModuleMatchingInfos an dieser Stelle nicht auch durch den kombinierten Matcher ermittelt werden müssen. Das
       // dauert aber sehr lange.
+
+      Map<Method, Collection<MethodMatchingInfo>> methodMatchingInfos = createMethodMatchingInfoForGen2SpecMapping(
+          queryType,
+          checkType );
+      return factory.createFromMethodMatchingInfos( methodMatchingInfos );
     }
     else if ( checkType.isAssignableFrom( queryType )
     // Wurde nur für native Typen gemacht
@@ -155,6 +157,32 @@ public class GenSpecMethodMatcher implements MethodMatcher {
       return Collections.singletonList( factory.create() );
     }
     return new ArrayList<>();
+  }
+
+  private Map<Method, Collection<MethodMatchingInfo>> createMethodMatchingInfoForGen2SpecMapping( Class<?> genType,
+      Class<?> specType ) {
+    Map<Method, Collection<MethodMatchingInfo>> matchingInfos = new HashMap<>();
+    Method[] genMethods = genType.getMethods();
+    Method[] specMethods = specType.getMethods();
+    for ( Method genM : genMethods ) {
+      for ( Method specM : specMethods ) {
+        // Prüfen, ob es die richten Methoden sind!!!!
+        MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( specM, genM );
+        // Der Returntype kann spezieller werden. Liskov lässt grüßen. (Kovarianz)
+        ModuleMatchingInfo returnTypeMatchingInfo = calculateTypeMatchingInfos( specM.getReturnType(),
+            genM.getReturnType() ).iterator().next();
+
+        // Die Argumente können allgemeiner werden. Liskov lässt grüßen (Kontravarianz)
+        Map<ParamPosition, Collection<ModuleMatchingInfo>> argumentTypeMatchingInfos = calculateArgumentTypesMatchingInfos(
+            specM.getParameterTypes(), genM.getParameterTypes() );
+        matchingInfos.put( genM,
+
+            factory.createFromTypeMatchingInfos( Collections.singletonList( returnTypeMatchingInfo ),
+                Collections.singletonList( argumentTypeMatchingInfos ) ) );
+      }
+    }
+
+    return matchingInfos;
   }
 
 }

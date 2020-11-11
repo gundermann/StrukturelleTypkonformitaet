@@ -4,10 +4,8 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import matching.methods.MethodMatchingInfo.ParamPosition;
@@ -36,10 +34,10 @@ public final class MethodMatchingInfoFactory {
    *          size >= 0
    * @return
    */
-  public Set<MethodMatchingInfo> createFromTypeMatchingInfos(
+  public Collection<MethodMatchingInfo> createFromTypeMatchingInfos(
       Collection<ModuleMatchingInfo> returnTypeMatchingInfos,
       Collection<Map<ParamPosition, Collection<ModuleMatchingInfo>>> argumentTypesMatchingInfos ) {
-    Set<MethodMatchingInfo> methodMatchingInfos = new HashSet<>();
+    Collection<MethodMatchingInfo> methodMatchingInfos = new ArrayList<>();
     for ( ModuleMatchingInfo selectedRT : returnTypeMatchingInfos ) {
       Collection<Map<ParamPosition, ModuleMatchingInfo>> restructMap = restructureArgumentTypeMatchingInfos(
           argumentTypesMatchingInfos );
@@ -93,11 +91,4 @@ public final class MethodMatchingInfoFactory {
 
   }
 
-  private Set<ParamPosition> generateDefaultParamPosition( Set<Integer> paramIdices ) {
-    Set<ParamPosition> paramPositions = new HashSet<>();
-    for ( Integer index : paramIdices ) {
-      paramPositions.add( new ParamPosition( index, index ) );
-    }
-    return paramPositions;
-  }
 }

@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import de.fernuni.hagen.ma.gundermann.ejb.util.Logger;
 import glue.SignatureMatchingTypeConverter;
 import matching.modules.ModuleMatcher;
 import matching.modules.ModuleMatchingInfo;
@@ -39,10 +40,10 @@ public enum EJBContainer {
         registerBean( loadedInterface, null );
       }
       catch ( ClassNotFoundException cnfe ) {
-        System.out.println( String.format( "class not found %s", bean ) );
+        Logger.info( String.format( "class not found %s", bean ) );
       }
     }
-    System.out.println( String.format( "registeres bean interfaces: %d", containerMap.keySet().size() ) );
+    Logger.info( String.format( "registeres bean interfaces: %d", containerMap.keySet().size() ) );
   }
 
   public <BI> void registerBean( Class<BI> beanInterface, BI bean ) {
@@ -65,9 +66,9 @@ public enum EJBContainer {
   public <DesiredInterface> DesiredInterface getDesiredBean(
       Class<DesiredInterface> desiredInterface ) {
     Collection<Class<?>> matchingBeanInterfaces = findBeansBySignatureMatching( desiredInterface );
-    // System.out.println( "Matching Bean-Interfaces of " + desiredInterface.getName() );
+    // Logger.info( "Matching Bean-Interfaces of " + desiredInterface.getName() );
     // matchingBeanInterfaces.stream().map( Class::getName ).forEach( System.out::println );
-    System.out.println( String.format( "count: %d", matchingBeanInterfaces.size() ) );
+    Logger.info( String.format( "count: %d", matchingBeanInterfaces.size() ) );
 
     // Hier können weitere Filter und Heuristiken eingebaut werden
 
@@ -76,11 +77,12 @@ public enum EJBContainer {
 
   private <DesiredInterface> DesiredInterface getComposedBean(
       Class<DesiredInterface> desiredInterface, Collection<Class<?>> matchingBeanInterfaces ) {
+    Logger.info( "create ComponentInfos" );
     Set<ComponentInfos> rankedComponentInfos = getSortedModuleMatchingInfos( desiredInterface,
         matchingBeanInterfaces );
-    System.out.println( String.format( "ranking of relevant components" ) );
-    rankedComponentInfos.stream().forEach( c -> System.out
-        .println( String.format( "rank: %d component: %s", c.getRank(), c.getComponentClass().getName() ) ) );
+    Logger.info( String.format( "ranking of relevant components" ) );
+    rankedComponentInfos.stream().forEach(
+        c -> Logger.info( String.format( "rank: %d component: %s", c.getRank(), c.getComponentClass().getName() ) ) );
     List<ComponentInfos> fullMatchedComponents = rankedComponentInfos.stream()
         .filter( c -> c.getRank() >= 100 // !!! Achtung: Das Ranking muss angepasst werden !!!
         ).collect( Collectors.toList() );
@@ -120,12 +122,15 @@ public enum EJBContainer {
     List<ComponentInfos> componentInfoSet = new ArrayList<>();
     ModuleMatcher<DesiredInterface> moduleMatcher = new ModuleMatcher<>( desiredInterface );
     for ( Class<?> matchingBeanInterface : matchingBeanInterfaces ) {
+      Logger.info( String.format( "collect ModuleMatchingInfo: %s", matchingBeanInterface.getName() ) );
       Set<ModuleMatchingInfo> matchingInfos = moduleMatcher
           .calculateMatchingInfos( matchingBeanInterface );
       ComponentInfos componentInfos = new ComponentInfos( matchingBeanInterface );
       componentInfos.setModuleMatchingInfos( matchingInfos );
       componentInfoSet.add( componentInfos );
     }
+    Logger.info( String.format( "ComponentInfos created: %d", componentInfoSet.size() ) );
+    Logger.info( "sort ComponentInfos" );
     Collections.sort( componentInfoSet, ( c1, c2 ) -> Integer.compare( c1.getRank(), c2.getRank() ) );
     return new HashSet<>( componentInfoSet );
   }
@@ -137,7 +142,7 @@ public enum EJBContainer {
     for ( Class<?> beanInterfaces : containerMap.keySet() ) {
       // Dieser Code ist nur für das Debugging-Analyse notwendig
       // if ( beanInterfaces.equals( ElerFTStammdatenAuskunftService.class ) ) {
-      // System.out.println( "BEAN OF INTEREST" );
+      // Logger.info( "BEAN OF INTEREST" );
       // }
       boolean matchesFull = moduleMatcher.matches( beanInterfaces );
       if ( !matchesFull ) {

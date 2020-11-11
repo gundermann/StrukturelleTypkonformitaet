@@ -2,7 +2,6 @@ package matching.methods;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
-import java.util.Set;
 
 import matching.modules.ModuleMatchingInfo;
 
@@ -54,7 +53,7 @@ public class CombinedMethodMatcher implements MethodMatcher {
   // }
 
   @Override
-  public Set<MethodMatchingInfo> calculateMatchingInfos( Method checkMethod, Method queryMethod ) {
+  public Collection<MethodMatchingInfo> calculateMatchingInfos( Method checkMethod, Method queryMethod ) {
     return combination.calculateMatchingInfos( checkMethod, queryMethod );
   }
 

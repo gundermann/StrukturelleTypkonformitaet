@@ -4,7 +4,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.function.Supplier;
 
 import matching.modules.ModuleMatchingInfo;
@@ -27,7 +26,7 @@ public abstract class MatcherCombiner {
       }
 
       @Override
-      public Set<MethodMatchingInfo> calculateMatchingInfos( Method checkMethod, Method queryMethod ) {
+      public Collection<MethodMatchingInfo> calculateMatchingInfos( Method checkMethod, Method queryMethod ) {
         for ( MethodMatcher m : matcher ) {
           if ( m.matches( checkMethod, queryMethod ) ) {
             return m.calculateMatchingInfos( checkMethod, queryMethod );

@@ -9,9 +9,9 @@ import static org.junit.Assert.fail;
 
 import java.lang.reflect.Method;
 import java.math.BigInteger;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -31,7 +31,7 @@ public class WrappedTypeMethodMatcherMatchingInfosTest {
   public void test1() {
     Method checkMethod = getMethod( "getTrue" );
     Method queryMethod = getMethod( "getTrue" );
-    Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
+    Collection<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 1 ) );
     for ( MethodMatchingInfo info : matchingInfos ) {
@@ -51,7 +51,7 @@ public class WrappedTypeMethodMatcherMatchingInfosTest {
   public void test2() {
     Method checkMethod = getMethod( "getTrue" );
     Method queryMethod = getMethod( "getFalse" );
-    Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
+    Collection<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 1 ) );
     for ( MethodMatchingInfo info : matchingInfos ) {
@@ -71,7 +71,7 @@ public class WrappedTypeMethodMatcherMatchingInfosTest {
   public void test3() {
     Method sourceMethod = getMethod( "getTrue" );
     Method targetMethod = getMethod( "getOne" );
-    Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( sourceMethod, targetMethod );
+    Collection<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( sourceMethod, targetMethod );
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 0 ) );
   }
@@ -80,7 +80,7 @@ public class WrappedTypeMethodMatcherMatchingInfosTest {
   public void test4() {
     Method checkMethod = getMethod( "getOneNativeWrapped" );
     Method queryMethod = getMethod( "getOne" );
-    Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
+    Collection<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 1 ) );
     for ( MethodMatchingInfo mmi : matchingInfos ) {
@@ -97,7 +97,7 @@ public class WrappedTypeMethodMatcherMatchingInfosTest {
       assertThat( rtMatchingInfo.getTarget(), equalTo( int.class ) );
       assertThat( rtMatchingInfo.getTargetDelegateAttribute(), nullValue() );
 
-      Set<MethodMatchingInfo> rtMethodMI = rtMatchingInfo.getMethodMatchingInfos();
+      Collection<MethodMatchingInfo> rtMethodMI = rtMatchingInfo.getMethodMatchingInfos();
       assertThat( rtMethodMI, notNullValue() );
       assertThat( rtMethodMI.size(), equalTo( 0 ) ); // Denn die Typen sind identisch
 
@@ -110,7 +110,7 @@ public class WrappedTypeMethodMatcherMatchingInfosTest {
   public void test4_turned() {
     Method queryMethod = getMethod( "getOneNativeWrapped" );
     Method checkMethod = getMethod( "getOne" );
-    Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
+    Collection<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 1 ) );
     for ( MethodMatchingInfo mmi : matchingInfos ) {
@@ -127,7 +127,7 @@ public class WrappedTypeMethodMatcherMatchingInfosTest {
       assertThat( rtMatchingInfo.getSource(), equalTo( int.class ) );
       assertThat( rtMatchingInfo.getSourceDelegateAttribute(), nullValue() );
 
-      Set<MethodMatchingInfo> rtMethodMI = rtMatchingInfo.getMethodMatchingInfos();
+      Collection<MethodMatchingInfo> rtMethodMI = rtMatchingInfo.getMethodMatchingInfos();
       assertThat( rtMethodMI, notNullValue() );
       assertThat( rtMethodMI.size(), equalTo( 0 ) ); // Denn die Typen sind identisch
 
@@ -140,7 +140,7 @@ public class WrappedTypeMethodMatcherMatchingInfosTest {
   public void test5() {
     Method checkMethod = getMethod( "setBoolNativeWrapped" );
     Method queryMethod = getMethod( "setBool" );
-    Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
+    Collection<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 1 ) );
     for ( MethodMatchingInfo mmi : matchingInfos ) {
@@ -156,7 +156,7 @@ public class WrappedTypeMethodMatcherMatchingInfosTest {
       assertThat( rtMatchingInfo.getTarget(), equalTo( void.class ) );
       assertThat( rtMatchingInfo.getTargetDelegateAttribute(), nullValue() );
 
-      Set<MethodMatchingInfo> rtMethodMI = rtMatchingInfo.getMethodMatchingInfos();
+      Collection<MethodMatchingInfo> rtMethodMI = rtMatchingInfo.getMethodMatchingInfos();
       assertThat( rtMethodMI, notNullValue() );
       assertThat( rtMethodMI.size(), equalTo( 0 ) ); // Denn die Typen sind identisch
 
@@ -170,7 +170,7 @@ public class WrappedTypeMethodMatcherMatchingInfosTest {
         assertThat( argMMI.getTarget(), notNullValue() );
         assertThat( argMMI.getTargetDelegateAttribute(), notNullValue() );
         assertThat( argMMI.getTargetDelegateAttribute(), equalTo( "value" ) );
-        Set<MethodMatchingInfo> argMethodMI = argMMI.getMethodMatchingInfos();
+        Collection<MethodMatchingInfo> argMethodMI = argMMI.getMethodMatchingInfos();
         assertThat( argMethodMI, notNullValue() );
         assertThat( argMethodMI.size(), equalTo( 0 ) ); // Denn die Typen sind identisch
       }
@@ -181,7 +181,7 @@ public class WrappedTypeMethodMatcherMatchingInfosTest {
   public void test6() {
     Method checkMethod = getMethod( "addOne" );
     Method queryMethod = getMethod( "subOne" );
-    Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
+    Collection<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 1 ) );
     for ( MethodMatchingInfo info : matchingInfos ) {
@@ -209,7 +209,7 @@ public class WrappedTypeMethodMatcherMatchingInfosTest {
   public void test7() {
     Method checkMethod = getMethod( "add" );
     Method queryMethod = getMethod( "sub" );
-    Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
+    Collection<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 1 ) );
     for ( MethodMatchingInfo info : matchingInfos ) {
@@ -237,7 +237,7 @@ public class WrappedTypeMethodMatcherMatchingInfosTest {
   public void test8() {
     Method checkMethod = getMethod( "addPartlyNativeWrapped" );
     Method queryMethod = getMethod( "subPartlyNativeWrapped" );
-    Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
+    Collection<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 1 ) );
     for ( MethodMatchingInfo mmi : matchingInfos ) {
@@ -253,7 +253,7 @@ public class WrappedTypeMethodMatcherMatchingInfosTest {
       assertThat( rtMatchingInfo.getTarget(), equalTo( int.class ) );
       assertThat( rtMatchingInfo.getTargetDelegateAttribute(), nullValue() );
 
-      Set<MethodMatchingInfo> rtMethodMI = rtMatchingInfo.getMethodMatchingInfos();
+      Collection<MethodMatchingInfo> rtMethodMI = rtMatchingInfo.getMethodMatchingInfos();
       assertThat( rtMethodMI, notNullValue() );
       assertThat( rtMethodMI.size(), equalTo( 0 ) ); // Denn die Typen sind identisch
 
@@ -279,7 +279,7 @@ public class WrappedTypeMethodMatcherMatchingInfosTest {
         else {
           fail( "arg source must be int or Integer" );
         }
-        Set<MethodMatchingInfo> argMethodMI = argMMI.getMethodMatchingInfos();
+        Collection<MethodMatchingInfo> argMethodMI = argMMI.getMethodMatchingInfos();
         assertThat( argMethodMI, notNullValue() );
         assertThat( argMethodMI.size(), equalTo( 0 ) ); // Denn die Typen sind identisch
       }
@@ -297,7 +297,7 @@ public class WrappedTypeMethodMatcherMatchingInfosTest {
   public void test9() {
     Method checkMethod = getMethod( "addPartlyWrapped" );
     Method queryMethod = getMethod( "subPartlyWrapped" );
-    Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
+    Collection<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 25 ) ); // BigInteger enthaelt 5 int Felder (also 25 Kombinationen)
     for ( MethodMatchingInfo mmi : matchingInfos ) {
@@ -313,7 +313,7 @@ public class WrappedTypeMethodMatcherMatchingInfosTest {
       assertThat( rtMatchingInfo.getTarget(), equalTo( int.class ) );
       assertThat( rtMatchingInfo.getTargetDelegateAttribute(), nullValue() );
 
-      Set<MethodMatchingInfo> rtMethodMI = rtMatchingInfo.getMethodMatchingInfos();
+      Collection<MethodMatchingInfo> rtMethodMI = rtMatchingInfo.getMethodMatchingInfos();
       assertThat( rtMethodMI, notNullValue() );
       assertThat( rtMethodMI.size(), equalTo( 0 ) ); // Denn die Typen sind identisch
 
@@ -337,7 +337,7 @@ public class WrappedTypeMethodMatcherMatchingInfosTest {
         else {
           fail( "arg source must be int or Integer" );
         }
-        Set<MethodMatchingInfo> argMethodMI = argMMI.getMethodMatchingInfos();
+        Collection<MethodMatchingInfo> argMethodMI = argMMI.getMethodMatchingInfos();
         assertThat( argMethodMI, notNullValue() );
         assertThat( argMethodMI.size(), equalTo( 0 ) ); // Denn die Typen sind identisch
       }
@@ -348,7 +348,7 @@ public class WrappedTypeMethodMatcherMatchingInfosTest {
   public void test10() {
     Method sourceMethod = getMethod( "addSpec" );
     Method targetMethod = getMethod( "addGen" );
-    Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( sourceMethod, targetMethod );
+    Collection<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( sourceMethod, targetMethod );
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 0 ) );
   }
@@ -357,7 +357,7 @@ public class WrappedTypeMethodMatcherMatchingInfosTest {
   public void test11() {
     Method sourceMethod = getMethod( "setBool" );
     Method targetMethod = getMethod( "setObject" );
-    Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( sourceMethod, targetMethod );
+    Collection<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( sourceMethod, targetMethod );
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 0 ) );
   }

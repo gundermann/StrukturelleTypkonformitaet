@@ -1,6 +1,6 @@
 package matching.modules;
 
-import java.util.Set;
+import java.util.Collection;
 
 import matching.methods.MethodMatchingInfo;
 
@@ -16,7 +16,7 @@ public class ModuleMatchingInfo {
   // Benoetigt, wenn das Target die Source enthaelt (Source in Target)
   private final String targetDelegateAttribute;
 
-  private final Set<MethodMatchingInfo> methodMatchingInfos;
+  private final Collection<MethodMatchingInfo> methodMatchingInfos;
 
   /**
    * Konstruktor fuer ModuleMatchings, bei denen zwischen Source und Target keine Contains-Assoziation besteht
@@ -25,7 +25,7 @@ public class ModuleMatchingInfo {
    * @param target
    * @param methodMatchingInfos
    */
-  public ModuleMatchingInfo( Class<?> source, Class<?> target, Set<MethodMatchingInfo> methodMatchingInfos ) {
+  public ModuleMatchingInfo( Class<?> source, Class<?> target, Collection<MethodMatchingInfo> methodMatchingInfos ) {
     this.source = source;
     this.target = target;
     this.methodMatchingInfos = methodMatchingInfos;
@@ -42,7 +42,7 @@ public class ModuleMatchingInfo {
    * @param methodMatchingInfos
    */
   public ModuleMatchingInfo( Class<?> source, Class<?> target, String targetDelegate,
-      Set<MethodMatchingInfo> methodMatchingInfos ) {
+      Collection<MethodMatchingInfo> methodMatchingInfos ) {
     this.source = source;
     this.target = target;
     this.methodMatchingInfos = methodMatchingInfos;
@@ -59,7 +59,7 @@ public class ModuleMatchingInfo {
    * @param methodMatchingInfos
    */
   public ModuleMatchingInfo( Class<?> source, String sourceDelegate, Class<?> target,
-      Set<MethodMatchingInfo> methodMatchingInfos ) {
+      Collection<MethodMatchingInfo> methodMatchingInfos ) {
     this.source = source;
     this.target = target;
     this.methodMatchingInfos = methodMatchingInfos;
@@ -87,7 +87,7 @@ public class ModuleMatchingInfo {
   /**
    * @return empty Set, if the source type is the same, or a superclass or a superinterface of the target type
    */
-  public Set<MethodMatchingInfo> getMethodMatchingInfos() {
+  public Collection<MethodMatchingInfo> getMethodMatchingInfos() {
     return methodMatchingInfos;
   }
 

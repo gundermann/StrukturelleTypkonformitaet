@@ -6,10 +6,10 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.junit.Test;
 
@@ -24,7 +24,7 @@ public class GenSpecMethodMatcherMatchingInfosTest {
   public void test1() {
     Method checkMethod = getMethod( "getTrue" );
     Method queryMethod = getMethod( "getTrue" );
-    Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod,
+    Collection<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod,
         queryMethod );
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 1 ) );
@@ -40,7 +40,7 @@ public class GenSpecMethodMatcherMatchingInfosTest {
   public void test2() {
     Method checkMethod = getMethod( "getTrue" );
     Method queryMethod = getMethod( "getFalse" );
-    Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
+    Collection<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 1 ) );
     matchingInfos.forEach( info -> {
@@ -55,7 +55,7 @@ public class GenSpecMethodMatcherMatchingInfosTest {
   public void test3() {
     Method checkMethod = getMethod( "getTrue" );
     Method queryMethod = getMethod( "getOne" );
-    Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
+    Collection<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 0 ) );
   }
@@ -64,7 +64,7 @@ public class GenSpecMethodMatcherMatchingInfosTest {
   public void test4() {
     Method checkMethod = getMethod( "getOneNativeWrapped" );
     Method queryMethod = getMethod( "getOne" );
-    Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
+    Collection<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 0 ) );
   }
@@ -73,7 +73,7 @@ public class GenSpecMethodMatcherMatchingInfosTest {
   public void test5() {
     Method checkMethod = getMethod( "setBool" );
     Method queryMethod = getMethod( "setBoolNativeWrapped" );
-    Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
+    Collection<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 0 ) );
   }
@@ -82,7 +82,7 @@ public class GenSpecMethodMatcherMatchingInfosTest {
   public void test6() {
     Method checkMethod = getMethod( "addOne" );
     Method queryMethod = getMethod( "subOne" );
-    Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
+    Collection<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 1 ) );
     matchingInfos.forEach( info -> {
@@ -106,7 +106,7 @@ public class GenSpecMethodMatcherMatchingInfosTest {
   public void test7() {
     Method checkMethod = getMethod( "add" );
     Method queryMethod = getMethod( "sub" );
-    Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
+    Collection<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 1 ) );
     matchingInfos.forEach( info -> {
@@ -135,7 +135,7 @@ public class GenSpecMethodMatcherMatchingInfosTest {
   public void test8() {
     Method checkMethod = getMethod( "addPartlyNativeWrapped" );
     Method queryMethod = getMethod( "subPartlyNativeWrapped" );
-    Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
+    Collection<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 0 ) );
   }
@@ -144,7 +144,7 @@ public class GenSpecMethodMatcherMatchingInfosTest {
   public void test9() {
     Method checkMethod = getMethod( "addPartlyWrapped" );
     Method queryMethod = getMethod( "subPartlyWrapped" );
-    Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
+    Collection<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 0 ) );
   }
@@ -153,7 +153,7 @@ public class GenSpecMethodMatcherMatchingInfosTest {
   public void test10() {
     Method checkMethod = getMethod( "addSpec" );
     Method queryMethod = getMethod( "addGen" );
-    Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
+    Collection<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size() > 0, equalTo( true ) );
     for ( MethodMatchingInfo info : matchingInfos ) {
@@ -188,7 +188,7 @@ public class GenSpecMethodMatcherMatchingInfosTest {
   public void test11() {
     Method checkMethod = getMethod( "setBoolNativeWrapped" );
     Method queryMethod = getMethod( "setObject" );
-    Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
+    Collection<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size() > 0, equalTo( true ) );
     for ( MethodMatchingInfo info : matchingInfos ) {
@@ -212,7 +212,7 @@ public class GenSpecMethodMatcherMatchingInfosTest {
   public void test12() {
     Method queryMethod = getMethod( "addSpec" );
     Method checkMethod = getMethod( "addSpecReturnSpec" );
-    Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
+    Collection<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size() > 0, equalTo( true ) );
     for ( MethodMatchingInfo info : matchingInfos ) {
@@ -221,7 +221,7 @@ public class GenSpecMethodMatcherMatchingInfosTest {
       assertThat( returnTypeMatchingInfo, notNullValue() );
       assertThat( returnTypeMatchingInfo.getSource(), equalTo( checkMethod.getReturnType() ) );
       assertThat( returnTypeMatchingInfo.getTarget(), equalTo( queryMethod.getReturnType() ) );
-      Set<MethodMatchingInfo> methodMatchingInfosOfReturnType = returnTypeMatchingInfo.getMethodMatchingInfos();
+      Collection<MethodMatchingInfo> methodMatchingInfosOfReturnType = returnTypeMatchingInfo.getMethodMatchingInfos();
       assertThat( methodMatchingInfosOfReturnType.isEmpty(), equalTo( true ) );
 
       // Parameter prüfen
@@ -246,7 +246,7 @@ public class GenSpecMethodMatcherMatchingInfosTest {
   public void test13() {
     Method checkMethod = getMethod( "addSpec" );
     Method queryMethod = getMethod( "addSpecReturnSpec" );
-    Set<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
+    Collection<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size() > 0, equalTo( true ) );
     for ( MethodMatchingInfo info : matchingInfos ) {
@@ -255,7 +255,7 @@ public class GenSpecMethodMatcherMatchingInfosTest {
       assertThat( returnTypeMatchingInfo, notNullValue() );
       assertThat( returnTypeMatchingInfo.getSource(), equalTo( checkMethod.getReturnType() ) );
       assertThat( returnTypeMatchingInfo.getTarget(), equalTo( queryMethod.getReturnType() ) );
-      Set<MethodMatchingInfo> methodMatchingInfosOfReturnType = returnTypeMatchingInfo.getMethodMatchingInfos();
+      Collection<MethodMatchingInfo> methodMatchingInfosOfReturnType = returnTypeMatchingInfo.getMethodMatchingInfos();
       assertThat( methodMatchingInfosOfReturnType.isEmpty(), equalTo( false ) );
 
       // Parameter prüfen

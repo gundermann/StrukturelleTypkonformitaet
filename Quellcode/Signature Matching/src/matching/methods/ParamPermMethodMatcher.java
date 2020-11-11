@@ -4,11 +4,9 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
@@ -98,9 +96,9 @@ public class ParamPermMethodMatcher implements MethodMatcher {
   }
 
   @Override
-  public Set<MethodMatchingInfo> calculateMatchingInfos( Method checkMethod, Method queryMethod ) {
+  public Collection<MethodMatchingInfo> calculateMatchingInfos( Method checkMethod, Method queryMethod ) {
     if ( !matches( checkMethod, queryMethod ) ) {
-      return new HashSet<>();
+      return new ArrayList<>();
     }
     MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( checkMethod, queryMethod );
     Collection<ModuleMatchingInfo> returnTypeMatchingInfos = innerMethodMatcherSupplier.get()

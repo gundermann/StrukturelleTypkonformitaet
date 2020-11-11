@@ -11,7 +11,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 import org.easymock.EasyMock;
 import org.junit.Test;
@@ -102,7 +101,7 @@ public class MethodMatchingInfoFactoryTest {
     returnTypeMatchingInfos.add( moduleMatchingInfoFactory.create() );
     returnTypeMatchingInfos.add( moduleMatchingInfoFactory.create() );
     Collection<Map<ParamPosition, Collection<ModuleMatchingInfo>>> argumentTypesMatchingInfos = new ArrayList<>( 0 );
-    Set<MethodMatchingInfo> infos = factory.createFromTypeMatchingInfos( returnTypeMatchingInfos,
+    Collection<MethodMatchingInfo> infos = factory.createFromTypeMatchingInfos( returnTypeMatchingInfos,
         argumentTypesMatchingInfos );
 
     assertThat( infos, notNullValue() );
@@ -135,7 +134,7 @@ public class MethodMatchingInfoFactoryTest {
 
     argumentTypesMatchingInfos.add( argumentTypesMatchingInfos1 );
     argumentTypesMatchingInfos.add( argumentTypesMatchingInfos2 );
-    Set<MethodMatchingInfo> infos = factory.createFromTypeMatchingInfos( returnTypeMatchingInfos,
+    Collection<MethodMatchingInfo> infos = factory.createFromTypeMatchingInfos( returnTypeMatchingInfos,
         argumentTypesMatchingInfos );
 
     assertThat( infos, notNullValue() );
@@ -164,7 +163,7 @@ public class MethodMatchingInfoFactoryTest {
     Map<ParamPosition, Collection<ModuleMatchingInfo>> argumentTypesMatchingInfos = new HashMap<>( 2 );
     argumentTypesMatchingInfos.put( new ParamPosition( 1, 1 ), new ArrayList<>() );
     argumentTypesMatchingInfos.put( new ParamPosition( 1, 2 ), new ArrayList<>() );
-    Set<MethodMatchingInfo> infos = factory.createFromTypeMatchingInfos( returnTypeMatchingInfos,
+    Collection<MethodMatchingInfo> infos = factory.createFromTypeMatchingInfos( returnTypeMatchingInfos,
         Collections.singletonList( argumentTypesMatchingInfos ) );
 
     assertThat( infos, notNullValue() );

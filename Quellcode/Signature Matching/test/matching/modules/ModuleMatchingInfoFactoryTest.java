@@ -6,6 +6,8 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -87,17 +89,17 @@ public class ModuleMatchingInfoFactoryTest {
   public void create_withMultipleMethodMatchingInfos() {
     ModuleMatchingInfoFactory factory = new ModuleMatchingInfoFactory( Object.class,
         Object.class );
-    Set<MethodMatchingInfo> method1MatchingInfos = new HashSet<>();
+    Collection<MethodMatchingInfo> method1MatchingInfos = new ArrayList<>();
     method1MatchingInfos.add( mockMethodMatchingInfo() );
 
-    Set<MethodMatchingInfo> method2MatchingInfos = new HashSet<>();
+    Collection<MethodMatchingInfo> method2MatchingInfos = new ArrayList<>();
     method2MatchingInfos.add( mockMethodMatchingInfo() );
 
-    Map<Method, Set<MethodMatchingInfo>> possibleMethodMatches = new HashMap<>();
+    Map<Method, Collection<MethodMatchingInfo>> possibleMethodMatches = new HashMap<>();
     possibleMethodMatches.put( Object.class.getMethods()[0], method1MatchingInfos );
     possibleMethodMatches.put( Object.class.getMethods()[1], method2MatchingInfos );
 
-    Set<ModuleMatchingInfo> matchingInfos = factory.createFromMethodMatchingInfos( possibleMethodMatches );
+    Collection<ModuleMatchingInfo> matchingInfos = factory.createFromMethodMatchingInfos( possibleMethodMatches );
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 1 ) );
     // assertThat( matchingInfo.getRating(), equalTo( 0 ) );
@@ -111,29 +113,29 @@ public class ModuleMatchingInfoFactoryTest {
   public void create_withMultipleMethodMatchingInfosForOneMethod() {
     ModuleMatchingInfoFactory factory = new ModuleMatchingInfoFactory( Object.class,
         Object.class );
-    Set<MethodMatchingInfo> method1MatchingInfos = new HashSet<>();
+    Collection<MethodMatchingInfo> method1MatchingInfos = new ArrayList<>();
     method1MatchingInfos.add( mockMethodMatchingInfo() );
     method1MatchingInfos.add( mockMethodMatchingInfo() );
     method1MatchingInfos.add( mockMethodMatchingInfo() );
 
-    Set<MethodMatchingInfo> method2MatchingInfos = new HashSet<>();
+    Collection<MethodMatchingInfo> method2MatchingInfos = new ArrayList<>();
     method2MatchingInfos.add( mockMethodMatchingInfo() );
     method2MatchingInfos.add( mockMethodMatchingInfo() );
 
-    Set<MethodMatchingInfo> method3MatchingInfos = new HashSet<>();
+    Collection<MethodMatchingInfo> method3MatchingInfos = new ArrayList<>();
     method3MatchingInfos.add( mockMethodMatchingInfo() );
 
-    Map<Method, Set<MethodMatchingInfo>> possibleMethodMatches = new HashMap<>();
+    Map<Method, Collection<MethodMatchingInfo>> possibleMethodMatches = new HashMap<>();
     possibleMethodMatches.put( Object.class.getMethods()[0], method1MatchingInfos );
     possibleMethodMatches.put( Object.class.getMethods()[1], method2MatchingInfos );
     possibleMethodMatches.put( Object.class.getMethods()[2], method3MatchingInfos );
 
-    Set<ModuleMatchingInfo> matchingInfos = factory.createFromMethodMatchingInfos( possibleMethodMatches );
+    Collection<ModuleMatchingInfo> matchingInfos = factory.createFromMethodMatchingInfos( possibleMethodMatches );
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 6 ) );
     // assertThat( matchingInfo.getRating(), equalTo( 0 ) );
     for ( ModuleMatchingInfo info : matchingInfos ) {
-      Set<MethodMatchingInfo> methodMatchingInfos = info.getMethodMatchingInfos();
+      Collection<MethodMatchingInfo> methodMatchingInfos = info.getMethodMatchingInfos();
       assertThat( methodMatchingInfos, notNullValue() );
       assertThat( methodMatchingInfos.size(), equalTo( 3 ) );
     }
