@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 
+import matching.Logger;
 import matching.methods.MethodMatchingInfo;
 import matching.methods.MethodMatchingInfo.ParamPosition;
 import matching.modules.ModuleMatchingInfo;
@@ -106,7 +107,7 @@ public class BehaviourDelegateInvocationHandler implements MethodInterceptor, In
    */
   @SuppressWarnings( "unchecked" )
   private <RT> RT convertType( Object sourceType, ModuleMatchingInfo moduleMatchingInfo ) {
-    System.out.println( String.format( "convert type %s -> %s",
+    Logger.info( String.format( "convert type %s -> %s",
         moduleMatchingInfo.getSource().getName(), moduleMatchingInfo.getTarget().getName() ) );
     if ( moduleMatchingInfo.getMethodMatchingInfos().isEmpty()
         && moduleMatchingInfo.getTargetDelegateAttribute() == null
@@ -125,8 +126,6 @@ public class BehaviourDelegateInvocationHandler implements MethodInterceptor, In
     try {
       Field sourceField = moduleMatchingInfo.getSource()
           .getDeclaredField( moduleMatchingInfo.getSourceDelegateAttribute() );
-      // Field sourceField = getDeclaredFieldFromClass( type.getClass(), moduleMatchingInfo.getSourceDelegateAttribute()
-      // );
       sourceField.setAccessible( true );
       return sourceField.get( type );
     }
