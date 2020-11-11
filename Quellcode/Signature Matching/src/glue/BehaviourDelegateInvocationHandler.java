@@ -2,8 +2,8 @@ package glue;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -20,30 +20,30 @@ public class BehaviourDelegateInvocationHandler implements MethodInterceptor, In
 
   private final ModuleMatchingInfo matchingInfos;
 
-  private final String targetDelegationComponent;
-
   public BehaviourDelegateInvocationHandler( Object component, ModuleMatchingInfo matchingInfos ) {
     this.component = component;
     this.matchingInfos = matchingInfos;
-    this.targetDelegationComponent = matchingInfos.getTargetDelegateAttribute();
+  }
+
+  @Override
+  public Object intercept( Object callObject, Method method, Object[] args, MethodProxy methodProxy ) throws Throwable {
+    Optional<MethodMatchingInfo> optMatchingInfo = getMethodMatchingInfo( method );
+    if ( optMatchingInfo.isPresent() ) {
+      return invokeOnComponentWithMatchingInfo( optMatchingInfo.get(), args );
+    }
+
+    // Default-Methode
+    if ( matchingInfos.getTargetDelegateAttribute() == null ) {
+      return method.invoke( component, args );
+    }
+    return methodProxy.invokeSuper( callObject, args );
   }
 
   @Override
   public Object invoke( Object methodProxy, Method method, Object[] args ) throws Throwable {
     Optional<MethodMatchingInfo> optMatchingInfo = getMethodMatchingInfo( method );
     if ( optMatchingInfo.isPresent() ) {
-      MethodMatchingInfo methodMatchingInfo = optMatchingInfo.get();
-      Method targetMethod = methodMatchingInfo.getTarget();
-      Object[] convertedArgs = convertArgs( args, methodMatchingInfo.getArgumentTypeMatchingInfos() );
-      Object returnValue = targetMethod.invoke( component, convertedArgs );
-      ModuleMatchingInfo returnTypeMatchingInfo = methodMatchingInfo.getReturnTypeMatchingInfo();
-      if ( returnTypeMatchingInfo == null ) {
-        return returnValue;
-      }
-      // Bei einem allgemeineren returnValue des Targets (Target.retrunValue >
-      // Source.returnValue) muss der ReturnType
-      // ebenfalls gemocked werden
-      return convertType( returnValue, returnTypeMatchingInfo );
+      return invokeOnComponentWithMatchingInfo( optMatchingInfo.get(), args );
     }
 
     // Default-Methode
@@ -51,6 +51,21 @@ public class BehaviourDelegateInvocationHandler implements MethodInterceptor, In
     // fï¿½r die aufgrund einer fehlenden
     // Implementierung keine MatchingInfo existiert)
     return method.invoke( component, args );
+  }
+
+  private Object invokeOnComponentWithMatchingInfo( MethodMatchingInfo methodMatchingInfo, Object[] args )
+      throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    Method targetMethod = methodMatchingInfo.getTarget();
+    Object[] convertedArgs = convertArgs( args, methodMatchingInfo.getArgumentTypeMatchingInfos() );
+    Object returnValue = targetMethod.invoke( component, convertedArgs );
+    ModuleMatchingInfo returnTypeMatchingInfo = methodMatchingInfo.getReturnTypeMatchingInfo();
+    if ( returnTypeMatchingInfo == null ) {
+      return returnValue;
+    }
+    // Bei einem allgemeineren returnValue des Targets (Target.retrunValue >
+    // Source.returnValue) muss der ReturnType
+    // ebenfalls gemocked werden
+    return convertType( returnValue, returnTypeMatchingInfo );
   }
 
   private Object[] convertArgs( Object[] args, Map<ParamPosition, ModuleMatchingInfo> argMMI ) {
@@ -121,39 +136,6 @@ public class BehaviourDelegateInvocationHandler implements MethodInterceptor, In
     }
   }
 
-  /**
-   * Es muss zwischen echten Klassen und Proxies unterschieden werden. Bei einem Proxy ist das Feld nämlich in der
-   * Oberklasse zu suchen
-   *
-   * @param targetClass
-   * @param fieldName
-   * @return
-   * @throws SecurityException
-   * @throws NoSuchFieldException
-   */
-  private Field getDeclaredFieldFromClass( Class<? extends Object> searchClass, String fieldName )
-      throws NoSuchFieldException, SecurityException {
-    if ( Proxy.isProxyClass( searchClass ) ) {
-      return searchClass.getSuperclass().getDeclaredField( fieldName );
-    }
-    return searchClass.getDeclaredField( fieldName );
-  }
-
-  private Object getTargetRefFromModuleMatchingInfo( Object o, ModuleMatchingInfo moduleMatchingInfo ) {
-    if ( moduleMatchingInfo.getTargetDelegateAttribute() == null ) {
-      return o;
-    }
-    try {
-      Field targetField = o.getClass().getDeclaredField( moduleMatchingInfo.getSourceDelegateAttribute() );
-      targetField.setAccessible( true );
-      return targetField.get( o );
-    }
-    catch ( NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e ) {
-      e.printStackTrace();
-      return null;
-    }
-  }
-
   private Optional<MethodMatchingInfo> getMethodMatchingInfo( Method method ) {
     for ( MethodMatchingInfo mmi : matchingInfos.getMethodMatchingInfos() ) {
       if ( mmi.getSource().getName().equals( method.getName() ) && agrumentsMatches( mmi, method ) ) {
@@ -174,31 +156,6 @@ public class BehaviourDelegateInvocationHandler implements MethodInterceptor, In
       }
     }
     return true;
-  }
-
-  @Override
-  public Object intercept( Object callObject, Method method, Object[] args, MethodProxy methodProxy ) throws Throwable {
-    Optional<MethodMatchingInfo> optMatchingInfo = getMethodMatchingInfo( method );
-    if ( optMatchingInfo.isPresent() ) {
-      MethodMatchingInfo methodMatchingInfo = optMatchingInfo.get();
-      Method targetMethod = methodMatchingInfo.getTarget();
-      Object[] convertedArgs = convertArgs( args, methodMatchingInfo.getArgumentTypeMatchingInfos() );
-      Object returnValue = targetMethod.invoke( component, convertedArgs );
-      ModuleMatchingInfo returnTypeMatchingInfo = methodMatchingInfo.getReturnTypeMatchingInfo();
-      if ( returnTypeMatchingInfo == null ) {
-        return returnValue;
-      }
-      // Bei einem allgemeineren returnValue des Targets (Target.retrunValue >
-      // Source.returnValue) muss der ReturnType
-      // ebenfalls gemocked werden
-      return convertType( returnValue, returnTypeMatchingInfo );
-    }
-
-    // Default-Methode
-    if ( matchingInfos.getTargetDelegateAttribute() == null ) {
-      return method.invoke( component, args );
-    }
-    return methodProxy.invokeSuper( callObject, args );
   }
 
 }
