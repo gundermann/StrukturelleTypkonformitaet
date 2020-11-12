@@ -11,6 +11,8 @@ public class ComponentInfos {
 
   private Set<ModuleMatchingInfo> matchingInfos = new HashSet<>();
 
+  private String contexts;
+
   public ComponentInfos( Class<?> componentClass ) {
     this.componentClass = componentClass;
   }
@@ -22,7 +24,15 @@ public class ComponentInfos {
   public void setModuleMatchingInfos( Set<ModuleMatchingInfo> matchingInfos ) {
     this.matchingInfos.clear();
     this.matchingInfos.addAll( matchingInfos );
+  }
 
+  public void addContext( String context ) {
+    if ( this.contexts == null ) {
+      this.contexts = context;
+    }
+    else {
+      this.contexts += "+" + context;
+    }
   }
 
   public Set<ModuleMatchingInfo> getMatchingInfos() {
@@ -31,6 +41,10 @@ public class ComponentInfos {
 
   public Class<?> getComponentClass() {
     return componentClass;
+  }
+
+  public String getName() {
+    return this.contexts;
   }
 
 }

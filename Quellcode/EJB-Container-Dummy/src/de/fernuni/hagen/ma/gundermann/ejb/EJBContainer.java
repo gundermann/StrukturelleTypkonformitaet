@@ -105,8 +105,12 @@ public enum EJBContainer {
     for ( ComponentInfos componentInfo : fullMatchedComponents ) {
       Class<?> componentClass = componentInfo.getComponentClass();
       Collection<?> components = getBeans( componentClass );
+
+      // TODO hier wäre eine Heuristik angebracht, welche die MatchingInfos der ComponentInfo in eine Reihenfolge
+      // bringt.
       for ( ModuleMatchingInfo matchingInfo : componentInfo.getMatchingInfos() ) {
         for ( Object component : components ) {
+          Logger.infoF( "test component: %s", component.getClass().getName() );
           DesiredInterface convertedComponent = converter.convert( component, matchingInfo );
           if ( componentTester.testComponent( convertedComponent ) ) {
             return convertedComponent;
@@ -127,6 +131,7 @@ public enum EJBContainer {
           .calculateMatchingInfos( matchingBeanInterface );
       ComponentInfos componentInfos = new ComponentInfos( matchingBeanInterface );
       componentInfos.setModuleMatchingInfos( matchingInfos );
+      componentInfos.addContext( matchingBeanInterface.getName() );
       componentInfoSet.add( componentInfos );
     }
     Logger.info( String.format( "ComponentInfos created: %d", componentInfoSet.size() ) );

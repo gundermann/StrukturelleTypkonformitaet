@@ -35,4 +35,8 @@ public class Logger {
     log( "ERR", format, true );
   }
 
+  public static void infoF( String pattern, Object... args ) {
+    info( String.format( pattern, args ) );
+  }
+
 }
