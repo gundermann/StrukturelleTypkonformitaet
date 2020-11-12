@@ -2,7 +2,7 @@ package util;
 
 public class Logger {
 
-  private static boolean isOn = true;
+  private static boolean isOn = false;
 
   public static void switchOn() {
     isOn = true;

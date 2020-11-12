@@ -9,6 +9,7 @@ public final class Permuter {
 
   }
 
+  @SuppressWarnings( "unchecked" )
   public static <T> void permuteRecursiveWithOriginalPositionCached(
       int n, T[] arguments, Integer[] positions, Collection<T[]> accumulator,
       Collection<Integer[]> positionAccumulator ) {
@@ -69,11 +70,5 @@ public final class Permuter {
       fractional *= i;
     }
     return fractional;
-  }
-
-  public static class OriginalPositions {
-    private int orignalPos;
-
-    private int permutedPos;
   }
 }
