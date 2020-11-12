@@ -1,6 +1,7 @@
 package matching.methods;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -8,16 +9,21 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import matching.methods.MethodMatchingInfo.ParamPosition;
 import matching.modules.ModuleMatchingInfo;
 import matching.modules.ModuleMatchingInfoFactory;
+import util.Logger;
 
 /**
  * Dieser Matcher achtet darauf, dass die Typen (Return- und Argumenttypen) der beiden Methoden auch Generelisierungen
  * bzw. Spezialisierungen von einander sein können.
  */
 public class GenSpecMethodMatcher implements MethodMatcher {
+
+  static int counter = 0;
 
   // Versuch: Cache der Wrapped-Prüfungen
   // Grund: Im WrappedTypeMethodMatcher wird auch ein Cache verwendet und es ist sicherlich aus Performance-Sicht
@@ -126,9 +132,14 @@ public class GenSpecMethodMatcher implements MethodMatcher {
   @Override
   public Collection<ModuleMatchingInfo> calculateTypeMatchingInfos( Class<?> checkType,
       Class<?> queryType ) {
+    Logger.infoF( "calculate TypeMatchingInfos: %s -> %s", queryType, checkType );
+    int c = ++counter;
+    Logger.infoF( "start calculation: %d", c );
+    Collection<ModuleMatchingInfo> result = new ArrayList<>();
     ModuleMatchingInfoFactory factory = new ModuleMatchingInfoFactory( checkType, queryType );
     if ( checkType.equals( queryType ) ) {
-      return Collections.singletonList( factory.create() );
+      Logger.infoF( "finish calculation: %d", c );
+      result = Collections.singletonList( factory.create() );
     }
     else if ( queryType.isAssignableFrom( checkType )
     // Wurde nur für native Typen gemacht
@@ -145,7 +156,7 @@ public class GenSpecMethodMatcher implements MethodMatcher {
       Map<Method, Collection<MethodMatchingInfo>> methodMatchingInfos = createMethodMatchingInfoForGen2SpecMapping(
           queryType,
           checkType );
-      return factory.createFromMethodMatchingInfos( methodMatchingInfos );
+      result = factory.createFromMethodMatchingInfos( methodMatchingInfos );
     }
     else if ( checkType.isAssignableFrom( queryType )
     // Wurde nur für native Typen gemacht
@@ -154,35 +165,46 @@ public class GenSpecMethodMatcher implements MethodMatcher {
       // queryType < checkType
       // Gen: checkType
       // Spec: queryType
-      return Collections.singletonList( factory.create() );
+      result = Collections.singletonList( factory.create() );
     }
-    return new ArrayList<>();
+    Logger.infoF( "finish calculation: %d", c );
+    return result;
   }
 
   private Map<Method, Collection<MethodMatchingInfo>> createMethodMatchingInfoForGen2SpecMapping( Class<?> genType,
       Class<?> specType ) {
     Map<Method, Collection<MethodMatchingInfo>> matchingInfos = new HashMap<>();
-    Method[] genMethods = genType.getMethods();
-    Method[] specMethods = specType.getMethods();
+    // Es wird davon ausgegangen, dass nur für die überschreibbaren Methoden MatchingInfos erzeugt werden können.
+    Method[] genMethods = getOverrideableMethods( genType );
+    // Methoden, die im speziellen Typ deklariert aber nicht überschrieben wurden, können keine passenede Methode im
+    // Supertyp haben.
+    Method[] specMethods = specType.getDeclaredMethods();
     for ( Method genM : genMethods ) {
       for ( Method specM : specMethods ) {
-        // Prüfen, ob es die richten Methoden sind!!!!
-        MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( specM, genM );
-        // Der Returntype kann spezieller werden. Liskov lässt grüßen. (Kovarianz)
-        ModuleMatchingInfo returnTypeMatchingInfo = calculateTypeMatchingInfos( specM.getReturnType(),
-            genM.getReturnType() ).iterator().next();
+        if ( specM.getName().equals( genM.getName() ) && matches( specM, genM ) ) {
+          MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( specM, genM );
+          // Der Returntype kann spezieller werden. Liskov lässt grüßen. (Kovarianz)
+          ModuleMatchingInfo returnTypeMatchingInfo = calculateTypeMatchingInfos( specM.getReturnType(),
+              genM.getReturnType() ).iterator().next();
 
-        // Die Argumente können allgemeiner werden. Liskov lässt grüßen (Kontravarianz)
-        Map<ParamPosition, Collection<ModuleMatchingInfo>> argumentTypeMatchingInfos = calculateArgumentTypesMatchingInfos(
-            specM.getParameterTypes(), genM.getParameterTypes() );
-        matchingInfos.put( genM,
+          // Die Argumente können allgemeiner werden. Liskov lässt grüßen (Kontravarianz)
+          Map<ParamPosition, Collection<ModuleMatchingInfo>> argumentTypeMatchingInfos = calculateArgumentTypesMatchingInfos(
+              specM.getParameterTypes(), genM.getParameterTypes() );
+          matchingInfos.put( genM,
 
-            factory.createFromTypeMatchingInfos( Collections.singletonList( returnTypeMatchingInfo ),
-                Collections.singletonList( argumentTypeMatchingInfos ) ) );
+              factory.createFromTypeMatchingInfos( Collections.singletonList( returnTypeMatchingInfo ),
+                  Collections.singletonList( argumentTypeMatchingInfos ) ) );
+        }
       }
     }
 
     return matchingInfos;
+  }
+
+  private Method[] getOverrideableMethods( Class<?> genType ) {
+    Method[] methods = genType.getMethods();
+    return Stream.of( methods ).filter( m -> !Modifier.isPrivate( m.getModifiers() ) ).collect( Collectors.toList() )
+        .toArray( new Method[] {} );
   }
 
 }
