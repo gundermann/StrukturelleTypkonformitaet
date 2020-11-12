@@ -64,7 +64,7 @@ public class ModuleMatchingInfoFactory {
       Map<Method, Collection<MethodMatchingInfo>> possibleMethodMatches ) {
     Logger.infoF( "start permutation of MethodMatchingInfos: %d",
         possibleMethodMatches.values().stream().filter( v -> !v.isEmpty() ).map( v -> v.size() )
-            .reduce( ( a, b ) -> a * b ).get() );
+            .reduce( ( a, b ) -> a * b ).orElse( 0 ) );
     Collection<Collection<MethodMatchingInfo>> permutedMethodMatches = generateMethodMatchingCombinations(
         possibleMethodMatches );
     Logger.infoF( "MethodMatches permuted: %d", permutedMethodMatches.size() );

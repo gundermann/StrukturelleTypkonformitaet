@@ -138,6 +138,14 @@ public class GenSpecMethodMatcher implements MethodMatcher {
     Collection<ModuleMatchingInfo> result = new ArrayList<>();
     ModuleMatchingInfoFactory factory = new ModuleMatchingInfoFactory( checkType, queryType );
     if ( checkType.equals( queryType ) ) {
+      Logger.infoF( "assumtion: %s == %s", queryType, checkType );
+      Logger.infoF( "finish calculation: %d", c );
+      result = Collections.singletonList( factory.create() );
+    }
+    // für primitive Typen, die auch als Object verwendet werden können
+    else if ( ( checkType.isPrimitive() && queryType.equals( Object.class ) )
+        || ( queryType.isPrimitive() && checkType.equals( Object.class ) ) ) {
+      Logger.infoF( "assumtion: Object > primitiv" );
       Logger.infoF( "finish calculation: %d", c );
       result = Collections.singletonList( factory.create() );
     }
@@ -148,23 +156,30 @@ public class GenSpecMethodMatcher implements MethodMatcher {
       // queryType > checkType
       // Gen: queryType
       // Spec: checkType
-      // return new ModuleMatcher<>( queryType, this ).calculateMatchingInfos( checkType );
+
+      // Versuch 1
       // TODO ich bin mir unsicher, ob die Übergabe von this an dieser Stelle korrekt ist, oder ob die
       // ModuleMatchingInfos an dieser Stelle nicht auch durch den kombinierten Matcher ermittelt werden müssen. Das
       // dauert aber sehr lange.
+      // return new ModuleMatcher<>( queryType, this ).calculateMatchingInfos( checkType );
 
+      // Versuch 2
+      Logger.infoF( "assumtion: %s > %s", queryType, checkType );
       Map<Method, Collection<MethodMatchingInfo>> methodMatchingInfos = createMethodMatchingInfoForGen2SpecMapping(
           queryType,
           checkType );
       result = factory.createFromMethodMatchingInfos( methodMatchingInfos );
     }
     else if ( checkType.isAssignableFrom( queryType )
+
     // Wurde nur für native Typen gemacht
     // || checkType.equals( Object.class )
     ) {
       // queryType < checkType
       // Gen: checkType
       // Spec: queryType
+
+      Logger.infoF( "assumtion: %s < %s", queryType, checkType );
       result = Collections.singletonList( factory.create() );
     }
     Logger.infoF( "finish calculation: %d", c );
@@ -182,10 +197,11 @@ public class GenSpecMethodMatcher implements MethodMatcher {
     for ( Method genM : genMethods ) {
       for ( Method specM : specMethods ) {
         if ( specM.getName().equals( genM.getName() ) && matches( specM, genM ) ) {
+          Logger.infoF( "matching methods found: %s === %s", specM, genM );
           MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( specM, genM );
           // Der Returntype kann spezieller werden. Liskov lässt grüßen. (Kovarianz)
-          ModuleMatchingInfo returnTypeMatchingInfo = calculateTypeMatchingInfos( specM.getReturnType(),
-              genM.getReturnType() ).iterator().next();
+          ModuleMatchingInfo returnTypeMatchingInfo = calculateTypeMatchingInfos( genM.getReturnType(),
+              specM.getReturnType() ).iterator().next();
 
           // Die Argumente können allgemeiner werden. Liskov lässt grüßen (Kontravarianz)
           Map<ParamPosition, Collection<ModuleMatchingInfo>> argumentTypeMatchingInfos = calculateArgumentTypesMatchingInfos(
