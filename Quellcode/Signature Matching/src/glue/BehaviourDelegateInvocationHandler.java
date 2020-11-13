@@ -66,6 +66,9 @@ public class BehaviourDelegateInvocationHandler implements MethodInterceptor, In
     // Bei einem allgemeineren returnValue des Targets (Target.retrunValue >
     // Source.returnValue) muss der ReturnType
     // ebenfalls gemocked werden
+
+    // TODO Sehr geil, wenn der returnValue Null ist, dann wird dieser dennoch konvertiert und ist danach nicht mehr
+    // null ;-D
     return convertType( returnValue, returnTypeMatchingInfo );
   }
 
