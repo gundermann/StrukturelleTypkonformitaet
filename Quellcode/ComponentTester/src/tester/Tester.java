@@ -38,15 +38,18 @@ class Tester {
         return false;
       }
     }
+    System.out.println( String.format( "TEST PASSED" ) );
     return true;
   }
 
   private void invokeTests( Object testInstance )
       throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, AssertionError {
     Method[] testMethods = findTestMethods( testInstance.getClass() );
+    int counter = 1;
     for ( Method test : testMethods ) {
       test.setAccessible( true );
       test.invoke( testInstance );
+      System.out.println( String.format( "Test passed: %d/%d", counter++, testMethods.length ) );
     }
   }
 

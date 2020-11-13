@@ -1,7 +1,7 @@
 package de.fernuni.hagen.ma.gundermann.ejb;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import org.junit.Test;
 

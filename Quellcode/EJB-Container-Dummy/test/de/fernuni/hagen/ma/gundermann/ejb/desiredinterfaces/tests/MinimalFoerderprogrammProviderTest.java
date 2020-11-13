@@ -1,14 +1,18 @@
 package de.fernuni.hagen.ma.gundermann.ejb.desiredinterfaces.tests;
 
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.Objects;
 
 import org.junit.Test;
 
 import DE.data_experts.profi.profilcs.antrag2015.stammdaten.business.impl.Foerderprogramm;
+import DE.data_experts.profi.util.allg.DvFoerderprogramm;
 import de.fernuni.hagen.ma.gundermann.ejb.desiredinterfaces.MinimalFoerderprogrammeProvider;
 import tester.annotation.QueryTypeInstanceSetter;
 
@@ -29,7 +33,20 @@ public class MinimalFoerderprogrammProviderTest {
 
   @Test
   public void testGetFoerderprogramm() {
-    Foerderprogramm alleFreigegebenenFPs = provider.getFoerderprogramm( "123", 2015, new Date() );
-    assertThat( alleFreigegebenenFPs, notNullValue() );
+    String fpCode = "123";
+    Foerderprogramm fp = provider.getFoerderprogramm( fpCode, 2015, new Date() );
+    assertThat( fp, notNullValue() );
+    DvFoerderprogramm dvFP = fp.getFoerderprogramm();
+    assertThat( dvFP, notNullValue() );
+
+    String code = dvFP.getCode();
+    assertTrue( Objects.equals( fpCode, code ) );
+    assertThat( fpCode, equalTo( code ) );
+    // WARNING assertThat funktioniert nur, wenn das hamcrest-JAR über den JUnit-JAR steht (BuildPath > Export-Order)
+    // ERROR: class "org.hamcrest.Matchers"'s signer information does not match signer information of other classes in
+    // the same
+    // package
+    // siehe issue: https://code.google.com/archive/p/hamcrest/issues/128
+
   }
 }
