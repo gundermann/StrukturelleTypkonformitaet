@@ -48,18 +48,4 @@ public class MinimalFoerderprogrammProviderTest {
 
   }
 
-  @Test
-  public void testGetFoerderprogrammZweiStrings() {
-    String fpCode = "123";
-    Foerderprogramm fp = provider.getFoerderprogramm( fpCode, 2015, "" );
-    assertThat( fp, notNullValue() );
-    provider.getFoerderprogramm( fpCode, 2015, "" );
-    // DvFoerderprogramm dvFP = fp.getFoerderprogramm();
-    // assertThat( dvFP, notNullValue() );
-    //
-    // String code = dvFP.getCode();
-    // assertTrue( Objects.equals( fpCode, code ) );
-    // assertThat( fpCode, equalTo( code ) );
-
-  }
 }

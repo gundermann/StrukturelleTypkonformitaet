@@ -16,7 +16,8 @@ public interface MinimalFoerderprogrammeProvider {
   // Versuch 2: diese Methode wurde zusätzlich deklariert => 24/885 relevanten Beans
   Foerderprogramm getFoerderprogramm( String fp, int jahr, Date date );
 
-  Foerderprogramm getFoerderprogramm( String fp, int jahr, String whatever );
+  // Hiermit sollte versucht werden, den "whatever"-String in ein Datum umzuwandeln
+  // Foerderprogramm getFoerderprogramm( String fp, int jahr, String whatever );
 
   // auch denkbar, wenn dem Entwickler nicht bewusst ist, dass es eine technische Gültigkeit gibt. (ergänzen mit null)
   // Den dazugehörigen Matcher habe ich aber noch nicht implementiert.
