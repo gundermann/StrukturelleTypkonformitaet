@@ -24,4 +24,8 @@ public class OfferedSpecClass {
     return b && spec.isSpecificAttr();
   }
 
+  public Specific getNull() {
+    return null;
+  }
+
 }

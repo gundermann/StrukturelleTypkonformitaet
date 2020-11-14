@@ -13,6 +13,10 @@ public enum Enum2 {
     return false;
   }
 
+  public Object getNull() {
+    return null;
+  }
+
   public Integer getOne() {
     return 1;
   }

@@ -11,4 +11,6 @@ public interface DesiredSpecInterface {
   public Long getBoxedLongAttr( Specific spec );
 
   public Boolean and( Specific spec, Boolean b );
+
+  public Specific getNull();
 }

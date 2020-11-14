@@ -67,8 +67,6 @@ public class BehaviourDelegateInvocationHandler implements MethodInterceptor, In
     // Source.returnValue) muss der ReturnType
     // ebenfalls gemocked werden
 
-    // TODO Sehr geil, wenn der returnValue Null ist, dann wird dieser dennoch konvertiert und ist danach nicht mehr
-    // null ;-D
     return convertType( returnValue, returnTypeMatchingInfo );
   }
 
@@ -112,7 +110,9 @@ public class BehaviourDelegateInvocationHandler implements MethodInterceptor, In
   private <RT> RT convertType( Object sourceType, ModuleMatchingInfo moduleMatchingInfo ) {
     Logger.info( String.format( "convert type %s -> %s",
         moduleMatchingInfo.getSource().getName(), moduleMatchingInfo.getTarget().getName() ) );
-    if ( moduleMatchingInfo.getMethodMatchingInfos().isEmpty()
+    // Wenn das zu konvertierende Objekt null ist, dann kann dies auch gleich zurückgegeben werden, da null-Objekte
+    // keinen speziellen Typ haben
+    if ( sourceType == null || moduleMatchingInfo.getMethodMatchingInfos().isEmpty()
         && moduleMatchingInfo.getTargetDelegateAttribute() == null
         && moduleMatchingInfo.getSourceDelegateAttribute() == null ) {
       return (RT) sourceType;

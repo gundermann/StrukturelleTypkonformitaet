@@ -21,4 +21,8 @@ public class OfferedGenClass {
     return gen.getBoxedLongAttr();
   }
 
+  public General getNull() {
+    return null;
+  }
+
 }

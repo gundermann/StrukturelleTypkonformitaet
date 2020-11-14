@@ -1,6 +1,7 @@
 package glue;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 import java.util.HashMap;
@@ -47,14 +48,23 @@ public class ExactSignatureMatchingTypeConverterTest {
         .andReturn( new HashMap<ParamPosition, ModuleMatchingInfo>() ).anyTimes();
     methodMatchingInfos.add( methodMatchingInfoGetOne );
 
+    MethodMatchingInfo methodMatchingInfoGetNull = EasyMock.createNiceMock( MethodMatchingInfo.class );
+    EasyMock.expect( methodMatchingInfoGetNull.getTarget() ).andReturn( target.getMethod( "getNull" ) ).anyTimes();
+    EasyMock.expect( methodMatchingInfoGetNull.getSource() ).andReturn( source.getMethod( "getNull" ) ).anyTimes();
+    EasyMock.expect( methodMatchingInfoGetNull.getArgumentTypeMatchingInfos() )
+        .andReturn( new HashMap<ParamPosition, ModuleMatchingInfo>() ).anyTimes();
+    methodMatchingInfos.add( methodMatchingInfoGetNull );
+
     ModuleMatchingInfo moduleMatchingInfo = EasyMock.createNiceMock( ModuleMatchingInfo.class );
     EasyMock.expect( moduleMatchingInfo.getMethodMatchingInfos() ).andReturn( methodMatchingInfos ).anyTimes();
     EasyMock.replay( moduleMatchingInfo, methodMatchingInfoGetFalse, methodMatchingInfoGetTrue,
-        methodMatchingInfoGetOne );
+        methodMatchingInfoGetOne, methodMatchingInfoGetNull );
     InterfaceWrapper converted = converter.convert( convertationObject, moduleMatchingInfo );
     assertThat( converted.getFalse(), equalTo( convertationObject.getFalse() ) );
     assertThat( converted.getTrue(), equalTo( convertationObject.getTrue() ) );
     assertThat( converted.getOne(), equalTo( convertationObject.getOne() ) );
+    assertThat( converted.getNull(), equalTo( convertationObject.getNull() ) );
+    assertThat( converted.getNull(), nullValue() );
   }
 
 }

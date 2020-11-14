@@ -77,12 +77,25 @@ public class GenSpecSignatureMatchingTypeConverterTest {
         .andReturn( MatchingInfoTestUtil.createMMIMap( createMMI_G2S() ) )
         .anyTimes();
 
-    EasyMock.replay( mmiConcat, mmiAddInt, mmiAddGen, mmiGetLong );
+    MethodMatchingInfo mmiGetNull = EasyMock.createNiceMock( MethodMatchingInfo.class );
+    EasyMock.expect( mmiGetNull.getTarget() )
+        .andReturn( target.getDeclaredMethod( "getNull" ) )
+        .anyTimes();
+    EasyMock.expect( mmiGetNull.getSource() ).andReturn( source.getMethod( "getNull" ) )
+        .anyTimes();
+    EasyMock.expect( mmiGetNull.getReturnTypeMatchingInfo() )
+        .andReturn( createMMI_S2G() ).anyTimes();
+    EasyMock.expect( mmiGetNull.getArgumentTypeMatchingInfos() )
+        .andReturn( new HashMap<>() )
+        .anyTimes();
+
+    EasyMock.replay( mmiConcat, mmiAddInt, mmiAddGen, mmiGetLong, mmiGetNull );
 
     methodMatchingInfos.add( mmiConcat );
     methodMatchingInfos.add( mmiAddInt );
     methodMatchingInfos.add( mmiAddGen );
     methodMatchingInfos.add( mmiGetLong );
+    methodMatchingInfos.add( mmiGetNull );
 
     ModuleMatchingInfo moduleMatchingInfo = EasyMock.createNiceMock( ModuleMatchingInfo.class );
     EasyMock.expect( moduleMatchingInfo.getMethodMatchingInfos() ).andReturn( methodMatchingInfos ).anyTimes();
@@ -93,6 +106,9 @@ public class GenSpecSignatureMatchingTypeConverterTest {
     General world_5_44_Gen = new General( "world", 5, 44L );
     Specific hello_2_Spec = new Specific( "hello", 2 );
     Specific world_99_Spec = new Specific( "world", 99 );
+
+    // Test Method: getNull
+    assertThat( converted.getNull(), nullValue() );
 
     // Test Method: concat
     assertThat( converted.concat( hello_1_10_Gen, world_5_44_Gen ), equalTo( "helloworld" ) );
@@ -190,12 +206,25 @@ public class GenSpecSignatureMatchingTypeConverterTest {
         .andReturn( MatchingInfoTestUtil.createMMIMap( MatchingInfoTestUtil.createMMI_SameTypes( General.class ) ) )
         .anyTimes();
 
-    EasyMock.replay( mmiConcat, mmiAddInt, mmiAddGen, mmiGetLong );
+    MethodMatchingInfo mmiGetNull = EasyMock.createNiceMock( MethodMatchingInfo.class );
+    EasyMock.expect( mmiGetNull.getTarget() )
+        .andReturn( target.getDeclaredMethod( "getNull" ) )
+        .anyTimes();
+    EasyMock.expect( mmiGetNull.getSource() ).andReturn( source.getMethod( "getNull" ) )
+        .anyTimes();
+    EasyMock.expect( mmiGetNull.getReturnTypeMatchingInfo() )
+        .andReturn( MatchingInfoTestUtil.createMMI_SameTypes( General.class ) ).anyTimes();
+    EasyMock.expect( mmiGetNull.getArgumentTypeMatchingInfos() )
+        .andReturn( new HashMap<>() )
+        .anyTimes();
+
+    EasyMock.replay( mmiConcat, mmiAddInt, mmiAddGen, mmiGetLong, mmiGetNull );
 
     methodMatchingInfos.add( mmiConcat );
     methodMatchingInfos.add( mmiAddInt );
     methodMatchingInfos.add( mmiAddGen );
     methodMatchingInfos.add( mmiGetLong );
+    methodMatchingInfos.add( mmiGetNull );
 
     ModuleMatchingInfo moduleMatchingInfo = EasyMock.createNiceMock( ModuleMatchingInfo.class );
     EasyMock.expect( moduleMatchingInfo.getMethodMatchingInfos() ).andReturn( methodMatchingInfos ).anyTimes();
@@ -206,6 +235,9 @@ public class GenSpecSignatureMatchingTypeConverterTest {
     General world_5_44_Gen = new General( "world", 5, 44L );
     Specific hello_2_Spec = new Specific( "hello", 2 );
     Specific world_99_Spec = new Specific( "world", 99 );
+
+    // Test Method: getNull
+    assertThat( converted.getNull(), nullValue() );
 
     // Test Method: concat
     assertThat( converted.concat( hello_1_10_Gen, world_5_44_Gen ), equalTo( "helloworld" ) );
@@ -318,12 +350,25 @@ public class GenSpecSignatureMatchingTypeConverterTest {
             MatchingInfoTestUtil.createMMI_SameTypes( Boolean.class ) ) )
         .anyTimes();
 
-    EasyMock.replay( mmiConcat, mmiAddInt, mmiAddGen, mmiGetLong, mmiAnd );
+    MethodMatchingInfo mmiGetNull = EasyMock.createNiceMock( MethodMatchingInfo.class );
+    EasyMock.expect( mmiGetNull.getTarget() )
+        .andReturn( target.getDeclaredMethod( "getNull" ) )
+        .anyTimes();
+    EasyMock.expect( mmiGetNull.getSource() ).andReturn( source.getMethod( "getNull" ) )
+        .anyTimes();
+    EasyMock.expect( mmiGetNull.getReturnTypeMatchingInfo() )
+        .andReturn( MatchingInfoTestUtil.createMMI_SameTypes( Specific.class ) ).anyTimes();
+    EasyMock.expect( mmiGetNull.getArgumentTypeMatchingInfos() )
+        .andReturn( new HashMap<>() )
+        .anyTimes();
+
+    EasyMock.replay( mmiConcat, mmiAddInt, mmiAddGen, mmiGetLong, mmiGetNull, mmiAnd );
 
     methodMatchingInfos.add( mmiConcat );
     methodMatchingInfos.add( mmiAddInt );
     methodMatchingInfos.add( mmiAddGen );
     methodMatchingInfos.add( mmiGetLong );
+    methodMatchingInfos.add( mmiGetNull );
     methodMatchingInfos.add( mmiAnd );
 
     ModuleMatchingInfo moduleMatchingInfo = EasyMock.createNiceMock( ModuleMatchingInfo.class );
@@ -335,6 +380,9 @@ public class GenSpecSignatureMatchingTypeConverterTest {
     Specific world_true_Spec = new Specific( "world", true );
     Specific hello_2_false_Spec = new Specific( "hello", 2 );
     Specific world_99_false_Spec = new Specific( "world", 99 );
+
+    // Test Method: getNull
+    assertThat( converted.getNull(), nullValue() );
 
     // Test Method: concat
     assertThat( converted.concat( hello_true_Spec, world_true_Spec ), equalTo( "helloworld" ) );
@@ -421,13 +469,25 @@ public class GenSpecSignatureMatchingTypeConverterTest {
     EasyMock.expect( mmiGetLong.getArgumentTypeMatchingInfos() )
         .andReturn( MatchingInfoTestUtil.createMMIMap( createMMI_S2G() ) )
         .anyTimes();
+    MethodMatchingInfo mmiGetNull = EasyMock.createNiceMock( MethodMatchingInfo.class );
+    EasyMock.expect( mmiGetNull.getTarget() )
+        .andReturn( target.getDeclaredMethod( "getNull" ) )
+        .anyTimes();
+    EasyMock.expect( mmiGetNull.getSource() ).andReturn( source.getMethod( "getNull" ) )
+        .anyTimes();
+    EasyMock.expect( mmiGetNull.getReturnTypeMatchingInfo() )
+        .andReturn( createMMI_G2S() ).anyTimes();
+    EasyMock.expect( mmiGetNull.getArgumentTypeMatchingInfos() )
+        .andReturn( new HashMap<>() )
+        .anyTimes();
 
-    EasyMock.replay( mmiConcat, mmiAddInt, mmiAddGen, mmiGetLong );
+    EasyMock.replay( mmiConcat, mmiAddInt, mmiAddGen, mmiGetLong, mmiGetNull );
 
     methodMatchingInfos.add( mmiConcat );
     methodMatchingInfos.add( mmiAddInt );
     methodMatchingInfos.add( mmiAddGen );
     methodMatchingInfos.add( mmiGetLong );
+    methodMatchingInfos.add( mmiGetNull );
 
     ModuleMatchingInfo moduleMatchingInfo = EasyMock.createNiceMock( ModuleMatchingInfo.class );
     EasyMock.expect( moduleMatchingInfo.getMethodMatchingInfos() ).andReturn( methodMatchingInfos ).anyTimes();
@@ -438,6 +498,9 @@ public class GenSpecSignatureMatchingTypeConverterTest {
     Specific world_true_Spec = new Specific( "world", true );
     Specific hello_2_false_Spec = new Specific( "hello", 2 );
     Specific world_99_false_Spec = new Specific( "world", 99 );
+
+    // Test Method: getNull
+    assertThat( converted.getNull(), nullValue() );
 
     // Test Method: concat
     assertThat( converted.concat( hello_true_Spec, world_true_Spec ), equalTo( "helloworld" ) );

@@ -6,6 +6,8 @@ public interface InterfaceWrapper {
 
   Boolean getFalse();
 
+  Object getNull();
+
   Integer getOne();
 
 }
