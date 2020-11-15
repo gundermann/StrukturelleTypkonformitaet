@@ -16,10 +16,17 @@ public interface MinimalFoerderprogrammeProvider {
   // Versuch 2: diese Methode wurde zusätzlich deklariert => 24/885 relevanten Beans
   Foerderprogramm getFoerderprogramm( String fp, int jahr, Date date );
 
-  // Hiermit sollte versucht werden, den "whatever"-String in ein Datum umzuwandeln
+  // Versuch 3: diese Methode wurde zusätzlich deklariert => 1/885 relevanten Beans => Aber die Falsche!
+  // (FeldBlockZonenDAO)
+  // die Annahme, dass die Nummer einens Förderprogramms als int abgebildet wird, ist falsch.
+  // Idee: Matcher, der damit umgehen kann, dass primitive Typen in andere primitive Typen umgewandelt werden.
+  // Foerderprogramm getFoerderprogramm( int fp, int jahr, Date date );
+
+  // TODO Hiermit sollte versucht werden, den "whatever"-String in ein Datum umzuwandeln
   // Foerderprogramm getFoerderprogramm( String fp, int jahr, String whatever );
 
-  // auch denkbar, wenn dem Entwickler nicht bewusst ist, dass es eine technische Gültigkeit gibt. (ergänzen mit null)
+  // TODO auch denkbar, wenn dem Entwickler nicht bewusst ist, dass es eine technische Gültigkeit gibt. (ergänzen mit
+  // null)
   // Den dazugehörigen Matcher habe ich aber noch nicht implementiert.
   // Foerderprogramm getFoerderprogramm( String fp, int jahr );
 }
