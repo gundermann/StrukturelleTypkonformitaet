@@ -18,8 +18,13 @@ public class InterfaceProxyFactory<T> implements ProxyFactory<T> {
   public T createProxy( Object component, ModuleMatchingInfo matchingInfo ) {
     InvocationHandler invocationHandler = new BehaviourDelegateInvocationHandler( component, matchingInfo );
 
-    // TODO klï¿½ren, welcher Classloader in verteilten Systemen verwendet werden muss.
-    return (T) Proxy.newProxyInstance( ClassLoader.getSystemClassLoader(),
+    return (T) Proxy.newProxyInstance( this.getClass().getClassLoader(),
+
+        // ClassLoader.getSystemClassLoader(),
+        // Die Verwendung des SystemClassLoaders führt zum Fehler, wenn die targetStructure in dem Modul, in dem der
+        // Aufruf des Proxies initiiert wird, nicht bekannt ist.
+        // Exception in thread "main" java.lang.IllegalArgumentException: interface ... is not visible from class loader
+
         new Class<?>[] { targetStrcture }, invocationHandler );
   }
 
