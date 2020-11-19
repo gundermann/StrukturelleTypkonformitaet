@@ -33,6 +33,10 @@ public enum EJBContainer {
     }
   }
 
+  public void reset() {
+    containerMap.clear();
+  }
+
   private void init( List<String> beans ) {
     for ( String bean : beans ) {
       try {
