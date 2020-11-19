@@ -7,12 +7,11 @@ import static org.hamcrest.Matchers.notNullValue;
 import java.util.Collection;
 import java.util.Date;
 
-import org.junit.Test;
-
 import DE.data_experts.profi.profilcs.antrag2015.stammdaten.business.impl.Foerderprogramm;
 import DE.data_experts.profi.util.allg.DvFoerderprogramm;
 import de.fernuni.hagen.ma.gundermann.ejb.desiredinterfaces.MinimalFoerderprogrammeProvider;
 import tester.annotation.QueryTypeInstanceSetter;
+import tester.annotation.QueryTypeTest;
 
 public class MinimalFoerderprogrammProviderTest {
 
@@ -23,13 +22,13 @@ public class MinimalFoerderprogrammProviderTest {
     this.provider = provider;
   }
 
-  @Test
+  @QueryTypeTest
   public void testEmptyCollection() {
     Collection<String> alleFreigegebenenFPs = provider.getAlleFreigegebenenFPs();
     assertThat( alleFreigegebenenFPs, notNullValue() );
   }
 
-  @Test
+  @QueryTypeTest
   public void testGetFoerderprogramm() {
     String fpCode = "123";
     Foerderprogramm fp = provider.getFoerderprogramm( fpCode, 2015, new Date() );

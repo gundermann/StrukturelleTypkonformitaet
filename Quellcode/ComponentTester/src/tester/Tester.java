@@ -5,9 +5,8 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.junit.Test;
-
 import tester.annotation.QueryTypeInstanceSetter;
+import tester.annotation.QueryTypeTest;
 
 class Tester {
 
@@ -57,7 +56,7 @@ class Tester {
     Method[] declaredMethods = testClass.getDeclaredMethods();
     Collection<Method> testMethods = new ArrayList<>();
     for ( Method method : declaredMethods ) {
-      if ( method.getAnnotation( Test.class ) != null ) {
+      if ( method.getAnnotation( QueryTypeTest.class ) != null ) {
         testMethods.add( method );
       }
     }
