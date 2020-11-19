@@ -3,18 +3,17 @@ package de.fernuni.hagen.ma.gundermann.ejb;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import de.fernuni.hagen.ma.gundermann.ejb.util.Logger;
 
 public enum EJBContainer {
   CONTAINER;
 
-  Map<Class<?>, Collection<Object>> containerMap = new HashMap<>();
+  Map<Class<?>, Object> containerMap = new HashMap<>();
 
   private EJBContainer() {
     try {
@@ -43,24 +42,15 @@ public enum EJBContainer {
   }
 
   public <BI> void registerBean( Class<BI> beanInterface, BI bean ) {
-    containerMap.compute( beanInterface, ( key, value ) -> {
-      Collection<Object> localValue = new ArrayList<>();
-      if ( value != null ) {
-        localValue.addAll( value );
-      }
-      if ( bean != null ) {
-        localValue.add( bean );
-      }
-      return localValue;
-    } );
+    containerMap.put( beanInterface, bean );
   }
 
-  public Collection<?> getBeans( Class<?> componentClass ) {
-    return containerMap.get( componentClass );
+  public Optional<?> getOptBean( Class<?> componentClass ) {
+    return Optional.ofNullable( containerMap.get( componentClass ) );
   }
 
-  public Collection<Class<?>> getRegisteredBeanInterfaces() {
-    return containerMap.keySet();
+  public Class<?>[] getRegisteredBeanInterfaces() {
+    return containerMap.keySet().toArray( new Class[] {} );
   }
 
 }

@@ -16,7 +16,9 @@ public class FindMatchingEJBInterfaceTest {
   public void findFullMatchingElerFTFoerderprogrammeProvider() {
     Class<ElerFTFoerderprogrammeProvider> desiredInterface = ElerFTFoerderprogrammeProvider.class;
     EJBContainer.CONTAINER.registerBean( ElerFTStammdatenAuskunftService.class, new EftSTDAuskunftImpl() );
-    ElerFTFoerderprogrammeProvider desiredBean = new DesiredEJBFinder().getDesiredBean( desiredInterface );
+    ElerFTFoerderprogrammeProvider desiredBean = new DesiredEJBFinder(
+        EJBContainer.CONTAINER.getRegisteredBeanInterfaces(), EJBContainer.CONTAINER::getOptBean )
+            .getDesiredBean( desiredInterface );
     assertThat( desiredBean, notNullValue() );
   }
 
@@ -24,7 +26,8 @@ public class FindMatchingEJBInterfaceTest {
   public void findFullMatchingFoerderprogrammeProvider() {
     Class<FoerderprogrammeProvider> desiredInterface = FoerderprogrammeProvider.class;
     EJBContainer.CONTAINER.registerBean( ElerFTStammdatenAuskunftService.class, new EftSTDAuskunftImpl() );
-    FoerderprogrammeProvider desiredBean = new DesiredEJBFinder().getDesiredBean( desiredInterface );
+    FoerderprogrammeProvider desiredBean = new DesiredEJBFinder( EJBContainer.CONTAINER.getRegisteredBeanInterfaces(),
+        EJBContainer.CONTAINER::getOptBean ).getDesiredBean( desiredInterface );
     assertThat( desiredBean, notNullValue() );
   }
 

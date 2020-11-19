@@ -15,7 +15,9 @@ public class FindingMinimalFoerderprogrammeProviderTest {
   public void findFullMatchingMinimalFoerderprogrammeProvider() {
     Class<MinimalFoerderprogrammeProvider> desiredInterface = MinimalFoerderprogrammeProvider.class;
     EJBContainer.CONTAINER.registerBean( ElerFTStammdatenAuskunftService.class, new EftSTDAuskunftImpl() );
-    MinimalFoerderprogrammeProvider desiredBean = new DesiredEJBFinder().getDesiredBean( desiredInterface );
+    MinimalFoerderprogrammeProvider desiredBean = new DesiredEJBFinder(
+        EJBContainer.CONTAINER.getRegisteredBeanInterfaces(), EJBContainer.CONTAINER::getOptBean )
+            .getDesiredBean( desiredInterface );
     assertThat( desiredBean, notNullValue() );
   }
 }

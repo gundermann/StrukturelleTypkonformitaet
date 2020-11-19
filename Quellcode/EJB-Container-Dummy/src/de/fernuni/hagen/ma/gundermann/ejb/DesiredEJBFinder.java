@@ -5,10 +5,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import de.fernuni.hagen.ma.gundermann.ejb.util.Logger;
 import glue.SignatureMatchingTypeConverter;
 import matching.modules.ModuleMatcher;
 import matching.modules.ModuleMatchingInfo;
@@ -16,8 +17,18 @@ import tester.ComponentTester;
 
 public class DesiredEJBFinder {
 
-  private Collection<?> getBeans( Class<?> componentClass ) {
-    return EJBContainer.CONTAINER.getBeans( componentClass );
+  private final Class<?>[] beanInterfaces;
+
+  private final Function<Class<?>, Optional<?>> optBeanGetter;
+
+  public DesiredEJBFinder( Class<?>[] beanInterfaces, Function<Class<?>, Optional<?>> optBeanGetter ) {
+    this.beanInterfaces = beanInterfaces;
+    this.optBeanGetter = optBeanGetter;
+
+  }
+
+  private Optional<?> getBean( Class<?> componentClass ) {
+    return optBeanGetter.apply( componentClass );
   }
 
   public <DesiredInterface> DesiredInterface getDesiredBean(
@@ -25,7 +36,7 @@ public class DesiredEJBFinder {
     Collection<Class<?>> matchingBeanInterfaces = findBeansBySignatureMatching( desiredInterface );
     // Logger.info( "Matching Bean-Interfaces of " + desiredInterface.getName() );
     // matchingBeanInterfaces.stream().map( Class::getName ).forEach( System.out::println );
-    Logger.info( String.format( "count: %d", matchingBeanInterfaces.size() ) );
+    // Logger.info( String.format( "count: %d", matchingBeanInterfaces.size() ) );
 
     // Hier können weitere Filter und Heuristiken eingebaut werden
 
@@ -34,12 +45,12 @@ public class DesiredEJBFinder {
 
   private <DesiredInterface> DesiredInterface getComposedBean(
       Class<DesiredInterface> desiredInterface, Collection<Class<?>> matchingBeanInterfaces ) {
-    Logger.info( "create ComponentInfos" );
+    // Logger.info( "create ComponentInfos" );
     Set<ComponentInfos> rankedComponentInfos = getSortedModuleMatchingInfos( desiredInterface,
         matchingBeanInterfaces );
-    Logger.info( String.format( "ranking of relevant components" ) );
-    rankedComponentInfos.stream().forEach(
-        c -> Logger.info( String.format( "rank: %d component: %s", c.getRank(), c.getComponentClass().getName() ) ) );
+    // Logger.info( String.format( "ranking of relevant components" ) );
+    // rankedComponentInfos.stream().forEach(
+    // c -> Logger.info( String.format( "rank: %d component: %s", c.getRank(), c.getComponentClass().getName() ) ) );
     List<ComponentInfos> fullMatchedComponents = rankedComponentInfos.stream()
         .filter( c -> c.getRank() >= 100 // !!! Achtung: Das Ranking muss angepasst werden !!!
         ).collect( Collectors.toList() );
@@ -61,21 +72,24 @@ public class DesiredEJBFinder {
 
     for ( ComponentInfos componentInfo : fullMatchedComponents ) {
       Class<?> componentClass = componentInfo.getComponentClass();
-      Collection<?> components = getBeans( componentClass );
+      Optional<?> optComponent = getBean( componentClass );
 
+      if ( !optComponent.isPresent() ) {
+        continue;
+      }
+      Object component = optComponent.get();
       // TODO hier wäre eine Heuristik angebracht, welche die MatchingInfos der ComponentInfo in eine Reihenfolge
       // bringt.
       for ( ModuleMatchingInfo matchingInfo : componentInfo.getMatchingInfos() ) {
-        for ( Object component : components ) {
-          Logger.infoF( "test component: %s", component.getClass().getName() );
-          DesiredInterface convertedComponent = converter.convert( component, matchingInfo );
-          if ( componentTester.testComponent( convertedComponent ) ) {
-            return convertedComponent;
-          }
+        // Logger.infoF( "test component: %s", component.getClass().getName() );
+        DesiredInterface convertedComponent = converter.convert( component, matchingInfo );
+        if ( componentTester.testComponent( convertedComponent ) ) {
+          return convertedComponent;
         }
       }
     }
     return null;
+
   }
 
   private <DesiredInterface> Set<ComponentInfos> getSortedModuleMatchingInfos(
@@ -83,7 +97,7 @@ public class DesiredEJBFinder {
     List<ComponentInfos> componentInfoSet = new ArrayList<>();
     ModuleMatcher<DesiredInterface> moduleMatcher = new ModuleMatcher<>( desiredInterface );
     for ( Class<?> matchingBeanInterface : matchingBeanInterfaces ) {
-      Logger.info( String.format( "collect ModuleMatchingInfo: %s", matchingBeanInterface.getName() ) );
+      // Logger.info( String.format( "collect ModuleMatchingInfo: %s", matchingBeanInterface.getName() ) );
       Set<ModuleMatchingInfo> matchingInfos = moduleMatcher
           .calculateMatchingInfos( matchingBeanInterface );
       ComponentInfos componentInfos = new ComponentInfos( matchingBeanInterface );
@@ -91,8 +105,8 @@ public class DesiredEJBFinder {
       componentInfos.addContext( matchingBeanInterface.getName() );
       componentInfoSet.add( componentInfos );
     }
-    Logger.info( String.format( "ComponentInfos created: %d", componentInfoSet.size() ) );
-    Logger.info( "sort ComponentInfos" );
+    // Logger.info( String.format( "ComponentInfos created: %d", componentInfoSet.size() ) );
+    // Logger.info( "sort ComponentInfos" );
     Collections.sort( componentInfoSet, ( c1, c2 ) -> Integer.compare( c1.getRank(), c2.getRank() ) );
     return new HashSet<>( componentInfoSet );
   }
@@ -101,25 +115,25 @@ public class DesiredEJBFinder {
       Class<DesiredInterface> desiredInterface ) {
     ModuleMatcher<DesiredInterface> moduleMatcher = new ModuleMatcher<>( desiredInterface );
     Collection<Class<?>> matchedBeans = new ArrayList<>();
-    for ( Class<?> beanInterfaces : getRegisteredBeanInterfaces() ) {
+    for ( Class<?> beanInterface : getRegisteredBeanInterfaces() ) {
       // Dieser Code ist nur für das Debugging-Analyse notwendig
       // if ( beanInterfaces.equals( ElerFTStammdatenAuskunftService.class ) ) {
       // Logger.info( "BEAN OF INTEREST" );
       // }
-      boolean matchesFull = moduleMatcher.matches( beanInterfaces );
+      boolean matchesFull = moduleMatcher.matches( beanInterface );
       if ( !matchesFull ) {
         // boolean partlyMatches = moduleMatcher.partlyMatches( beanInterfaces );
         // if ( !partlyMatches ) {
         continue;
         // }
       }
-      matchedBeans.add( beanInterfaces );
+      matchedBeans.add( beanInterface );
     }
     return matchedBeans;
   }
 
-  private Collection<Class<?>> getRegisteredBeanInterfaces() {
-    return EJBContainer.CONTAINER.getRegisteredBeanInterfaces();
+  private Class<?>[] getRegisteredBeanInterfaces() {
+    return this.beanInterfaces;
   }
 
 }
