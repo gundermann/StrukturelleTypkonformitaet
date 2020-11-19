@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import de.fernuni.hagen.ma.gundermann.ejb.util.Logger;
 import glue.SignatureMatchingTypeConverter;
 import matching.modules.ModuleMatcher;
 import matching.modules.ModuleMatchingInfo;
@@ -33,10 +34,14 @@ public class DesiredEJBFinder {
 
   public <DesiredInterface> DesiredInterface getDesiredBean(
       Class<DesiredInterface> desiredInterface ) {
+
+    // TODO Matching-Method Heuristik: Zwischen den Matching-Methoden gibt es eine Rangfolge:
+    // Exact > ParamPerm + Exact > SpecGen > ParamPerm + SpecGen > Wrapped > ParamPerm + Wrapped
+    // In dieser Reihenfolge sollen passende Beans gefunden werden.
     Collection<Class<?>> matchingBeanInterfaces = findBeansBySignatureMatching( desiredInterface );
-    // Logger.info( "Matching Bean-Interfaces of " + desiredInterface.getName() );
+    Logger.info( "Matching Bean-Interfaces of " + desiredInterface.getName() );
     // matchingBeanInterfaces.stream().map( Class::getName ).forEach( System.out::println );
-    // Logger.info( String.format( "count: %d", matchingBeanInterfaces.size() ) );
+    Logger.info( String.format( "count: %d", matchingBeanInterfaces.size() ) );
 
     // Hier können weitere Filter und Heuristiken eingebaut werden
 
@@ -45,12 +50,12 @@ public class DesiredEJBFinder {
 
   private <DesiredInterface> DesiredInterface getComposedBean(
       Class<DesiredInterface> desiredInterface, Collection<Class<?>> matchingBeanInterfaces ) {
-    // Logger.info( "create ComponentInfos" );
+    Logger.info( "create ComponentInfos" );
     Set<ComponentInfos> rankedComponentInfos = getSortedModuleMatchingInfos( desiredInterface,
         matchingBeanInterfaces );
-    // Logger.info( String.format( "ranking of relevant components" ) );
-    // rankedComponentInfos.stream().forEach(
-    // c -> Logger.info( String.format( "rank: %d component: %s", c.getRank(), c.getComponentClass().getName() ) ) );
+    Logger.info( String.format( "ranking of relevant components" ) );
+    rankedComponentInfos.stream().forEach(
+        c -> Logger.info( String.format( "rank: %d component: %s", c.getRank(), c.getComponentClass().getName() ) ) );
     List<ComponentInfos> fullMatchedComponents = rankedComponentInfos.stream()
         .filter( c -> c.getRank() >= 100 // !!! Achtung: Das Ranking muss angepasst werden !!!
         ).collect( Collectors.toList() );
@@ -81,7 +86,7 @@ public class DesiredEJBFinder {
       // TODO hier wäre eine Heuristik angebracht, welche die MatchingInfos der ComponentInfo in eine Reihenfolge
       // bringt.
       for ( ModuleMatchingInfo matchingInfo : componentInfo.getMatchingInfos() ) {
-        // Logger.infoF( "test component: %s", component.getClass().getName() );
+        Logger.infoF( "test component: %s", component.getClass().getName() );
         DesiredInterface convertedComponent = converter.convert( component, matchingInfo );
         if ( componentTester.testComponent( convertedComponent ) ) {
           return convertedComponent;
@@ -97,7 +102,7 @@ public class DesiredEJBFinder {
     List<ComponentInfos> componentInfoSet = new ArrayList<>();
     ModuleMatcher<DesiredInterface> moduleMatcher = new ModuleMatcher<>( desiredInterface );
     for ( Class<?> matchingBeanInterface : matchingBeanInterfaces ) {
-      // Logger.info( String.format( "collect ModuleMatchingInfo: %s", matchingBeanInterface.getName() ) );
+      Logger.info( String.format( "collect ModuleMatchingInfo: %s", matchingBeanInterface.getName() ) );
       Set<ModuleMatchingInfo> matchingInfos = moduleMatcher
           .calculateMatchingInfos( matchingBeanInterface );
       ComponentInfos componentInfos = new ComponentInfos( matchingBeanInterface );
@@ -105,8 +110,8 @@ public class DesiredEJBFinder {
       componentInfos.addContext( matchingBeanInterface.getName() );
       componentInfoSet.add( componentInfos );
     }
-    // Logger.info( String.format( "ComponentInfos created: %d", componentInfoSet.size() ) );
-    // Logger.info( "sort ComponentInfos" );
+    Logger.info( String.format( "ComponentInfos created: %d", componentInfoSet.size() ) );
+    Logger.info( "sort ComponentInfos" );
     Collections.sort( componentInfoSet, ( c1, c2 ) -> Integer.compare( c1.getRank(), c2.getRank() ) );
     return new HashSet<>( componentInfoSet );
   }
