@@ -17,6 +17,8 @@ import matching.methods.MethodMatcher;
 import matching.modules.ModuleMatcher;
 import matching.modules.ModuleMatchingInfo;
 import tester.ComponentTester;
+import tester.TestResult;
+import tester.TestResult.Result;
 
 public class DesiredComponentFinder {
 
@@ -135,7 +137,9 @@ public class DesiredComponentFinder {
       for ( ModuleMatchingInfo matchingInfo : componentInfo.getMatchingInfos() ) {
         Logger.infoF( "test component: %s", component.getClass().getName() );
         DesiredInterface convertedComponent = converter.convert( component, matchingInfo );
-        if ( componentTester.testComponent( convertedComponent ) ) {
+        TestResult testResult = componentTester.testComponent( convertedComponent );
+        Logger.infoF( "passed tests: %d/%d", testResult.getPassedTests(), testResult.getTestCount() );
+        if ( testResult.getResult() == Result.PASSED ) {
           return convertedComponent;
         }
       }

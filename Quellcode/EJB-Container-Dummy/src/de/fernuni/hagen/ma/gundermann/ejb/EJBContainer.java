@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import de.fernuni.hagen.ma.gundermann.ejb.util.Logger;
-
 public enum EJBContainer {
   CONTAINER;
 
@@ -35,10 +33,10 @@ public enum EJBContainer {
         registerBean( loadedInterface, null );
       }
       catch ( ClassNotFoundException cnfe ) {
-        Logger.info( String.format( "class not found %s", bean ) );
+        // Logger.info( String.format( "class not found %s", bean ) );
       }
     }
-    Logger.info( String.format( "registeres bean interfaces: %d", containerMap.keySet().size() ) );
+    // Logger.info( String.format( "registeres bean interfaces: %d", containerMap.keySet().size() ) );
   }
 
   public <BI> void registerBean( Class<BI> beanInterface, BI bean ) {
