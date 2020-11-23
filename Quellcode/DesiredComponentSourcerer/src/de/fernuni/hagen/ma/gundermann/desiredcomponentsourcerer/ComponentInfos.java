@@ -1,4 +1,4 @@
-package de.fernuni.hagen.ma.gundermann.ejb;
+package de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -1,4 +1,4 @@
-package de.fernuni.hagen.ma.gundermann.ejb;
+package de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,45 +10,92 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import de.fernuni.hagen.ma.gundermann.ejb.util.Logger;
+import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.MethodMatcherHeuristic;
+import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.Logger;
 import glue.SignatureMatchingTypeConverter;
+import matching.methods.MethodMatcher;
 import matching.modules.ModuleMatcher;
 import matching.modules.ModuleMatchingInfo;
 import tester.ComponentTester;
 
-public class DesiredEJBFinder {
+public class DesiredComponentFinder {
 
-  private final Class<?>[] beanInterfaces;
+  private static final MethodMatcher[] METHOD_MATCHERS = MethodMatcherHeuristic.getMethodMatcher();
 
-  private final Function<Class<?>, Optional<?>> optBeanGetter;
+  private final Class<?>[] registeredComponentInterfaces;
 
-  public DesiredEJBFinder( Class<?>[] beanInterfaces, Function<Class<?>, Optional<?>> optBeanGetter ) {
-    this.beanInterfaces = beanInterfaces;
-    this.optBeanGetter = optBeanGetter;
+  private final Function<Class<?>, Optional<?>> optComponentGetter;
+
+  public DesiredComponentFinder( Class<?>[] registeredCompoentInterfaces,
+      Function<Class<?>, Optional<?>> optComponentGetter ) {
+    this.registeredComponentInterfaces = registeredCompoentInterfaces;
+    this.optComponentGetter = optComponentGetter;
 
   }
 
-  private Optional<?> getBean( Class<?> componentClass ) {
-    return optBeanGetter.apply( componentClass );
+  private Optional<?> getComponent( Class<?> componentClass ) {
+    return optComponentGetter.apply( componentClass );
   }
 
-  public <DesiredInterface> DesiredInterface getDesiredBean(
+  public <DesiredInterface> DesiredInterface getDesiredComponent(
       Class<DesiredInterface> desiredInterface ) {
 
     // TODO Matching-Method Heuristik: Zwischen den Matching-Methoden gibt es eine Rangfolge:
-    // Exact > ParamPerm + Exact > SpecGen > ParamPerm + SpecGen > Wrapped > ParamPerm + Wrapped
-    // In dieser Reihenfolge sollen passende Beans gefunden werden.
-    Collection<Class<?>> matchingBeanInterfaces = findBeansBySignatureMatching( desiredInterface );
-    Logger.info( "Matching Bean-Interfaces of " + desiredInterface.getName() );
-    // matchingBeanInterfaces.stream().map( Class::getName ).forEach( System.out::println );
-    Logger.info( String.format( "count: %d", matchingBeanInterfaces.size() ) );
+    for ( int i = 0; i < METHOD_MATCHERS.length; i++ ) {
+      Optional<DesiredInterface> optDesiredBean = findDesiredComponentByMatcher( desiredInterface,
+          METHOD_MATCHERS[i] );
+      if ( optDesiredBean.isPresent() ) {
+        Logger.info( "component found" );
+        return optDesiredBean.get();
+      }
+      Logger.info( "component not found" );
+    }
+    return null;
+
+    // Das ist dasselbe wie findDesiredComponentByMatcher( desiredInterface, new CombinedMethodMatcher());
+    // Collection<Class<?>> matchingBeanInterfaces = findComponentsBySignatureMatching( desiredInterface );
+    // Logger.info( "Matching Bean-Interfaces of " + desiredInterface.getName() );
+    // // matchingBeanInterfaces.stream().map( Class::getName ).forEach( System.out::println );
+    // Logger.info( String.format( "count: %d", matchingBeanInterfaces.size() ) );
 
     // Hier können weitere Filter und Heuristiken eingebaut werden
 
-    return getComposedBean( desiredInterface, matchingBeanInterfaces );
+    // return getComposedComponent( desiredInterface, matchingBeanInterfaces );
   }
 
-  private <DesiredInterface> DesiredInterface getComposedBean(
+  private <DesiredInterface> Optional<DesiredInterface> findDesiredComponentByMatcher(
+      Class<DesiredInterface> desiredInterface, MethodMatcher methodMatcher ) {
+    Logger.infoF( "start search with matcher: %s", methodMatcher.getClass().getSimpleName() );
+    Collection<Class<?>> matchingBeanInterfaces = findMatchingComponentInterfaces( desiredInterface, methodMatcher );
+    Optional<DesiredInterface> result = Optional
+        .ofNullable( getComposedComponent( desiredInterface, matchingBeanInterfaces ) );
+    Logger.infoF( "finish search with matcher: %s", methodMatcher.getClass().getSimpleName() );
+    return result;
+  }
+
+  private <DesiredInterface> Collection<Class<?>> findMatchingComponentInterfaces(
+      Class<DesiredInterface> desiredInterface,
+      MethodMatcher methodMatcher ) {
+    ModuleMatcher<DesiredInterface> moduleMatcher = new ModuleMatcher<>( desiredInterface, methodMatcher );
+    Collection<Class<?>> matchedBeans = new ArrayList<>();
+    for ( Class<?> beanInterface : getRegisteredComponentInterfaces() ) {
+      // Dieser Code ist nur für das Debugging-Analyse notwendig
+      // if ( Arrays.asList( beanInterfaces ).contains( ElerFTStammdatenAuskunftService.class ) ) {
+      // Logger.info( "BEAN OF INTEREST" );
+      // }
+      boolean matchesFull = moduleMatcher.matches( beanInterface );
+      if ( !matchesFull ) {
+        // boolean partlyMatches = moduleMatcher.partlyMatches( beanInterfaces );
+        // if ( !partlyMatches ) {
+        continue;
+        // }
+      }
+      matchedBeans.add( beanInterface );
+    }
+    return matchedBeans;
+  }
+
+  private <DesiredInterface> DesiredInterface getComposedComponent(
       Class<DesiredInterface> desiredInterface, Collection<Class<?>> matchingBeanInterfaces ) {
     Logger.info( "create ComponentInfos" );
     Set<ComponentInfos> rankedComponentInfos = getSortedModuleMatchingInfos( desiredInterface,
@@ -77,7 +124,7 @@ public class DesiredEJBFinder {
 
     for ( ComponentInfos componentInfo : fullMatchedComponents ) {
       Class<?> componentClass = componentInfo.getComponentClass();
-      Optional<?> optComponent = getBean( componentClass );
+      Optional<?> optComponent = getComponent( componentClass );
 
       if ( !optComponent.isPresent() ) {
         continue;
@@ -116,11 +163,11 @@ public class DesiredEJBFinder {
     return new HashSet<>( componentInfoSet );
   }
 
-  private <DesiredInterface> Collection<Class<?>> findBeansBySignatureMatching(
+  private <DesiredInterface> Collection<Class<?>> findComponentsBySignatureMatching(
       Class<DesiredInterface> desiredInterface ) {
     ModuleMatcher<DesiredInterface> moduleMatcher = new ModuleMatcher<>( desiredInterface );
     Collection<Class<?>> matchedBeans = new ArrayList<>();
-    for ( Class<?> beanInterface : getRegisteredBeanInterfaces() ) {
+    for ( Class<?> beanInterface : getRegisteredComponentInterfaces() ) {
       // Dieser Code ist nur für das Debugging-Analyse notwendig
       // if ( beanInterfaces.equals( ElerFTStammdatenAuskunftService.class ) ) {
       // Logger.info( "BEAN OF INTEREST" );
@@ -137,8 +184,8 @@ public class DesiredEJBFinder {
     return matchedBeans;
   }
 
-  private Class<?>[] getRegisteredBeanInterfaces() {
-    return this.beanInterfaces;
+  private Class<?>[] getRegisteredComponentInterfaces() {
+    return this.registeredComponentInterfaces;
   }
 
 }
