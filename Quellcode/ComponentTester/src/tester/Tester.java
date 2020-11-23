@@ -10,7 +10,8 @@ import tester.annotation.QueryTypeTest;
 
 class Tester {
 
-  boolean testComponent( Object component, Collection<Class<?>> testClasses ) {
+  TestResult testComponent( Object component, Collection<Class<?>> testClasses ) {
+    TestResult testResult = new TestResult();
     for ( Class<?> testClass : testClasses ) {
       try {
         Object testInstance = testClass.newInstance();
@@ -21,33 +22,39 @@ class Tester {
         }
         setter.setAccessible( true );
         setter.invoke( testInstance, component );
-        invokeTests( testInstance );
+        invokeTests( testInstance, testResult );
       }
       catch ( InstantiationException | IllegalAccessException | IllegalArgumentException e ) {
         e.printStackTrace();
-        return false;
+        testResult.canceled();
+        return testResult;
       }
       catch ( InvocationTargetException ite ) {
         Throwable targetException = ite.getTargetException();
         if ( targetException.getClass().equals( AssertionError.class ) ) {
           System.out.println( String.format( "TEST FAILED: %s", targetException.getMessage() ) );
-          return false;
+          testResult.failed();
+          return testResult;
         }
         ite.printStackTrace();
-        return false;
+        testResult.canceled();
+        return testResult;
       }
     }
     System.out.println( String.format( "TEST PASSED" ) );
-    return true;
+    testResult.passed();
+    return testResult;
   }
 
-  private void invokeTests( Object testInstance )
+  private void invokeTests( Object testInstance, TestResult testResult )
       throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, AssertionError {
     Method[] testMethods = findTestMethods( testInstance.getClass() );
+    testResult.addTests( testMethods.length );
     int counter = 1;
     for ( Method test : testMethods ) {
       test.setAccessible( true );
       test.invoke( testInstance );
+      testResult.incrementPassedTests();
       System.out.println( String.format( "Test passed: %d/%d", counter++, testMethods.length ) );
     }
   }

@@ -5,9 +5,8 @@ import static org.junit.Assert.assertThat;
 
 import java.math.BigInteger;
 
-import org.junit.Test;
-
 import tester.annotation.QueryTypeInstanceSetter;
+import tester.annotation.QueryTypeTest;
 import tester.querytypes.Interface1;
 
 public class Interface1Test2 {
@@ -19,22 +18,22 @@ public class Interface1Test2 {
     this.testInterface = i;
   }
 
-  @Test
+  @QueryTypeTest
   void addPartlyNativeWrapped() {
     assertThat( testInterface.addPartlyNativeWrapped( 1, 1 ), equalTo( 2 ) );
   }
 
-  @Test
+  @QueryTypeTest
   void subPartlyNativeWrapped() {
     assertThat( testInterface.subPartlyNativeWrapped( 3, 1 ), equalTo( 2 ) );
   }
 
-  @Test
+  @QueryTypeTest
   void addPartlyWrapped() {
     assertThat( testInterface.addPartlyWrapped( BigInteger.ONE, 1 ), equalTo( 2 ) );
   }
 
-  @Test
+  @QueryTypeTest
   void subPartlyWrapped() {
     assertThat( testInterface.subPartlyWrapped( 3, BigInteger.ONE ), equalTo( 2 ) );
   }

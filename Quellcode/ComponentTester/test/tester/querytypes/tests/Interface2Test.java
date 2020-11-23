@@ -3,9 +3,8 @@ package tester.querytypes.tests;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
-import org.junit.Test;
-
 import tester.annotation.QueryTypeInstanceSetter;
+import tester.annotation.QueryTypeTest;
 import tester.querytypes.Interface2;
 
 public class Interface2Test {
@@ -17,17 +16,17 @@ public class Interface2Test {
     this.testInterface = i;
   }
 
-  @Test
+  @QueryTypeTest
   void getOne() {
     assertThat( testInterface.getOne(), equalTo( 1 ) );
   }
 
-  @Test
+  @QueryTypeTest
   void getTrue() {
     assertThat( testInterface.getTrue(), equalTo( true ) );
   }
 
-  @Test
+  @QueryTypeTest
   void getFalse() {
     assertThat( testInterface.getFalse(), equalTo( false ) );
   }
