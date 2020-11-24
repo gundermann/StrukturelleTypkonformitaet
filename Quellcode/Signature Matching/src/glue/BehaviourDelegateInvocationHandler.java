@@ -1,6 +1,5 @@
 package glue;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -34,7 +33,7 @@ public class BehaviourDelegateInvocationHandler implements MethodInterceptor, In
     }
 
     // Default-Methode
-    if ( matchingInfos.getTargetDelegateAttribute() == null ) {
+    if ( matchingInfos.getTargetDelegate() == null ) {
       return method.invoke( component, args );
     }
     return methodProxy.invokeSuper( callObject, args );
@@ -113,29 +112,17 @@ public class BehaviourDelegateInvocationHandler implements MethodInterceptor, In
     // Wenn das zu konvertierende Objekt null ist, dann kann dies auch gleich zurückgegeben werden, da null-Objekte
     // keinen speziellen Typ haben
     if ( sourceType == null || moduleMatchingInfo.getMethodMatchingInfos().isEmpty()
-        && moduleMatchingInfo.getTargetDelegateAttribute() == null
-        && moduleMatchingInfo.getSourceDelegateAttribute() == null ) {
+        && moduleMatchingInfo.getTargetDelegate() == null
+        && moduleMatchingInfo.getSourceDelegate() == null ) {
       return (RT) sourceType;
     }
-    Object source = getSourceRefFromModuleMatchingInfo( sourceType, moduleMatchingInfo );
+
+    Object source = sourceType;
+    if ( moduleMatchingInfo.getSourceDelegate() != null ) {
+      source = moduleMatchingInfo.getSourceDelegate().apply( sourceType );
+    }
     return new SignatureMatchingTypeConverter<>( (Class<RT>) moduleMatchingInfo.getTarget() ).convert( source,
         moduleMatchingInfo );
-  }
-
-  private Object getSourceRefFromModuleMatchingInfo( Object type, ModuleMatchingInfo moduleMatchingInfo ) {
-    if ( moduleMatchingInfo.getSourceDelegateAttribute() == null ) {
-      return type;
-    }
-    try {
-      Field sourceField = moduleMatchingInfo.getSource()
-          .getDeclaredField( moduleMatchingInfo.getSourceDelegateAttribute() );
-      sourceField.setAccessible( true );
-      return sourceField.get( type );
-    }
-    catch ( NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e ) {
-      e.printStackTrace();
-      return null;
-    }
   }
 
   private Optional<MethodMatchingInfo> getMethodMatchingInfo( Method method ) {

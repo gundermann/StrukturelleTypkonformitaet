@@ -1,7 +1,5 @@
 package glue;
 
-import java.lang.reflect.Field;
-
 import org.objenesis.Objenesis;
 import org.objenesis.ObjenesisStd;
 import org.objenesis.instantiator.ObjectInstantiator;
@@ -11,7 +9,6 @@ import net.sf.cglib.proxy.Callback;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.Factory;
 import net.sf.cglib.proxy.MethodInterceptor;
-import util.Logger;
 
 public class ClassProxyFactory<T> implements ProxyFactory<T> {
 
@@ -40,44 +37,47 @@ public class ClassProxyFactory<T> implements ProxyFactory<T> {
     Object proxyInstance = instantiator.newInstance();
     ( (Factory) proxyInstance ).setCallbacks( new Callback[] { methodInterceptor } );
 
-    if ( matchingInfo.getTargetDelegateAttribute() != null ) {
+    if ( matchingInfo.getTargetDelegate() != null ) {
+      matchingInfo.getTargetDelegate().apply( proxyInstance, component );
+
       // es handelt sich um einen Wrapper, der die übergebene component enthalten muss
       // da cglib keine Felder in Klassen erzeugen kann, ist das entsprechende Feld für die componente in den
       // Oberklassen zu suchen.
-      try {
-        Field wrappedField = getDeclaredFieldOfClassHierachry( proxyInstance.getClass(),
-            matchingInfo.getTargetDelegateAttribute() );
-        if ( wrappedField == null ) {
-          logFieldError( matchingInfo.getTargetDelegateAttribute(), targetStrcture.getName() );
-        }
-        wrappedField.setAccessible( true );
-        wrappedField.set( proxyInstance, component );
-      }
-      catch ( IllegalArgumentException | IllegalAccessException e ) {
-        logFieldError( matchingInfo.getTargetDelegateAttribute(), targetStrcture.getName() );
-      }
+      //
+      // try {
+      // Field wrappedField = getDeclaredFieldOfClassHierachry( proxyInstance.getClass(),
+      // matchingInfo.getTargetDelegateAttribute() );
+      // if ( wrappedField == null ) {
+      // logFieldError( matchingInfo.getTargetDelegateAttribute(), targetStrcture.getName() );
+      // }
+      // wrappedField.setAccessible( true );
+      // wrappedField.set( proxyInstance, component );
+      // }
+      // catch ( IllegalArgumentException | IllegalAccessException e ) {
+      // logFieldError( matchingInfo.getTargetDelegateAttribute(), targetStrcture.getName() );
+      // }
     }
     return (T) proxyInstance;
   }
 
-  private void logFieldError( String fieldname, String classname ) {
-    Logger.err( String.format( "field %s not found in class hierarchy of %s",
-        fieldname, classname ) );
-  }
-
-  private Field getDeclaredFieldOfClassHierachry( Class<? extends Object> startClass,
-      String fieldName ) {
-    Field declaredField = null;
-    try {
-      declaredField = startClass.getDeclaredField( fieldName );
-    }
-    catch ( NoSuchFieldException | SecurityException e ) {
-      if ( startClass.getSuperclass() != null ) {
-        return getDeclaredFieldOfClassHierachry( startClass.getSuperclass(), fieldName );
-      }
-    }
-    return declaredField;
-
-  }
+  // private void logFieldError( String fieldname, String classname ) {
+  // Logger.err( String.format( "field %s not found in class hierarchy of %s",
+  // fieldname, classname ) );
+  // }
+  //
+  // private Field getDeclaredFieldOfClassHierachry( Class<? extends Object> startClass,
+  // String fieldName ) {
+  // Field declaredField = null;
+  // try {
+  // declaredField = startClass.getDeclaredField( fieldName );
+  // }
+  // catch ( NoSuchFieldException | SecurityException e ) {
+  // if ( startClass.getSuperclass() != null ) {
+  // return getDeclaredFieldOfClassHierachry( startClass.getSuperclass(), fieldName );
+  // }
+  // }
+  // return declaredField;
+  //
+  // }
 
 }

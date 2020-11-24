@@ -51,6 +51,9 @@ public class EftSTDAuskunftImpl implements ElerFTStammdatenAuskunftService {
 
   @Override
   public ElerFTFoerderprogramm getFoerderprogramm( DvAntragsJahr jahr, DvFoerderprogramm fp, Date date ) {
+    if ( fp.getNummer() == 215L ) {
+      return null;
+    }
     ElerFTFoerderprogramm fpMock = EasyMock.createNiceMock( ElerFTFoerderprogramm.class );
     EasyMock.expect( fpMock.getFoerderprogramm() ).andReturn( fp ).anyTimes();
     EasyMock.replay( fpMock );

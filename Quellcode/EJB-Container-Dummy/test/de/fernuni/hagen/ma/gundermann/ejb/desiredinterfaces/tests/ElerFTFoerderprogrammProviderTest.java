@@ -35,6 +35,7 @@ public class ElerFTFoerderprogrammProviderTest {
   @QueryTypeTest
   public void testMockedFPCollection() {
     DvFoerderprogramm fp = EasyMock.createNiceMock( DvFoerderprogramm.class );
+    EasyMock.expect( fp.getNummer() ).andReturn( 800L ).anyTimes();
     EasyMock.replay( fp );
     ElerFTFoerderprogramm alleFreigegebenenFPs = provider.getElerFTFoerderprogramm( DvAntragsJahr.AJ2020,
         fp, new Date() );

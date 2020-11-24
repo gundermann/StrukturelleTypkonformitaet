@@ -38,9 +38,9 @@ public class WrappedTypeMethodMatcherMatchingInfosTest {
       ModuleMatchingInfo rtInfo = info.getReturnTypeMatchingInfo();
       assertThat( rtInfo, notNullValue() );
       assertThat( rtInfo.getSource(), equalTo( checkMethod.getReturnType() ) );
-      assertThat( rtInfo.getSourceDelegateAttribute(), nullValue() );
+      assertThat( rtInfo.getSourceDelegate(), nullValue() );
       assertThat( rtInfo.getTarget(), equalTo( queryMethod.getReturnType() ) );
-      assertThat( rtInfo.getTargetDelegateAttribute(), nullValue() );
+      assertThat( rtInfo.getTargetDelegate(), nullValue() );
 
       assertThat( info.getArgumentTypeMatchingInfos(), notNullValue() );
       assertThat( info.getArgumentTypeMatchingInfos().size(), equalTo( 0 ) );
@@ -58,9 +58,9 @@ public class WrappedTypeMethodMatcherMatchingInfosTest {
       ModuleMatchingInfo rtInfo = info.getReturnTypeMatchingInfo();
       assertThat( rtInfo, notNullValue() );
       assertThat( rtInfo.getSource(), equalTo( checkMethod.getReturnType() ) );
-      assertThat( rtInfo.getSourceDelegateAttribute(), nullValue() );
+      assertThat( rtInfo.getSourceDelegate(), nullValue() );
       assertThat( rtInfo.getTarget(), equalTo( queryMethod.getReturnType() ) );
-      assertThat( rtInfo.getTargetDelegateAttribute(), nullValue() );
+      assertThat( rtInfo.getTargetDelegate(), nullValue() );
 
       assertThat( info.getArgumentTypeMatchingInfos(), notNullValue() );
       assertThat( info.getArgumentTypeMatchingInfos().size(), equalTo( 0 ) );
@@ -90,12 +90,11 @@ public class WrappedTypeMethodMatcherMatchingInfosTest {
       assertThat( rtMatchingInfo, notNullValue() );
       assertThat( rtMatchingInfo.getSource(), notNullValue() );
       assertThat( rtMatchingInfo.getSource(), equalTo( Integer.class ) );
-      assertThat( rtMatchingInfo.getSourceDelegateAttribute(), notNullValue() );
-      assertThat( rtMatchingInfo.getSourceDelegateAttribute(), equalTo( "value" ) );
+      assertThat( rtMatchingInfo.getSourceDelegate(), notNullValue() );
 
       assertThat( rtMatchingInfo.getTarget(), notNullValue() );
       assertThat( rtMatchingInfo.getTarget(), equalTo( int.class ) );
-      assertThat( rtMatchingInfo.getTargetDelegateAttribute(), nullValue() );
+      assertThat( rtMatchingInfo.getTargetDelegate(), nullValue() );
 
       Collection<MethodMatchingInfo> rtMethodMI = rtMatchingInfo.getMethodMatchingInfos();
       assertThat( rtMethodMI, notNullValue() );
@@ -120,12 +119,11 @@ public class WrappedTypeMethodMatcherMatchingInfosTest {
       assertThat( rtMatchingInfo, notNullValue() );
       assertThat( rtMatchingInfo.getTarget(), notNullValue() );
       assertThat( rtMatchingInfo.getTarget(), equalTo( Integer.class ) );
-      assertThat( rtMatchingInfo.getTargetDelegateAttribute(), notNullValue() );
-      assertThat( rtMatchingInfo.getTargetDelegateAttribute(), equalTo( "value" ) );
+      assertThat( rtMatchingInfo.getTargetDelegate(), notNullValue() );
 
       assertThat( rtMatchingInfo.getSource(), notNullValue() );
       assertThat( rtMatchingInfo.getSource(), equalTo( int.class ) );
-      assertThat( rtMatchingInfo.getSourceDelegateAttribute(), nullValue() );
+      assertThat( rtMatchingInfo.getSourceDelegate(), nullValue() );
 
       Collection<MethodMatchingInfo> rtMethodMI = rtMatchingInfo.getMethodMatchingInfos();
       assertThat( rtMethodMI, notNullValue() );
@@ -150,11 +148,11 @@ public class WrappedTypeMethodMatcherMatchingInfosTest {
       assertThat( rtMatchingInfo, notNullValue() );
       assertThat( rtMatchingInfo.getSource(), notNullValue() );
       assertThat( rtMatchingInfo.getSource(), equalTo( void.class ) );
-      assertThat( rtMatchingInfo.getSourceDelegateAttribute(), nullValue() );
+      assertThat( rtMatchingInfo.getSourceDelegate(), nullValue() );
 
       assertThat( rtMatchingInfo.getTarget(), notNullValue() );
       assertThat( rtMatchingInfo.getTarget(), equalTo( void.class ) );
-      assertThat( rtMatchingInfo.getTargetDelegateAttribute(), nullValue() );
+      assertThat( rtMatchingInfo.getTargetDelegate(), nullValue() );
 
       Collection<MethodMatchingInfo> rtMethodMI = rtMatchingInfo.getMethodMatchingInfos();
       assertThat( rtMethodMI, notNullValue() );
@@ -166,10 +164,9 @@ public class WrappedTypeMethodMatcherMatchingInfosTest {
       for ( ModuleMatchingInfo argMMI : argumentTypeMatchingInfos.values() ) {
         assertThat( argMMI, notNullValue() );
         assertThat( argMMI.getSource(), notNullValue() );
-        assertThat( argMMI.getSourceDelegateAttribute(), nullValue() );
+        assertThat( argMMI.getSourceDelegate(), nullValue() );
         assertThat( argMMI.getTarget(), notNullValue() );
-        assertThat( argMMI.getTargetDelegateAttribute(), notNullValue() );
-        assertThat( argMMI.getTargetDelegateAttribute(), equalTo( "value" ) );
+        assertThat( argMMI.getTargetDelegate(), notNullValue() );
         Collection<MethodMatchingInfo> argMethodMI = argMMI.getMethodMatchingInfos();
         assertThat( argMethodMI, notNullValue() );
         assertThat( argMethodMI.size(), equalTo( 0 ) ); // Denn die Typen sind identisch
@@ -188,9 +185,9 @@ public class WrappedTypeMethodMatcherMatchingInfosTest {
       ModuleMatchingInfo rtInfo = info.getReturnTypeMatchingInfo();
       assertThat( rtInfo, notNullValue() );
       assertThat( rtInfo.getSource(), equalTo( checkMethod.getReturnType() ) );
-      assertThat( rtInfo.getSourceDelegateAttribute(), nullValue() );
+      assertThat( rtInfo.getSourceDelegate(), nullValue() );
       assertThat( rtInfo.getTarget(), equalTo( queryMethod.getReturnType() ) );
-      assertThat( rtInfo.getTargetDelegateAttribute(), nullValue() );
+      assertThat( rtInfo.getTargetDelegate(), nullValue() );
 
       Map<ParamPosition, ModuleMatchingInfo> argInfos = info.getArgumentTypeMatchingInfos();
       assertThat( argInfos, notNullValue() );
@@ -216,9 +213,9 @@ public class WrappedTypeMethodMatcherMatchingInfosTest {
       ModuleMatchingInfo rtInfo = info.getReturnTypeMatchingInfo();
       assertThat( rtInfo, notNullValue() );
       assertThat( rtInfo.getSource(), equalTo( checkMethod.getReturnType() ) );
-      assertThat( rtInfo.getSourceDelegateAttribute(), nullValue() );
+      assertThat( rtInfo.getSourceDelegate(), nullValue() );
       assertThat( rtInfo.getTarget(), equalTo( queryMethod.getReturnType() ) );
-      assertThat( rtInfo.getTargetDelegateAttribute(), nullValue() );
+      assertThat( rtInfo.getTargetDelegate(), nullValue() );
 
       Map<ParamPosition, ModuleMatchingInfo> argInfos = info.getArgumentTypeMatchingInfos();
       assertThat( argInfos, notNullValue() );
@@ -247,11 +244,12 @@ public class WrappedTypeMethodMatcherMatchingInfosTest {
       assertThat( rtMatchingInfo, notNullValue() );
       assertThat( rtMatchingInfo.getSource(), notNullValue() );
       assertThat( rtMatchingInfo.getSource(), equalTo( int.class ) );
-      assertThat( rtMatchingInfo.getSourceDelegateAttribute(), nullValue() );
+      assertThat( rtMatchingInfo.getSourceDelegate(), nullValue() );
+      assertThat( rtMatchingInfo.getSourceDelegate(), nullValue() );
 
       assertThat( rtMatchingInfo.getTarget(), notNullValue() );
       assertThat( rtMatchingInfo.getTarget(), equalTo( int.class ) );
-      assertThat( rtMatchingInfo.getTargetDelegateAttribute(), nullValue() );
+      assertThat( rtMatchingInfo.getTargetDelegate(), nullValue() );
 
       Collection<MethodMatchingInfo> rtMethodMI = rtMatchingInfo.getMethodMatchingInfos();
       assertThat( rtMethodMI, notNullValue() );
@@ -266,15 +264,14 @@ public class WrappedTypeMethodMatcherMatchingInfosTest {
         assertThat( argMMI.getTarget(), notNullValue() );
         if ( argMMI.getSource().equals( int.class ) ) {
           // wrapped
-          assertThat( argMMI.getSourceDelegateAttribute(), nullValue() );
-          assertThat( argMMI.getTargetDelegateAttribute(), notNullValue() );
-          assertThat( argMMI.getTargetDelegateAttribute(), equalTo( "value" ) );
+          assertThat( argMMI.getSourceDelegate(), nullValue() );
+          assertThat( argMMI.getSourceDelegate(), nullValue() );
+          assertThat( argMMI.getTargetDelegate(), notNullValue() );
         }
         else if ( argMMI.getSource().equals( Integer.class ) ) {
           // wrapper
-          assertThat( argMMI.getSourceDelegateAttribute(), notNullValue() );
-          assertThat( argMMI.getSourceDelegateAttribute(), equalTo( "value" ) );
-          assertThat( argMMI.getTargetDelegateAttribute(), nullValue() );
+          assertThat( argMMI.getSourceDelegate(), notNullValue() );
+          assertThat( argMMI.getTargetDelegate(), nullValue() );
         }
         else {
           fail( "arg source must be int or Integer" );
@@ -307,11 +304,11 @@ public class WrappedTypeMethodMatcherMatchingInfosTest {
       assertThat( rtMatchingInfo, notNullValue() );
       assertThat( rtMatchingInfo.getSource(), notNullValue() );
       assertThat( rtMatchingInfo.getSource(), equalTo( int.class ) );
-      assertThat( rtMatchingInfo.getSourceDelegateAttribute(), nullValue() );
+      assertThat( rtMatchingInfo.getSourceDelegate(), nullValue() );
 
       assertThat( rtMatchingInfo.getTarget(), notNullValue() );
       assertThat( rtMatchingInfo.getTarget(), equalTo( int.class ) );
-      assertThat( rtMatchingInfo.getTargetDelegateAttribute(), nullValue() );
+      assertThat( rtMatchingInfo.getTargetDelegate(), nullValue() );
 
       Collection<MethodMatchingInfo> rtMethodMI = rtMatchingInfo.getMethodMatchingInfos();
       assertThat( rtMethodMI, notNullValue() );
@@ -326,13 +323,13 @@ public class WrappedTypeMethodMatcherMatchingInfosTest {
         assertThat( argMMI.getTarget(), notNullValue() );
         if ( argMMI.getSource().equals( int.class ) ) {
           // wrapped
-          assertThat( argMMI.getSourceDelegateAttribute(), nullValue() );
-          assertThat( argMMI.getTargetDelegateAttribute(), notNullValue() );
+          assertThat( argMMI.getSourceDelegate(), nullValue() );
+          assertThat( argMMI.getTargetDelegate(), notNullValue() );
         }
         else if ( argMMI.getSource().equals( BigInteger.class ) ) {
           // wrapper
-          assertThat( argMMI.getSourceDelegateAttribute(), notNullValue() );
-          assertThat( argMMI.getTargetDelegateAttribute(), nullValue() );
+          assertThat( argMMI.getSourceDelegate(), notNullValue() );
+          assertThat( argMMI.getTargetDelegate(), nullValue() );
         }
         else {
           fail( "arg source must be int or Integer" );

@@ -1,6 +1,8 @@
 package matching.modules;
 
 import java.util.Collection;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import matching.methods.MethodMatchingInfo;
 
@@ -16,6 +18,10 @@ public class ModuleMatchingInfo {
   // Benoetigt, wenn das Target die Source enthaelt (Source in Target)
   private final String targetDelegateAttribute;
 
+  private final Function<Object, Object> sourceDelegate;
+
+  private final BiFunction<Object, Object, Void> targetDelegate;
+
   private final Collection<MethodMatchingInfo> methodMatchingInfos;
 
   /**
@@ -30,7 +36,9 @@ public class ModuleMatchingInfo {
     this.target = target;
     this.methodMatchingInfos = methodMatchingInfos;
     this.sourceDelegateAttribute = null;
+    this.sourceDelegate = null;
     this.targetDelegateAttribute = null;
+    this.targetDelegate = null;
   }
 
   /**
@@ -47,7 +55,9 @@ public class ModuleMatchingInfo {
     this.target = target;
     this.methodMatchingInfos = methodMatchingInfos;
     this.sourceDelegateAttribute = null;
+    this.sourceDelegate = null;
     this.targetDelegateAttribute = targetDelegate;
+    this.targetDelegate = ModuleMatchingInfoUtil.setFieldFunction( target, targetDelegate );
   }
 
   /**
@@ -64,7 +74,9 @@ public class ModuleMatchingInfo {
     this.target = target;
     this.methodMatchingInfos = methodMatchingInfos;
     this.sourceDelegateAttribute = sourceDelegate;
+    this.sourceDelegate = ModuleMatchingInfoUtil.getFieldFunction( source, sourceDelegate );
     this.targetDelegateAttribute = null;
+    this.targetDelegate = null;
   }
 
   /**
@@ -100,17 +112,19 @@ public class ModuleMatchingInfo {
   }
 
   /**
-   * @return <code> null </code> wenn das Target nicht in der Source enthalten ist.
-   */
-  public String getSourceDelegateAttribute() {
-    return sourceDelegateAttribute;
-  }
-
-  /**
    * @return <code> null </code> wenn die Source nicht im Target enthalten ist.
    */
+  @Deprecated
   public String getTargetDelegateAttribute() {
     return targetDelegateAttribute;
+  }
+
+  public Function<Object, Object> getSourceDelegate() {
+    return sourceDelegate;
+  }
+
+  public BiFunction<Object, Object, Void> getTargetDelegate() {
+    return targetDelegate;
   }
 
 }

@@ -9,6 +9,7 @@ import org.easymock.EasyMock;
 
 import matching.methods.MethodMatchingInfo.ParamPosition;
 import matching.modules.ModuleMatchingInfo;
+import matching.modules.ModuleMatchingInfoUtil;
 import testcomponents.wrapped.Wrapped;
 import testcomponents.wrapped.Wrapper;
 
@@ -44,7 +45,8 @@ public class MatchingInfoTestUtil {
   static ModuleMatchingInfo createMMI_Wrapper2Wrapped( String delegateAttr ) {
     ModuleMatchingInfo mmi = EasyMock.createNiceMock( ModuleMatchingInfo.class );
     EasyMock.expect( mmi.getSource() ).andReturn( (Class) Wrapper.class ).anyTimes();
-    EasyMock.expect( mmi.getSourceDelegateAttribute() ).andReturn( delegateAttr ).anyTimes();
+    EasyMock.expect( mmi.getSourceDelegate() )
+        .andReturn( ModuleMatchingInfoUtil.getFieldFunction( Wrapper.class, delegateAttr ) ).anyTimes();
     EasyMock.expect( mmi.getTarget() ).andReturn( (Class) Wrapped.class ).anyTimes();
     EasyMock.expect( mmi.getMethodMatchingInfos() ).andReturn( new HashSet<>() ).anyTimes();
     EasyMock.replay( mmi );
@@ -56,7 +58,8 @@ public class MatchingInfoTestUtil {
     ModuleMatchingInfo mmi = EasyMock.createNiceMock( ModuleMatchingInfo.class );
     EasyMock.expect( mmi.getSource() ).andReturn( (Class) Wrapped.class ).anyTimes();
     EasyMock.expect( mmi.getTarget() ).andReturn( (Class) Wrapper.class ).anyTimes();
-    EasyMock.expect( mmi.getTargetDelegateAttribute() ).andReturn( delegateAttr ).anyTimes();
+    EasyMock.expect( mmi.getTargetDelegate() )
+        .andReturn( ModuleMatchingInfoUtil.setFieldFunction( Wrapper.class, delegateAttr ) ).anyTimes();
     EasyMock.expect( mmi.getMethodMatchingInfos() ).andReturn( new HashSet<>() ).anyTimes();
     EasyMock.replay( mmi );
     return mmi;

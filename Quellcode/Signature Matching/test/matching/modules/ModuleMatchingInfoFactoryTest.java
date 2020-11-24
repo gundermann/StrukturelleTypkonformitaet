@@ -29,8 +29,8 @@ public class ModuleMatchingInfoFactoryTest {
     assertThat( matchingInfo.getRating(), equalTo( 0 ) );
     assertThat( matchingInfo.getMethodMatchingInfos(), notNullValue() );
     assertThat( matchingInfo.getMethodMatchingInfos().size(), equalTo( 0 ) );
-    assertThat( matchingInfo.getSourceDelegateAttribute(), nullValue() );
-    assertThat( matchingInfo.getTargetDelegateAttribute(), nullValue() );
+    assertThat( matchingInfo.getSourceDelegate(), nullValue() );
+    assertThat( matchingInfo.getTargetDelegate(), nullValue() );
   }
 
   @Test
@@ -42,9 +42,8 @@ public class ModuleMatchingInfoFactoryTest {
     assertThat( matchingInfo.getRating(), equalTo( 0 ) );
     assertThat( matchingInfo.getMethodMatchingInfos(), notNullValue() );
     assertThat( matchingInfo.getMethodMatchingInfos().size(), equalTo( 0 ) );
-    assertThat( matchingInfo.getSourceDelegateAttribute(), notNullValue() );
-    assertThat( matchingInfo.getSourceDelegateAttribute(), equalTo( "SOURCE" ) );
-    assertThat( matchingInfo.getTargetDelegateAttribute(), nullValue() );
+    assertThat( matchingInfo.getSourceDelegate(), notNullValue() );
+    assertThat( matchingInfo.getTargetDelegate(), nullValue() );
   }
 
   @Test
@@ -56,9 +55,8 @@ public class ModuleMatchingInfoFactoryTest {
     assertThat( matchingInfo.getRating(), equalTo( 0 ) );
     assertThat( matchingInfo.getMethodMatchingInfos(), notNullValue() );
     assertThat( matchingInfo.getMethodMatchingInfos().size(), equalTo( 0 ) );
-    assertThat( matchingInfo.getSourceDelegateAttribute(), nullValue() );
-    assertThat( matchingInfo.getTargetDelegateAttribute(), notNullValue() );
-    assertThat( matchingInfo.getTargetDelegateAttribute(), equalTo( "TARGET" ) );
+    assertThat( matchingInfo.getSourceDelegate(), nullValue() );
+    assertThat( matchingInfo.getTargetDelegate(), notNullValue() );
   }
 
   @Test
