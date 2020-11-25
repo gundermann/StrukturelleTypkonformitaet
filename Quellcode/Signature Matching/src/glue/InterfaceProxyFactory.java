@@ -7,10 +7,10 @@ import matching.modules.ModuleMatchingInfo;
 
 public class InterfaceProxyFactory<T> implements ProxyFactory<T> {
 
-  private final Class<T> targetStrcture;
+  private final Class<T> targetStructure;
 
-  public InterfaceProxyFactory( Class<T> targetStrcture ) {
-    this.targetStrcture = targetStrcture;
+  public InterfaceProxyFactory( Class<T> targetStructure ) {
+    this.targetStructure = targetStructure;
   }
 
   @SuppressWarnings( "unchecked" )
@@ -25,7 +25,16 @@ public class InterfaceProxyFactory<T> implements ProxyFactory<T> {
         // Aufruf des Proxies initiiert wird, nicht bekannt ist.
         // Exception in thread "main" java.lang.IllegalArgumentException: interface ... is not visible from class loader
 
-        new Class<?>[] { targetStrcture }, invocationHandler );
+        new Class<?>[] { targetStructure }, invocationHandler );
+  }
+
+  static class InterfaceProxyFactoryCreator implements ProxyFactoryCreator {
+
+    @Override
+    public <T> ProxyFactory<T> createProxyFactory( Class<T> targetType ) {
+      return new InterfaceProxyFactory<>( targetType );
+    }
+
   }
 
 }

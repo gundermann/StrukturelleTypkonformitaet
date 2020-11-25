@@ -529,6 +529,8 @@ public class GenSpecSignatureMatchingTypeConverterTest {
     ModuleMatchingInfo mmit = EasyMock.createNiceMock( ModuleMatchingInfo.class );
     EasyMock.expect( mmit.getTarget() ).andReturn( (Class) Specific.class ).anyTimes();
     EasyMock.expect( mmit.getSource() ).andReturn( (Class) General.class ).anyTimes();
+    EasyMock.expect( mmit.getConverterCreator() ).andReturn( ProxyCreatorFactories.getClassFactoryCreator() )
+        .anyTimes();
     Set<MethodMatchingInfo> methodInfos = new HashSet<>();
     MethodMatchingInfo concatMethod = EasyMock.createNiceMock( MethodMatchingInfo.class );
     EasyMock.expect( concatMethod.getTarget() ).andReturn( Specific.class.getMethod( "getStringAttr" ) ).anyTimes();
@@ -570,6 +572,9 @@ public class GenSpecSignatureMatchingTypeConverterTest {
     ModuleMatchingInfo mmit = EasyMock.createNiceMock( ModuleMatchingInfo.class );
     EasyMock.expect( mmit.getTarget() ).andReturn( (Class) General.class ).anyTimes();
     EasyMock.expect( mmit.getSource() ).andReturn( (Class) Specific.class ).anyTimes();
+    EasyMock.expect( mmit.getConverterCreator() ).andReturn( ProxyCreatorFactories.getClassFactoryCreator() )
+        .anyTimes();
+
     Set<MethodMatchingInfo> methodInfos = new HashSet<>();
 
     MethodMatchingInfo concatMethod = EasyMock.createNiceMock( MethodMatchingInfo.class );

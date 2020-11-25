@@ -29,8 +29,7 @@ public class ModuleMatchingInfoFactoryTest {
     assertThat( matchingInfo.getRating(), equalTo( 0 ) );
     assertThat( matchingInfo.getMethodMatchingInfos(), notNullValue() );
     assertThat( matchingInfo.getMethodMatchingInfos().size(), equalTo( 0 ) );
-    assertThat( matchingInfo.getSourceDelegate(), nullValue() );
-    assertThat( matchingInfo.getTargetDelegate(), nullValue() );
+    assertThat( matchingInfo.getConverterCreator(), nullValue() );
   }
 
   @Test
@@ -42,8 +41,7 @@ public class ModuleMatchingInfoFactoryTest {
     assertThat( matchingInfo.getRating(), equalTo( 0 ) );
     assertThat( matchingInfo.getMethodMatchingInfos(), notNullValue() );
     assertThat( matchingInfo.getMethodMatchingInfos().size(), equalTo( 0 ) );
-    assertThat( matchingInfo.getSourceDelegate(), notNullValue() );
-    assertThat( matchingInfo.getTargetDelegate(), nullValue() );
+    assertThat( matchingInfo.getConverterCreator(), nullValue() );
   }
 
   @Test
@@ -55,8 +53,7 @@ public class ModuleMatchingInfoFactoryTest {
     assertThat( matchingInfo.getRating(), equalTo( 0 ) );
     assertThat( matchingInfo.getMethodMatchingInfos(), notNullValue() );
     assertThat( matchingInfo.getMethodMatchingInfos().size(), equalTo( 0 ) );
-    assertThat( matchingInfo.getSourceDelegate(), nullValue() );
-    assertThat( matchingInfo.getTargetDelegate(), notNullValue() );
+    assertThat( matchingInfo.getConverterCreator(), notNullValue() );
   }
 
   @Test

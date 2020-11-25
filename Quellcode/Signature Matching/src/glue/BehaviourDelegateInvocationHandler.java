@@ -31,11 +31,6 @@ public class BehaviourDelegateInvocationHandler implements MethodInterceptor, In
     if ( optMatchingInfo.isPresent() ) {
       return invokeOnComponentWithMatchingInfo( optMatchingInfo.get(), args );
     }
-
-    // Default-Methode
-    if ( matchingInfos.getTargetDelegate() == null ) {
-      return method.invoke( component, args );
-    }
     return methodProxy.invokeSuper( callObject, args );
   }
 
@@ -111,18 +106,23 @@ public class BehaviourDelegateInvocationHandler implements MethodInterceptor, In
         moduleMatchingInfo.getSource().getName(), moduleMatchingInfo.getTarget().getName() ) );
     // Wenn das zu konvertierende Objekt null ist, dann kann dies auch gleich zurückgegeben werden, da null-Objekte
     // keinen speziellen Typ haben
-    if ( sourceType == null || moduleMatchingInfo.getMethodMatchingInfos().isEmpty()
-        && moduleMatchingInfo.getTargetDelegate() == null
-        && moduleMatchingInfo.getSourceDelegate() == null ) {
+    // if ( sourceType == null || moduleMatchingInfo.getMethodMatchingInfos().isEmpty()
+    // && moduleMatchingInfo.getTargetDelegate() == null
+    // && moduleMatchingInfo.getSourceDelegate() == null ) {
+    // return (RT) sourceType;
+    // }
+
+    if ( sourceType == null ) {
       return (RT) sourceType;
     }
 
     Object source = sourceType;
-    if ( moduleMatchingInfo.getSourceDelegate() != null ) {
-      source = moduleMatchingInfo.getSourceDelegate().apply( sourceType );
-    }
-    return new SignatureMatchingTypeConverter<>( (Class<RT>) moduleMatchingInfo.getTarget() ).convert( source,
-        moduleMatchingInfo );
+    // if ( moduleMatchingInfo.getSourceDelegate() != null ) {
+    // source = moduleMatchingInfo.getSourceDelegate().apply( sourceType );
+    // }
+    return new SignatureMatchingTypeConverter<>( (Class<RT>) moduleMatchingInfo.getTarget(),
+        moduleMatchingInfo.getConverterCreator() ).convert( source,
+            moduleMatchingInfo );
   }
 
   private Optional<MethodMatchingInfo> getMethodMatchingInfo( Method method ) {

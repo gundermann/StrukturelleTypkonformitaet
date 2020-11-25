@@ -36,27 +36,6 @@ public class ClassProxyFactory<T> implements ProxyFactory<T> {
     ObjectInstantiator<?> instantiator = objenesis.getInstantiatorOf( enhancedClass );
     Object proxyInstance = instantiator.newInstance();
     ( (Factory) proxyInstance ).setCallbacks( new Callback[] { methodInterceptor } );
-
-    if ( matchingInfo.getTargetDelegate() != null ) {
-      matchingInfo.getTargetDelegate().apply( proxyInstance, component );
-
-      // es handelt sich um einen Wrapper, der die übergebene component enthalten muss
-      // da cglib keine Felder in Klassen erzeugen kann, ist das entsprechende Feld für die componente in den
-      // Oberklassen zu suchen.
-      //
-      // try {
-      // Field wrappedField = getDeclaredFieldOfClassHierachry( proxyInstance.getClass(),
-      // matchingInfo.getTargetDelegateAttribute() );
-      // if ( wrappedField == null ) {
-      // logFieldError( matchingInfo.getTargetDelegateAttribute(), targetStrcture.getName() );
-      // }
-      // wrappedField.setAccessible( true );
-      // wrappedField.set( proxyInstance, component );
-      // }
-      // catch ( IllegalArgumentException | IllegalAccessException e ) {
-      // logFieldError( matchingInfo.getTargetDelegateAttribute(), targetStrcture.getName() );
-      // }
-    }
     return (T) proxyInstance;
   }
 
@@ -79,5 +58,14 @@ public class ClassProxyFactory<T> implements ProxyFactory<T> {
   // return declaredField;
   //
   // }
+
+  static class ClassProxyFactoryCreator implements ProxyFactoryCreator {
+
+    @Override
+    public <T> ProxyFactory<T> createProxyFactory( Class<T> targetType ) {
+      return new ClassProxyFactory<>( targetType );
+    }
+
+  }
 
 }

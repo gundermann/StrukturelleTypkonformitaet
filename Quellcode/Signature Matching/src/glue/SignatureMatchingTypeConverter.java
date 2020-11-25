@@ -23,6 +23,10 @@ public class SignatureMatchingTypeConverter<T> {
     }
   }
 
+  public SignatureMatchingTypeConverter( Class<T> targetStructure, ProxyFactoryCreator factoryCreator ) {
+    this.proxyFactory = factoryCreator.createProxyFactory( targetStructure );
+  }
+
   public T convert( Object component, ModuleMatchingInfo matchingInfo ) {
     T targetInstance = proxyFactory.createProxy( component, matchingInfo );
     return targetInstance;

@@ -1,9 +1,9 @@
 package matching.modules;
 
 import java.util.Collection;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 
+import glue.ProxyCreatorFactories;
+import glue.ProxyFactoryCreator;
 import matching.methods.MethodMatchingInfo;
 
 public class ModuleMatchingInfo {
@@ -12,17 +12,9 @@ public class ModuleMatchingInfo {
 
   private final Class<?> target;
 
-  // Benoetigt, wenn die Source das Target enthaelt (Target in Source)
-  private final String sourceDelegateAttribute;
-
-  // Benoetigt, wenn das Target die Source enthaelt (Source in Target)
-  private final String targetDelegateAttribute;
-
-  private final Function<Object, Object> sourceDelegate;
-
-  private final BiFunction<Object, Object, Void> targetDelegate;
-
   private final Collection<MethodMatchingInfo> methodMatchingInfos;
+
+  private final ProxyFactoryCreator converterCreator;
 
   /**
    * Konstruktor fuer ModuleMatchings, bei denen zwischen Source und Target keine Contains-Assoziation besteht
@@ -32,13 +24,24 @@ public class ModuleMatchingInfo {
    * @param methodMatchingInfos
    */
   public ModuleMatchingInfo( Class<?> source, Class<?> target, Collection<MethodMatchingInfo> methodMatchingInfos ) {
+    this( source, target, methodMatchingInfos,
+        methodMatchingInfos.isEmpty() ? ProxyCreatorFactories.getIdentityFactoryCreator()
+            : ProxyCreatorFactories.getClassFactoryCreator() );
+  }
+
+  /**
+   * Konstruktor fuer ModuleMatchings, bei denen zwischen Source und Target keine Contains-Assoziation besteht
+   *
+   * @param source
+   * @param target
+   * @param methodMatchingInfos
+   */
+  public ModuleMatchingInfo( Class<?> source, Class<?> target, Collection<MethodMatchingInfo> methodMatchingInfos,
+      ProxyFactoryCreator proxyFactoryCreator ) {
     this.source = source;
     this.target = target;
     this.methodMatchingInfos = methodMatchingInfos;
-    this.sourceDelegateAttribute = null;
-    this.sourceDelegate = null;
-    this.targetDelegateAttribute = null;
-    this.targetDelegate = null;
+    this.converterCreator = proxyFactoryCreator;
   }
 
   /**
@@ -51,13 +54,7 @@ public class ModuleMatchingInfo {
    */
   public ModuleMatchingInfo( Class<?> source, Class<?> target, String targetDelegate,
       Collection<MethodMatchingInfo> methodMatchingInfos ) {
-    this.source = source;
-    this.target = target;
-    this.methodMatchingInfos = methodMatchingInfos;
-    this.sourceDelegateAttribute = null;
-    this.sourceDelegate = null;
-    this.targetDelegateAttribute = targetDelegate;
-    this.targetDelegate = ModuleMatchingInfoUtil.setFieldFunction( target, targetDelegate );
+    this( source, target, methodMatchingInfos, ProxyCreatorFactories.getWrapperFactoryCreator( targetDelegate ) );
   }
 
   /**
@@ -70,13 +67,7 @@ public class ModuleMatchingInfo {
    */
   public ModuleMatchingInfo( Class<?> source, String sourceDelegate, Class<?> target,
       Collection<MethodMatchingInfo> methodMatchingInfos ) {
-    this.source = source;
-    this.target = target;
-    this.methodMatchingInfos = methodMatchingInfos;
-    this.sourceDelegateAttribute = sourceDelegate;
-    this.sourceDelegate = ModuleMatchingInfoUtil.getFieldFunction( source, sourceDelegate );
-    this.targetDelegateAttribute = null;
-    this.targetDelegate = null;
+    this( source, target, methodMatchingInfos, ProxyCreatorFactories.getWrappedFactoryCreator( sourceDelegate ) );
   }
 
   /**
@@ -111,20 +102,8 @@ public class ModuleMatchingInfo {
     return target;
   }
 
-  /**
-   * @return <code> null </code> wenn die Source nicht im Target enthalten ist.
-   */
-  @Deprecated
-  public String getTargetDelegateAttribute() {
-    return targetDelegateAttribute;
-  }
-
-  public Function<Object, Object> getSourceDelegate() {
-    return sourceDelegate;
-  }
-
-  public BiFunction<Object, Object, Void> getTargetDelegate() {
-    return targetDelegate;
+  public ProxyFactoryCreator getConverterCreator() {
+    return this.converterCreator;
   }
 
 }
