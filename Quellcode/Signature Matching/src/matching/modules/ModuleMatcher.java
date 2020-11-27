@@ -34,6 +34,7 @@ public class ModuleMatcher<S> {
 
   }
 
+  @Deprecated
   public ModuleMatcher( Class<S> queryType ) {
     this.queryType = queryType;
     this.methodMatcher = new CombinedMethodMatcher();

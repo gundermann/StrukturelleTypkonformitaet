@@ -9,7 +9,6 @@ import org.easymock.EasyMock;
 
 import DE.data_experts.profi.fp.dv.AntragsVorgangsTyp;
 import DE.data_experts.profi.profilcs.antrag.dv.business.DvFoerdergegenstand;
-import DE.data_experts.profi.profilcs.antrag2015.eler.ft.stammdaten.business.DvEftOekoFoerdergegenstandGruppe;
 import DE.data_experts.profi.profilcs.antrag2015.eler.ft.stammdaten.business.ElerFTFoerderprogramm;
 import DE.data_experts.profi.profilcs.antrag2015.eler.ft.stammdaten.business.ElerFTKoFoerdergegenstand;
 import DE.data_experts.profi.profilcs.antrag2015.eler.ft.stammdaten.business.ElerFTKombiKzFpFoerdergegenstand;

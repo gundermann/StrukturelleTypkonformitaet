@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.MethodMatcherHeuristic;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.Logger;
@@ -28,9 +29,11 @@ public class DesiredComponentFinder {
 
   private final Function<Class<?>, Optional<?>> optComponentGetter;
 
-  public DesiredComponentFinder( Class<?>[] registeredCompoentInterfaces,
+  public DesiredComponentFinder( Class<?>[] registeredComponentInterfaces,
       Function<Class<?>, Optional<?>> optComponentGetter ) {
-    this.registeredComponentInterfaces = registeredCompoentInterfaces;
+    this.registeredComponentInterfaces = Stream.of( registeredComponentInterfaces ).distinct()
+        .collect( Collectors.toList() )
+        .toArray( new Class[] {} );
     this.optComponentGetter = optComponentGetter;
 
   }
@@ -70,7 +73,7 @@ public class DesiredComponentFinder {
     Logger.infoF( "start search with matcher: %s", methodMatcher.getClass().getSimpleName() );
     Collection<Class<?>> matchingBeanInterfaces = findMatchingComponentInterfaces( desiredInterface, methodMatcher );
     Optional<DesiredInterface> result = Optional
-        .ofNullable( getComposedComponent( desiredInterface, matchingBeanInterfaces ) );
+        .ofNullable( getComposedComponent( desiredInterface, matchingBeanInterfaces, methodMatcher ) );
     Logger.infoF( "finish search with matcher: %s", methodMatcher.getClass().getSimpleName() );
     return result;
   }
@@ -98,10 +101,11 @@ public class DesiredComponentFinder {
   }
 
   private <DesiredInterface> DesiredInterface getComposedComponent(
-      Class<DesiredInterface> desiredInterface, Collection<Class<?>> matchingBeanInterfaces ) {
+      Class<DesiredInterface> desiredInterface, Collection<Class<?>> matchingBeanInterfaces,
+      MethodMatcher methodMatcher ) {
     Logger.info( "create ComponentInfos" );
     Set<ComponentInfos> rankedComponentInfos = getSortedModuleMatchingInfos( desiredInterface,
-        matchingBeanInterfaces );
+        matchingBeanInterfaces, methodMatcher );
     Logger.info( String.format( "ranking of relevant components" ) );
     rankedComponentInfos.stream().forEach(
         c -> Logger.info( String.format( "rank: %d component: %s", c.getRank(), c.getComponentClass().getName() ) ) );
@@ -149,11 +153,12 @@ public class DesiredComponentFinder {
   }
 
   private <DesiredInterface> Set<ComponentInfos> getSortedModuleMatchingInfos(
-      Class<DesiredInterface> desiredInterface, Collection<Class<?>> matchingBeanInterfaces ) {
+      Class<DesiredInterface> desiredInterface, Collection<Class<?>> matchingBeanInterfaces,
+      MethodMatcher methodMatcher ) {
     List<ComponentInfos> componentInfoSet = new ArrayList<>();
-    ModuleMatcher<DesiredInterface> moduleMatcher = new ModuleMatcher<>( desiredInterface );
+    ModuleMatcher<DesiredInterface> moduleMatcher = new ModuleMatcher<>( desiredInterface, methodMatcher );
     for ( Class<?> matchingBeanInterface : matchingBeanInterfaces ) {
-      Logger.info( String.format( "collect ModuleMatchingInfo: %s", matchingBeanInterface.getName() ) );
+      // Logger.info( String.format( "collect ModuleMatchingInfo: %s", matchingBeanInterface.getName() ) );
       Set<ModuleMatchingInfo> matchingInfos = moduleMatcher
           .calculateMatchingInfos( matchingBeanInterface );
       ComponentInfos componentInfos = new ComponentInfos( matchingBeanInterface );
