@@ -11,7 +11,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import matching.methods.CombinedMethodMatcher;
 import matching.methods.MethodMatcher;
 import matching.methods.MethodMatchingInfo;
 import util.Logger;
@@ -32,12 +31,6 @@ public class ModuleMatcher<S> {
     this.queryType = queryType;
     this.methodMatcher = methodMatcher;
 
-  }
-
-  @Deprecated
-  public ModuleMatcher( Class<S> queryType ) {
-    this.queryType = queryType;
-    this.methodMatcher = new CombinedMethodMatcher();
   }
 
   /**

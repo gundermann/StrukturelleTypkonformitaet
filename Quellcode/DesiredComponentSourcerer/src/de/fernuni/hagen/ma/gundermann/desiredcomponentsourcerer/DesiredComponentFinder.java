@@ -172,26 +172,26 @@ public class DesiredComponentFinder {
     return new HashSet<>( componentInfoSet );
   }
 
-  private <DesiredInterface> Collection<Class<?>> findComponentsBySignatureMatching(
-      Class<DesiredInterface> desiredInterface ) {
-    ModuleMatcher<DesiredInterface> moduleMatcher = new ModuleMatcher<>( desiredInterface );
-    Collection<Class<?>> matchedBeans = new ArrayList<>();
-    for ( Class<?> beanInterface : getRegisteredComponentInterfaces() ) {
-      // Dieser Code ist nur für das Debugging-Analyse notwendig
-      // if ( beanInterfaces.equals( ElerFTStammdatenAuskunftService.class ) ) {
-      // Logger.info( "BEAN OF INTEREST" );
-      // }
-      boolean matchesFull = moduleMatcher.matches( beanInterface );
-      if ( !matchesFull ) {
-        // boolean partlyMatches = moduleMatcher.partlyMatches( beanInterfaces );
-        // if ( !partlyMatches ) {
-        continue;
-        // }
-      }
-      matchedBeans.add( beanInterface );
-    }
-    return matchedBeans;
-  }
+  // private <DesiredInterface> Collection<Class<?>> findComponentsBySignatureMatching(
+  // Class<DesiredInterface> desiredInterface ) {
+  // ModuleMatcher<DesiredInterface> moduleMatcher = new ModuleMatcher<>( desiredInterface );
+  // Collection<Class<?>> matchedBeans = new ArrayList<>();
+  // for ( Class<?> beanInterface : getRegisteredComponentInterfaces() ) {
+  // // Dieser Code ist nur für das Debugging-Analyse notwendig
+  // // if ( beanInterfaces.equals( ElerFTStammdatenAuskunftService.class ) ) {
+  // // Logger.info( "BEAN OF INTEREST" );
+  // // }
+  // boolean matchesFull = moduleMatcher.matches( beanInterface );
+  // if ( !matchesFull ) {
+  // // boolean partlyMatches = moduleMatcher.partlyMatches( beanInterfaces );
+  // // if ( !partlyMatches ) {
+  // continue;
+  // // }
+  // }
+  // matchedBeans.add( beanInterface );
+  // }
+  // return matchedBeans;
+  // }
 
   private Class<?>[] getRegisteredComponentInterfaces() {
     return this.registeredComponentInterfaces;

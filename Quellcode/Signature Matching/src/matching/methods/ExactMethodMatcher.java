@@ -11,10 +11,13 @@ import java.util.Map;
 import java.util.Objects;
 
 import matching.methods.MethodMatchingInfo.ParamPosition;
+import matching.modules.ExactTypeMatcher;
 import matching.modules.ModuleMatchingInfo;
-import matching.modules.ModuleMatchingInfoFactory;
+import matching.modules.TypeMatcher;
 
 public class ExactMethodMatcher implements MethodMatcher, Comparator<MethodStructure> {
+
+  private TypeMatcher typeMatcher = new ExactTypeMatcher();
 
   @Override
   public boolean matches( Method checkMethod, Method queryMethod ) {
@@ -25,7 +28,7 @@ public class ExactMethodMatcher implements MethodMatcher, Comparator<MethodStruc
 
   @Override
   public int compare( MethodStructure check, MethodStructure query ) {
-    if ( !matchesType( check.getReturnType(), query.getReturnType() ) ) {
+    if ( !typeMatcher.matchesType( check.getReturnType(), query.getReturnType() ) ) {
       return 1;
     }
     if ( check.getSortedArgumentTypes().length != query.getSortedArgumentTypes().length ) {
@@ -40,18 +43,13 @@ public class ExactMethodMatcher implements MethodMatcher, Comparator<MethodStruc
   }
 
   @Override
-  public boolean matchesType( Class<?> checkType, Class<?> queryType ) {
-    return checkType.equals( queryType );
-  }
-
-  @Override
   public Collection<MethodMatchingInfo> calculateMatchingInfos( Method checkMethod, Method queryMethod ) {
     if ( !matches( checkMethod, queryMethod ) ) {
       return new ArrayList<>();
     }
     // da es ein exakter Match sein muss, darf hier nur eine MethodMatchingInfo erzeugt werden
     MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( checkMethod, queryMethod );
-    Collection<ModuleMatchingInfo> returnTypeMatchingInfos = calculateTypeMatchingInfos(
+    Collection<ModuleMatchingInfo> returnTypeMatchingInfos = typeMatcher.calculateTypeMatchingInfos(
         queryMethod.getReturnType(), checkMethod.getReturnType() );
     Map<ParamPosition, Collection<ModuleMatchingInfo>> argumentTypesMatchingInfos = calculateArgumentMatchingInfos(
         checkMethod, queryMethod );
@@ -68,16 +66,9 @@ public class ExactMethodMatcher implements MethodMatcher, Comparator<MethodStruc
       Parameter sourceParameter = sourceParameters[i];
       Parameter targetParameter = targetParameters[i];
       matchingInfoMap.put( new ParamPosition( i, i ),
-          calculateTypeMatchingInfos( targetParameter.getType(), sourceParameter.getType() ) );
+          typeMatcher.calculateTypeMatchingInfos( targetParameter.getType(), sourceParameter.getType() ) );
     }
     return matchingInfoMap;
-  }
-
-  @Override
-  public Collection<ModuleMatchingInfo> calculateTypeMatchingInfos( Class<?> targetType,
-      Class<?> sourceType ) {
-    return Collections
-        .singletonList( new ModuleMatchingInfoFactory( targetType, sourceType ).create() );
   }
 
 }

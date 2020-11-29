@@ -3,17 +3,24 @@ package matching.methods;
 import java.lang.reflect.Method;
 import java.util.Collection;
 
+import matching.MatcherCombiner;
+import matching.modules.ExactTypeMatcher;
+import matching.modules.GenSpecTypeMatcher;
 import matching.modules.ModuleMatchingInfo;
 
 public class CombinedMethodMatcher implements MethodMatcher {
   ExactMethodMatcher exactMethodMatcher = new ExactMethodMatcher();
 
+  ExactTypeMatcher exactTypeMatcher = new ExactTypeMatcher();
+
   GenSpecMethodMatcher genSpecMethodMatcher = new GenSpecMethodMatcher();
+
+  GenSpecTypeMatcher genSpecTypeMatcher = new GenSpecTypeMatcher();
 
   MethodMatcher combination = new ParamPermMethodMatcher(
       MatcherCombiner.combine( genSpecMethodMatcher, exactMethodMatcher,
-          new WrappedTypeMethodMatcher( MatcherCombiner.combine( genSpecMethodMatcher,
-              exactMethodMatcher ) ) ) );
+          new WrappedTypeMethodMatcher( MatcherCombiner.combine( genSpecTypeMatcher,
+              exactTypeMatcher ) ) ) );
 
   @Override
   public boolean matches( Method checkMethod, Method queryMethod ) {

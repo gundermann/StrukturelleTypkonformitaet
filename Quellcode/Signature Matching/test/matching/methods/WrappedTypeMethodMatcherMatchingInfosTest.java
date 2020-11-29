@@ -17,6 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import matching.methods.MethodMatchingInfo.ParamPosition;
+import matching.modules.ExactTypeMatcher;
 import matching.modules.ModuleMatchingInfo;
 
 public class WrappedTypeMethodMatcherMatchingInfosTest {
@@ -24,7 +25,7 @@ public class WrappedTypeMethodMatcherMatchingInfosTest {
 
   @Before
   public void setup() {
-    matcher = new WrappedTypeMethodMatcher( () -> new ExactMethodMatcher() );
+    matcher = new WrappedTypeMethodMatcher( () -> new ExactTypeMatcher() );
   }
 
   @Test

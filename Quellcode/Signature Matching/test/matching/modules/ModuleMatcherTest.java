@@ -7,12 +7,13 @@ import org.junit.Test;
 import matching.methods.CombinedMethodMatcher;
 import matching.modules.testmodules.Class1;
 import matching.modules.testmodules.Class2;
-import matching.modules.testmodules.EnumNative;
 import matching.modules.testmodules.Enum2;
+import matching.modules.testmodules.EnumNative;
 import matching.modules.testmodules.Interface1;
 import matching.modules.testmodules.InterfaceWrapper;
 
 public class ModuleMatcherTest {
+
   @Test
   public void interface2interface_full_match() {
     ModuleMatcher<InterfaceWrapper> matcher = ModuleMatcherTestSupport.createModuleMatcher( InterfaceWrapper.class,

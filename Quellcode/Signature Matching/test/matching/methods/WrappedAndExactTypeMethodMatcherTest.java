@@ -4,27 +4,27 @@ import static matching.methods.testmethods.MethodPool.getMethod;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Before;
 import org.junit.Test;
 
+import matching.MatcherCombiner;
 import matching.modules.ExactTypeMatcher;
 
-public class WrappedTypeMethodMatcherTest {
-  MethodMatcher matcher;
+public class WrappedAndExactTypeMethodMatcherTest {
 
-  @Before
-  public void setup() {
-    matcher = new WrappedTypeMethodMatcher( () -> new ExactTypeMatcher() );
-  }
+  private MethodMatcher exactMethodMatcher = new ExactMethodMatcher();
+
+  private MethodMatcher wrappedMatcher = new WrappedTypeMethodMatcher( () -> new ExactTypeMatcher() );
+
+  private MethodMatcher matcher = MatcherCombiner.combine( wrappedMatcher, exactMethodMatcher ).get();
 
   @Test
   public void test1() {
-    assertFalse( matcher.matches( getMethod( "getTrue" ), getMethod( "getTrue" ) ) );
+    assertTrue( matcher.matches( getMethod( "getTrue" ), getMethod( "getTrue" ) ) );
   }
 
   @Test
   public void test2() {
-    assertFalse( matcher.matches( getMethod( "getTrue" ), getMethod( "getFalse" ) ) );
+    assertTrue( matcher.matches( getMethod( "getTrue" ), getMethod( "getFalse" ) ) );
   }
 
   @Test
@@ -39,17 +39,17 @@ public class WrappedTypeMethodMatcherTest {
 
   @Test
   public void test5() {
-    assertFalse( matcher.matches( getMethod( "setBool" ), getMethod( "setBoolNativeWrapped" ) ) );
+    assertTrue( matcher.matches( getMethod( "setBool" ), getMethod( "setBoolNativeWrapped" ) ) );
   }
 
   @Test
   public void test6() {
-    assertFalse( matcher.matches( getMethod( "addOne" ), getMethod( "subOne" ) ) );
+    assertTrue( matcher.matches( getMethod( "addOne" ), getMethod( "subOne" ) ) );
   }
 
   @Test
   public void test7() {
-    assertFalse( matcher.matches( getMethod( "add" ), getMethod( "sub" ) ) );
+    assertTrue( matcher.matches( getMethod( "add" ), getMethod( "sub" ) ) );
   }
 
   @Test
