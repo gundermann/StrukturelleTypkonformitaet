@@ -8,14 +8,17 @@ import org.junit.Test;
 
 import matching.MatcherCombiner;
 import matching.modules.ExactTypeMatcher;
+import matching.modules.TypeMatcher;
+import matching.modules.WrappedTypeMatcher;
 
 public class WrappedAndExactTypeMethodMatcherTest {
 
-  private MethodMatcher exactMethodMatcher = new ExactMethodMatcher();
+  private TypeMatcher exactTypeMatcher = new ExactTypeMatcher();
 
-  private MethodMatcher wrappedMatcher = new WrappedTypeMethodMatcher( () -> new ExactTypeMatcher() );
+  private TypeMatcher wrappedTypeMatcher = new WrappedTypeMatcher( () -> exactTypeMatcher );
 
-  private MethodMatcher matcher = MatcherCombiner.combine( wrappedMatcher, exactMethodMatcher ).get();
+  private MethodMatcher matcher = new CommonMethodMatcher(
+      MatcherCombiner.combine( wrappedTypeMatcher, exactTypeMatcher ) );
 
   @Test
   public void test1() {
@@ -54,12 +57,12 @@ public class WrappedAndExactTypeMethodMatcherTest {
 
   @Test
   public void test8() {
-    assertFalse( matcher.matches( getMethod( "addPartlyNativeWrapped" ), getMethod( "subPartlyNativeWrapped" ) ) );
+    assertTrue( matcher.matches( getMethod( "addPartlyNativeWrapped" ), getMethod( "subPartlyNativeWrapped" ) ) );
   }
 
   @Test
   public void test9() {
-    assertFalse( matcher.matches( getMethod( "addPartlyWrapped" ), getMethod( "subPartlyWrapped" ) ) );
+    assertTrue( matcher.matches( getMethod( "addPartlyWrapped" ), getMethod( "subPartlyWrapped" ) ) );
   }
 
   @Test

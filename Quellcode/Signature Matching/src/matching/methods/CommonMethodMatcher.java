@@ -6,47 +6,25 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import matching.methods.MethodMatchingInfo.ParamPosition;
-import matching.modules.GenSpecTypeMatcher;
 import matching.modules.ModuleMatchingInfo;
 import matching.modules.TypeMatcher;
 
-/**
- * Dieser Matcher achtet darauf, dass die Typen (Return- und Argumenttypen) der beiden Methoden auch Generelisierungen
- * bzw. Spezialisierungen von einander sein können.
- */
-public class GenSpecMethodMatcher implements MethodMatcher {
+public class CommonMethodMatcher implements MethodMatcher {
 
-  private TypeMatcher typeMatcher = new GenSpecTypeMatcher();
+  private final Supplier<TypeMatcher> typeMatcherSupplier;
 
-  static int counter = 0;
-
-  // Versuch: Cache der Wrapped-Prüfungen
-  // Grund: Im WrappedTypeMethodMatcher wird auch ein Cache verwendet und es ist sicherlich aus Performance-Sicht
-  // sinnvoll auch hier einen Cache aufzubauen.
-  Map<Class<?>[], Boolean> cachedGenSpecTypesChecks = new HashMap<>();
+  public CommonMethodMatcher( Supplier<TypeMatcher> typeMatcherSupplier ) {
+    this.typeMatcherSupplier = typeMatcherSupplier;
+  }
 
   @Override
   public boolean matches( Method checkMethod, Method queryMethod ) {
     MethodStructure cms1 = MethodStructure.createFromDeclaredMethod( checkMethod );
     MethodStructure qms2 = MethodStructure.createFromDeclaredMethod( queryMethod );
     return matches( cms1, qms2 );
-  }
-
-  private boolean matches( MethodStructure cms1, MethodStructure qms2 ) {
-    if ( cms1.getSortedArgumentTypes().length != qms2.getSortedArgumentTypes().length ) {
-      return false;
-    }
-    if ( !typeMatcher.matchesType( cms1.getReturnType(), qms2.getReturnType() ) ) {
-      return false;
-    }
-    for ( int i = 0; i < cms1.getSortedArgumentTypes().length; i++ ) {
-      if ( !typeMatcher.matchesType( cms1.getSortedArgumentTypes()[i], qms2.getSortedArgumentTypes()[i] ) ) {
-        return false;
-      }
-    }
-    return true;
   }
 
   @Override
@@ -57,12 +35,28 @@ public class GenSpecMethodMatcher implements MethodMatcher {
     MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( checkMethod, queryMethod );
     MethodStructure checkStruct = MethodStructure.createFromDeclaredMethod( checkMethod );
     MethodStructure queryStruct = MethodStructure.createFromDeclaredMethod( queryMethod );
-    Collection<ModuleMatchingInfo> returnTypeMatchingInfos = typeMatcher.calculateTypeMatchingInfos(
+    Collection<ModuleMatchingInfo> returnTypeMatchingInfos = typeMatcherSupplier.get().calculateTypeMatchingInfos(
         queryStruct.getReturnType(), checkStruct.getReturnType() );
     Map<ParamPosition, Collection<ModuleMatchingInfo>> argumentTypesMatchingInfos = calculateArgumentTypesMatchingInfos(
         checkStruct.getSortedArgumentTypes(), queryStruct.getSortedArgumentTypes() );
     return factory.createFromTypeMatchingInfos( returnTypeMatchingInfos,
         Collections.singletonList( argumentTypesMatchingInfos ) );
+  }
+
+  private boolean matches( MethodStructure ms1, MethodStructure ms2 ) {
+    if ( ms1.getSortedArgumentTypes().length != ms2.getSortedArgumentTypes().length ) {
+      return false;
+    }
+    if ( !typeMatcherSupplier.get().matchesType( ms1.getReturnType(), ms2.getReturnType() ) ) {
+      return false;
+    }
+    for ( int i = 0; i < ms1.getSortedArgumentTypes().length; i++ ) {
+      if ( !typeMatcherSupplier.get().matchesType( ms1.getSortedArgumentTypes()[i],
+          ms2.getSortedArgumentTypes()[i] ) ) {
+        return false;
+      }
+    }
+    return true;
   }
 
   private Map<ParamPosition, Collection<ModuleMatchingInfo>> calculateArgumentTypesMatchingInfos(
@@ -71,11 +65,10 @@ public class GenSpecMethodMatcher implements MethodMatcher {
     for ( int i = 0; i < checkATs.length; i++ ) {
       Class<?> checkAT = checkATs[i];
       Class<?> queryAT = queryATs[i];
-      Collection<ModuleMatchingInfo> infos = typeMatcher.calculateTypeMatchingInfos( checkAT, queryAT );
+      Collection<ModuleMatchingInfo> infos = typeMatcherSupplier.get().calculateTypeMatchingInfos( checkAT, queryAT );
       matchingMap.put( new ParamPosition( i, i ), infos );
     }
 
     return matchingMap;
   }
-
 }

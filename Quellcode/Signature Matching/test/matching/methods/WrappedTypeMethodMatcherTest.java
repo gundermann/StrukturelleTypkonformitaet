@@ -8,13 +8,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 import matching.modules.ExactTypeMatcher;
+import matching.modules.WrappedTypeMatcher;
 
 public class WrappedTypeMethodMatcherTest {
   MethodMatcher matcher;
 
   @Before
   public void setup() {
-    matcher = new WrappedTypeMethodMatcher( () -> new ExactTypeMatcher() );
+    matcher = new CommonMethodMatcher( () -> new WrappedTypeMatcher( () -> new ExactTypeMatcher() ) );
   }
 
   @Test

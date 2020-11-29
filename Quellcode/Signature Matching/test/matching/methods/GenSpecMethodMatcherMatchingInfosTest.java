@@ -14,11 +14,12 @@ import java.util.Map.Entry;
 import org.junit.Test;
 
 import matching.methods.MethodMatchingInfo.ParamPosition;
+import matching.modules.GenSpecTypeMatcher;
 import matching.modules.ModuleMatchingInfo;
 
 public class GenSpecMethodMatcherMatchingInfosTest {
 
-  MethodMatcher matcher = new GenSpecMethodMatcher();
+  MethodMatcher matcher = new CommonMethodMatcher( () -> new GenSpecTypeMatcher() );
 
   @Test
   public void test1() {
