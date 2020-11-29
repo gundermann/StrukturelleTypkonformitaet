@@ -72,9 +72,8 @@ public class ModuleMatchingInfo {
 
   /**
    * Diese Methode führt eine Bewertung hinsichtlich der Vollständigkeit bzgl. der erwünschten Methoden. Wenn das target
-   * bspw. nur einen Teil der in der source erwarteten Methoden liefern kann (siehe {@link ModuleMatcher}->
-   * partlyMatches), dann wird hier ein niedrigerer Wert geliefert, als wenn das target vollständig die source matched
-   * (siehe {@link ModuleMatcher}-> matches).
+   * bspw. nur einen Teil der in der source erwarteten Methoden liefern kann , dann wird hier ein niedrigerer Wert
+   * geliefert, als wenn das target vollständig die source matched.
    *
    * @deprecated TODO das muss woanders hin verschobenw reden
    * @return
