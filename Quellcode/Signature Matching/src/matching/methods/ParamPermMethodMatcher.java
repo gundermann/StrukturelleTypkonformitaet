@@ -12,6 +12,7 @@ import java.util.function.Supplier;
 
 import matching.methods.MethodMatchingInfo.ParamPosition;
 import matching.modules.ModuleMatchingInfo;
+import matching.modules.TypeMatcher;
 import util.Permuter;
 
 /**
@@ -20,17 +21,14 @@ import util.Permuter;
  */
 public class ParamPermMethodMatcher implements MethodMatcher {
 
-  private final Supplier<MethodMatcher> innerMethodMatcherSupplier;
+  private final Supplier<TypeMatcher> innerTypeMatcherSupplier;
 
-  public ParamPermMethodMatcher( Supplier<MethodMatcher> innerMethodMatcherSupplier ) {
-    this.innerMethodMatcherSupplier = innerMethodMatcherSupplier;
+  public ParamPermMethodMatcher( Supplier<TypeMatcher> innerTypeMatcherSupplier ) {
+    this.innerTypeMatcherSupplier = innerTypeMatcherSupplier;
   }
 
   @Override
   public boolean matches( Method m1, Method m2 ) {
-    if ( innerMethodMatcherSupplier.get().matches( m1, m2 ) ) {
-      return true;
-    }
     MethodStructure ms1 = MethodStructure.createFromDeclaredMethod( m1 );
     MethodStructure ms2 = MethodStructure.createFromDeclaredMethod( m2 );
     return matches( ms1, ms2 );
@@ -101,7 +99,7 @@ public class ParamPermMethodMatcher implements MethodMatcher {
       return new ArrayList<>();
     }
     MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( checkMethod, queryMethod );
-    Collection<ModuleMatchingInfo> returnTypeMatchingInfos = innerMethodMatcherSupplier.get()
+    Collection<ModuleMatchingInfo> returnTypeMatchingInfos = innerTypeMatcherSupplier.get()
         .calculateTypeMatchingInfos(
             queryMethod.getReturnType(), checkMethod.getReturnType() );
 
@@ -134,12 +132,12 @@ public class ParamPermMethodMatcher implements MethodMatcher {
 
   @Override
   public boolean matchesType( Class<?> checkType, Class<?> queryType ) {
-    return innerMethodMatcherSupplier.get().matchesType( checkType, queryType );
+    return innerTypeMatcherSupplier.get().matchesType( checkType, queryType );
   }
 
   @Override
   public Collection<ModuleMatchingInfo> calculateTypeMatchingInfos( Class<?> checkType, Class<?> queryType ) {
-    return innerMethodMatcherSupplier.get().calculateTypeMatchingInfos( checkType, queryType );
+    return innerTypeMatcherSupplier.get().calculateTypeMatchingInfos( checkType, queryType );
   }
 
 }

@@ -6,9 +6,11 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import matching.modules.ExactTypeMatcher;
+
 public class ParamPermMethodMatcherTest {
 
-  MethodMatcher matcher = new ParamPermMethodMatcher( () -> new ExactMethodMatcher() );
+  MethodMatcher matcher = new ParamPermMethodMatcher( () -> new ExactTypeMatcher() );
 
   @Test
   public void test1() {
