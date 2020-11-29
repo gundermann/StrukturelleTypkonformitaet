@@ -6,7 +6,7 @@ import java.util.Collection;
 import matching.MatcherCombiner;
 import matching.modules.ExactTypeMatcher;
 import matching.modules.GenSpecTypeMatcher;
-import matching.modules.ModuleMatchingInfo;
+import matching.modules.WrappedTypeMatcher;
 
 public class CombinedMethodMatcher implements MethodMatcher {
   ExactMethodMatcher exactMethodMatcher = new ExactMethodMatcher();
@@ -18,8 +18,8 @@ public class CombinedMethodMatcher implements MethodMatcher {
   GenSpecTypeMatcher genSpecTypeMatcher = new GenSpecTypeMatcher();
 
   MethodMatcher combination = new ParamPermMethodMatcher(
-      MatcherCombiner.combine( genSpecMethodMatcher, exactMethodMatcher,
-          new WrappedTypeMethodMatcher( MatcherCombiner.combine( genSpecTypeMatcher,
+      MatcherCombiner.combine( genSpecTypeMatcher, exactTypeMatcher,
+          new WrappedTypeMatcher( MatcherCombiner.combine( genSpecTypeMatcher,
               exactTypeMatcher ) ) ) );
 
   @Override
@@ -62,16 +62,6 @@ public class CombinedMethodMatcher implements MethodMatcher {
   @Override
   public Collection<MethodMatchingInfo> calculateMatchingInfos( Method checkMethod, Method queryMethod ) {
     return combination.calculateMatchingInfos( checkMethod, queryMethod );
-  }
-
-  @Override
-  public boolean matchesType( Class<?> checkType, Class<?> queryType ) {
-    return combination.matchesType( checkType, queryType );
-  }
-
-  @Override
-  public Collection<ModuleMatchingInfo> calculateTypeMatchingInfos( Class<?> checkType, Class<?> queryType ) {
-    return combination.calculateTypeMatchingInfos( checkType, queryType );
   }
 
 }

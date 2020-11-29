@@ -1,18 +1,12 @@
 package matching.methods;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import matching.methods.MethodMatchingInfo.ParamPosition;
 import matching.modules.ModuleMatchingInfo;
@@ -25,18 +19,9 @@ import matching.modules.WrappedTypeMatcher;
  */
 public class WrappedTypeMethodMatcher implements MethodMatcher {
 
-  // Versuch: Cache der Wrapped-Prüfungen
-  // Grund: Bei der Wrapped-Prüfung von boolean und Boolean über den CombinedMethodMatcher kam es zu einem StackOverflow
-  // Idee: Die geprüften Kombinationen werden gecached. Sofern eine gecachedte Kombination nochmal geprüft wird, wird
-  // die Prüfung einfach übersprungen.
-  final Map<Class<?>[], Boolean> cachedWrappedTypeChecks = new HashMap<>();
-
-  private final Supplier<TypeMatcher> innerMethodMatcherSupplier;
-
   private final TypeMatcher typeMatcher;
 
   public WrappedTypeMethodMatcher( Supplier<TypeMatcher> innerMethodMatcherSupplier ) {
-    this.innerMethodMatcherSupplier = innerMethodMatcherSupplier;
     this.typeMatcher = new WrappedTypeMatcher( innerMethodMatcherSupplier );
   }
 
@@ -63,62 +48,6 @@ public class WrappedTypeMethodMatcher implements MethodMatcher {
     return true;
   }
 
-  /**
-   * Prüft auf Gleichheit oder auf Wrapped in eine Richtung
-   *
-   * @param t1
-   * @param t2
-   * @return t1 = t2 || t1 in t2
-   */
-  boolean matchesWrappedOneDirection( Class<?> t1, Class<?> t2 ) {
-    return t1.equals( t2 ) || isWrappedIn( t1, t2 );
-  }
-
-  private boolean isWrappedIn( Class<?> checkType, Class<?> queryType ) {
-    // Hier ist die Frage, ob nur ein Attribut vom Typ des wrappedType im Wrapper vorhanden sein muss, oder nur eine
-    // Methode mit den Rückgabewert des wrappedType, oder sogar beides.
-
-    // Erster Versuch: beides (siehe Frage-Antwort-Spiel in containsMethodWithType
-    // return containsFieldWithType( wrapperType, wrappedType ) &&
-    // containsMethodWithType( wrapperType, wrappedType );
-
-    // Zweiter Versuch: nur Attribute
-
-    // return containsFieldWithType( wrapperType, wrappedType, innerCompareFunction );
-
-    // Dritter Versuch: wie zweiter Versucht nur mit Cache.
-    Class<?>[] cacheKey = new Class<?>[] { checkType, queryType };
-    if ( isCombinationCached( cacheKey ) ) {
-      // false, weil die Überprüfung noch nicht stattgefunden bzw. wenn sie bereits true ermittelt hatte, dann wäre die
-      // Überprüfung bereits erfolgreich gewesen
-      return getResultFromCache( cacheKey );
-    }
-    cachedWrappedTypeChecks.put( cacheKey, null );
-    boolean result = containsFieldWithType( queryType, checkType );
-    cachedWrappedTypeChecks.put( cacheKey, result );
-    return result;
-
-  }
-
-  private boolean getResultFromCache( Class<?>[] newCacheKey ) {
-    for ( Entry<Class<?>[], Boolean> cacheEntries : cachedWrappedTypeChecks.entrySet() ) {
-      Class<?>[] cachedKey = cacheEntries.getKey();
-      if ( Objects.equals( cachedKey[0], newCacheKey[0] ) && Objects.equals( cachedKey[1], newCacheKey[1] ) ) {
-        return cacheEntries.getValue() == null ? false : cacheEntries.getValue();
-      }
-    }
-    return false;
-  }
-
-  private boolean isCombinationCached( Class<?>[] newCacheKey ) {
-    for ( Class<?>[] cacheKeys : cachedWrappedTypeChecks.keySet() ) {
-      if ( Objects.equals( cacheKeys[0], newCacheKey[0] ) && Objects.equals( cacheKeys[1], newCacheKey[1] ) ) {
-        return true;
-      }
-    }
-    return false;
-  }
-
   // @Deprecated
   // private boolean containsMethodWithType( Class<?> checkingClass, Class<?> returnType ) {
   // // Frage: Sollen hier nur auf sichtbare Methoden geprüft werden
@@ -137,16 +66,6 @@ public class WrappedTypeMethodMatcher implements MethodMatcher {
   //
   // return false;
   // }
-
-  private boolean containsFieldWithType( Class<?> wrapperClass, Class<?> wrappedType ) {
-    Field[] fieldsOfWrapper = filterStaticFields( wrapperClass.getDeclaredFields() );
-    for ( Field field : fieldsOfWrapper ) {
-      if ( innerMethodMatcherSupplier.get().matchesType( field.getType(), wrappedType ) ) {
-        return true;
-      }
-    }
-    return false;
-  }
 
   @Override
   public Collection<MethodMatchingInfo> calculateMatchingInfos( Method checkMethod, Method queryMethod ) {
@@ -173,18 +92,6 @@ public class WrappedTypeMethodMatcher implements MethodMatcher {
       matchingMap.put( new ParamPosition( i, i ), infos );
     }
     return Collections.singletonList( matchingMap );
-  }
-
-  /**
-   * Die statischen Felder müssen herausgefiltert werden.
-   *
-   * @param declaredFields
-   * @return
-   */
-  private Field[] filterStaticFields( Field[] declaredFields ) {
-    return Stream.of( declaredFields ).filter( f -> !Modifier.isStatic( f.getModifiers() ) )
-        .collect( Collectors.toList() )
-        .toArray( new Field[] {} );
   }
 
 }

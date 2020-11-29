@@ -69,7 +69,8 @@ public final class MethodMatchingInfoFactory {
       return result;
     }
     ParamPosition selectedKey = keyIterator.next();
-    Collection<ModuleMatchingInfo> selectedArgumentTypeInfos = localInfos.remove( selectedKey );
+    Collection<ModuleMatchingInfo> selectedArgumentTypeInfos = localInfos.get( selectedKey );
+    localInfos.remove( selectedKey );
     if ( selectedArgumentTypeInfos.isEmpty() ) {
       return restructureArgumentTypeMatchingInfosWithParamPosition( localInfos );
     }
