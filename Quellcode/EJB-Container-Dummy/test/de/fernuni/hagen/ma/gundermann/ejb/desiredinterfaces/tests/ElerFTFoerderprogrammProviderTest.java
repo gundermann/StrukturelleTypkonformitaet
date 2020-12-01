@@ -32,10 +32,12 @@ public class ElerFTFoerderprogrammProviderTest {
     assertThat( alleFreigegebenenFPs, notNullValue() );
   }
 
+  // Dass dieser Test nicht funktioniert, liegt vermutlich an den DVs
   @QueryTypeTest
   public void testMockedFPCollection() {
     DvFoerderprogramm fp = EasyMock.createNiceMock( DvFoerderprogramm.class );
     EasyMock.expect( fp.getNummer() ).andReturn( 800L ).anyTimes();
+    EasyMock.expect( fp.isDefined() ).andReturn( true ).anyTimes();
     EasyMock.replay( fp );
     ElerFTFoerderprogramm alleFreigegebenenFPs = provider.getElerFTFoerderprogramm( DvAntragsJahr.AJ2020,
         fp, new Date() );

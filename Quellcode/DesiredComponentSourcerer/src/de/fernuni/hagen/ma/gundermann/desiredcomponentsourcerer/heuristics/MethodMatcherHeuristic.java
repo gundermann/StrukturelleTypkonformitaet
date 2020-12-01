@@ -18,7 +18,7 @@ public final class MethodMatcherHeuristic {
 
   private final TypeMatcher wrappedTM = new WrappedTypeMatcher( () -> combinedGenSpecExactTM );
 
-  private final TypeMatcher combinedWrappedGenSpecExact = MatcherCombiner.combine( wrappedTM, genSpecTM, exactTM )
+  private final TypeMatcher combinedWrappedGenSpecExact = MatcherCombiner.combine( genSpecTM, exactTM, wrappedTM )
       .get();
 
   private final TypeMatcher structExactTM = new StructuralTypeMatcher( () -> exactTM );

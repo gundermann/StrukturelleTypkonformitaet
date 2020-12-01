@@ -146,7 +146,7 @@ public class GenSpecTypeMatcher implements TypeMatcher {
     // Supertyp haben.
     Method[] specMethods = specType.getDeclaredMethods();
     for ( Method specM : specMethods ) {
-      Method genM = getOriginalMethod( specM );
+      Method genM = getOriginalMethod( specM, genType );
       if ( genM != null ) {
         genMethods.remove( genM );
         Logger.infoF( "matching methods found: %s === %s", specM, genM );
@@ -193,13 +193,12 @@ public class GenSpecTypeMatcher implements TypeMatcher {
     return Stream.of( methods ).filter( m -> !Modifier.isPrivate( m.getModifiers() ) ).collect( Collectors.toList() );
   }
 
-  public static Method getOriginalMethod( final Method myMethod ) {
-    Class<?> declaringClass = myMethod.getDeclaringClass();
-    if ( declaringClass.equals( Object.class ) ) {
+  public static Method getOriginalMethod( final Method myMethod, Class<?> superType ) {
+    if ( superType.equals( Object.class ) ) {
       return null;
     }
     try {
-      Method superMethod = declaringClass.getSuperclass().getDeclaredMethod( myMethod.getName(),
+      Method superMethod = superType.getDeclaredMethod( myMethod.getName(),
           myMethod.getParameterTypes() );
       return !Modifier.isPrivate( superMethod.getModifiers() ) ? superMethod : null;
     }

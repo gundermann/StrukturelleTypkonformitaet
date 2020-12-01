@@ -12,9 +12,9 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import matching.methods.CommonMethodMatcher;
 import matching.methods.MethodMatcher;
 import matching.methods.MethodMatchingInfo;
+import matching.methods.ParamPermMethodMatcher;
 import util.Logger;
 
 public class StructuralTypeMatcher implements TypeMatcher {
@@ -22,7 +22,7 @@ public class StructuralTypeMatcher implements TypeMatcher {
   private final MethodMatcher methodMatcher;
 
   public StructuralTypeMatcher( final Supplier<TypeMatcher> innerMethodMatcherSupplier ) {
-    this.methodMatcher = new CommonMethodMatcher( innerMethodMatcherSupplier );
+    this.methodMatcher = new ParamPermMethodMatcher( innerMethodMatcherSupplier );
   }
 
   @Override
