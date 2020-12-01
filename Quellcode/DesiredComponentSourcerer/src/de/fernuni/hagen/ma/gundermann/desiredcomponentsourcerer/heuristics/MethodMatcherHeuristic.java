@@ -1,46 +1,55 @@
 package de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics;
 
-import matching.methods.ExactMethodMatcher;
-import matching.methods.GenSpecMethodMatcher;
-import matching.methods.MatcherCombiner;
-import matching.methods.MethodMatcher;
-import matching.methods.ParamPermMethodMatcher;
-import matching.methods.WrappedTypeMethodMatcher;
+import matching.MatcherCombiner;
+import matching.modules.ExactTypeMatcher;
+import matching.modules.GenSpecTypeMatcher;
+import matching.modules.StructuralTypeMatcher;
+import matching.modules.TypeMatcher;
+import matching.modules.WrappedTypeMatcher;
 
 // Exact > ParamPerm + Exact > GenSpec > ParamPerm + GenSpec > Wrapped > ParamPerm + Wrapped
 public final class MethodMatcherHeuristic {
 
-  private final MethodMatcher exactMM = new ExactMethodMatcher();
+  private final TypeMatcher exactTM = new ExactTypeMatcher();
 
-  private final MethodMatcher paramPermExactMM = new ParamPermMethodMatcher( () -> exactMM );
+  private final TypeMatcher genSpecTM = new GenSpecTypeMatcher();
 
-  private final MethodMatcher genSpecMM = new GenSpecMethodMatcher();
+  private final TypeMatcher combinedGenSpecExactTM = MatcherCombiner.combine( genSpecTM, exactTM ).get();
 
-  private final MethodMatcher paramPermGenSpecMM = new ParamPermMethodMatcher( () -> genSpecMM );
+  private final TypeMatcher wrappedTM = new WrappedTypeMatcher( () -> combinedGenSpecExactTM );
 
-  private final MethodMatcher combinedParamPermGenSpecExactMM = new ParamPermMethodMatcher(
-      MatcherCombiner.combine( genSpecMM, exactMM ) );
+  private final TypeMatcher combinedWrappedGenSpecExact = MatcherCombiner.combine( wrappedTM, genSpecTM, exactTM )
+      .get();
 
-  private final MethodMatcher wrappedMM = new WrappedTypeMethodMatcher( () -> combinedParamPermGenSpecExactMM );
+  private final TypeMatcher structExactTM = new StructuralTypeMatcher( () -> exactTM );
 
-  private final MethodMatcher paramPermWrappedMM = new ParamPermMethodMatcher( () -> wrappedMM );
+  private final TypeMatcher structGenSpecExactTM = new StructuralTypeMatcher( () -> combinedGenSpecExactTM );
+
+  private final TypeMatcher structWrappedGenSpecExactTM = new StructuralTypeMatcher(
+      () -> combinedWrappedGenSpecExact );
+
+  // TODO später
+  // private final TypeMatcher recursiveWrappedTM = new WrappedTypeMatcher(
+  // () -> MatcherCombiner.combine( genSpecTM, exactTM, recursiveWrappedTM ) );
 
   private MethodMatcherHeuristic() {
 
   }
 
-  public static MethodMatcher[] getMethodMatcher() {
-    return new MethodMatcherHeuristic().getMatcherArray();
+  private TypeMatcher[] getMatcherArray() {
+    return new TypeMatcher[] {
+        this.exactTM,
+        this.genSpecTM,
+        this.combinedGenSpecExactTM,
+        this.wrappedTM,
+        this.combinedWrappedGenSpecExact,
+        this.structExactTM,
+        this.structGenSpecExactTM,
+        this.structWrappedGenSpecExactTM };
   }
 
-  private MethodMatcher[] getMatcherArray() {
-    return new MethodMatcher[] {
-        this.exactMM,
-        this.paramPermExactMM,
-        this.genSpecMM,
-        this.paramPermGenSpecMM,
-        this.wrappedMM,
-        this.paramPermWrappedMM };
+  public static TypeMatcher[] getTypeMatcher() {
+    return new MethodMatcherHeuristic().getMatcherArray();
   }
 
 }
