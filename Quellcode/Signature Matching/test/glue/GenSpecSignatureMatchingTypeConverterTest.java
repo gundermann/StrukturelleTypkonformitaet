@@ -481,7 +481,9 @@ public class GenSpecSignatureMatchingTypeConverterTest {
         .andReturn( new HashMap<>() )
         .anyTimes();
 
-    EasyMock.replay( mmiConcat, mmiAddInt, mmiAddGen, mmiGetLong, mmiGetNull );
+    EasyMock.replay( mmiConcat, mmiAddInt, mmiAddGen,
+        mmiGetLong,
+        mmiGetNull );
 
     methodMatchingInfos.add( mmiConcat );
     methodMatchingInfos.add( mmiAddInt );

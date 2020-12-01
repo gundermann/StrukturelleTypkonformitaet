@@ -14,7 +14,7 @@ public class ModuleMatchingInfo {
 
   private final Collection<MethodMatchingInfo> methodMatchingInfos;
 
-  private final ProxyFactoryCreator converterCreator;
+  private ProxyFactoryCreator converterCreator;
 
   /**
    * Konstruktor fuer ModuleMatchings, bei denen zwischen Source und Target keine Contains-Assoziation besteht
@@ -103,6 +103,10 @@ public class ModuleMatchingInfo {
 
   public ProxyFactoryCreator getConverterCreator() {
     return this.converterCreator;
+  }
+
+  public void setConverterCreator( ProxyFactoryCreator converterCreator ) {
+    this.converterCreator = converterCreator;
   }
 
 }

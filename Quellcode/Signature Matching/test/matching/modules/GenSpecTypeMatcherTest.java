@@ -1,6 +1,8 @@
 package matching.modules;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
@@ -34,10 +36,16 @@ public class GenSpecTypeMatcherTest {
     GenSpecTypeMatcher matcher = new GenSpecTypeMatcher();
     Collection<ModuleMatchingInfo> tmi = matcher.calculateTypeMatchingInfos( String.class, String.class );
     assertTrue( tmi.size() == 1 );
+    ModuleMatchingInfo mmi = tmi.iterator().next();
+    assertThat( mmi.getMethodMatchingInfos().size(), equalTo( 0 ) );
     tmi = matcher.calculateTypeMatchingInfos( General.class, Specific.class );
     assertTrue( tmi.size() == 1 );
+    mmi = tmi.iterator().next();
+    assertThat( mmi.getMethodMatchingInfos().size(), equalTo( 0 ) );
     tmi = matcher.calculateTypeMatchingInfos( Specific.class, General.class );
-    assertTrue( tmi.size() == 1 );
+    assertThat( tmi.size(), equalTo( 1 ) );
+    mmi = tmi.iterator().next();
+    assertThat( mmi.getMethodMatchingInfos().size(), equalTo( 3 ) );
   }
 
 }

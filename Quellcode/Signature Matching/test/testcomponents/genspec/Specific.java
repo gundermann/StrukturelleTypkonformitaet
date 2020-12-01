@@ -23,9 +23,10 @@ public class Specific extends General {
     return specificAttr;
   }
 
-  @Override
-  public Long getBoxedLongAttr() {
-    return super.getBoxedLongAttr();
-  }
+  // TODO das funktioniert noch nicht. Siehe MA Überlegungen > Matcher > GenSpecTypeMatcher > Ansatz 3
+  // @Override
+  // public Long getBoxedLongAttr() {
+  // return super.getBoxedLongAttr();
+  // }
 
 }

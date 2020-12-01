@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import matching.methods.MethodMatchingInfo;
 import matching.methods.MethodMatchingInfo.ParamPosition;
@@ -136,13 +138,17 @@ public class GenSpecTypeMatcher implements TypeMatcher {
   private Map<Method, Collection<MethodMatchingInfo>> createMethodMatchingInfoForGen2SpecMapping( Class<?> genType,
       Class<?> specType ) {
     Map<Method, Collection<MethodMatchingInfo>> matchingInfos = new HashMap<>();
+
+    // Es wird davon ausgegangen, dass nur für die überschreibbaren Methoden MatchingInfos erzeugt werden können.
+    // Und für jede überschreibbare Methode muss eine MatchingInfo erzeugt werden.
+    Collection<Method> genMethods = getOverrideableMethods( genType );
     // Methoden, die im speziellen Typ deklariert aber nicht überschrieben wurden, können keine passenede Methode im
     // Supertyp haben.
     Method[] specMethods = specType.getDeclaredMethods();
     for ( Method specM : specMethods ) {
-      // Es wird davon ausgegangen, dass nur für die überschreibbaren Methoden MatchingInfos erzeugt werden können.
       Method genM = getOriginalMethod( specM );
       if ( genM != null ) {
+        genMethods.remove( genM );
         Logger.infoF( "matching methods found: %s === %s", specM, genM );
         MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( specM, genM );
         // Hier kann wirklich der gleiche TypeMatcher verwendet werden, weil für überschriebene Methode bestimmte Regeln
@@ -161,6 +167,11 @@ public class GenSpecTypeMatcher implements TypeMatcher {
       }
     }
 
+    for ( Method genM : genMethods ) {
+      MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( genM, genM );
+      matchingInfos.put( genM, Collections.singletonList( factory.create( null, new HashMap<>() ) ) );
+    }
+
     return matchingInfos;
   }
 
@@ -175,6 +186,11 @@ public class GenSpecTypeMatcher implements TypeMatcher {
     }
 
     return matchingMap;
+  }
+
+  private Collection<Method> getOverrideableMethods( Class<?> genType ) {
+    Method[] methods = genType.getDeclaredMethods();
+    return Stream.of( methods ).filter( m -> !Modifier.isPrivate( m.getModifiers() ) ).collect( Collectors.toList() );
   }
 
   public static Method getOriginalMethod( final Method myMethod ) {
