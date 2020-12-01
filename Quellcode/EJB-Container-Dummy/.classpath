@@ -8,5 +8,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/Signature Matching"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/profil-repository"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/ComponentTester"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/DesiredComponentSourcerer"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
