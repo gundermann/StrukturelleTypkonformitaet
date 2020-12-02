@@ -11,7 +11,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.MethodMatcherHeuristic;
+import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.TypeMatcherHeuristic;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.Logger;
 import glue.SignatureMatchingTypeConverter;
 import matching.modules.ModuleMatchingInfo;
@@ -22,7 +22,7 @@ import tester.TestResult.Result;
 
 public class DesiredComponentFinder {
 
-  private static final TypeMatcher[] TYPE_MATCHERS = MethodMatcherHeuristic.getTypeMatcher();
+  private static final TypeMatcher[] TYPE_MATCHERS = TypeMatcherHeuristic.getTypeMatcher();
 
   private final Class<?>[] registeredComponentInterfaces;
 

@@ -8,7 +8,7 @@ import matching.modules.TypeMatcher;
 import matching.modules.WrappedTypeMatcher;
 
 // Exact > ParamPerm + Exact > GenSpec > ParamPerm + GenSpec > Wrapped > ParamPerm + Wrapped
-public final class MethodMatcherHeuristic {
+public final class TypeMatcherHeuristic {
 
   private final TypeMatcher exactTM = new ExactTypeMatcher();
 
@@ -32,7 +32,7 @@ public final class MethodMatcherHeuristic {
   // private final TypeMatcher recursiveWrappedTM = new WrappedTypeMatcher(
   // () -> MatcherCombiner.combine( genSpecTM, exactTM, recursiveWrappedTM ) );
 
-  private MethodMatcherHeuristic() {
+  private TypeMatcherHeuristic() {
 
   }
 
@@ -49,7 +49,7 @@ public final class MethodMatcherHeuristic {
   }
 
   public static TypeMatcher[] getTypeMatcher() {
-    return new MethodMatcherHeuristic().getMatcherArray();
+    return new TypeMatcherHeuristic().getMatcherArray();
   }
 
 }
