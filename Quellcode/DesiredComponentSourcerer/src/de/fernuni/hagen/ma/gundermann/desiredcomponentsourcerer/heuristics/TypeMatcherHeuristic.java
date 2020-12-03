@@ -3,6 +3,7 @@ package de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics;
 import matching.MatcherCombiner;
 import matching.modules.ExactTypeMatcher;
 import matching.modules.GenSpecTypeMatcher;
+import matching.modules.PartlyTypeMatcher;
 import matching.modules.StructuralTypeMatcher;
 import matching.modules.TypeMatcher;
 import matching.modules.WrappedTypeMatcher;
@@ -21,11 +22,11 @@ public final class TypeMatcherHeuristic {
   private final TypeMatcher combinedWrappedGenSpecExact = MatcherCombiner.combine( genSpecTM, exactTM, wrappedTM )
       .get();
 
-  private final TypeMatcher structExactTM = new StructuralTypeMatcher( () -> exactTM );
+  private final PartlyTypeMatcher structExactTM = new StructuralTypeMatcher( () -> exactTM );
 
-  private final TypeMatcher structGenSpecExactTM = new StructuralTypeMatcher( () -> combinedGenSpecExactTM );
+  private final PartlyTypeMatcher structGenSpecExactTM = new StructuralTypeMatcher( () -> combinedGenSpecExactTM );
 
-  private final TypeMatcher structWrappedGenSpecExactTM = new StructuralTypeMatcher(
+  private final PartlyTypeMatcher structWrappedGenSpecExactTM = new StructuralTypeMatcher(
       () -> combinedWrappedGenSpecExact );
 
   // TODO später
@@ -34,6 +35,21 @@ public final class TypeMatcherHeuristic {
 
   private TypeMatcherHeuristic() {
 
+  }
+
+  public static TypeMatcher[] getFullTypeMatcher() {
+    return new TypeMatcherHeuristic().getMatcherArray();
+  }
+
+  public static PartlyTypeMatcher[] getPartlyTypeMatcher() {
+    return new TypeMatcherHeuristic().getPartlyMatcherArray();
+  }
+
+  private PartlyTypeMatcher[] getPartlyMatcherArray() {
+    return new PartlyTypeMatcher[] {
+        this.structExactTM,
+        this.structGenSpecExactTM,
+        this.structWrappedGenSpecExactTM };
   }
 
   private TypeMatcher[] getMatcherArray() {
@@ -46,10 +62,6 @@ public final class TypeMatcherHeuristic {
         this.structExactTM,
         this.structGenSpecExactTM,
         this.structWrappedGenSpecExactTM };
-  }
-
-  public static TypeMatcher[] getTypeMatcher() {
-    return new TypeMatcherHeuristic().getMatcherArray();
   }
 
 }

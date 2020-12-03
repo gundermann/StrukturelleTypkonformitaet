@@ -27,7 +27,7 @@ public class ParamPermSignatureMatchingTypeConverterTest {
     Class<Desired1ParameterInterface> source = Desired1ParameterInterface.class;
     Class<Offered1ParameterClass> target = Offered1ParameterClass.class;
     Offered1ParameterClass convertationObject = new Offered1ParameterClass();
-    SignatureMatchingTypeConverter<Desired1ParameterInterface> converter = new SignatureMatchingTypeConverter<>(
+    SingleTypeConverter<Desired1ParameterInterface> converter = new SingleTypeConverter<>(
         source );
 
     Set<MethodMatchingInfo> methodMatchingInfos = new HashSet<>();
@@ -68,7 +68,7 @@ public class ParamPermSignatureMatchingTypeConverterTest {
     Class<Desired2ParameterInterface> source = Desired2ParameterInterface.class;
     Class<Offered2ParameterClass> target = Offered2ParameterClass.class;
     Offered2ParameterClass convertationObject = new Offered2ParameterClass();
-    SignatureMatchingTypeConverter<Desired2ParameterInterface> converter = new SignatureMatchingTypeConverter<>(
+    SingleTypeConverter<Desired2ParameterInterface> converter = new SingleTypeConverter<>(
         source );
 
     Set<MethodMatchingInfo> methodMatchingInfos = new HashSet<>();
@@ -112,7 +112,7 @@ public class ParamPermSignatureMatchingTypeConverterTest {
     Class<Desired3ParameterInterface> source = Desired3ParameterInterface.class;
     Class<Offered3ParameterClass> target = Offered3ParameterClass.class;
     Offered3ParameterClass convertationObject = new Offered3ParameterClass();
-    SignatureMatchingTypeConverter<Desired3ParameterInterface> converter = new SignatureMatchingTypeConverter<>(
+    SingleTypeConverter<Desired3ParameterInterface> converter = new SingleTypeConverter<>(
         source );
 
     Set<MethodMatchingInfo> methodMatchingInfos = new HashSet<>();

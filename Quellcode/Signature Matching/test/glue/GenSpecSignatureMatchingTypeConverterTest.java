@@ -29,7 +29,7 @@ public class GenSpecSignatureMatchingTypeConverterTest {
     Class<DesiredGenInterface> source = DesiredGenInterface.class;
     Class<OfferedSpecClass> target = OfferedSpecClass.class;
     OfferedSpecClass convertationObject = new OfferedSpecClass();
-    SignatureMatchingTypeConverter<DesiredGenInterface> converter = new SignatureMatchingTypeConverter<>( source );
+    SingleTypeConverter<DesiredGenInterface> converter = new SingleTypeConverter<>( source );
 
     Set<MethodMatchingInfo> methodMatchingInfos = new HashSet<>();
 
@@ -150,7 +150,7 @@ public class GenSpecSignatureMatchingTypeConverterTest {
     Class<DesiredGenInterface> source = DesiredGenInterface.class;
     Class<OfferedGenClass> target = OfferedGenClass.class;
     OfferedGenClass convertationObject = new OfferedGenClass();
-    SignatureMatchingTypeConverter<DesiredGenInterface> converter = new SignatureMatchingTypeConverter<>( source );
+    SingleTypeConverter<DesiredGenInterface> converter = new SingleTypeConverter<>( source );
 
     Set<MethodMatchingInfo> methodMatchingInfos = new HashSet<>();
 
@@ -282,7 +282,7 @@ public class GenSpecSignatureMatchingTypeConverterTest {
     Class<DesiredSpecInterface> source = DesiredSpecInterface.class;
     Class<OfferedSpecClass> target = OfferedSpecClass.class;
     OfferedSpecClass convertationObject = new OfferedSpecClass();
-    SignatureMatchingTypeConverter<DesiredSpecInterface> converter = new SignatureMatchingTypeConverter<>( source );
+    SingleTypeConverter<DesiredSpecInterface> converter = new SingleTypeConverter<>( source );
 
     Set<MethodMatchingInfo> methodMatchingInfos = new HashSet<>();
 
@@ -418,7 +418,7 @@ public class GenSpecSignatureMatchingTypeConverterTest {
     Class<DesiredSpecInterface> source = DesiredSpecInterface.class;
     Class<OfferedGenClass> target = OfferedGenClass.class;
     OfferedGenClass convertationObject = new OfferedGenClass();
-    SignatureMatchingTypeConverter<DesiredSpecInterface> converter = new SignatureMatchingTypeConverter<>( source );
+    SingleTypeConverter<DesiredSpecInterface> converter = new SingleTypeConverter<>( source );
 
     Set<MethodMatchingInfo> methodMatchingInfos = new HashSet<>();
 

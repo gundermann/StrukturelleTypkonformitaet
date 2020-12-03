@@ -25,7 +25,7 @@ public class WrappedTypeSignatureMatchingTypeConverterTest {
     Class<DesiredWrappedParameterInterface> source = DesiredWrappedParameterInterface.class;
     Class<OfferedWrapperParameterClass> target = OfferedWrapperParameterClass.class;
     OfferedWrapperParameterClass convertationObject = new OfferedWrapperParameterClass();
-    SignatureMatchingTypeConverter<DesiredWrappedParameterInterface> converter = new SignatureMatchingTypeConverter<>(
+    SingleTypeConverter<DesiredWrappedParameterInterface> converter = new SingleTypeConverter<>(
         source );
 
     Set<MethodMatchingInfo> methodMatchingInfos = new HashSet<>();
@@ -78,7 +78,7 @@ public class WrappedTypeSignatureMatchingTypeConverterTest {
     Class<DesiredWrapperParameterInterface> source = DesiredWrapperParameterInterface.class;
     Class<OfferedWrappedParameterClass> target = OfferedWrappedParameterClass.class;
     OfferedWrappedParameterClass convertationObject = new OfferedWrappedParameterClass();
-    SignatureMatchingTypeConverter<DesiredWrapperParameterInterface> converter = new SignatureMatchingTypeConverter<>(
+    SingleTypeConverter<DesiredWrapperParameterInterface> converter = new SingleTypeConverter<>(
         source );
 
     Set<MethodMatchingInfo> methodMatchingInfos = new HashSet<>();

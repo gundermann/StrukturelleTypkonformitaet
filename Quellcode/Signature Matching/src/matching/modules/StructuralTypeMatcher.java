@@ -17,7 +17,7 @@ import matching.methods.MethodMatchingInfo;
 import matching.methods.ParamPermMethodMatcher;
 import util.Logger;
 
-public class StructuralTypeMatcher implements TypeMatcher {
+public class StructuralTypeMatcher implements PartlyTypeMatcher {
 
   private final MethodMatcher methodMatcher;
 

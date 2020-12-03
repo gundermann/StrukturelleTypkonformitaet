@@ -3,18 +3,21 @@ package de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.TypeMatcherHeuristic;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.Logger;
-import glue.SignatureMatchingTypeConverter;
+import glue.CombinationTypeConverter;
+import glue.SingleTypeConverter;
 import matching.modules.ModuleMatchingInfo;
+import matching.modules.PartlyTypeMatcher;
+import matching.modules.PartlyTypeMatchingInfo;
 import matching.modules.TypeMatcher;
 import tester.ComponentTester;
 import tester.TestResult;
@@ -22,7 +25,9 @@ import tester.TestResult.Result;
 
 public class DesiredComponentFinder {
 
-  private static final TypeMatcher[] TYPE_MATCHERS = TypeMatcherHeuristic.getTypeMatcher();
+  private static final TypeMatcher[] FULL_TYPE_MATCHERS = TypeMatcherHeuristic.getFullTypeMatcher();
+
+  private static final PartlyTypeMatcher[] PARLTY_TYPE_MATCHERS = TypeMatcherHeuristic.getPartlyTypeMatcher();
 
   private final Class<?>[] registeredComponentInterfaces;
 
@@ -44,10 +49,22 @@ public class DesiredComponentFinder {
   public <DesiredInterface> DesiredInterface getDesiredComponent(
       Class<DesiredInterface> desiredInterface ) {
 
+    Logger.info( "search component by full match" );
     // TODO Matching-Method Heuristik: Zwischen den Matching-Methoden gibt es eine Rangfolge:
-    for ( int i = 0; i < TYPE_MATCHERS.length; i++ ) {
-      Optional<DesiredInterface> optDesiredBean = findDesiredComponentByMatcher( desiredInterface,
-          TYPE_MATCHERS[i] );
+    for ( int i = 0; i < FULL_TYPE_MATCHERS.length; i++ ) {
+      Optional<DesiredInterface> optDesiredBean = findDesiredComponentByFullMatcher( desiredInterface,
+          FULL_TYPE_MATCHERS[i] );
+      if ( optDesiredBean.isPresent() ) {
+        Logger.info( "component found" );
+        return optDesiredBean.get();
+      }
+      Logger.info( "component not found" );
+    }
+
+    Logger.info( "search component by partly match" );
+    for ( int i = 0; i < PARLTY_TYPE_MATCHERS.length; i++ ) {
+      Optional<DesiredInterface> optDesiredBean = findDesiredComponentByPartlyMatcher( desiredInterface,
+          PARLTY_TYPE_MATCHERS[i] );
       if ( optDesiredBean.isPresent() ) {
         Logger.info( "component found" );
         return optDesiredBean.get();
@@ -55,56 +72,84 @@ public class DesiredComponentFinder {
       Logger.info( "component not found" );
     }
     return null;
-
-    // Das ist dasselbe wie findDesiredComponentByMatcher( desiredInterface, new CombinedMethodMatcher());
-    // Collection<Class<?>> matchingBeanInterfaces = findComponentsBySignatureMatching( desiredInterface );
-    // Logger.info( "Matching Bean-Interfaces of " + desiredInterface.getName() );
-    // // matchingBeanInterfaces.stream().map( Class::getName ).forEach( System.out::println );
-    // Logger.info( String.format( "count: %d", matchingBeanInterfaces.size() ) );
-
-    // Hier können weitere Filter und Heuristiken eingebaut werden
-
-    // return getComposedComponent( desiredInterface, matchingBeanInterfaces );
   }
 
-  private <DesiredInterface> Optional<DesiredInterface> findDesiredComponentByMatcher(
+  private <DesiredInterface> Optional<DesiredInterface> findDesiredComponentByPartlyMatcher(
+      Class<DesiredInterface> desiredInterface,
+      PartlyTypeMatcher typeMatcher ) {
+    Logger.infoF( "start search with matcher: %s", typeMatcher.getClass().getSimpleName() );
+
+    Map<Class<?>, PartlyTypeMatchingInfo> compnentInterface2PartlyMatchingInfos = findPartlyMatchingComponentInterfaces(
+        desiredInterface, typeMatcher );
+
+    Optional<DesiredInterface> result = Optional
+        .ofNullable( getCombinedMatchingComponent( desiredInterface, compnentInterface2PartlyMatchingInfos ) );
+    Logger.infoF( "finish search with matcher: %s", typeMatcher.getClass().getSimpleName() );
+    return result;
+  }
+
+  private <DesiredInterface> Map<Class<?>, PartlyTypeMatchingInfo> findPartlyMatchingComponentInterfaces(
+      Class<DesiredInterface> desiredInterface, PartlyTypeMatcher typeMatcher ) {
+    Map<Class<?>, PartlyTypeMatchingInfo> matchedBeans = new HashMap<>();
+    for ( Class<?> beanInterface : getRegisteredComponentInterfaces() ) {
+      boolean matchesPartly = typeMatcher.matchesTypePartly( beanInterface, desiredInterface );
+      if ( !matchesPartly ) {
+        continue;
+      }
+      matchedBeans.put( beanInterface,
+          typeMatcher.calculatePartlyTypeMatchingInfos( beanInterface, desiredInterface ) );
+    }
+    return matchedBeans;
+  }
+
+  private <DesiredInterface> Optional<DesiredInterface> findDesiredComponentByFullMatcher(
       Class<DesiredInterface> desiredInterface, TypeMatcher typeMatcher ) {
     Logger.infoF( "start search with matcher: %s", typeMatcher.getClass().getSimpleName() );
     Collection<Class<?>> matchingBeanInterfaces = findMatchingComponentInterfaces( desiredInterface, typeMatcher );
     Optional<DesiredInterface> result = Optional
-        .ofNullable( getComposedComponent( desiredInterface, matchingBeanInterfaces, typeMatcher ) );
+        .ofNullable( getFullMatchingComponent( desiredInterface, matchingBeanInterfaces, typeMatcher ) );
     Logger.infoF( "finish search with matcher: %s", typeMatcher.getClass().getSimpleName() );
     return result;
   }
 
   private <DesiredInterface> Collection<Class<?>> findMatchingComponentInterfaces(
-      Class<DesiredInterface> desiredInterface,
-      TypeMatcher typeMatcher ) {
+      Class<DesiredInterface> desiredInterface, TypeMatcher typeMatcher ) {
     Collection<Class<?>> matchedBeans = new ArrayList<>();
     for ( Class<?> beanInterface : getRegisteredComponentInterfaces() ) {
-      // Dieser Code ist nur für das Debugging-Analyse notwendig
-      // if ( Arrays.asList( beanInterfaces ).contains( ElerFTStammdatenAuskunftService.class ) ) {
-      // Logger.info( "BEAN OF INTEREST" );
-      // }
       boolean matchesFull = typeMatcher.matchesType( beanInterface, desiredInterface );
       if ( !matchesFull ) {
-        // boolean partlyMatches = moduleMatcher.partlyMatches( beanInterfaces );
-        // if ( !partlyMatches ) {
         continue;
-        // }
       }
       matchedBeans.add( beanInterface );
     }
     return matchedBeans;
   }
 
-  private <DesiredInterface> DesiredInterface getComposedComponent(
+  private <DesiredInterface> DesiredInterface getCombinedMatchingComponent(
+      Class<DesiredInterface> desiredInterface,
+      Map<Class<?>, PartlyTypeMatchingInfo> compnentInterface2PartlyMatchingInfos ) {
+    Logger.info( "create ComponentInfos" );
+    BestMatchingComponentCombinationFinder combinationFinder = new BestMatchingComponentCombinationFinder(
+        compnentInterface2PartlyMatchingInfos );
+
+    while ( !combinationFinder.hasNextCombination() ) {
+      CombinationInfo combinationInfos = combinationFinder.getNextCombination();
+      DesiredInterface component = getPartlyMatchedTestedComponent( combinationInfos, desiredInterface );
+      if ( component != null ) {
+        return component;
+      }
+    }
+
+    return null;
+
+  }
+
+  private <DesiredInterface> DesiredInterface getFullMatchingComponent(
       Class<DesiredInterface> desiredInterface, Collection<Class<?>> matchingBeanInterfaces,
       TypeMatcher typeMatcher ) {
     Logger.info( "create ComponentInfos" );
-    Set<ComponentInfos> rankedComponentInfos = getSortedModuleMatchingInfos( desiredInterface,
+    Collection<ComponentInfos> rankedComponentInfos = getSortedModuleMatchingInfos( desiredInterface,
         matchingBeanInterfaces, typeMatcher );
-    Logger.info( String.format( "ranking of relevant components" ) );
     rankedComponentInfos.stream().forEach(
         c -> Logger.info( String.format( "rank: %d component: %s", c.getRank(), c.getComponentClass().getName() ) ) );
     List<ComponentInfos> fullMatchedComponents = rankedComponentInfos.stream()
@@ -120,9 +165,35 @@ public class DesiredComponentFinder {
     return null;
   }
 
+  private <DesiredInterface> DesiredInterface getPartlyMatchedTestedComponent( CombinationInfo combinationInfos,
+      Class<DesiredInterface> desiredInterface ) {
+    CombinationTypeConverter<DesiredInterface> converter = new CombinationTypeConverter<>(
+        desiredInterface );
+    ComponentTester<DesiredInterface> componentTester = new ComponentTester<>( desiredInterface );
+
+    Map<Object, ModuleMatchingInfo> components2MatchingInfo = new HashMap<>();
+    for ( Class<?> componentClass : combinationInfos.getComponentClasses() ) {
+      Optional<?> optComponent = getComponent( componentClass );
+      if ( !optComponent.isPresent() ) {
+        return null;
+      }
+      components2MatchingInfo.put( optComponent.get(), combinationInfos.getModuleMatchingInfo( componentClass ) );
+    }
+
+    Logger.infoF( "test component: %s",
+        combinationInfos.getComponentClasses().stream().map( Class::getName ).collect( Collectors.joining( "," ) ) );
+    DesiredInterface convertedComponent = converter.convert( components2MatchingInfo );
+    TestResult testResult = componentTester.testComponent( convertedComponent );
+    Logger.infoF( "passed tests: %d/%d", testResult.getPassedTests(), testResult.getTestCount() );
+    if ( testResult.getResult() == Result.PASSED ) {
+      return convertedComponent;
+    }
+    return null;
+  }
+
   private <DesiredInterface> DesiredInterface getFullMatchedTestedComponent(
       List<ComponentInfos> fullMatchedComponents, Class<DesiredInterface> desiredInterface ) {
-    SignatureMatchingTypeConverter<DesiredInterface> converter = new SignatureMatchingTypeConverter<>(
+    SingleTypeConverter<DesiredInterface> converter = new SingleTypeConverter<>(
         desiredInterface );
     ComponentTester<DesiredInterface> componentTester = new ComponentTester<>( desiredInterface );
 
@@ -150,7 +221,7 @@ public class DesiredComponentFinder {
 
   }
 
-  private <DesiredInterface> Set<ComponentInfos> getSortedModuleMatchingInfos(
+  private <DesiredInterface> Collection<ComponentInfos> getSortedModuleMatchingInfos(
       Class<DesiredInterface> desiredInterface, Collection<Class<?>> matchingBeanInterfaces,
       TypeMatcher typeMatcher ) {
     List<ComponentInfos> componentInfoSet = new ArrayList<>();
@@ -166,7 +237,7 @@ public class DesiredComponentFinder {
     Logger.info( String.format( "ComponentInfos created: %d", componentInfoSet.size() ) );
     Logger.info( "sort ComponentInfos" );
     Collections.sort( componentInfoSet, ( c1, c2 ) -> Integer.compare( c1.getRank(), c2.getRank() ) );
-    return new HashSet<>( componentInfoSet );
+    return componentInfoSet;
   }
 
   // private <DesiredInterface> Collection<Class<?>> findComponentsBySignatureMatching(

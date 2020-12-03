@@ -2,14 +2,14 @@ package glue;
 
 import matching.modules.ModuleMatchingInfo;
 
-public class SignatureMatchingTypeConverter<T> {
+public class SingleTypeConverter<T> {
 
   // private final Class<T> targetStructure;
 
   private final ProxyFactory<T> proxyFactory;
 
   // Was ist mit ENUMs?
-  public SignatureMatchingTypeConverter( Class<T> targetStructure ) {
+  public SingleTypeConverter( Class<T> targetStructure ) {
     // this.targetStructure = targetStructure;
     // Grundlagen pruefen:
     // Interface oder Klasse
@@ -23,7 +23,7 @@ public class SignatureMatchingTypeConverter<T> {
     }
   }
 
-  public SignatureMatchingTypeConverter( Class<T> targetStructure, ProxyFactoryCreator factoryCreator ) {
+  public SingleTypeConverter( Class<T> targetStructure, ProxyFactoryCreator factoryCreator ) {
     this.proxyFactory = factoryCreator.createProxyFactory( targetStructure );
   }
 

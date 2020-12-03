@@ -120,7 +120,7 @@ public class BehaviourDelegateInvocationHandler implements MethodInterceptor, In
     // if ( moduleMatchingInfo.getSourceDelegate() != null ) {
     // source = moduleMatchingInfo.getSourceDelegate().apply( sourceType );
     // }
-    return new SignatureMatchingTypeConverter<>( (Class<RT>) moduleMatchingInfo.getTarget(),
+    return new SingleTypeConverter<>( (Class<RT>) moduleMatchingInfo.getTarget(),
         moduleMatchingInfo.getConverterCreator() ).convert( source,
             moduleMatchingInfo );
   }
