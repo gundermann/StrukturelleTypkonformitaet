@@ -14,11 +14,12 @@ import java.util.Map.Entry;
 import org.junit.Test;
 
 import matching.methods.MethodMatchingInfo.ParamPosition;
+import matching.modules.ExactTypeMatcher;
 import matching.modules.ModuleMatchingInfo;
 
 public class ParamPermMethodMatcherMatchingInfosTest {
 
-  MethodMatcher matcher = new ParamPermMethodMatcher( () -> new ExactMethodMatcher() );
+  MethodMatcher matcher = new ParamPermMethodMatcher( () -> new ExactTypeMatcher() );
 
   @Test
   public void test1() {
@@ -135,7 +136,7 @@ public class ParamPermMethodMatcherMatchingInfosTest {
 
     Collection<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
     assertThat( matchingInfos, notNullValue() );
-    assertThat( matchingInfos.size(), equalTo( 2 ) );
+    assertThat( matchingInfos.size(), equalTo( 1 ) );
     for ( MethodMatchingInfo info : matchingInfos ) {
       ModuleMatchingInfo returnTypeMatchingInfo = info.getReturnTypeMatchingInfo();
       assertThat( returnTypeMatchingInfo, notNullValue() );
@@ -164,7 +165,7 @@ public class ParamPermMethodMatcherMatchingInfosTest {
 
     Collection<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
     assertThat( matchingInfos, notNullValue() );
-    assertThat( matchingInfos.size(), equalTo( 2 ) );
+    assertThat( matchingInfos.size(), equalTo( 1 ) );
     for ( MethodMatchingInfo info : matchingInfos ) {
       ModuleMatchingInfo returnTypeMatchingInfo = info.getReturnTypeMatchingInfo();
       assertThat( returnTypeMatchingInfo, notNullValue() );
@@ -193,7 +194,7 @@ public class ParamPermMethodMatcherMatchingInfosTest {
 
     Collection<MethodMatchingInfo> matchingInfos = matcher.calculateMatchingInfos( checkMethod, queryMethod );
     assertThat( matchingInfos, notNullValue() );
-    assertThat( matchingInfos.size(), equalTo( 2 ) );
+    assertThat( matchingInfos.size(), equalTo( 1 ) );
     for ( MethodMatchingInfo info : matchingInfos ) {
       ModuleMatchingInfo returnTypeMatchingInfo = info.getReturnTypeMatchingInfo();
       assertThat( returnTypeMatchingInfo, notNullValue() );

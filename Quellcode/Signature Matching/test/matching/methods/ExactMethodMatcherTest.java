@@ -6,9 +6,11 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import matching.modules.ExactTypeMatcher;
+
 public class ExactMethodMatcherTest {
 
-  MethodMatcher matcher = new ExactMethodMatcher();
+  MethodMatcher matcher = new CommonMethodMatcher( () -> new ExactTypeMatcher() );
 
   @Test
   public void test1() {

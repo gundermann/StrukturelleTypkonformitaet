@@ -12,6 +12,7 @@ import java.util.function.Supplier;
 
 import matching.methods.MethodMatchingInfo.ParamPosition;
 import matching.modules.ModuleMatchingInfo;
+import matching.modules.TypeMatcher;
 import util.Permuter;
 
 /**
@@ -20,24 +21,21 @@ import util.Permuter;
  */
 public class ParamPermMethodMatcher implements MethodMatcher {
 
-  private final Supplier<MethodMatcher> innerMethodMatcherSupplier;
+  private final Supplier<TypeMatcher> innerTypeMatcherSupplier;
 
-  public ParamPermMethodMatcher( Supplier<MethodMatcher> innerMethodMatcherSupplier ) {
-    this.innerMethodMatcherSupplier = innerMethodMatcherSupplier;
+  public ParamPermMethodMatcher( Supplier<TypeMatcher> innerTypeMatcherSupplier ) {
+    this.innerTypeMatcherSupplier = innerTypeMatcherSupplier;
   }
 
   @Override
   public boolean matches( Method m1, Method m2 ) {
-    if ( innerMethodMatcherSupplier.get().matches( m1, m2 ) ) {
-      return true;
-    }
     MethodStructure ms1 = MethodStructure.createFromDeclaredMethod( m1 );
     MethodStructure ms2 = MethodStructure.createFromDeclaredMethod( m2 );
     return matches( ms1, ms2 );
   }
 
   private boolean matches( MethodStructure ms1, MethodStructure ms2 ) {
-    if ( !matchesType( ms1.getReturnType(), ms2.getReturnType() ) ) {
+    if ( !innerTypeMatcherSupplier.get().matchesType( ms1.getReturnType(), ms2.getReturnType() ) ) {
       return false;
     }
     if ( ms1.getSortedArgumentTypes().length != ms2.getSortedArgumentTypes().length ) {
@@ -88,7 +86,7 @@ public class ParamPermMethodMatcher implements MethodMatcher {
 
   private boolean matchesArgumentTypes( Class<?>[] argumentTypes1, Class<?>[] argumentTypes2 ) {
     for ( int i = 0; i < argumentTypes1.length; i++ ) {
-      if ( !matchesType( argumentTypes1[i], argumentTypes2[i] ) ) {
+      if ( !innerTypeMatcherSupplier.get().matchesType( argumentTypes1[i], argumentTypes2[i] ) ) {
         return false;
       }
     }
@@ -101,7 +99,7 @@ public class ParamPermMethodMatcher implements MethodMatcher {
       return new ArrayList<>();
     }
     MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( checkMethod, queryMethod );
-    Collection<ModuleMatchingInfo> returnTypeMatchingInfos = innerMethodMatcherSupplier.get()
+    Collection<ModuleMatchingInfo> returnTypeMatchingInfos = innerTypeMatcherSupplier.get()
         .calculateTypeMatchingInfos(
             queryMethod.getReturnType(), checkMethod.getReturnType() );
 
@@ -125,21 +123,11 @@ public class ParamPermMethodMatcher implements MethodMatcher {
         Class<?> checkParameter = combination.getValue()[i];
         Class<?> queryParameter = queryArgs[i];
         infoMap.put( new ParamPosition( i, combination.getKey()[i] ),
-            calculateTypeMatchingInfos( checkParameter, queryParameter ) );
+            innerTypeMatcherSupplier.get().calculateTypeMatchingInfos( checkParameter, queryParameter ) );
       }
       infos.add( infoMap );
     }
     return infos;
-  }
-
-  @Override
-  public boolean matchesType( Class<?> checkType, Class<?> queryType ) {
-    return innerMethodMatcherSupplier.get().matchesType( checkType, queryType );
-  }
-
-  @Override
-  public Collection<ModuleMatchingInfo> calculateTypeMatchingInfos( Class<?> checkType, Class<?> queryType ) {
-    return innerMethodMatcherSupplier.get().calculateTypeMatchingInfos( checkType, queryType );
   }
 
 }

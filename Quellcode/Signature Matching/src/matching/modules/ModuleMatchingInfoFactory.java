@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -62,6 +63,11 @@ public class ModuleMatchingInfoFactory {
 
   public Set<ModuleMatchingInfo> createFromMethodMatchingInfos(
       Map<Method, Collection<MethodMatchingInfo>> possibleMethodMatches ) {
+    if ( possibleMethodMatches.isEmpty() ) {
+      Set<ModuleMatchingInfo> set = new HashSet<>();
+      set.add( create() );
+      return set;
+    }
     Logger.infoF( "start permutation of MethodMatchingInfos: %d",
         possibleMethodMatches.values().stream().filter( v -> !v.isEmpty() ).map( v -> v.size() )
             .reduce( ( a, b ) -> a * b ).orElse( 0 ) );

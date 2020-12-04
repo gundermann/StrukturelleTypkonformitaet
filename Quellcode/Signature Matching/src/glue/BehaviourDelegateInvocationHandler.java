@@ -127,14 +127,14 @@ public class BehaviourDelegateInvocationHandler implements MethodInterceptor, In
 
   private Optional<MethodMatchingInfo> getMethodMatchingInfo( Method method ) {
     for ( MethodMatchingInfo mmi : matchingInfos.getMethodMatchingInfos() ) {
-      if ( mmi.getSource().getName().equals( method.getName() ) && agrumentsMatches( mmi, method ) ) {
+      if ( mmi.getSource().getName().equals( method.getName() ) && argumentsMatches( mmi, method ) ) {
         return Optional.of( mmi );
       }
     }
     return Optional.empty();
   }
 
-  private boolean agrumentsMatches( MethodMatchingInfo mmi, Method method ) {
+  private boolean argumentsMatches( MethodMatchingInfo mmi, Method method ) {
     for ( Entry<ParamPosition, ModuleMatchingInfo> argMMIEntry : mmi.getArgumentTypeMatchingInfos().entrySet() ) {
       if ( method.getParameterCount() <= argMMIEntry.getKey().getSourceParamPosition() ) {
         throw new RuntimeException( "wrong parameter count" );

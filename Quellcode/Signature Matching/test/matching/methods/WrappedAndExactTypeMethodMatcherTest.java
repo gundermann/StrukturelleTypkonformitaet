@@ -6,11 +6,19 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import matching.MatcherCombiner;
 import matching.modules.ExactTypeMatcher;
+import matching.modules.TypeMatcher;
+import matching.modules.WrappedTypeMatcher;
 
-public class ParamPermMethodMatcherTest {
+public class WrappedAndExactTypeMethodMatcherTest {
 
-  MethodMatcher matcher = new ParamPermMethodMatcher( () -> new ExactTypeMatcher() );
+  private TypeMatcher exactTypeMatcher = new ExactTypeMatcher();
+
+  private TypeMatcher wrappedTypeMatcher = new WrappedTypeMatcher( () -> exactTypeMatcher );
+
+  private MethodMatcher matcher = new CommonMethodMatcher(
+      MatcherCombiner.combine( wrappedTypeMatcher, exactTypeMatcher ) );
 
   @Test
   public void test1() {
@@ -29,12 +37,12 @@ public class ParamPermMethodMatcherTest {
 
   @Test
   public void test4() {
-    assertFalse( matcher.matches( getMethod( "getOneNativeWrapped" ), getMethod( "getOne" ) ) );
+    assertTrue( matcher.matches( getMethod( "getOneNativeWrapped" ), getMethod( "getOne" ) ) );
   }
 
   @Test
   public void test5() {
-    assertFalse( matcher.matches( getMethod( "setBool" ), getMethod( "setBoolNativeWrapped" ) ) );
+    assertTrue( matcher.matches( getMethod( "setBool" ), getMethod( "setBoolNativeWrapped" ) ) );
   }
 
   @Test
@@ -59,8 +67,11 @@ public class ParamPermMethodMatcherTest {
 
   @Test
   public void test10() {
-    // Das dieser Test richtig ist, war eigentlich nicht meine Intension.
-    // Aber es ist nachvollziehbar, dass das Ergebnis durch eine Parameter-Permutation positiv ausfällt.
-    assertTrue( matcher.matches( getMethod( "addSpec" ), getMethod( "addGen" ) ) );
+    assertFalse( matcher.matches( getMethod( "addSpec" ), getMethod( "addGen" ) ) );
+  }
+
+  @Test
+  public void test11() {
+    assertFalse( matcher.matches( getMethod( "setBool" ), getMethod( "setObject" ) ) );
   }
 }

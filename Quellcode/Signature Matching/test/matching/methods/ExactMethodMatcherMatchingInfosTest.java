@@ -13,11 +13,12 @@ import java.util.Map.Entry;
 import org.junit.Test;
 
 import matching.methods.MethodMatchingInfo.ParamPosition;
+import matching.modules.ExactTypeMatcher;
 import matching.modules.ModuleMatchingInfo;
 
 public class ExactMethodMatcherMatchingInfosTest {
 
-  MethodMatcher matcher = new ExactMethodMatcher();
+  MethodMatcher matcher = new CommonMethodMatcher( () -> new ExactTypeMatcher() );
 
   @Test
   public void test1() {

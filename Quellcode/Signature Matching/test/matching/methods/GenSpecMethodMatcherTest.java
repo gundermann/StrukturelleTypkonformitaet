@@ -6,9 +6,11 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import matching.modules.GenSpecTypeMatcher;
+
 public class GenSpecMethodMatcherTest {
 
-  MethodMatcher matcher = new GenSpecMethodMatcher();
+  MethodMatcher matcher = new CommonMethodMatcher( () -> new GenSpecTypeMatcher() );
 
   @Test
   public void test1() {

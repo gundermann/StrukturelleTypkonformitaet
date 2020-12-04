@@ -2,7 +2,6 @@ package matching.modules;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 import java.lang.reflect.Method;
@@ -29,7 +28,7 @@ public class ModuleMatchingInfoFactoryTest {
     assertThat( matchingInfo.getRating(), equalTo( 0 ) );
     assertThat( matchingInfo.getMethodMatchingInfos(), notNullValue() );
     assertThat( matchingInfo.getMethodMatchingInfos().size(), equalTo( 0 ) );
-    assertThat( matchingInfo.getConverterCreator(), nullValue() );
+    assertThat( matchingInfo.getConverterCreator(), notNullValue() );
   }
 
   @Test
@@ -41,7 +40,7 @@ public class ModuleMatchingInfoFactoryTest {
     assertThat( matchingInfo.getRating(), equalTo( 0 ) );
     assertThat( matchingInfo.getMethodMatchingInfos(), notNullValue() );
     assertThat( matchingInfo.getMethodMatchingInfos().size(), equalTo( 0 ) );
-    assertThat( matchingInfo.getConverterCreator(), nullValue() );
+    assertThat( matchingInfo.getConverterCreator(), notNullValue() );
   }
 
   @Test

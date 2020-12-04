@@ -1,11 +1,9 @@
-package matching.methods;
+package matching.modules;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -14,15 +12,11 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import matching.methods.MethodMatchingInfo.ParamPosition;
-import matching.modules.ModuleMatchingInfo;
-import matching.modules.ModuleMatchingInfoFactory;
-
 /**
  * Dieser Matcher beachtet, dass die Typen (Return- und Argumenttypen) einer der beiden Methoden in einem Typ der
  * anderen Methode enthalten sein können (Wrapper).
  */
-public class WrappedTypeMethodMatcher implements MethodMatcher {
+public class WrappedTypeMatcher implements TypeMatcher {
 
   // Versuch: Cache der Wrapped-Prüfungen
   // Grund: Bei der Wrapped-Prüfung von boolean und Boolean über den CombinedMethodMatcher kam es zu einem StackOverflow
@@ -30,44 +24,18 @@ public class WrappedTypeMethodMatcher implements MethodMatcher {
   // die Prüfung einfach übersprungen.
   final Map<Class<?>[], Boolean> cachedWrappedTypeChecks = new HashMap<>();
 
-  private final Supplier<MethodMatcher> innerMethodMatcherSupplier;
+  private final Supplier<TypeMatcher> innerMethodMatcherSupplier;
 
-  public WrappedTypeMethodMatcher( Supplier<MethodMatcher> innerMethodMatcherSupplier ) {
+  public WrappedTypeMatcher( Supplier<TypeMatcher> innerMethodMatcherSupplier ) {
     this.innerMethodMatcherSupplier = innerMethodMatcherSupplier;
   }
 
-  @Override
-  public boolean matches( Method m1, Method m2 ) {
-    if ( innerMethodMatcherSupplier.get().matches( m1, m2 ) ) {
-      return true;
-    }
-    MethodStructure ms1 = MethodStructure.createFromDeclaredMethod( m1 );
-    MethodStructure ms2 = MethodStructure.createFromDeclaredMethod( m2 );
-    return matches( ms1, ms2 );
-  }
-
-  private boolean matches( MethodStructure ms1, MethodStructure ms2 ) {
-
-    if ( ms1.getSortedArgumentTypes().length != ms2.getSortedArgumentTypes().length ) {
-      return false;
-    }
-    if ( !matchesType( ms1.getReturnType(), ms2.getReturnType() ) ) {
-      return false;
-    }
-    for ( int i = 0; i < ms1.getSortedArgumentTypes().length; i++ ) {
-      if ( !matchesType( ms1.getSortedArgumentTypes()[i], ms2.getSortedArgumentTypes()[i] ) ) {
-        return false;
-      }
-    }
-    return true;
-  }
-
   /**
-   * Prüft auf Gleichheit oder auf Wrapped
+   * Prüft auf Wrapped
    *
    * @param t1
    * @param t2
-   * @return t1 = t2 || t1 > t2 || t2 > t1
+   * @return t1 in t2 || t2 in t1
    */
 
   @Override
@@ -76,20 +44,19 @@ public class WrappedTypeMethodMatcher implements MethodMatcher {
     // Darf die Gleichheit hier geprüft werden?
     // NEIN: Das ist wenn überhaupt die Aufgabe des inneren Matchers
     // t1.equals( t2 ) ||
-    innerMethodMatcherSupplier.get().matchesType( t1, t2 ) ||
-        isWrappedIn( t1, t2 )
+    isWrappedIn( t1, t2 )
         || isWrappedIn( t2, t1 );
   }
 
   /**
-   * Prüft auf Gleichheit oder auf Wrapped in eine Richtung
+   * Prüft auf Wrapped in eine Richtung
    *
    * @param t1
    * @param t2
-   * @return t1 = t2 || t1 in t2
+   * @return t1 in t2
    */
   boolean matchesWrappedOneDirection( Class<?> t1, Class<?> t2 ) {
-    return t1.equals( t2 ) || isWrappedIn( t1, t2 );
+    return isWrappedIn( t1, t2 );
   }
 
   private boolean isWrappedIn( Class<?> checkType, Class<?> queryType ) {
@@ -167,36 +134,10 @@ public class WrappedTypeMethodMatcher implements MethodMatcher {
   }
 
   @Override
-  public Collection<MethodMatchingInfo> calculateMatchingInfos( Method checkMethod, Method queryMethod ) {
-    if ( !matches( checkMethod, queryMethod ) ) {
-      return new ArrayList<>();
-    }
-    MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( checkMethod, queryMethod );
-    Collection<ModuleMatchingInfo> returnTypeMatchingInfos = calculateTypeMatchingInfos( queryMethod.getReturnType(),
-        checkMethod.getReturnType() );
-
-    Collection<Map<ParamPosition, Collection<ModuleMatchingInfo>>> argumentTypesMatchingInfos = calculateArgumentMatchingInfos(
-        checkMethod.getParameterTypes(), queryMethod.getParameterTypes() );
-    return factory.createFromTypeMatchingInfos( returnTypeMatchingInfos, argumentTypesMatchingInfos );
-  }
-
-  private Collection<Map<ParamPosition, Collection<ModuleMatchingInfo>>> calculateArgumentMatchingInfos(
-      Class<?>[] checkATs, Class<?>[] queryATs ) {
-    Map<ParamPosition, Collection<ModuleMatchingInfo>> matchingMap = new HashMap<>();
-    for ( int i = 0; i < checkATs.length; i++ ) {
-      Class<?> checkAT = checkATs[i];
-      Class<?> queryAT = queryATs[i];
-      Collection<ModuleMatchingInfo> infos = calculateTypeMatchingInfos( checkAT, queryAT );
-      matchingMap.put( new ParamPosition( i, i ), infos );
-    }
-    return Collections.singletonList( matchingMap );
-  }
-
-  @Override
   public Collection<ModuleMatchingInfo> calculateTypeMatchingInfos( Class<?> checkType, Class<?> queryType ) {
     Collection<ModuleMatchingInfo> allMatchingInfos = new ArrayList<>();
 
-    MethodMatcher innerMethodMatcher = innerMethodMatcherSupplier.get();
+    TypeMatcher innerMethodMatcher = innerMethodMatcherSupplier.get();
     if ( innerMethodMatcher.matchesType( checkType, queryType ) ) {
       Collection<ModuleMatchingInfo> matchingInfos = innerMethodMatcher.calculateTypeMatchingInfos( checkType,
           queryType );
@@ -217,7 +158,7 @@ public class WrappedTypeMethodMatcher implements MethodMatcher {
       Class<?> wrappedType, boolean isTargetWrapper ) {
     Collection<ModuleMatchingInfo> allMatchingInfos = new ArrayList<>();
     Field[] fieldsOfWrapper = filterStaticFields( wrapperClass.getDeclaredFields() );
-    MethodMatcher innerMethodMatcher = innerMethodMatcherSupplier.get();
+    TypeMatcher innerMethodMatcher = innerMethodMatcherSupplier.get();
     for ( Field field : fieldsOfWrapper ) {
       // TODO hier wird nur auf der ersten Ebene geprüft. Eine tiefere Verschachtelung wird noch nicht ermöglicht.
       // ABER: Der ganze Matcher macht das noch nicht. Auch beim Prüfen des Matchings wird nur auf der obersten Ebene

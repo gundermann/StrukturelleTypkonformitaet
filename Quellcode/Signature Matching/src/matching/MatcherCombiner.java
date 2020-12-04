@@ -1,4 +1,4 @@
-package matching.methods;
+package matching;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -6,7 +6,10 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.function.Supplier;
 
+import matching.methods.MethodMatcher;
+import matching.methods.MethodMatchingInfo;
 import matching.modules.ModuleMatchingInfo;
+import matching.modules.TypeMatcher;
 
 public abstract class MatcherCombiner {
   private MatcherCombiner() {
@@ -35,9 +38,15 @@ public abstract class MatcherCombiner {
         return new HashSet<>();
       }
 
+    };
+  }
+
+  public static Supplier<TypeMatcher> combine( TypeMatcher... matcher ) {
+    return () -> new TypeMatcher() {
+
       @Override
       public boolean matchesType( Class<?> checkType, Class<?> queryType ) {
-        for ( MethodMatcher m : matcher ) {
+        for ( TypeMatcher m : matcher ) {
           if ( m.matchesType( checkType, queryType ) ) {
             return true;
           }
@@ -47,14 +56,14 @@ public abstract class MatcherCombiner {
 
       @Override
       public Collection<ModuleMatchingInfo> calculateTypeMatchingInfos( Class<?> checkType, Class<?> queryType ) {
-        for ( MethodMatcher m : matcher ) {
+        for ( TypeMatcher m : matcher ) {
           if ( m.matchesType( checkType, queryType ) ) {
             return m.calculateTypeMatchingInfos( checkType, queryType );
           }
         }
         return new ArrayList<>();
       }
+
     };
   }
-
 }
