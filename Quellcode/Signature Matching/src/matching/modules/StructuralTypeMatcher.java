@@ -132,4 +132,10 @@ public class StructuralTypeMatcher implements PartlyTypeMatcher {
     return queryMethods;
   }
 
+  @Override
+  public PartlyTypeMatchingInfo calculatePartlyTypeMatchingInfos( Class<?> checkType, Class<?> queryType ) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
 }

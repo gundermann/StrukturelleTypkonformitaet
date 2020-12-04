@@ -11,7 +11,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.TypeMatcherHeuristic;
+import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.DefaultTypeMatcherHeuristic;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.Logger;
 import glue.CombinationTypeConverter;
 import glue.SingleTypeConverter;
@@ -25,9 +25,9 @@ import tester.TestResult.Result;
 
 public class DesiredComponentFinder {
 
-  private static final TypeMatcher[] FULL_TYPE_MATCHERS = TypeMatcherHeuristic.getFullTypeMatcher();
+  private TypeMatcher[] fullTypeMatcher = DefaultTypeMatcherHeuristic.getFullTypeMatcher();
 
-  private static final PartlyTypeMatcher[] PARLTY_TYPE_MATCHERS = TypeMatcherHeuristic.getPartlyTypeMatcher();
+  private static final PartlyTypeMatcher[] PARLTY_TYPE_MATCHERS = DefaultTypeMatcherHeuristic.getPartlyTypeMatcher();
 
   private final Class<?>[] registeredComponentInterfaces;
 
@@ -42,6 +42,10 @@ public class DesiredComponentFinder {
 
   }
 
+  public void setFullTypeMatcher( TypeMatcher[] fullTypeMatcher ) {
+    this.fullTypeMatcher = fullTypeMatcher;
+  }
+
   private Optional<?> getComponent( Class<?> componentClass ) {
     return optComponentGetter.apply( componentClass );
   }
@@ -51,9 +55,9 @@ public class DesiredComponentFinder {
 
     Logger.info( "search component by full match" );
     // TODO Matching-Method Heuristik: Zwischen den Matching-Methoden gibt es eine Rangfolge:
-    for ( int i = 0; i < FULL_TYPE_MATCHERS.length; i++ ) {
+    for ( int i = 0; i < fullTypeMatcher.length; i++ ) {
       Optional<DesiredInterface> optDesiredBean = findDesiredComponentByFullMatcher( desiredInterface,
-          FULL_TYPE_MATCHERS[i] );
+          fullTypeMatcher[i] );
       if ( optDesiredBean.isPresent() ) {
         Logger.info( "component found" );
         return optDesiredBean.get();
@@ -61,16 +65,16 @@ public class DesiredComponentFinder {
       Logger.info( "component not found" );
     }
 
-    Logger.info( "search component by partly match" );
-    for ( int i = 0; i < PARLTY_TYPE_MATCHERS.length; i++ ) {
-      Optional<DesiredInterface> optDesiredBean = findDesiredComponentByPartlyMatcher( desiredInterface,
-          PARLTY_TYPE_MATCHERS[i] );
-      if ( optDesiredBean.isPresent() ) {
-        Logger.info( "component found" );
-        return optDesiredBean.get();
-      }
-      Logger.info( "component not found" );
-    }
+    // Logger.info( "search component by partly match" );
+    // for ( int i = 0; i < PARLTY_TYPE_MATCHERS.length; i++ ) {
+    // Optional<DesiredInterface> optDesiredBean = findDesiredComponentByPartlyMatcher( desiredInterface,
+    // PARLTY_TYPE_MATCHERS[i] );
+    // if ( optDesiredBean.isPresent() ) {
+    // Logger.info( "component found" );
+    // return optDesiredBean.get();
+    // }
+    // Logger.info( "component not found" );
+    // }
     return null;
   }
 
@@ -148,12 +152,18 @@ public class DesiredComponentFinder {
       Class<DesiredInterface> desiredInterface, Collection<Class<?>> matchingBeanInterfaces,
       TypeMatcher typeMatcher ) {
     Logger.info( "create ComponentInfos" );
-    Collection<ComponentInfos> rankedComponentInfos = getSortedModuleMatchingInfos( desiredInterface,
+    Collection<DesiredComponentInfos> rankedComponentInfos = getSortedModuleMatchingInfos( desiredInterface,
         matchingBeanInterfaces, typeMatcher );
     rankedComponentInfos.stream().forEach(
-        c -> Logger.info( String.format( "rank: %d component: %s", c.getRank(), c.getComponentClass().getName() ) ) );
-    List<ComponentInfos> fullMatchedComponents = rankedComponentInfos.stream()
-        .filter( c -> c.getRank() >= 100 // !!! Achtung: Das Ranking muss angepasst werden !!!
+        c -> Logger.info( String.format( "rank: %d component: %s",
+            c.getMatchingInfos( c.getComponentClasses().iterator().next() ).getRating(),
+            c.getComponentClasses().iterator().next().getName() ) ) );
+    List<DesiredComponentInfos> fullMatchedComponents = rankedComponentInfos.stream()
+        .filter( c -> c.getMatchingInfos( c.getComponentClasses().iterator().next() ).getRating() >= 100 // !!! Achtung:
+                                                                                                         // Das Ranking
+                                                                                                         // muss
+                                                                                                         // angepasst
+                                                                                                         // werden !!!
         ).collect( Collectors.toList() );
     if ( !fullMatchedComponents.isEmpty() ) {
       DesiredInterface component = getFullMatchedTestedComponent( fullMatchedComponents, desiredInterface );
@@ -192,51 +202,50 @@ public class DesiredComponentFinder {
   }
 
   private <DesiredInterface> DesiredInterface getFullMatchedTestedComponent(
-      List<ComponentInfos> fullMatchedComponents, Class<DesiredInterface> desiredInterface ) {
+      List<DesiredComponentInfos> fullMatchedComponents, Class<DesiredInterface> desiredInterface ) {
     SingleTypeConverter<DesiredInterface> converter = new SingleTypeConverter<>(
         desiredInterface );
     ComponentTester<DesiredInterface> componentTester = new ComponentTester<>( desiredInterface );
 
-    for ( ComponentInfos componentInfo : fullMatchedComponents ) {
-      Class<?> componentClass = componentInfo.getComponentClass();
+    for ( DesiredComponentInfos componentInfo : fullMatchedComponents ) {
+      Class<?> componentClass = componentInfo.getComponentClasses().iterator().next();
       Optional<?> optComponent = getComponent( componentClass );
 
       if ( !optComponent.isPresent() ) {
         continue;
       }
       Object component = optComponent.get();
-      // TODO hier wäre eine Heuristik angebracht, welche die MatchingInfos der ComponentInfo in eine Reihenfolge
-      // bringt.
-      for ( ModuleMatchingInfo matchingInfo : componentInfo.getMatchingInfos() ) {
-        Logger.infoF( "test component: %s", component.getClass().getName() );
-        DesiredInterface convertedComponent = converter.convert( component, matchingInfo );
-        TestResult testResult = componentTester.testComponent( convertedComponent );
-        Logger.infoF( "passed tests: %d/%d", testResult.getPassedTests(), testResult.getTestCount() );
-        if ( testResult.getResult() == Result.PASSED ) {
-          return convertedComponent;
-        }
+      ModuleMatchingInfo matchingInfo = componentInfo.getMatchingInfos( componentClass );
+      Logger.infoF( "test component: %s", component.getClass().getName() );
+      DesiredInterface convertedComponent = converter.convert( component, matchingInfo );
+      TestResult testResult = componentTester.testComponent( convertedComponent );
+      Logger.infoF( "passed tests: %d/%d", testResult.getPassedTests(), testResult.getTestCount() );
+      if ( testResult.getResult() == Result.PASSED ) {
+        return convertedComponent;
       }
     }
     return null;
 
   }
 
-  private <DesiredInterface> Collection<ComponentInfos> getSortedModuleMatchingInfos(
+  private <DesiredInterface> Collection<DesiredComponentInfos> getSortedModuleMatchingInfos(
       Class<DesiredInterface> desiredInterface, Collection<Class<?>> matchingBeanInterfaces,
       TypeMatcher typeMatcher ) {
-    List<ComponentInfos> componentInfoSet = new ArrayList<>();
+    List<DesiredComponentInfos> componentInfoSet = new ArrayList<>();
     for ( Class<?> matchingBeanInterface : matchingBeanInterfaces ) {
       // Logger.info( String.format( "collect ModuleMatchingInfo: %s", matchingBeanInterface.getName() ) );
       Collection<ModuleMatchingInfo> matchingInfos = typeMatcher
           .calculateTypeMatchingInfos( matchingBeanInterface, desiredInterface );
-      ComponentInfos componentInfos = new ComponentInfos( matchingBeanInterface );
-      componentInfos.setModuleMatchingInfos( matchingInfos );
-      componentInfos.addContext( matchingBeanInterface.getName() );
-      componentInfoSet.add( componentInfos );
+      for ( ModuleMatchingInfo mmi : matchingInfos ) {
+        DesiredComponentInfos componentInfos = new DesiredComponentInfos( matchingBeanInterface, mmi );
+        componentInfoSet.add( componentInfos );
+      }
     }
     Logger.info( String.format( "ComponentInfos created: %d", componentInfoSet.size() ) );
     Logger.info( "sort ComponentInfos" );
-    Collections.sort( componentInfoSet, ( c1, c2 ) -> Integer.compare( c1.getRank(), c2.getRank() ) );
+    Collections.sort( componentInfoSet,
+        ( c1, c2 ) -> Integer.compare( c1.getMatchingInfos( c1.getComponentClasses().iterator().next() ).getRating(),
+            c2.getMatchingInfos( c2.getComponentClasses().iterator().next() ).getRating() ) );
     return componentInfoSet;
   }
 
