@@ -7,6 +7,7 @@ import java.util.function.Supplier;
 
 import matching.methods.MethodMatchingInfo;
 
+//Äquivalent zur ModuleMatchingInfo
 public class PartlyTypeMatchingInfo {
 
   private final Collection<Method> originalMethods;

@@ -21,6 +21,10 @@ import util.Logger;
  * Dieser Matcher achtet darauf, dass die Typen (Return- und Argumenttypen) der beiden Methoden auch Generelisierungen
  * bzw. Spezialisierungen von einander sein können.
  */
+
+// TODO QUERSTION: Dieser Matcher gehört doch eigentlich auch in die Kategorie "PartlyTypeMatcher" oder?
+// Zumindest, wenn ich Gen2Spec matchen möchte. Dann kann es passieren, dass der Gen nur teilweise die Methoden des Spec
+// erfüllt.
 public class GenSpecTypeMatcher implements TypeMatcher {
 
   static int counter = 0;

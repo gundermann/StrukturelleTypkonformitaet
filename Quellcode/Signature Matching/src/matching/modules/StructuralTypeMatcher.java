@@ -134,8 +134,45 @@ public class StructuralTypeMatcher implements PartlyTypeMatcher {
 
   @Override
   public PartlyTypeMatchingInfo calculatePartlyTypeMatchingInfos( Class<?> checkType, Class<?> queryType ) {
+    ModuleMatchingInfoFactory factory = new ModuleMatchingInfoFactory( checkType, queryType );
+    if ( queryType.equals( Object.class ) ) {
+      // Dieser Spezialfall führt ohne diese Sonderregelung in einen Stackoverflow, da Object als Typ immer wieder
+      // auftaucht. Es ist also eine Abbruchbedingung.
+      return new PartlyTypeMatchingInfo( checkType, new ArrayList<>(), new HashMap<>() );
+    }
+
+    Method[] queryMethods = getQueryMethods( queryType );
+    Logger.infoF( "QueryMethods: %s",
+        Stream.of( queryMethods ).map( m -> m.getName() ).collect( Collectors.joining( ", " ) ) );
+    Map<Method, Collection<Method>> possibleMatches = collectPossibleMatches( queryMethods, checkType.getMethods() );
+    Map<Method, Supplier<Collection<MethodMatchingInfo>>> matchingInfoSupplier = new HashMap<>();
+    for ( Entry<Method, Collection<Method>> qM2tM : possibleMatches.entrySet() ) {
+      Supplier<Collection<MethodMatchingInfo>> supplier = getSupplierOfMultipleMatchingMethods( qM2tM.getKey(),
+          qM2tM.getValue() );
+      matchingInfoSupplier.put( qM2tM.getKey(), supplier );
+    }
+
+    Map<Method, Collection<MethodMatchingInfo>> possibleMethodMatches = collectMethodMatchingInfos( queryMethods,
+        possibleMatches );
+    possibleMatches.entrySet()
+        .forEach( e -> Logger.infoF( "MethodMatchingInfos collected - Method: %s | Info count: %d",
+            e.getKey().getName(), e.getValue().size() ) );
+
+    return factory.createFromMethodMatchingInfos( possibleMethodMatches );
+
     // TODO Auto-generated method stub
     return null;
+  }
+
+  private Supplier<Collection<MethodMatchingInfo>> getSupplierOfMultipleMatchingMethods( Method queryMethod,
+      Collection<Method> matchingMethods ) {
+    return () -> {
+      Collection<MethodMatchingInfo> metMIs = new ArrayList<>();
+      for ( Method matching : matchingMethods ) {
+        metMIs.addAll( methodMatcher.calculateMatchingInfos( matching, queryMethod ) );
+      }
+      return metMIs;
+    };
   }
 
 }
