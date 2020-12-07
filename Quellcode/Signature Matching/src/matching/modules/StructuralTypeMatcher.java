@@ -2,6 +2,7 @@ package matching.modules;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -47,7 +48,7 @@ public class StructuralTypeMatcher implements PartlyTypeMatcher {
   public Collection<ModuleMatchingInfo> calculateTypeMatchingInfos( Class<?> checkType, Class<?> queryType ) {
     ModuleMatchingInfoFactory factory = new ModuleMatchingInfoFactory( checkType, queryType );
     if ( queryType.equals( Object.class ) ) {
-      // Dieser Spezialfall führt ohne diese Sonderregelung in einen Stackoverflow, da Object als Typ immer wieder
+      // Dieser Spezialfall fuehrt ohne diese Sonderregelung in einen Stackoverflow, da Object als Typ immer wieder
       // auftaucht. Es ist also eine Abbruchbedingung.
       Set<ModuleMatchingInfo> singleResult = new HashSet<>();
       singleResult.add( factory.create() );
@@ -99,7 +100,9 @@ public class StructuralTypeMatcher implements PartlyTypeMatcher {
           queryMethodMatches.add( checkMethod );
         }
       }
-      matches.put( queryMethod, queryMethodMatches );
+      if(!queryMethodMatches.isEmpty()) {
+    	  matches.put( queryMethod, queryMethodMatches );
+      }
     }
     return matches;
   }
@@ -119,14 +122,16 @@ public class StructuralTypeMatcher implements PartlyTypeMatcher {
   // return possibleMatches;
   // }
 
-  // Hier müssen alle Methoden der Klasse Object herausgefiltert werden, weil:
-  // 1. ohnehin alle Objekte mit diesen Methoden umgehen könne
+  // Hier muessen alle Methoden der Klasse Object herausgefiltert werden, weil:
+  // 1. ohnehin alle Objekte mit diesen Methoden umgehen koenne
   // 2. ein Interface die dazu passenden Methoden-Signaturen nicht ausweist
 
-  // Einsicht: Das Matching mit Klassen oder Enums als Query-Typ ist etwas kompliziert. Ich beschränke mich erst einmal
+  // Einsicht: Das Matching mit Klassen oder Enums als Query-Typ ist etwas kompliziert. Ich beschraenke mich erst einmal
   // nur auf Interfaces als Query-Typ. Das ist auch hinsichtlich meines Anwendungsfalls eher relevant.
 
-  // Weiteres Problem: Native Typen haben keine Methoden!!!
+  // Weiteres Problem: primitive Typen haben keine Methoden!!!
+  
+  // Weiteres Problem: was ist mit package-Sichtbarkeit?
   private Method[] getQueryMethods( Class<?> queryType ) {
     Method[] queryMethods = queryType.getMethods();
     return queryMethods;
@@ -134,11 +139,11 @@ public class StructuralTypeMatcher implements PartlyTypeMatcher {
 
   @Override
   public PartlyTypeMatchingInfo calculatePartlyTypeMatchingInfos( Class<?> checkType, Class<?> queryType ) {
-    ModuleMatchingInfoFactory factory = new ModuleMatchingInfoFactory( checkType, queryType );
+    PartlyTypeMatchingInfoFactory factory = new PartlyTypeMatchingInfoFactory(checkType);
     if ( queryType.equals( Object.class ) ) {
-      // Dieser Spezialfall führt ohne diese Sonderregelung in einen Stackoverflow, da Object als Typ immer wieder
+      // Dieser Spezialfall fuehrt ohne diese Sonderregelung in einen Stackoverflow, da Object als Typ immer wieder
       // auftaucht. Es ist also eine Abbruchbedingung.
-      return new PartlyTypeMatchingInfo( checkType, new ArrayList<>(), new HashMap<>() );
+      return factory.create();
     }
 
     Method[] queryMethods = getQueryMethods( queryType );
@@ -151,17 +156,10 @@ public class StructuralTypeMatcher implements PartlyTypeMatcher {
           qM2tM.getValue() );
       matchingInfoSupplier.put( qM2tM.getKey(), supplier );
     }
-
-    Map<Method, Collection<MethodMatchingInfo>> possibleMethodMatches = collectMethodMatchingInfos( queryMethods,
-        possibleMatches );
-    possibleMatches.entrySet()
-        .forEach( e -> Logger.infoF( "MethodMatchingInfos collected - Method: %s | Info count: %d",
-            e.getKey().getName(), e.getValue().size() ) );
-
-    return factory.createFromMethodMatchingInfos( possibleMethodMatches );
-
-    // TODO Auto-generated method stub
-    return null;
+    matchingInfoSupplier.entrySet()
+    .forEach( e -> Logger.infoF( "Supplier for MethodMatchingInfos collected - Method: %s",
+    		e.getKey().getName() ) );
+    return factory.create(Arrays.asList(queryMethods), matchingInfoSupplier);
   }
 
   private Supplier<Collection<MethodMatchingInfo>> getSupplierOfMultipleMatchingMethods( Method queryMethod,

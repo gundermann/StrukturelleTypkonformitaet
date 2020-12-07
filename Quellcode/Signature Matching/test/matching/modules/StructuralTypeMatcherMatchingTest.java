@@ -12,7 +12,7 @@ import matching.modules.testmodules.EnumNative;
 import matching.modules.testmodules.Interface1;
 import matching.modules.testmodules.InterfaceWrapper;
 
-public class ModuleMatcherTest {
+public class StructuralTypeMatcherMatchingTest {
 
   ExactTypeMatcher exactTypeMatcher = new ExactTypeMatcher();
 
@@ -54,5 +54,5 @@ public class ModuleMatcherTest {
     assertTrue( matcher.matchesTypePartly( Class1.class, InterfaceWrapper.class ) );
     assertTrue( matcher.matchesTypePartly( Class2.class, InterfaceWrapper.class ) );
   }
-
+  
 }

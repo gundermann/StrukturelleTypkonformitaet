@@ -254,7 +254,7 @@ public class DesiredComponentFinder {
   // ModuleMatcher<DesiredInterface> moduleMatcher = new ModuleMatcher<>( desiredInterface );
   // Collection<Class<?>> matchedBeans = new ArrayList<>();
   // for ( Class<?> beanInterface : getRegisteredComponentInterfaces() ) {
-  // // Dieser Code ist nur für das Debugging-Analyse notwendig
+  // // Dieser Code ist nur fï¿½r das Debugging-Analyse notwendig
   // // if ( beanInterfaces.equals( ElerFTStammdatenAuskunftService.class ) ) {
   // // Logger.info( "BEAN OF INTEREST" );
   // // }
