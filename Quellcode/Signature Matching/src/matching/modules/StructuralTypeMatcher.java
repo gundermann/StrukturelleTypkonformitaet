@@ -100,8 +100,8 @@ public class StructuralTypeMatcher implements PartlyTypeMatcher {
           queryMethodMatches.add( checkMethod );
         }
       }
-      if(!queryMethodMatches.isEmpty()) {
-    	  matches.put( queryMethod, queryMethodMatches );
+      if ( !queryMethodMatches.isEmpty() ) {
+        matches.put( queryMethod, queryMethodMatches );
       }
     }
     return matches;
@@ -130,7 +130,7 @@ public class StructuralTypeMatcher implements PartlyTypeMatcher {
   // nur auf Interfaces als Query-Typ. Das ist auch hinsichtlich meines Anwendungsfalls eher relevant.
 
   // Weiteres Problem: primitive Typen haben keine Methoden!!!
-  
+
   // Weiteres Problem: was ist mit package-Sichtbarkeit?
   private Method[] getQueryMethods( Class<?> queryType ) {
     Method[] queryMethods = queryType.getMethods();
@@ -139,7 +139,7 @@ public class StructuralTypeMatcher implements PartlyTypeMatcher {
 
   @Override
   public PartlyTypeMatchingInfo calculatePartlyTypeMatchingInfos( Class<?> checkType, Class<?> queryType ) {
-    PartlyTypeMatchingInfoFactory factory = new PartlyTypeMatchingInfoFactory(checkType);
+    PartlyTypeMatchingInfoFactory factory = new PartlyTypeMatchingInfoFactory( checkType );
     if ( queryType.equals( Object.class ) ) {
       // Dieser Spezialfall fuehrt ohne diese Sonderregelung in einen Stackoverflow, da Object als Typ immer wieder
       // auftaucht. Es ist also eine Abbruchbedingung.
@@ -149,6 +149,8 @@ public class StructuralTypeMatcher implements PartlyTypeMatcher {
     Method[] queryMethods = getQueryMethods( queryType );
     Logger.infoF( "QueryMethods: %s",
         Stream.of( queryMethods ).map( m -> m.getName() ).collect( Collectors.joining( ", " ) ) );
+
+    // gleicht nur die public-Methods ab
     Map<Method, Collection<Method>> possibleMatches = collectPossibleMatches( queryMethods, checkType.getMethods() );
     Map<Method, Supplier<Collection<MethodMatchingInfo>>> matchingInfoSupplier = new HashMap<>();
     for ( Entry<Method, Collection<Method>> qM2tM : possibleMatches.entrySet() ) {
@@ -157,9 +159,9 @@ public class StructuralTypeMatcher implements PartlyTypeMatcher {
       matchingInfoSupplier.put( qM2tM.getKey(), supplier );
     }
     matchingInfoSupplier.entrySet()
-    .forEach( e -> Logger.infoF( "Supplier for MethodMatchingInfos collected - Method: %s",
-    		e.getKey().getName() ) );
-    return factory.create(Arrays.asList(queryMethods), matchingInfoSupplier);
+        .forEach( e -> Logger.infoF( "Supplier for MethodMatchingInfos collected - Method: %s",
+            e.getKey().getName() ) );
+    return factory.create( Arrays.asList( queryMethods ), matchingInfoSupplier );
   }
 
   private Supplier<Collection<MethodMatchingInfo>> getSupplierOfMultipleMatchingMethods( Method queryMethod,
