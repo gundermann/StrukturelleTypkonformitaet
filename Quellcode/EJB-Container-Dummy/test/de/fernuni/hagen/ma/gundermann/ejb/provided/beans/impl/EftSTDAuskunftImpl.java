@@ -1,4 +1,4 @@
-package de.fernuni.hagen.ma.gundermann.ejb.beanimplementations;
+package de.fernuni.hagen.ma.gundermann.ejb.provided.beans.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;

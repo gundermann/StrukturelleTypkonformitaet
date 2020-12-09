@@ -1,4 +1,4 @@
-package de.fernuni.hagen.ma.gundermann.ejb.desiredinterfaces;
+package de.fernuni.hagen.ma.gundermann.ejb.desired;
 
 import java.util.Collection;
 import java.util.Date;
@@ -6,7 +6,7 @@ import java.util.Date;
 import DE.data_experts.profi.profilcs.antrag2015.stammdaten.business.impl.Foerderprogramm;
 import DE.data_experts.profi.util.DvAntragsJahr;
 import DE.data_experts.profi.util.allg.DvFoerderprogramm;
-import de.fernuni.hagen.ma.gundermann.ejb.desiredinterfaces.tests.FoerderprogrammProviderTest;
+import de.fernuni.hagen.ma.gundermann.ejb.desired.tests.FoerderprogrammProviderTest;
 import tester.annotation.QueryTypeTestReference;
 
 @QueryTypeTestReference( testClasses = FoerderprogrammProviderTest.class )

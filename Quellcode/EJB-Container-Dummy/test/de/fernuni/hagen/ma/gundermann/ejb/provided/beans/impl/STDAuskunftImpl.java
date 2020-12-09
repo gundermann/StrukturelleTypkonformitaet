@@ -1,5 +1,5 @@
 
-package de.fernuni.hagen.ma.gundermann.ejb.beanimplementations;
+package de.fernuni.hagen.ma.gundermann.ejb.provided.beans.impl;
 
 import java.math.BigDecimal;
 import java.util.Collection;

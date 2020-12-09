@@ -1,4 +1,4 @@
-package de.fernuni.hagen.ma.gundermann.ejb.desiredinterfaces.tests;
+package de.fernuni.hagen.ma.gundermann.ejb.desired.tests;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -6,7 +6,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import java.util.Collection;
 
 import DE.data_experts.profi.profilcs.antrag2015.eler.ft.stammdaten.business.ElerFTFoerderprogramm;
-import de.fernuni.hagen.ma.gundermann.ejb.desiredinterfaces.ElerFTFoerderprogrammeProvider;
+import de.fernuni.hagen.ma.gundermann.ejb.desired.ElerFTFoerderprogrammeProvider;
 import tester.annotation.QueryTypeInstanceSetter;
 import tester.annotation.QueryTypeTest;
 

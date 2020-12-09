@@ -1,4 +1,4 @@
-package de.fernuni.hagen.ma.gundermann.ejb.desiredinterfaces;
+package de.fernuni.hagen.ma.gundermann.ejb.desired;
 
 public class FP {
 
