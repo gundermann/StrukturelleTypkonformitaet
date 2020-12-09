@@ -2,8 +2,9 @@ package glue;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
+import java.util.Collection;
 
-import matching.modules.ModuleMatchingInfo;
+import matching.methods.MethodMatchingInfo;
 
 public class InterfaceProxyFactory<T> implements ProxyFactory<T> {
 
@@ -15,8 +16,9 @@ public class InterfaceProxyFactory<T> implements ProxyFactory<T> {
 
   @SuppressWarnings( "unchecked" )
   @Override
-  public T createProxy( Object component, ModuleMatchingInfo matchingInfo ) {
-    InvocationHandler invocationHandler = new BehaviourDelegateInvocationHandler( component, matchingInfo );
+  public T createProxy( Object component, Collection<MethodMatchingInfo> matchingInfos ) {
+    InvocationHandler invocationHandler = new BehaviourDelegateInvocationHandler( component,
+        matchingInfos );
 
     return (T) Proxy.newProxyInstance( this.getClass().getClassLoader(),
 

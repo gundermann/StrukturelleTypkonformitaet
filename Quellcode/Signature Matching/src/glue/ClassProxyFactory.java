@@ -1,10 +1,12 @@
 package glue;
 
+import java.util.Collection;
+
 import org.objenesis.Objenesis;
 import org.objenesis.ObjenesisStd;
 import org.objenesis.instantiator.ObjectInstantiator;
 
-import matching.modules.ModuleMatchingInfo;
+import matching.methods.MethodMatchingInfo;
 import net.sf.cglib.proxy.Callback;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.Factory;
@@ -20,11 +22,11 @@ public class ClassProxyFactory<T> implements ProxyFactory<T> {
 
   @SuppressWarnings( "unchecked" )
   @Override
-  public T createProxy( Object component, ModuleMatchingInfo matchingInfo ) {
+  public T createProxy( Object component, Collection<MethodMatchingInfo> matchingInfos ) {
     Enhancer enhancer = new Enhancer();
     enhancer.setSuperclass( targetStrcture );
     BehaviourDelegateInvocationHandler handler = new BehaviourDelegateInvocationHandler( component,
-        matchingInfo );
+        matchingInfos );
 
     MethodInterceptor methodInterceptor = ( obj, method, args, proxyMethod ) -> {
       return handler.intercept( obj, method, args, proxyMethod );

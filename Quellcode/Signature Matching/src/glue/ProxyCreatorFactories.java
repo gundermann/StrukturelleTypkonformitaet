@@ -1,6 +1,8 @@
 package glue;
 
-import matching.modules.ModuleMatchingInfo;
+import java.util.Collection;
+
+import matching.methods.MethodMatchingInfo;
 
 public final class ProxyCreatorFactories {
 
@@ -46,7 +48,7 @@ public final class ProxyCreatorFactories {
 
           @SuppressWarnings( "unchecked" )
           @Override
-          public T createProxy( Object component, ModuleMatchingInfo matchingInfo ) {
+          public T createProxy( Object component, Collection<MethodMatchingInfo> matchingInfos ) {
             return (T) component;
           }
         };

@@ -28,7 +28,7 @@ public class SingleTypeConverter<T> {
   }
 
   public T convert( Object component, ModuleMatchingInfo matchingInfo ) {
-    T targetInstance = proxyFactory.createProxy( component, matchingInfo );
+    T targetInstance = proxyFactory.createProxy( component, matchingInfo.getMethodMatchingInfos() );
     return targetInstance;
   }
 

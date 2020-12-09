@@ -3,6 +3,7 @@ package glue;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -18,11 +19,11 @@ public class BehaviourDelegateInvocationHandler implements MethodInterceptor, In
 
   private final Object component;
 
-  private final ModuleMatchingInfo matchingInfos;
+  private final Collection<MethodMatchingInfo> methodMatchingInfos;
 
-  public BehaviourDelegateInvocationHandler( Object component, ModuleMatchingInfo matchingInfos ) {
+  public BehaviourDelegateInvocationHandler( Object component, Collection<MethodMatchingInfo> methodMatchingInfos ) {
     this.component = component;
-    this.matchingInfos = matchingInfos;
+    this.methodMatchingInfos = methodMatchingInfos;
   }
 
   @Override
@@ -126,7 +127,7 @@ public class BehaviourDelegateInvocationHandler implements MethodInterceptor, In
   }
 
   private Optional<MethodMatchingInfo> getMethodMatchingInfo( Method method ) {
-    for ( MethodMatchingInfo mmi : matchingInfos.getMethodMatchingInfos() ) {
+    for ( MethodMatchingInfo mmi : methodMatchingInfos ) {
       if ( mmi.getSource().getName().equals( method.getName() ) && argumentsMatches( mmi, method ) ) {
         return Optional.of( mmi );
       }
