@@ -3,13 +3,12 @@ package matching.modules;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import matching.MethodMatchingInfoCombinator;
 import matching.methods.MethodMatchingInfo;
 import util.Logger;
 
@@ -71,44 +70,10 @@ public class ModuleMatchingInfoFactory {
     Logger.infoF( "start permutation of MethodMatchingInfos: %d",
         possibleMethodMatches.values().stream().filter( v -> !v.isEmpty() ).map( v -> v.size() )
             .reduce( ( a, b ) -> a * b ).orElse( 0 ) );
-    Collection<Collection<MethodMatchingInfo>> permutedMethodMatches = generateMethodMatchingCombinations(
-        possibleMethodMatches );
+    Collection<Collection<MethodMatchingInfo>> permutedMethodMatches = new MethodMatchingInfoCombinator()
+        .generateMethodMatchingCombinations( possibleMethodMatches );
     Logger.infoF( "MethodMatches permuted: %d", permutedMethodMatches.size() );
     return permutedMethodMatches.stream().map( this::create ).collect( Collectors.toSet() );
-  }
-
-  private Collection<Collection<MethodMatchingInfo>> generateMethodMatchingCombinations(
-      Map<Method, Collection<MethodMatchingInfo>> possibleMethodMatches ) {
-    Collection<Collection<MethodMatchingInfo>> combinations = new ArrayList<>();
-    // erste Methode holen
-    Iterator<Method> iterator = possibleMethodMatches.keySet().iterator();
-    if ( !iterator.hasNext() ) {
-      // keine Methode mehr übrig
-      return combinations;
-    }
-    Method selectedMethod = iterator.next();
-    // possibleMethodMatches abbauen
-    // Kopie der ursprünglichen Map erstellen
-    Map<Method, Collection<MethodMatchingInfo>> localMethodMatches = new HashMap<>( possibleMethodMatches );
-    Collection<MethodMatchingInfo> selectedMethodMatches = localMethodMatches.remove( selectedMethod );
-    if ( selectedMethodMatches.isEmpty() ) {
-      return generateMethodMatchingCombinations( localMethodMatches );
-    }
-    for ( MethodMatchingInfo info : selectedMethodMatches ) {
-      Collection<Collection<MethodMatchingInfo>> otherCombinations = generateMethodMatchingCombinations(
-          localMethodMatches );
-      if ( otherCombinations.isEmpty() ) {
-        Collection<MethodMatchingInfo> singleInfos = new ArrayList<>();
-        singleInfos.add( info );
-        combinations.add( singleInfos );
-        continue;
-      }
-      for ( Collection<MethodMatchingInfo> otherInfos : otherCombinations ) {
-        otherInfos.add( info );
-      }
-      combinations.addAll( otherCombinations );
-    }
-    return combinations;
   }
 
 }

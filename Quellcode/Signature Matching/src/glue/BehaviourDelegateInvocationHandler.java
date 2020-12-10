@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -17,18 +18,20 @@ import util.Logger;
 
 public class BehaviourDelegateInvocationHandler implements MethodInterceptor, InvocationHandler {
 
-  private final Object component;
-
-  private final Collection<MethodMatchingInfo> methodMatchingInfos;
+  private final Map<Object, Collection<MethodMatchingInfo>> components2MatchingInfo;
 
   public BehaviourDelegateInvocationHandler( Object component, Collection<MethodMatchingInfo> methodMatchingInfos ) {
-    this.component = component;
-    this.methodMatchingInfos = methodMatchingInfos;
+    this.components2MatchingInfo = new HashMap<>();
+    this.components2MatchingInfo.put( component, methodMatchingInfos );
+  }
+
+  public BehaviourDelegateInvocationHandler( Map<Object, Collection<MethodMatchingInfo>> components2MatchingInfo ) {
+    this.components2MatchingInfo = components2MatchingInfo;
   }
 
   @Override
   public Object intercept( Object callObject, Method method, Object[] args, MethodProxy methodProxy ) throws Throwable {
-    Optional<MethodMatchingInfo> optMatchingInfo = getMethodMatchingInfo( method );
+    Optional<ComponentWithMatchingInfo> optMatchingInfo = getMethodMatchingInfo( method );
     if ( optMatchingInfo.isPresent() ) {
       return invokeOnComponentWithMatchingInfo( optMatchingInfo.get(), args );
     }
@@ -37,7 +40,7 @@ public class BehaviourDelegateInvocationHandler implements MethodInterceptor, In
 
   @Override
   public Object invoke( Object methodProxy, Method method, Object[] args ) throws Throwable {
-    Optional<MethodMatchingInfo> optMatchingInfo = getMethodMatchingInfo( method );
+    Optional<ComponentWithMatchingInfo> optMatchingInfo = getMethodMatchingInfo( method );
     if ( optMatchingInfo.isPresent() ) {
       return invokeOnComponentWithMatchingInfo( optMatchingInfo.get(), args );
     }
@@ -46,14 +49,23 @@ public class BehaviourDelegateInvocationHandler implements MethodInterceptor, In
     // (Hierbei handelt es sich um Methoden, dei von jedem Objekt erf�llt werden und
     // f�r die aufgrund einer fehlenden
     // Implementierung keine MatchingInfo existiert)
-    return method.invoke( component, args );
+    return method.invoke( getSingleComponent(), args );
   }
 
-  private Object invokeOnComponentWithMatchingInfo( MethodMatchingInfo methodMatchingInfo, Object[] args )
+  private Object getSingleComponent() {
+    if ( components2MatchingInfo.size() == 1 ) {
+      return components2MatchingInfo.keySet().iterator().next();
+    }
+    return null;
+  }
+
+  private Object invokeOnComponentWithMatchingInfo( ComponentWithMatchingInfo component,
+      Object[] args )
       throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    MethodMatchingInfo methodMatchingInfo = component.getMatchingInfo();
     Method targetMethod = methodMatchingInfo.getTarget();
     Object[] convertedArgs = convertArgs( args, methodMatchingInfo.getArgumentTypeMatchingInfos() );
-    Object returnValue = targetMethod.invoke( component, convertedArgs );
+    Object returnValue = targetMethod.invoke( component.getComponent(), convertedArgs );
     ModuleMatchingInfo returnTypeMatchingInfo = methodMatchingInfo.getReturnTypeMatchingInfo();
     if ( returnTypeMatchingInfo == null ) {
       return returnValue;
@@ -126,10 +138,12 @@ public class BehaviourDelegateInvocationHandler implements MethodInterceptor, In
             moduleMatchingInfo );
   }
 
-  private Optional<MethodMatchingInfo> getMethodMatchingInfo( Method method ) {
-    for ( MethodMatchingInfo mmi : methodMatchingInfos ) {
-      if ( mmi.getSource().getName().equals( method.getName() ) && argumentsMatches( mmi, method ) ) {
-        return Optional.of( mmi );
+  private Optional<ComponentWithMatchingInfo> getMethodMatchingInfo( Method method ) {
+    for ( Entry<Object, Collection<MethodMatchingInfo>> entry : components2MatchingInfo.entrySet() ) {
+      for ( MethodMatchingInfo mmi : entry.getValue() ) {
+        if ( mmi.getSource().getName().equals( method.getName() ) && argumentsMatches( mmi, method ) ) {
+          return Optional.of( new ComponentWithMatchingInfo( entry.getKey(), mmi ) );
+        }
       }
     }
     return Optional.empty();
@@ -146,6 +160,26 @@ public class BehaviourDelegateInvocationHandler implements MethodInterceptor, In
       }
     }
     return true;
+  }
+
+  private static class ComponentWithMatchingInfo {
+    private final Object component;
+
+    private final MethodMatchingInfo matchingInfo;
+
+    private ComponentWithMatchingInfo( Object component, MethodMatchingInfo matchingInfo ) {
+      this.component = component;
+      this.matchingInfo = matchingInfo;
+    }
+
+    public Object getComponent() {
+      return component;
+    }
+
+    public MethodMatchingInfo getMatchingInfo() {
+      return matchingInfo;
+    }
+
   }
 
 }

@@ -3,6 +3,8 @@ package glue;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import matching.methods.MethodMatchingInfo;
 
@@ -16,9 +18,8 @@ public class InterfaceProxyFactory<T> implements ProxyFactory<T> {
 
   @SuppressWarnings( "unchecked" )
   @Override
-  public T createProxy( Object component, Collection<MethodMatchingInfo> matchingInfos ) {
-    InvocationHandler invocationHandler = new BehaviourDelegateInvocationHandler( component,
-        matchingInfos );
+  public T createProxy( Map<Object, Collection<MethodMatchingInfo>> components2MatchingInfo ) {
+    InvocationHandler invocationHandler = new BehaviourDelegateInvocationHandler( components2MatchingInfo );
 
     return (T) Proxy.newProxyInstance( this.getClass().getClassLoader(),
 
@@ -28,6 +29,13 @@ public class InterfaceProxyFactory<T> implements ProxyFactory<T> {
         // Exception in thread "main" java.lang.IllegalArgumentException: interface ... is not visible from class loader
 
         new Class<?>[] { targetStructure }, invocationHandler );
+  }
+
+  @Override
+  public T createProxy( Object component, Collection<MethodMatchingInfo> matchingInfos ) {
+    Map<Object, Collection<MethodMatchingInfo>> components2MatchingInfo = new HashMap<>();
+    components2MatchingInfo.put( component, matchingInfos );
+    return createProxy( components2MatchingInfo );
   }
 
   static class InterfaceProxyFactoryCreator implements ProxyFactoryCreator {

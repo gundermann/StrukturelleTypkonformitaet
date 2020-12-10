@@ -1,8 +1,9 @@
 package glue;
 
+import java.util.Collection;
 import java.util.Map;
 
-import matching.modules.ModuleMatchingInfo;
+import matching.methods.MethodMatchingInfo;
 
 public class CombinationTypeConverter<T> {
 
@@ -23,10 +24,9 @@ public class CombinationTypeConverter<T> {
     }
   }
 
-  public T convert( Map<Object, ModuleMatchingInfo> components2MatchingInfo ) {
-    // T targetInstance = proxyFactory.createProxy( component, matchingInfo );
-    // return targetInstance;
-    return null;
+  public T convert( Map<Object, Collection<MethodMatchingInfo>> components2MatchingInfo ) {
+    T targetInstance = proxyFactory.createProxy( components2MatchingInfo );
+    return targetInstance;
   }
 
 }

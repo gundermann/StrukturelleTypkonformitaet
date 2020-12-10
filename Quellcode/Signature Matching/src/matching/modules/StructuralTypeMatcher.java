@@ -72,6 +72,9 @@ public class StructuralTypeMatcher implements PartlyTypeMatcher {
     Map<Method, Collection<MethodMatchingInfo>> matches = new HashMap<>();
     for ( Method queryMethod : queryMethods ) {
       Collection<MethodMatchingInfo> matchingInfosOfQueryMethod = new ArrayList<>();
+      if ( !possibleMatches.containsKey( queryMethod ) ) {
+        continue;
+      }
       for ( Method checkMethod : possibleMatches.get( queryMethod ) ) {
         Collection<MethodMatchingInfo> matchingInfos = methodMatcher.calculateMatchingInfos( checkMethod, queryMethod );
         matchingInfosOfQueryMethod.addAll( matchingInfos );

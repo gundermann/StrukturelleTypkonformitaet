@@ -15,6 +15,7 @@ import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.Defau
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.Logger;
 import glue.CombinationTypeConverter;
 import glue.SingleTypeConverter;
+import matching.methods.MethodMatchingInfo;
 import matching.modules.ModuleMatchingInfo;
 import matching.modules.PartlyTypeMatcher;
 import matching.modules.PartlyTypeMatchingInfo;
@@ -65,16 +66,16 @@ public class DesiredComponentFinder {
       Logger.info( "component not found" );
     }
 
-    // Logger.info( "search component by partly match" );
-    // for ( int i = 0; i < PARLTY_TYPE_MATCHERS.length; i++ ) {
-    // Optional<DesiredInterface> optDesiredBean = findDesiredComponentByPartlyMatcher( desiredInterface,
-    // PARLTY_TYPE_MATCHERS[i] );
-    // if ( optDesiredBean.isPresent() ) {
-    // Logger.info( "component found" );
-    // return optDesiredBean.get();
-    // }
-    // Logger.info( "component not found" );
-    // }
+    Logger.info( "search component by partly match" );
+    for ( int i = 0; i < PARLTY_TYPE_MATCHERS.length; i++ ) {
+      Optional<DesiredInterface> optDesiredBean = findDesiredComponentByPartlyMatcher( desiredInterface,
+          PARLTY_TYPE_MATCHERS[i] );
+      if ( optDesiredBean.isPresent() ) {
+        Logger.info( "component found" );
+        return optDesiredBean.get();
+      }
+      Logger.info( "component not found" );
+    }
     return null;
   }
 
@@ -83,11 +84,11 @@ public class DesiredComponentFinder {
       PartlyTypeMatcher typeMatcher ) {
     Logger.infoF( "start search with matcher: %s", typeMatcher.getClass().getSimpleName() );
 
-    Map<Class<?>, PartlyTypeMatchingInfo> compnentInterface2PartlyMatchingInfos = findPartlyMatchingComponentInterfaces(
+    Map<Class<?>, PartlyTypeMatchingInfo> componentInterface2PartlyMatchingInfos = findPartlyMatchingComponentInterfaces(
         desiredInterface, typeMatcher );
 
     Optional<DesiredInterface> result = Optional
-        .ofNullable( getCombinedMatchingComponent( desiredInterface, compnentInterface2PartlyMatchingInfos ) );
+        .ofNullable( getCombinedMatchingComponent( desiredInterface, componentInterface2PartlyMatchingInfos ) );
     Logger.infoF( "finish search with matcher: %s", typeMatcher.getClass().getSimpleName() );
     return result;
   }
@@ -96,6 +97,9 @@ public class DesiredComponentFinder {
       Class<DesiredInterface> desiredInterface, PartlyTypeMatcher typeMatcher ) {
     Map<Class<?>, PartlyTypeMatchingInfo> matchedBeans = new HashMap<>();
     for ( Class<?> beanInterface : getRegisteredComponentInterfaces() ) {
+      if ( beanInterface.getSimpleName().equals( "Doctor" ) || beanInterface.getSimpleName().equals( "FireFighter" ) ) {
+        System.out.println( "hwg" );
+      }
       boolean matchesPartly = typeMatcher.matchesTypePartly( beanInterface, desiredInterface );
       if ( !matchesPartly ) {
         continue;
@@ -136,7 +140,7 @@ public class DesiredComponentFinder {
     BestMatchingComponentCombinationFinder combinationFinder = new BestMatchingComponentCombinationFinder(
         compnentInterface2PartlyMatchingInfos );
 
-    while ( !combinationFinder.hasNextCombination() ) {
+    while ( combinationFinder.hasNextCombination() ) {
       CombinationInfo combinationInfos = combinationFinder.getNextCombination();
       DesiredInterface component = getPartlyMatchedTestedComponent( combinationInfos, desiredInterface );
       if ( component != null ) {
@@ -177,11 +181,14 @@ public class DesiredComponentFinder {
 
   private <DesiredInterface> DesiredInterface getPartlyMatchedTestedComponent( CombinationInfo combinationInfos,
       Class<DesiredInterface> desiredInterface ) {
+    Logger.infoF( "find components for combination: %s",
+        combinationInfos.getComponentClasses().stream().map( Class::toString ).collect( Collectors.joining( " + " ) ) );
     CombinationTypeConverter<DesiredInterface> converter = new CombinationTypeConverter<>(
         desiredInterface );
     ComponentTester<DesiredInterface> componentTester = new ComponentTester<>( desiredInterface );
 
-    Map<Object, ModuleMatchingInfo> components2MatchingInfo = new HashMap<>();
+    Map<Object, Collection<MethodMatchingInfo>> components2MatchingInfo = new HashMap<>();
+
     for ( Class<?> componentClass : combinationInfos.getComponentClasses() ) {
       Optional<?> optComponent = getComponent( componentClass );
       if ( !optComponent.isPresent() ) {

@@ -3,7 +3,7 @@ package de.fernuni.hagen.ma.gundermann.ejb.desired.tests;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import de.fernuni.hagen.ma.gundermann.ejb.desired.IntubatinFireFighter;
+import de.fernuni.hagen.ma.gundermann.ejb.desired.IntubatingFireFighter;
 import de.fernuni.hagen.ma.gundermann.ejb.provided.business.Fire;
 import de.fernuni.hagen.ma.gundermann.ejb.provided.business.Patient;
 import tester.annotation.QueryTypeInstanceSetter;
@@ -11,17 +11,17 @@ import tester.annotation.QueryTypeTest;
 
 public class IntubatingFireFighterTest {
 
-  private IntubatinFireFighter intubatingFireFighter;
+  private IntubatingFireFighter intubatingFireFighter;
 
   @QueryTypeInstanceSetter
-  public void setProvider( IntubatinFireFighter intubatingFireFighter ) {
+  public void setProvider( IntubatingFireFighter intubatingFireFighter ) {
     this.intubatingFireFighter = intubatingFireFighter;
   }
 
   @QueryTypeTest
   public void extinguishFire() {
     Fire fire = new Fire();
-    intubatingFireFighter.extinguishFire();
+    intubatingFireFighter.extinguishFire( fire );
     assertFalse( fire.isActive() );
   }
 
