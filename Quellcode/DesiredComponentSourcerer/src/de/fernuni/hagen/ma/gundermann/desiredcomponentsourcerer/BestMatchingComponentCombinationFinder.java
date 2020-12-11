@@ -9,11 +9,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.CollectionUtil;
-import matching.methods.MethodMatchingInfo;
 import matching.modules.PartlyTypeMatchingInfo;
 
 // Auskommentierte Teile gehoeren zu Heuristiken, die ich begonnen hatte umzusetzten, aber nicht zuende gedacht hatte.
@@ -23,7 +23,7 @@ public class BestMatchingComponentCombinationFinder {
 
   private final List<PartlyTypeMatchingInfo> quantitativeSortedInfos;
 
-  private Collection<MethodMatchingInfo> cachedCalculatedInfos = new ArrayList<>();
+  private Collection<Collection<CombinationPartInfo>> cachedCalculatedInfos = new ArrayList<>();
 
   // erster Versuch (primitiv)
   private int mainIndex = -1;
@@ -49,11 +49,11 @@ public class BestMatchingComponentCombinationFinder {
   }
 
   public boolean hasNextCombination() {
-    if (
-    // quantitativeSortedInfos.size() == 0
-    // || currentTypeMatchingInfoIndizes.length > 0
-    // && currentTypeMatchingInfoIndizes[0] >= quantitativeSortedInfos.size()
-    mainIndex + 1 >= quantitativeSortedInfos.size() ) {
+    if ( cachedCalculatedInfos.isEmpty()
+        // quantitativeSortedInfos.size() == 0
+        // || currentTypeMatchingInfoIndizes.length > 0
+        // && currentTypeMatchingInfoIndizes[0] >= quantitativeSortedInfos.size()
+        && mainIndex + 1 >= quantitativeSortedInfos.size() ) {
       return false;
     }
     generateNextCombination();
@@ -66,59 +66,103 @@ public class BestMatchingComponentCombinationFinder {
 
   private void generateNextCombination() {
     // Neue Methoden-Kombination in aktuellen Komponenten suchen.
-
-    // Neue Komponente suchen
-    // int lastMainIndex = releaseLastMainIndex();
-    mainIndex++;
-    PartlyTypeMatchingInfo mainComponent = quantitativeSortedInfos.get( mainIndex );
-    // PartlyTypeMatchingInfo lastUsedComponent = quantitativeSortedInfos.get( lastMainIndex );
-    // Collection<Method> uncoveragedMethods = getUncoveragedMethods();
-    // findNextComponentForMethods( lastUsedComponent );
-    findNextComponentForMethods( mainComponent );
+    if ( !cachedCalculatedInfos.isEmpty() ) {
+      setNextCombinationInfoFromCache();
+    }
+    else {
+      // Neue Komponente suchen
+      // int lastMainIndex = releaseLastMainIndex();
+      mainIndex++;
+      PartlyTypeMatchingInfo mainComponent = quantitativeSortedInfos.get( mainIndex );
+      // PartlyTypeMatchingInfo lastUsedComponent = quantitativeSortedInfos.get( lastMainIndex );
+      // Collection<Method> uncoveragedMethods = getUncoveragedMethods();
+      // findNextComponentForMethods( lastUsedComponent );
+      findNextComponentForMethods( mainComponent );
+    }
   }
 
   private void findNextComponentForMethods( PartlyTypeMatchingInfo lastUsedComponent ) {
     Collection<Method> methodsWithoutMatchingInfo = lastUsedComponent.getOriginalMethods();
-    Map<Method, Collection<PartlyTypeMatchingInfo>> relevantInfos = collectRelevantMatchingInfos(
-        methodsWithoutMatchingInfo );
-    Map<Class<?>, Collection<MethodMatchingInfo>> component2MatchingInfo = new HashMap<>();
-    for ( Entry<Method, Collection<PartlyTypeMatchingInfo>> e : relevantInfos.entrySet() ) {
-      Optional<PartlyTypeMatchingInfo> optInfo = CollectionUtil.get( e.getValue(), 0 );
-      if ( optInfo.isPresent() ) {
-        PartlyTypeMatchingInfo info = optInfo.get();
-        Collection<MethodMatchingInfo> methodMatchingInfos = info.getMethodMatchingInfoSupplier().get( e.getKey() )
-            .get();
-        Optional<MethodMatchingInfo> optMethodMatchingInfo = CollectionUtil.get( methodMatchingInfos, 0 );
-        optMethodMatchingInfo.ifPresent( i -> component2MatchingInfo.compute( info.getCheckType(),
-            CollectionUtil.remapping_addToValueCollection( i ) ) );
-      }
-    }
+    Map<Method, Collection<PartlyTypeMatchingInfo>> relevantTypeMatchingInfos = collectRelevantTypeMatchingInfos(
+        methodsWithoutMatchingInfo, lastUsedComponent );
 
-    this.nextCombinationInfo = Optional.of( new CombinationInfo( component2MatchingInfo ) );
+    fillCachedComponent2MatchingInfo( relevantTypeMatchingInfos );
+
+    // Map<Class<?>, Collection<MethodMatchingInfo>> component2MatchingInfo = new HashMap<>();
+    // for ( Entry<Method, Collection<PartlyTypeMatchingInfo>> e : relevantInfos.entrySet() ) {
+    // Optional<PartlyTypeMatchingInfo> optInfo = CollectionUtil.get( e.getValue(), 0 );
+    // if ( optInfo.isPresent() ) {
+    // PartlyTypeMatchingInfo info = optInfo.get();
+    // Collection<MethodMatchingInfo> methodMatchingInfos = info.getMethodMatchingInfoSupplier().get( e.getKey() )
+    // .get();
+    // Optional<MethodMatchingInfo> optMethodMatchingInfo = CollectionUtil.get( methodMatchingInfos, 0 );
+    // optMethodMatchingInfo.ifPresent( i -> component2MatchingInfo.compute( info.getCheckType(),
+    // CollectionUtil.remapping_addToValueCollection( i ) ) );
+    // }
+    // }
+
+    setNextCombinationInfoFromCache();
+  }
+
+  private void setNextCombinationInfoFromCache() {
+    this.nextCombinationInfo = Optional.of( new CombinationInfo( CollectionUtil.pop( cachedCalculatedInfos ) ) );
+  }
+
+  private void fillCachedComponent2MatchingInfo( Map<Method, Collection<PartlyTypeMatchingInfo>> typeMatchingInfos ) {
+    Map<Method, Collection<CombinationPartInfo>> combiPartInfos = transformToCombinationPartInfosPerMethod(
+        typeMatchingInfos );
+    this.cachedCalculatedInfos = new Combinator<Method, CombinationPartInfo>().generateCombis( combiPartInfos );
 
   }
 
-  private Map<Method, Collection<PartlyTypeMatchingInfo>> collectRelevantMatchingInfos(
-      Collection<Method> originalMethods ) {
-    Collection<Method> originalMethodsTmp = new ArrayList<>( originalMethods );
+  private Map<Method, Collection<CombinationPartInfo>> transformToCombinationPartInfosPerMethod(
+      Map<Method, Collection<PartlyTypeMatchingInfo>> method2typeMatchingInfos ) {
+    Map<Method, Collection<CombinationPartInfo>> transformed = new HashMap<>();
+    for ( Entry<Method, Collection<PartlyTypeMatchingInfo>> entry : method2typeMatchingInfos.entrySet() ) {
+      Method method = entry.getKey();
+      Collection<PartlyTypeMatchingInfo> infos = entry.getValue();
+      List<CombinationPartInfo> combiPartInfos = infos.stream()
+          .map( Transformator::transformTypeInfo2CombinationPartInfos )
+          .flatMap( Collection::stream )
+          .filter( cpi -> Objects.equals( cpi.getSourceMethod(), method ) )
+          .collect( Collectors.toList() );
+      transformed.put( method, combiPartInfos );
+    }
+    return transformed;
+  }
+
+  private Map<Method, Collection<PartlyTypeMatchingInfo>> collectRelevantTypeMatchingInfos(
+      Collection<Method> originalMethods, PartlyTypeMatchingInfo lastUsedComponent ) {
     Map<Method, Collection<PartlyTypeMatchingInfo>> relevantInfos = new HashMap<>();
-    int infoIndex = mainIndex;
+    Collection<Method> originalMethodsTmp = enhanceRelevantInfosAndReturnLeftOriMethods( relevantInfos,
+        lastUsedComponent, originalMethods );
+    int infoIndex = 0;
     while ( !originalMethodsTmp.isEmpty() && infoIndex < quantitativeSortedInfos.size() ) {
-      PartlyTypeMatchingInfo info = quantitativeSortedInfos.get( infoIndex );
-      Collection<Method> methodsWithMatchingInfo = info.getMethodMatchingInfoSupplier().keySet();
-      originalMethodsTmp = originalMethods.stream()
-          .filter( m -> !methodsWithMatchingInfo.contains( m ) ).collect( Collectors.toList() );
-      for ( Method m : methodsWithMatchingInfo ) {
-        Collection<PartlyTypeMatchingInfo> infos = new ArrayList<>();
-        if ( relevantInfos.containsKey( m ) ) {
-          infos = relevantInfos.get( m );
-        }
-        infos.add( info );
-        relevantInfos.put( m, infos );
+      if ( infoIndex == mainIndex ) {
+        continue;
       }
+      PartlyTypeMatchingInfo info = quantitativeSortedInfos.get( infoIndex );
+      originalMethodsTmp = enhanceRelevantInfosAndReturnLeftOriMethods( relevantInfos, info, originalMethodsTmp );
       infoIndex++;
     }
     return relevantInfos;
+  }
+
+  private List<Method> enhanceRelevantInfosAndReturnLeftOriMethods(
+      Map<Method, Collection<PartlyTypeMatchingInfo>> relevantInfos,
+      PartlyTypeMatchingInfo info, Collection<Method> originalMethods ) {
+    Collection<Method> methodsWithMatchingInfo = info.getMethodMatchingInfoSupplier().keySet();
+    for ( Method m : methodsWithMatchingInfo ) {
+      Collection<PartlyTypeMatchingInfo> infos = new ArrayList<>();
+      if ( relevantInfos.containsKey( m ) ) {
+        infos = relevantInfos.get( m );
+      }
+      infos.add( info );
+      relevantInfos.put( m, infos );
+    }
+    return originalMethods.stream()
+        .filter( m -> !methodsWithMatchingInfo.contains( m ) ).collect( Collectors.toList() );
+
   }
 
   // private Collection<Method> getUncoveragedMethods() {

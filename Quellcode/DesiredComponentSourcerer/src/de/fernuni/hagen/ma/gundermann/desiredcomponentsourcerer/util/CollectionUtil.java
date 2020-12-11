@@ -34,4 +34,11 @@ public final class CollectionUtil {
       return newValue;
     };
   }
+
+  public static <T> T pop(
+      Collection<T> col ) {
+    T popped = col.iterator().next();
+    col.remove( popped );
+    return popped;
+  }
 }
