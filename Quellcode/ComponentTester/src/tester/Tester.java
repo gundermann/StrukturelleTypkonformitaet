@@ -24,21 +24,21 @@ class Tester {
         setter.invoke( testInstance, component );
         invokeTests( testInstance, testResult );
       }
-      catch ( InstantiationException | IllegalAccessException | IllegalArgumentException e ) {
+      catch ( InstantiationException | IllegalAccessException | IllegalArgumentException
+          | InvocationTargetException e ) {
         e.printStackTrace();
         testResult.canceled();
         return testResult;
       }
-      catch ( InvocationTargetException ite ) {
-        Throwable targetException = ite.getTargetException();
-        if ( targetException.getClass().equals( AssertionError.class ) ) {
-          System.out.println( String.format( "TEST FAILED: %s", targetException.getMessage() ) );
-          testResult.failed();
-          return testResult;
+      catch ( WrappedAssertionError ae ) {
+        String assertionError = ae.getMessage();
+        if ( assertionError.isEmpty() ) {
+          assertionError = "assertion error";
         }
-        ite.printStackTrace();
-        testResult.canceled();
+        System.out.println( String.format( "TEST FAILED: %s => %s", ae.getTestName(), ae.getMessage() ) );
+        testResult.failed();
         return testResult;
+
       }
     }
     System.out.println( String.format( "TEST PASSED" ) );
@@ -47,13 +47,22 @@ class Tester {
   }
 
   private void invokeTests( Object testInstance, TestResult testResult )
-      throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, AssertionError {
+      throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, WrappedAssertionError {
     Method[] testMethods = findTestMethods( testInstance.getClass() );
     testResult.addTests( testMethods.length );
     int counter = 1;
     for ( Method test : testMethods ) {
       test.setAccessible( true );
-      test.invoke( testInstance );
+      try {
+        test.invoke( testInstance );
+      }
+      catch ( InvocationTargetException e ) {
+        Throwable targetException = e.getTargetException();
+        if ( AssertionError.class.equals( targetException.getClass() ) ) {
+          throw new WrappedAssertionError( AssertionError.class.cast( targetException ), test );
+        }
+        throw e;
+      }
       testResult.incrementPassedTests();
       System.out.println( String.format( "Test passed: %d/%d", counter++, testMethods.length ) );
     }
