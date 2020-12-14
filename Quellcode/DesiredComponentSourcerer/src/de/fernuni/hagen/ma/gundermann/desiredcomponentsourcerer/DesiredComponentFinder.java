@@ -54,6 +54,7 @@ public class DesiredComponentFinder {
   public <DesiredInterface> DesiredInterface getDesiredComponent(
       Class<DesiredInterface> desiredInterface ) {
 
+    // ... Wird vermutlich gar nicht benoetigt:
     Logger.info( "search component by full match" );
     // TODO Matching-Method Heuristik: Zwischen den Matching-Methoden gibt es eine Rangfolge:
     for ( int i = 0; i < fullTypeMatcher.length; i++ ) {
