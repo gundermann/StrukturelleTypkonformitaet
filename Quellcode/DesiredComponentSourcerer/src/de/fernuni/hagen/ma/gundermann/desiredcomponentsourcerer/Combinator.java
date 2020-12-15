@@ -2,11 +2,49 @@ package de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.CollectionUtil;
 
 public class Combinator<K, V> {
+
+  public static <T> Collection<Collection<T>> generateCombis( Collection<T> base, int combinatedElems ) {
+    if ( combinatedElems == 1 ) {
+      return base.stream().map( Collections::singletonList ).map( ArrayList::new ).collect( Collectors.toList() );
+    }
+
+    Collection<T> restBase = new ArrayList<>( base );
+    Collection<Collection<T>> result = new ArrayList<>();
+    for ( int i1 = 0; i1 < base.size(); i1++ ) {
+      T elem = CollectionUtil.get( base, i1 ).get();
+      restBase.remove( elem );
+      Collection<Collection<T>> generateCombis = new ArrayList<>();
+      for ( int combiIteration = combinatedElems - 1; combiIteration > 0; combiIteration-- ) {
+        generateCombis.addAll( generateCombis( restBase, combiIteration ) );
+      }
+      for ( Collection<T> combi : generateCombis ) {
+        combi.add( elem );
+      }
+      result.addAll( generateCombis );
+    }
+    return result;
+
+  }
+
+  private static int nOverK( int n, int k ) {
+    return faculty( n ) / ( faculty( n - k ) );
+  }
+
+  private static int faculty( int n ) {
+    if ( n == 0 ) {
+      return 1;
+    }
+    return n * faculty( n - 1 );
+  }
 
   public Collection<Collection<V>> generateCombis(
       Map<K, Collection<V>> possibleMethodMatches ) {

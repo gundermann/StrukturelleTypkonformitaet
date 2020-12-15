@@ -1,11 +1,12 @@
 package de.fernuni.hagen.ma.gundermann.ejb.provided.beans.impl;
 
 import de.fernuni.hagen.ma.gundermann.ejb.provided.beans.FireFighter;
+import de.fernuni.hagen.ma.gundermann.ejb.provided.beans.ParaMedic;
 import de.fernuni.hagen.ma.gundermann.ejb.provided.business.AccidentParticipant;
 import de.fernuni.hagen.ma.gundermann.ejb.provided.business.Fire;
 import de.fernuni.hagen.ma.gundermann.ejb.provided.business.Suffer;
 
-public class VolunteerFireFighter implements FireFighter {
+public class ProfessionalFireFighter implements ParaMedic, FireFighter {
 
   @Override
   public void extinguishFire( Fire fire ) {
@@ -33,9 +34,15 @@ public class VolunteerFireFighter implements FireFighter {
   }
 
   @Override
+  public void placeInfusion( AccidentParticipant injured ) {
+    injured.healSuffer( Suffer.NUTRITIONAL_DEFICIENCY );
+  }
+
+  @Override
   public void provideFirstAid( AccidentParticipant injured ) {
     free( injured );
     provideHeartbeatMassage( injured );
+    placeInfusion( injured );
     nurseWounds( injured );
     stabilizeBrokenBones( injured );
   }

@@ -1,22 +1,9 @@
-/*   $HeadURL$
- * ----------------------------------------------------------------------------
- *     (c) by data experts gmbh
- *            Woldegker Str. 12
- *            17033 Neubrandenburg
- * ----------------------------------------------------------------------------
- *     Dieses Dokument und die hierin enthaltenen Informationen unterliegen
- *     dem Urheberrecht und duerfen ohne die schriftliche Genehmigung des
- *     Herausgebers weder als ganzes noch in Teilen dupliziert, reproduziert
- *     oder manipuliert werden.
- * ----------------------------------------------------------------------------
- *     $Id$
- * ----------------------------------------------------------------------------
- */
 package de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -50,6 +37,17 @@ public class CombinatorTest {
     stringMap.put( "A", Arrays.asList( "1", "2" ) );
     stringMap.put( "B", Arrays.asList( "3", "4", "5" ) );
     Collection<Collection<String>> generateCombis = new Combinator<String, String>().generateCombis( stringMap );
+    assertThat( generateCombis.size(), equalTo( 6 ) );
+  }
+
+  @Test
+  public void test2of4List() {
+    Collection<String> stringList = new ArrayList<>();
+    stringList.add( "1" );
+    stringList.add( "2" );
+    stringList.add( "3" );
+    stringList.add( "4" );
+    Collection<Collection<String>> generateCombis = Combinator.generateCombis( stringList, 2 );
     assertThat( generateCombis.size(), equalTo( 6 ) );
   }
 
