@@ -19,14 +19,22 @@ import matching.modules.PartlyTypeMatchingInfo;
 // Auskommentierte Teile gehoeren zu Heuristiken, die ich begonnen hatte umzusetzten, aber nicht zuende gedacht hatte.
 public class BestMatchingComponentCombinationFinder {
 
+  private final Selector singleSelector;
+
   private final Map<Class<?>, PartlyTypeMatchingInfo> componentInterface2PartlyMatchingInfos;
 
   private final List<PartlyTypeMatchingInfo> quantitativeSortedInfos;
+
+  private boolean fullMatchedGenerated = false;
+
+  private boolean fullMatchedCombisGenerated = false;
 
   private Collection<Collection<CombinationPartInfo>> cachedCalculatedInfos = new ArrayList<>();
 
   // erster Versuch (primitiv)
   private int mainIndex = -1;
+
+  private int baseToBetterIndex = -1;
 
   // private int currentTypeMatchingInfoIndizes[] = new int[] {};
   //
@@ -45,49 +53,99 @@ public class BestMatchingComponentCombinationFinder {
     quantitativeSortedInfos = new ArrayList<>(
         componentInterface2PartlyMatchingInfos.values() );
     Collections.sort( quantitativeSortedInfos, new QuantitaiveMatchRankingComparator() );
-    new CombinationInfo( new HashMap<>() );
+    this.fullMatchedGenerated = quantitativeSortedInfos.stream()
+        .noneMatch( CombinationFinderUtils::isFullMatchingComponent );
+    this.fullMatchedCombisGenerated = fullMatchedGenerated;
+
+    this.singleSelector = new SingleSelector( quantitativeSortedInfos.stream()
+        .filter( CombinationFinderUtils::isFullMatchingComponent ).collect( Collectors.toList() ) );
   }
 
   public boolean hasNextCombination() {
-    if ( cachedCalculatedInfos.isEmpty()
-        // quantitativeSortedInfos.size() == 0
-        // || currentTypeMatchingInfoIndizes.length > 0
-        // && currentTypeMatchingInfoIndizes[0] >= quantitativeSortedInfos.size()
-        && mainIndex + 1 >= quantitativeSortedInfos.size() ) {
-      return false;
-    }
-    generateNextCombination();
-    return nextCombinationInfo.isPresent();
+    return getSelectorForNextCombination().hasNext();
+    //
+    // if ( cachedCalculatedInfos.isEmpty()
+    // // quantitativeSortedInfos.size() == 0
+    // // || currentTypeMatchingInfoIndizes.length > 0
+    // // && currentTypeMatchingInfoIndizes[0] >= quantitativeSortedInfos.size()
+    // && mainIndex + 1 >= quantitativeSortedInfos.size() && fullMatchedGenerated && fullMatchedCombisGenerated ) {
+    // return false;
+    // }
+    // generateNextCombination();
+    // return nextCombinationInfo.isPresent();
   }
 
   public CombinationInfo getNextCombination() {
+    generateNextCombination();
     return nextCombinationInfo.get();
   }
 
   private void generateNextCombination() {
-    // Neue Methoden-Kombination in aktuellen Komponenten suchen.
-    if ( !cachedCalculatedInfos.isEmpty() ) {
-      setNextCombinationInfoFromCache();
-    }
-    else {
-      // Neue Komponente suchen
-      // int lastMainIndex = releaseLastMainIndex();
-      mainIndex++;
-      PartlyTypeMatchingInfo mainComponent = quantitativeSortedInfos.get( mainIndex );
-      // PartlyTypeMatchingInfo lastUsedComponent = quantitativeSortedInfos.get( lastMainIndex );
-      // Collection<Method> uncoveragedMethods = getUncoveragedMethods();
-      // findNextComponentForMethods( lastUsedComponent );
-      findNextComponentForMethods( mainComponent );
-    }
+    Selector selector = getSelectorForNextCombination();
+    nextCombinationInfo = selector.getNext();
+
+    // // Neue Methoden-Kombination in aktuellen Komponenten suchen.
+    // if ( !cachedCalculatedInfos.isEmpty() ) {
+    // setNextCombinationInfoFromCache();
+    // }
+    // else {
+    // // Neue Komponente suchen
+    // // int lastMainIndex = releaseLastMainIndex();
+    // if ( !fullMatchedCombisGenerated && fullMatchedGenerated && baseToBetterIndex + 1 == mainIndex ) {
+    // baseToBetterIndex = -1;
+    // }
+    //
+    // mainIndex++;
+    // PartlyTypeMatchingInfo mainComponent = quantitativeSortedInfos.get( mainIndex );
+    // if ( !fullMatchedGenerated && CombinationFinderUtils.isFullMatchingComponent( mainComponent ) ) {
+    // fullMatchedGenerated = true;
+    // mainIndex = 0;
+    // }
+    //
+    // mainComponent = quantitativeSortedInfos.get( mainIndex );
+    // // PartlyTypeMatchingInfo lastUsedComponent = quantitativeSortedInfos.get( lastMainIndex );
+    // // Collection<Method> uncoveragedMethods = getUncoveragedMethods();
+    // // findNextComponentForMethods( lastUsedComponent );
+    // findNextComponentForMethods( mainComponent );
+    // }
   }
 
-  private void findNextComponentForMethods( PartlyTypeMatchingInfo lastUsedComponent ) {
-    Collection<Method> methodsWithoutMatchingInfo = lastUsedComponent.getOriginalMethods();
-    Map<Method, Collection<PartlyTypeMatchingInfo>> relevantTypeMatchingInfos = collectRelevantTypeMatchingInfos(
-        methodsWithoutMatchingInfo, lastUsedComponent );
+  private Selector getSelectorForNextCombination() {
+    if ( singleSelector.hasNext() ) {
+      return singleSelector;
+    }
+    return new Selector() {
+
+      @Override
+      public boolean hasNext() {
+        return false;
+      }
+
+      @Override
+      public Optional<CombinationInfo> getNext() {
+        return Optional.empty();
+      }
+    };
+  }
+
+  private void findNextComponentForMethods( PartlyTypeMatchingInfo nextMainComponent ) {
+    Map<Method, Collection<PartlyTypeMatchingInfo>> relevantTypeMatchingInfos = new HashMap<>();
+    if ( !fullMatchedGenerated && CombinationFinderUtils.isFullMatchingComponent( nextMainComponent ) ) {
+      enhanceRelevantInfosAndReturnLeftOriMethods( relevantTypeMatchingInfos, nextMainComponent, new ArrayList<>() );
+    }
+    if ( !fullMatchedCombisGenerated ) {
+      baseToBetterIndex++;
+      enhanceRelevantInfosAndReturnLeftOriMethods( relevantTypeMatchingInfos, nextMainComponent, new ArrayList<>() );
+      enhanceRelevantInfosAndReturnLeftOriMethods( relevantTypeMatchingInfos,
+          quantitativeSortedInfos.get( baseToBetterIndex ), new ArrayList<>() );
+    }
+    else {
+      Collection<Method> methodsWithoutMatchingInfo = nextMainComponent.getOriginalMethods();
+      relevantTypeMatchingInfos = collectRelevantTypeMatchingInfos( methodsWithoutMatchingInfo, nextMainComponent );
+
+    }
 
     fillCachedComponent2MatchingInfo( relevantTypeMatchingInfos );
-
     // Map<Class<?>, Collection<MethodMatchingInfo>> component2MatchingInfo = new HashMap<>();
     // for ( Entry<Method, Collection<PartlyTypeMatchingInfo>> e : relevantInfos.entrySet() ) {
     // Optional<PartlyTypeMatchingInfo> optInfo = CollectionUtil.get( e.getValue(), 0 );

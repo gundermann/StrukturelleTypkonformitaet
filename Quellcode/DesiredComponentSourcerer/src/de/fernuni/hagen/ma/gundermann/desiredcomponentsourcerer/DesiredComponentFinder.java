@@ -55,17 +55,17 @@ public class DesiredComponentFinder {
       Class<DesiredInterface> desiredInterface ) {
 
     // ... Wird vermutlich gar nicht benoetigt:
-    Logger.info( "search component by full match" );
-    // TODO Matching-Method Heuristik: Zwischen den Matching-Methoden gibt es eine Rangfolge:
-    for ( int i = 0; i < fullTypeMatcher.length; i++ ) {
-      Optional<DesiredInterface> optDesiredBean = findDesiredComponentByFullMatcher( desiredInterface,
-          fullTypeMatcher[i] );
-      if ( optDesiredBean.isPresent() ) {
-        Logger.info( "component found" );
-        return optDesiredBean.get();
-      }
-      Logger.info( "component not found" );
-    }
+    // Logger.info( "search component by full match" );
+    // // TODO Matching-Method Heuristik: Zwischen den Matching-Methoden gibt es eine Rangfolge:
+    // for ( int i = 0; i < fullTypeMatcher.length; i++ ) {
+    // Optional<DesiredInterface> optDesiredBean = findDesiredComponentByFullMatcher( desiredInterface,
+    // fullTypeMatcher[i] );
+    // if ( optDesiredBean.isPresent() ) {
+    // Logger.info( "component found" );
+    // return optDesiredBean.get();
+    // }
+    // Logger.info( "component not found" );
+    // }
 
     Logger.info( "search component by partly match" );
     for ( int i = 0; i < PARLTY_TYPE_MATCHERS.length; i++ ) {

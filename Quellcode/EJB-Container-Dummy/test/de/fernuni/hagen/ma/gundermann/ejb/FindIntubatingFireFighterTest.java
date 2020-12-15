@@ -20,6 +20,9 @@ public class FindIntubatingFireFighterTest {
     EJBContainer.CONTAINER.reset();
     EJBContainer.CONTAINER.registerBean( FireFighter.class, new VolunteerFireFighter() );
     EJBContainer.CONTAINER.registerBean( Doctor.class, new EmergencyDoctor() );
+    // EJBContainer.CONTAINER.registerBean( FirstAidTrainedPasserby.class, new TrainedPasserby() );
+    // EJBContainer.CONTAINER.registerBean( FireFighter.class, new ProfessionalFireFighter() );
+    // EJBContainer.CONTAINER.registerBean( ParaMedic.class, new ProfessionalFireFighter() );
     IntubatingFireFighter desiredBean = new DesiredComponentFinder(
         EJBContainer.CONTAINER.getRegisteredBeanInterfaces(),
         EJBContainer.CONTAINER::getOptBean ).getDesiredComponent( desiredInterface );
