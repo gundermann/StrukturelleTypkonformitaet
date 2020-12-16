@@ -56,7 +56,6 @@ public class BestMatchingComponentCombinationFinder {
       return fullMatchingCombinationSelector;
     }
     return new Selector() {
-
       @Override
       public boolean hasNext() {
         return false;
