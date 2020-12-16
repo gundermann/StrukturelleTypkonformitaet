@@ -35,17 +35,6 @@ public class Combinator<K, V> {
 
   }
 
-  private static int nOverK( int n, int k ) {
-    return faculty( n ) / ( faculty( n - k ) );
-  }
-
-  private static int faculty( int n ) {
-    if ( n == 0 ) {
-      return 1;
-    }
-    return n * faculty( n - 1 );
-  }
-
   public Collection<Collection<V>> generateCombis(
       Map<K, Collection<V>> possibleMethodMatches ) {
     Collection<Collection<V>> combinations = new ArrayList<>();
