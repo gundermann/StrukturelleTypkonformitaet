@@ -98,9 +98,6 @@ public class DesiredComponentFinder {
       Class<DesiredInterface> desiredInterface, PartlyTypeMatcher typeMatcher ) {
     Map<Class<?>, PartlyTypeMatchingInfo> matchedBeans = new HashMap<>();
     for ( Class<?> beanInterface : getRegisteredComponentInterfaces() ) {
-      if ( beanInterface.getSimpleName().equals( "Doctor" ) || beanInterface.getSimpleName().equals( "FireFighter" ) ) {
-        System.out.println( "hwg" );
-      }
       boolean matchesPartly = typeMatcher.matchesTypePartly( beanInterface, desiredInterface );
       if ( !matchesPartly ) {
         continue;
@@ -184,12 +181,6 @@ public class DesiredComponentFinder {
       Class<DesiredInterface> desiredInterface ) {
     Logger.infoF( "find components for combination: %s",
         combinationInfos.getComponentClasses().stream().map( Class::toString ).collect( Collectors.joining( " + " ) ) );
-    if ( "interface de.fernuni.hagen.ma.gundermann.ejb.provided.beans.FireFighter + interface de.fernuni.hagen.ma.gundermann.ejb.provided.beans.Doctor"
-        .equals(
-            combinationInfos.getComponentClasses().stream().map( Class::toString )
-                .collect( Collectors.joining( " + " ) ) ) ) {
-      System.out.println( "hwg" );
-    }
     CombinationTypeConverter<DesiredInterface> converter = new CombinationTypeConverter<>(
         desiredInterface );
     ComponentTester<DesiredInterface> componentTester = new ComponentTester<>( desiredInterface );

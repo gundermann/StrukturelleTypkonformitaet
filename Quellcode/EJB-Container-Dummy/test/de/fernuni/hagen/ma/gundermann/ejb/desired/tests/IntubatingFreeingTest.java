@@ -1,39 +1,38 @@
 package de.fernuni.hagen.ma.gundermann.ejb.desired.tests;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.Collection;
 
-import de.fernuni.hagen.ma.gundermann.ejb.desired.IntubatingFireFighter;
+import de.fernuni.hagen.ma.gundermann.ejb.desired.IntubatingFreeing;
 import de.fernuni.hagen.ma.gundermann.ejb.provided.business.AccidentParticipant;
-import de.fernuni.hagen.ma.gundermann.ejb.provided.business.Fire;
 import de.fernuni.hagen.ma.gundermann.ejb.provided.business.Suffer;
 import tester.annotation.QueryTypeInstanceSetter;
 import tester.annotation.QueryTypeTest;
 
-public class IntubatingFireFighterTest {
+public class IntubatingFreeingTest {
 
-  private IntubatingFireFighter intubatingFireFighter;
+  private IntubatingFreeing intubatingFreeing;
 
   @QueryTypeInstanceSetter
-  public void setProvider( IntubatingFireFighter intubatingFireFighter ) {
-    this.intubatingFireFighter = intubatingFireFighter;
+  public void setProvider( IntubatingFreeing intubatingFireFighter ) {
+    this.intubatingFreeing = intubatingFireFighter;
   }
 
   @QueryTypeTest
   public void free() {
-    Fire fire = new Fire();
-    intubatingFireFighter.extinguishFire( fire );
-    assertFalse( fire.isActive() );
+    Collection<Suffer> suffer = Arrays.asList( Suffer.LOCKED );
+    AccidentParticipant patient = new AccidentParticipant( suffer );
+    intubatingFreeing.free( patient );
+    assertTrue( patient.isStabilized() );
   }
 
   @QueryTypeTest
   public void intubate() {
     Collection<Suffer> suffer = Arrays.asList( Suffer.BREATH_PROBLEMS );
     AccidentParticipant patient = new AccidentParticipant( suffer );
-    intubatingFireFighter.intubate( patient );
+    intubatingFreeing.intubate( patient );
     assertTrue( patient.isStabilized() );
   }
 

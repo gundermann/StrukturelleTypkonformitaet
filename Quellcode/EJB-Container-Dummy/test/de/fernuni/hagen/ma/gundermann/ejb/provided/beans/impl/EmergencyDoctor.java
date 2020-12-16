@@ -1,10 +1,12 @@
 package de.fernuni.hagen.ma.gundermann.ejb.provided.beans.impl;
 
 import de.fernuni.hagen.ma.gundermann.ejb.provided.beans.Doctor;
+import de.fernuni.hagen.ma.gundermann.ejb.provided.beans.Intubator;
 import de.fernuni.hagen.ma.gundermann.ejb.provided.business.AccidentParticipant;
+import de.fernuni.hagen.ma.gundermann.ejb.provided.business.IntubationPartient;
 import de.fernuni.hagen.ma.gundermann.ejb.provided.business.Suffer;
 
-public class EmergencyDoctor implements Doctor {
+public class EmergencyDoctor implements Doctor, Intubator {
 
   @Override
   public void provideHeartbeatMassage( AccidentParticipant injured ) {
@@ -38,6 +40,11 @@ public class EmergencyDoctor implements Doctor {
     placeInfusion( injured );
     nurseWounds( injured );
     stablilizeBrokenBones( injured );
+  }
+
+  @Override
+  public void intubate( IntubationPartient patient ) {
+    patient.setIntubated( true );
   }
 
 }
