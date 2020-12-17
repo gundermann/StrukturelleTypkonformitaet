@@ -25,7 +25,6 @@ public class ModuleMatchingInfoFactoryTest {
         Object.class );
     ModuleMatchingInfo matchingInfo = factory.create();
     assertThat( matchingInfo, notNullValue() );
-    assertThat( matchingInfo.getRating(), equalTo( 0 ) );
     assertThat( matchingInfo.getMethodMatchingInfos(), notNullValue() );
     assertThat( matchingInfo.getMethodMatchingInfos().size(), equalTo( 0 ) );
     assertThat( matchingInfo.getConverterCreator(), notNullValue() );
@@ -37,7 +36,6 @@ public class ModuleMatchingInfoFactoryTest {
         Object.class, "SOURCE" );
     ModuleMatchingInfo matchingInfo = factory.create();
     assertThat( matchingInfo, notNullValue() );
-    assertThat( matchingInfo.getRating(), equalTo( 0 ) );
     assertThat( matchingInfo.getMethodMatchingInfos(), notNullValue() );
     assertThat( matchingInfo.getMethodMatchingInfos().size(), equalTo( 0 ) );
     assertThat( matchingInfo.getConverterCreator(), notNullValue() );
@@ -49,7 +47,6 @@ public class ModuleMatchingInfoFactoryTest {
         Object.class );
     ModuleMatchingInfo matchingInfo = factory.create();
     assertThat( matchingInfo, notNullValue() );
-    assertThat( matchingInfo.getRating(), equalTo( 0 ) );
     assertThat( matchingInfo.getMethodMatchingInfos(), notNullValue() );
     assertThat( matchingInfo.getMethodMatchingInfos().size(), equalTo( 0 ) );
     assertThat( matchingInfo.getConverterCreator(), notNullValue() );
@@ -61,7 +58,6 @@ public class ModuleMatchingInfoFactoryTest {
         Object.class );
     ModuleMatchingInfo matchingInfo = factory.create( new HashSet<>() );
     assertThat( matchingInfo, notNullValue() );
-    assertThat( matchingInfo.getRating(), equalTo( 0 ) );
     assertThat( matchingInfo.getMethodMatchingInfos(), notNullValue() );
     assertThat( matchingInfo.getMethodMatchingInfos().size(), equalTo( 0 ) );
   }
