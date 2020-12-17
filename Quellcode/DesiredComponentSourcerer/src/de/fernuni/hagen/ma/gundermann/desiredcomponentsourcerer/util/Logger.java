@@ -10,7 +10,9 @@ public class Logger {
   private static Collection<AppendableLogger> appendedLogger = new ArrayList<>();
 
   public static void appendLogger( AppendableLogger logger ) {
-    appendedLogger.add( logger );
+    if ( !appendedLogger.contains( logger ) ) {
+      appendedLogger.add( logger );
+    }
   }
 
   public static void switchOn() {

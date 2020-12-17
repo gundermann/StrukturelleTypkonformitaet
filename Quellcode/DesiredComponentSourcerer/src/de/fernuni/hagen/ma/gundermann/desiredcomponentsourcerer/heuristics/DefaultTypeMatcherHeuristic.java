@@ -3,6 +3,8 @@ package de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import matching.MatcherCombiner;
 import matching.modules.ExactTypeMatcher;
@@ -62,6 +64,11 @@ public enum DefaultTypeMatcherHeuristic {
       this.structGenSpecExactTM,
       this.structWrappedGenSpecExactTM };
 
+  private PartlyTypeMatcher[] typeMatchers = new PartlyTypeMatcher[] {
+      this.structExactTM,
+      this.structGenSpecExactTM,
+      this.structWrappedGenSpecExactTM };
+
   // TODO später
   // private final TypeMatcher recursiveWrappedTM = new WrappedTypeMatcher(
   // () -> MatcherCombiner.combine( genSpecTM, exactTM, recursiveWrappedTM ) );
@@ -116,14 +123,21 @@ public enum DefaultTypeMatcherHeuristic {
   }
 
   private PartlyTypeMatcher[] getPartlyMatcherArray() {
-    return new PartlyTypeMatcher[] {
-        this.structExactTM,
-        this.structGenSpecExactTM,
-        this.structWrappedGenSpecExactTM };
+    return this.typeMatchers;
   }
 
   private TypeMatcher[] getMatcherArray() {
     return rankedTypeMatcher;
+  }
+
+  public static PartlyTypeMatcher[] createTypeMatcher( TypeMatcher[] fullTypeMatcher ) {
+    INSTANCE.reorgansizeMatchers( fullTypeMatcher );
+    return INSTANCE.getPartlyMatcherArray();
+  }
+
+  private void reorgansizeMatchers( TypeMatcher[] fullTypeMatcher ) {
+    this.typeMatchers = Stream.of( fullTypeMatcher ).map( m -> new StructuralTypeMatcher( () -> m ) )
+        .collect( Collectors.toList() ).toArray( new PartlyTypeMatcher[] {} );
   }
 
 }
