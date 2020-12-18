@@ -65,8 +65,10 @@ public enum DefaultTypeMatcherHeuristic {
       this.structWrappedGenSpecExactTM };
 
   private PartlyTypeMatcher[] typeMatchers = new PartlyTypeMatcher[] {
-      this.structExactTM,
-      this.structGenSpecExactTM,
+      // Werden ohne die ersten beiden bessere Ergebnisse erzielt? => scheinbar ja.
+      // TODO Die Frage ist, wie es sich mit vielen Beans verhaelt
+      // this.structExactTM,
+      // this.structGenSpecExactTM,
       this.structWrappedGenSpecExactTM };
 
   // TODO später

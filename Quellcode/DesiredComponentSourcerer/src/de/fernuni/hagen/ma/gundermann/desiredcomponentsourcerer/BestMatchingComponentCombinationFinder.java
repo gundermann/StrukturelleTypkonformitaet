@@ -9,15 +9,21 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.CombinationSelector;
+import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.CommonSelector;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.SingleSelector;
 import matching.modules.PartlyTypeMatchingInfo;
 
 // Auskommentierte Teile gehoeren zu Heuristiken, die ich begonnen hatte umzusetzten, aber nicht zuende gedacht hatte.
 public class BestMatchingComponentCombinationFinder {
 
+  // Selektor für strukturell 100%ig matchende Komponenten
   private final Selector singleSelector;
 
+  // Selektor für die Kombination von strukturell 100%ig matchenden Komponenten
   private final Selector fullMatchingCombinationSelector;
+
+  // Selektor für die Kombination von Komponenten, sodass alle erwarteten Methoden bedient werden.
+  private final Selector commonSelector;
 
   private final List<PartlyTypeMatchingInfo> quantitativeSortedInfos;
 
@@ -32,6 +38,7 @@ public class BestMatchingComponentCombinationFinder {
         .filter( CombinationFinderUtils::isFullMatchingComponent ).collect( Collectors.toList() ) );
     this.fullMatchingCombinationSelector = new CombinationSelector( quantitativeSortedInfos.stream()
         .filter( CombinationFinderUtils::isFullMatchingComponent ).collect( Collectors.toList() ) );
+    this.commonSelector = new CommonSelector( quantitativeSortedInfos );
   }
 
   public boolean hasNextCombination() {
@@ -49,11 +56,15 @@ public class BestMatchingComponentCombinationFinder {
   }
 
   private Selector getSelectorForNextCombination() {
-    if ( singleSelector.hasNext() ) {
-      return singleSelector;
-    }
-    if ( fullMatchingCombinationSelector.hasNext() ) {
-      return fullMatchingCombinationSelector;
+    // if ( singleSelector.hasNext() ) {
+    // return singleSelector;
+    // }
+    // if ( fullMatchingCombinationSelector.hasNext() ) {
+    // return fullMatchingCombinationSelector;
+    // }
+
+    if ( commonSelector.hasNext() ) {
+      return commonSelector;
     }
     return new Selector() {
       @Override
