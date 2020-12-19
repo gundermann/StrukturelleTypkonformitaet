@@ -35,11 +35,11 @@ public class Logger {
     if ( isOn ) {
       if ( !error ) {
         System.out.println( String.format( "%s %s", prefix, msg ) );
-        appendedLogger.forEach( l -> l.logError( String.format( "%s %s", prefix, msg ) ) );
+        appendedLogger.forEach( l -> l.logInfo( String.format( "%s %s", prefix, msg ) ) );
       }
       else {
         System.err.println( String.format( "%s %s", prefix, msg ) );
-        appendedLogger.forEach( l -> l.logInfo( String.format( "%s %s", prefix, msg ) ) );
+        appendedLogger.forEach( l -> l.logError( String.format( "%s %s", prefix, msg ) ) );
       }
     }
   }
