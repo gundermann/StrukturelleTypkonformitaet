@@ -6,13 +6,16 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.Test;
 
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.DesiredComponentFinder;
-import de.fernuni.hagen.ma.gundermann.ejb.desired.IntubatingFireFighter;
+import de.fernuni.hagen.ma.gundermann.ejb.desired.IntubatingPatientFireFighter;
 import de.fernuni.hagen.ma.gundermann.ejb.provided.beans.FireFighter;
 import de.fernuni.hagen.ma.gundermann.ejb.provided.beans.Intubator;
 import de.fernuni.hagen.ma.gundermann.ejb.provided.beans.impl.EmergencyDoctor;
 import de.fernuni.hagen.ma.gundermann.ejb.provided.beans.impl.VolunteerFireFighter;
 
-public class FindIntubatingPatrientFireFighterTest {
+/**
+ * TODO Auch dieser Test benoetigt relativ viel Zeit. (Siehe Kommentar in {@link FindIntubatingFreeingTest})
+ */
+public class FindIntubatingPatientFireFighterTest {
 
   /**
    * Hier werden zwei Komponenten verbunden, die das erwartete Interface sowohl strukturell als auch semantisch nur in
@@ -30,11 +33,11 @@ public class FindIntubatingPatrientFireFighterTest {
    */
   @Test
   public void findCombined() {
-    Class<IntubatingFireFighter> desiredInterface = IntubatingFireFighter.class;
-    EJBContainer.CONTAINER.reset();
+    Class<IntubatingPatientFireFighter> desiredInterface = IntubatingPatientFireFighter.class;
+    // EJBContainer.CONTAINER.reset();
     EJBContainer.CONTAINER.registerBean( FireFighter.class, new VolunteerFireFighter() );
     EJBContainer.CONTAINER.registerBean( Intubator.class, new EmergencyDoctor() );
-    IntubatingFireFighter desiredBean = new DesiredComponentFinder(
+    IntubatingPatientFireFighter desiredBean = new DesiredComponentFinder(
         EJBContainer.CONTAINER.getRegisteredBeanInterfaces(),
         EJBContainer.CONTAINER::getOptBean ).getDesiredComponent( desiredInterface );
     assertThat( desiredBean, notNullValue() );

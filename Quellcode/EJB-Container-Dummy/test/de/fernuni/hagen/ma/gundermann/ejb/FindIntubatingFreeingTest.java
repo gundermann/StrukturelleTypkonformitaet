@@ -12,6 +12,15 @@ import de.fernuni.hagen.ma.gundermann.ejb.provided.beans.FireFighter;
 import de.fernuni.hagen.ma.gundermann.ejb.provided.beans.impl.EmergencyDoctor;
 import de.fernuni.hagen.ma.gundermann.ejb.provided.beans.impl.VolunteerFireFighter;
 
+/**
+ * TODO dieser Test benoetigt verhaeltnismaeßig viel Zeit. Vermutlich liegt es daran, dass viele der deg-Bean-Interfaces
+ * strutkurell vollstaendig passen und die semantisch passenden Interfaces im Container an das Ende der Liste angefuegt
+ * wurden. </br>
+ * </br>
+ * Loeseung: Die Vorsortierung der Komponenten erfolgt zusätzlich noch über ein qualitatives Kriterium, welches das
+ * Verhaeltnis von originalen Methoden der Quell-Komponenten zu den nutzbaren Methoden der Ziel-Komponente sicherstellt:
+ * ORI_MET / PUBLIC_MET
+ */
 public class FindIntubatingFreeingTest {
 
   /**
