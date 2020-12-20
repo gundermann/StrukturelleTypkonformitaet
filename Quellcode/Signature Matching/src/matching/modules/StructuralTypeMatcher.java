@@ -154,7 +154,8 @@ public class StructuralTypeMatcher implements PartlyTypeMatcher {
         Stream.of( queryMethods ).map( m -> m.getName() ).collect( Collectors.joining( ", " ) ) );
 
     // gleicht nur die public-Methods ab
-    Map<Method, Collection<Method>> possibleMatches = collectPossibleMatches( queryMethods, checkType.getMethods() );
+    Method[] potentialMethods = checkType.getMethods();
+    Map<Method, Collection<Method>> possibleMatches = collectPossibleMatches( queryMethods, potentialMethods );
     Map<Method, Supplier<Collection<MethodMatchingInfo>>> matchingInfoSupplier = new HashMap<>();
     for ( Entry<Method, Collection<Method>> qM2tM : possibleMatches.entrySet() ) {
       Supplier<Collection<MethodMatchingInfo>> supplier = getSupplierOfMultipleMatchingMethods( qM2tM.getKey(),
@@ -164,7 +165,7 @@ public class StructuralTypeMatcher implements PartlyTypeMatcher {
     matchingInfoSupplier.entrySet()
         .forEach( e -> Logger.infoF( "Supplier for MethodMatchingInfos collected - Method: %s",
             e.getKey().getName() ) );
-    return factory.create( Arrays.asList( queryMethods ), matchingInfoSupplier );
+    return factory.create( Arrays.asList( queryMethods ), matchingInfoSupplier, potentialMethods.length );
   }
 
   private Supplier<Collection<MethodMatchingInfo>> getSupplierOfMultipleMatchingMethods( Method queryMethod,

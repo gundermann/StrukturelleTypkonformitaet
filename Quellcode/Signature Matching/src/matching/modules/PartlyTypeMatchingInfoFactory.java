@@ -11,20 +11,19 @@ import matching.methods.MethodMatchingInfo;
 
 public class PartlyTypeMatchingInfoFactory {
 
-	private final Class<?> targetType;
+  private final Class<?> targetType;
 
+  public PartlyTypeMatchingInfoFactory( Class<?> targetType ) {
+    this.targetType = targetType;
+  }
 
-	public PartlyTypeMatchingInfoFactory(Class<?> targetType) {
-		this.targetType = targetType;
-	}
+  public PartlyTypeMatchingInfo create() {
+    return this.create( new ArrayList<>(), new HashMap<>(), 0 );
+  }
 
-	public PartlyTypeMatchingInfo create() {
-		return this.create(new ArrayList<>(), new HashMap<>() );
-	}
-
-	public PartlyTypeMatchingInfo create(Collection<Method> sourceMethods, Map<Method, Supplier<Collection<MethodMatchingInfo>>> methodMatchingInfos) {
-		return new PartlyTypeMatchingInfo(targetType, sourceMethods, methodMatchingInfos);
-	}
-
+  public PartlyTypeMatchingInfo create( Collection<Method> sourceMethods,
+      Map<Method, Supplier<Collection<MethodMatchingInfo>>> methodMatchingInfos, int countOfPotentialMethods ) {
+    return new PartlyTypeMatchingInfo( targetType, sourceMethods, methodMatchingInfos, countOfPotentialMethods );
+  }
 
 }

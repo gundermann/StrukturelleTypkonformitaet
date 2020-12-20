@@ -19,11 +19,17 @@ public class PartlyTypeMatchingInfo {
 
   private final Class<?> checkType;
 
+  /**
+   * Die Methoden, die im Check-Type beim Ermitteln des Matchings untersucht wurden.
+   */
+  private int countOfPotentialMethods;
+
   PartlyTypeMatchingInfo( Class<?> checkType, Collection<Method> originalMethods,
-      Map<Method, Supplier<Collection<MethodMatchingInfo>>> methodMatchingInfoSupplier ) {
+      Map<Method, Supplier<Collection<MethodMatchingInfo>>> methodMatchingInfoSupplier, int countOfPotentialMethods ) {
     this.checkType = checkType;
     this.originalMethods = originalMethods;
     this.methodMatchingInfoSupplier = methodMatchingInfoSupplier;
+    this.countOfPotentialMethods = countOfPotentialMethods;
   }
 
   public Collection<Method> getOriginalMethods() {
@@ -46,6 +52,16 @@ public class PartlyTypeMatchingInfo {
       return 0.0d;
     }
     return Double.valueOf( methodMatchingInfoSupplier.keySet().size() ) / Double.valueOf( originalMethods.size() );
+  }
+
+  public double getQuantitativeMatchedToPotentialMethodsRating() {
+    if ( countOfPotentialMethods == 0 ) {
+      return 1.0d;
+    }
+    if ( methodMatchingInfoSupplier == null ) {
+      return 0.0d;
+    }
+    return Double.valueOf( methodMatchingInfoSupplier.keySet().size() ) / Double.valueOf( countOfPotentialMethods );
   }
 
   public double getQualitativeMatchRating() {

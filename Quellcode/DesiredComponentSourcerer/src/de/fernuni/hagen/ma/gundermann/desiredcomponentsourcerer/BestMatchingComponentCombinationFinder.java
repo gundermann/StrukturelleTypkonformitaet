@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.CommonSelector;
-import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.QuantitaiveMatchRatingComparator;
+import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.QuantitaiveMatchingInfoComparator;
 import matching.modules.PartlyTypeMatchingInfo;
 
 // Auskommentierte Teile gehoeren zu Heuristiken, die ich begonnen hatte umzusetzten, aber nicht zuende gedacht hatte.
@@ -30,7 +30,7 @@ public class BestMatchingComponentCombinationFinder {
       Map<Class<?>, PartlyTypeMatchingInfo> componentInterface2PartlyMatchingInfos ) {
     quantitativeSortedInfos = new ArrayList<>(
         componentInterface2PartlyMatchingInfos.values() );
-    Collections.sort( quantitativeSortedInfos, new QuantitaiveMatchRatingComparator() );
+    Collections.sort( quantitativeSortedInfos, new QuantitaiveMatchingInfoComparator() );
     // this.singleSelector = new SingleSelector( quantitativeSortedInfos.stream()
     // .filter( CombinationFinderUtils::isFullMatchingComponent ).collect( Collectors.toList() ) );
     // this.fullMatchingCombinationSelector = new CombinationSelector( quantitativeSortedInfos.stream()

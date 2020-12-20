@@ -6,6 +6,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.Test;
 
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.DesiredComponentFinder;
+import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.QuantitaiveMatchingInfoComparator;
 import de.fernuni.hagen.ma.gundermann.ejb.desired.IntubatingFreeing;
 import de.fernuni.hagen.ma.gundermann.ejb.provided.beans.Doctor;
 import de.fernuni.hagen.ma.gundermann.ejb.provided.beans.FireFighter;
@@ -19,7 +20,7 @@ import de.fernuni.hagen.ma.gundermann.ejb.provided.beans.impl.VolunteerFireFight
  * </br>
  * Loeseung: Die Vorsortierung der Komponenten erfolgt zusätzlich noch über ein qualitatives Kriterium, welches das
  * Verhaeltnis von originalen Methoden der Quell-Komponenten zu den nutzbaren Methoden der Ziel-Komponente sicherstellt:
- * ORI_MET / PUBLIC_MET
+ * ORI_MET / PUBLIC_MET ==> siehe {@link QuantitaiveMatchingInfoComparator}
  */
 public class FindIntubatingFreeingTest {
 
