@@ -64,10 +64,6 @@ public class CommonSelector implements Selector {
 
   private Map<Method, Collection<PartlyTypeMatchingInfo>> collectRelevantInfosPerMethod() {
     Collection<PartlyTypeMatchingInfo> combi = CollectionUtil.pop( cachedMatchingInfoCombinations );
-    if ( CollectionUtil.get( combi, 0 ).get().getCheckType().getSimpleName()
-        .startsWith( "ElerFTStammdatenAuskunftService" ) ) {
-      System.out.println( "hwg" );
-    }
     Map<Method, Collection<PartlyTypeMatchingInfo>> matchingInfoPerMethod = getMatchingInfoPerMethod( combi );
     // Pruefen, ob auch alle erwarteten Methoden erfuellt wurden.
     if ( !matchingInfoPerMethod.keySet().containsAll( originalMethods ) ) {
