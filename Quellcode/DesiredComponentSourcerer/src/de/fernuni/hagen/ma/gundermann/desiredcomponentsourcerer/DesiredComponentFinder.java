@@ -46,7 +46,7 @@ public class DesiredComponentFinder {
 
   public <DesiredInterface> DesiredInterface getDesiredComponent(
       Class<DesiredInterface> desiredInterface ) {
-    Logger.info( "search component by partly match" );
+    Logger.info( "search component by partly match: " + desiredInterface.getName() );
     for ( int i = 0; i < partlyTypeMatcher.length; i++ ) {
       Optional<DesiredInterface> optDesiredBean = findDesiredComponentByPartlyMatcher( desiredInterface,
           partlyTypeMatcher[i] );
