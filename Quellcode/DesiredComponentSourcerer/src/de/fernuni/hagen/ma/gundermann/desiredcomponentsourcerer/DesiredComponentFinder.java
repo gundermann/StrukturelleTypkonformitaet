@@ -69,7 +69,7 @@ public class DesiredComponentFinder {
 
     // FIXME INFO OUTPUT
     componentInterface2PartlyMatchingInfos.values().forEach( i -> {
-      Logger.toFile( "%f;%s;\n", i.getQualitativeMatchRating(),
+      Logger.toFile( "%f;%f;%s;\n", i.getQualitativeMatchRating(), i.getQuantitaiveMatchRating(),
           i.getCheckType().getSimpleName() );
     } );
 

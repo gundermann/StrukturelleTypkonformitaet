@@ -14,7 +14,8 @@ import matching.modules.TypeMatcher;
 
 public class CommonMethodMatcher implements MethodMatcher {
 
-  private static final double MATCHER_BASE_RATING = 500d;
+  // Anpassung des MatcherBaseRatings bringt nichts, da dieser Matcher nur im Test verwendet wird
+  private static final double MATCHER_BASE_RATING = 0;
 
   private final Supplier<TypeMatcher> typeMatcherSupplier;
 
