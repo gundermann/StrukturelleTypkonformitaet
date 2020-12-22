@@ -9,4 +9,5 @@ public interface MethodMatcher {
 
   Collection<MethodMatchingInfo> calculateMatchingInfos( Method checkMethod, Method queryMethod );
 
+  double matchesWithRating( Method checkMethod, Method queryMethod );
 }

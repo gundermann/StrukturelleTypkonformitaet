@@ -14,6 +14,8 @@ import matching.modules.TypeMatcher;
 
 public class CommonMethodMatcher implements MethodMatcher {
 
+  private static final double MATCHER_BASE_RATING = 500d;
+
   private final Supplier<TypeMatcher> typeMatcherSupplier;
 
   public CommonMethodMatcher( Supplier<TypeMatcher> typeMatcherSupplier ) {
@@ -70,5 +72,33 @@ public class CommonMethodMatcher implements MethodMatcher {
     }
 
     return matchingMap;
+  }
+
+  @Override
+  public double matchesWithRating( Method checkMethod, Method queryMethod ) {
+    MethodStructure ms1 = MethodStructure.createFromDeclaredMethod( checkMethod );
+    MethodStructure ms2 = MethodStructure.createFromDeclaredMethod( queryMethod );
+    return getMatchRating( ms1, ms2 );
+  }
+
+  private double getMatchRating( MethodStructure ms1, MethodStructure ms2 ) {
+    if ( ms1.getSortedArgumentTypes().length != ms2.getSortedArgumentTypes().length ) {
+      return -1;
+    }
+
+    double rating = typeMatcherSupplier.get().matchesWithRating( ms1.getReturnType(), ms2.getReturnType() );
+    if ( rating < 0 ) {
+      return rating;
+    }
+
+    for ( int i = 0; i < ms1.getSortedArgumentTypes().length; i++ ) {
+      double argRating = typeMatcherSupplier.get().matchesWithRating( ms1.getSortedArgumentTypes()[i],
+          ms2.getSortedArgumentTypes()[i] );
+      if ( argRating < 0 ) {
+        return -1;
+      }
+      rating += argRating;
+    }
+    return rating + MATCHER_BASE_RATING;
   }
 }

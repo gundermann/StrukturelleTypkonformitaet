@@ -5,9 +5,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Supplier;
-
-import matching.methods.MethodMatchingInfo;
 
 public class PartlyTypeMatchingInfoFactory {
 
@@ -22,7 +19,7 @@ public class PartlyTypeMatchingInfoFactory {
   }
 
   public PartlyTypeMatchingInfo create( Collection<Method> sourceMethods,
-      Map<Method, Supplier<Collection<MethodMatchingInfo>>> methodMatchingInfos, int countOfPotentialMethods ) {
+      Map<Method, MatchingSupplier> methodMatchingInfos, int countOfPotentialMethods ) {
     return new PartlyTypeMatchingInfo( targetType, sourceMethods, methodMatchingInfos, countOfPotentialMethods );
   }
 

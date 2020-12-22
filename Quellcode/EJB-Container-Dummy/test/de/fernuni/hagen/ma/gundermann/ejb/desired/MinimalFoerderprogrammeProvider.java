@@ -29,4 +29,8 @@ public interface MinimalFoerderprogrammeProvider {
   // null)
   // Den dazugehörigen Matcher habe ich aber noch nicht implementiert.
   // Foerderprogramm getFoerderprogramm( String fp, int jahr );
+
+  // Versuch 4: Das funktioniert noch nicht, sollte aber. Es funktioniert nicht, weil es in Foerderprogramm kein Feld
+  // vom Typ DvFoerderprogramm gibt.
+  // DvFoerderprogramm getFoerderprogramm( String fp, int jahr, Date date );
 }

@@ -20,6 +20,8 @@ import util.Logger;
 
 public class StructuralTypeMatcher implements PartlyTypeMatcher {
 
+  private static final double MATCHER_BASE_RATING = 400d;
+
   private final MethodMatcher methodMatcher;
 
   public StructuralTypeMatcher( final Supplier<TypeMatcher> innerMethodMatcherSupplier ) {
@@ -30,7 +32,8 @@ public class StructuralTypeMatcher implements PartlyTypeMatcher {
   public boolean matchesType( Class<?> checkType, Class<?> queryType ) {
     Logger.info( String.format( "%s MATCH? %s", checkType.getSimpleName(), queryType.getSimpleName() ) );
     Method[] queryMethods = getQueryMethods( queryType );
-    Map<Method, Collection<Method>> possibleMatches = collectPossibleMatches( queryMethods, checkType.getMethods() );
+    Map<Method, Collection<Method>> possibleMatches = convertMethod2MethodCollection(
+        collectPossibleMatches( queryMethods, checkType.getMethods() ) );
     printPossibleMatches( possibleMatches );
     return possibleMatches.values().stream().noneMatch( Collection::isEmpty );
   }
@@ -39,7 +42,8 @@ public class StructuralTypeMatcher implements PartlyTypeMatcher {
   public boolean matchesTypePartly( Class<?> checkType, Class<?> queryType ) {
     Logger.info( String.format( "%s MATCH? %s", checkType.getSimpleName(), queryType.getSimpleName() ) );
     Method[] queryMethods = getQueryMethods( queryType );
-    Map<Method, Collection<Method>> possibleMatches = collectPossibleMatches( queryMethods, checkType.getMethods() );
+    Map<Method, Collection<Method>> possibleMatches = convertMethod2MethodCollection(
+        collectPossibleMatches( queryMethods, checkType.getMethods() ) );
     printPossibleMatches( possibleMatches );
     return possibleMatches.values().stream().anyMatch( l -> !l.isEmpty() );
   }
@@ -57,7 +61,8 @@ public class StructuralTypeMatcher implements PartlyTypeMatcher {
     Method[] queryMethods = getQueryMethods( queryType );
     Logger.infoF( "QueryMethods: %s",
         Stream.of( queryMethods ).map( m -> m.getName() ).collect( Collectors.joining( ", " ) ) );
-    Map<Method, Collection<Method>> possibleMatches = collectPossibleMatches( queryMethods, checkType.getMethods() );
+    Map<Method, Collection<Method>> possibleMatches = convertMethod2MethodCollection(
+        collectPossibleMatches( queryMethods, checkType.getMethods() ) );
     Map<Method, Collection<MethodMatchingInfo>> possibleMethodMatches = collectMethodMatchingInfos( queryMethods,
         possibleMatches );
     possibleMatches.entrySet()
@@ -94,13 +99,15 @@ public class StructuralTypeMatcher implements PartlyTypeMatcher {
     }
   }
 
-  private Map<Method, Collection<Method>> collectPossibleMatches( Method[] queryMethods, Method[] checkMethods ) {
-    Map<Method, Collection<Method>> matches = new HashMap<>();
+  private Map<Method, Collection<MatchingMethod>> collectPossibleMatches( Method[] queryMethods,
+      Method[] checkMethods ) {
+    Map<Method, Collection<MatchingMethod>> matches = new HashMap<>();
     for ( Method queryMethod : queryMethods ) {
-      Collection<Method> queryMethodMatches = new ArrayList<>();
+      Collection<MatchingMethod> queryMethodMatches = new ArrayList<>();
       for ( Method checkMethod : checkMethods ) {
-        if ( methodMatcher.matches( checkMethod, queryMethod ) ) {
-          queryMethodMatches.add( checkMethod );
+        double rating = methodMatcher.matchesWithRating( checkMethod, queryMethod );
+        if ( rating >= 0 ) {
+          queryMethodMatches.add( new MatchingMethod( checkMethod, rating ) );
         }
       }
       if ( !queryMethodMatches.isEmpty() ) {
@@ -155,10 +162,11 @@ public class StructuralTypeMatcher implements PartlyTypeMatcher {
 
     // gleicht nur die public-Methods ab
     Method[] potentialMethods = checkType.getMethods();
-    Map<Method, Collection<Method>> possibleMatches = collectPossibleMatches( queryMethods, potentialMethods );
-    Map<Method, Supplier<Collection<MethodMatchingInfo>>> matchingInfoSupplier = new HashMap<>();
-    for ( Entry<Method, Collection<Method>> qM2tM : possibleMatches.entrySet() ) {
-      Supplier<Collection<MethodMatchingInfo>> supplier = getSupplierOfMultipleMatchingMethods( qM2tM.getKey(),
+    Map<Method, Collection<MatchingMethod>> possibleMatches = collectPossibleMatches( queryMethods,
+        potentialMethods );
+    Map<Method, MatchingSupplier> matchingInfoSupplier = new HashMap<>();
+    for ( Entry<Method, Collection<MatchingMethod>> qM2tM : possibleMatches.entrySet() ) {
+      MatchingSupplier supplier = getSupplierOfMultipleMatchingMethods( qM2tM.getKey(),
           qM2tM.getValue() );
       matchingInfoSupplier.put( qM2tM.getKey(), supplier );
     }
@@ -168,15 +176,33 @@ public class StructuralTypeMatcher implements PartlyTypeMatcher {
     return factory.create( Arrays.asList( queryMethods ), matchingInfoSupplier, potentialMethods.length );
   }
 
-  private Supplier<Collection<MethodMatchingInfo>> getSupplierOfMultipleMatchingMethods( Method queryMethod,
-      Collection<Method> matchingMethods ) {
-    return () -> {
+  private MatchingSupplier getSupplierOfMultipleMatchingMethods( Method queryMethod,
+      Collection<MatchingMethod> matchingMethods ) {
+    Supplier<Collection<MethodMatchingInfo>> supplier = () -> {
       Collection<MethodMatchingInfo> metMIs = new ArrayList<>();
-      for ( Method matching : matchingMethods ) {
-        metMIs.addAll( methodMatcher.calculateMatchingInfos( matching, queryMethod ) );
+      for ( MatchingMethod matching : matchingMethods ) {
+        metMIs.addAll( methodMatcher.calculateMatchingInfos( matching.getMethod(), queryMethod ) );
       }
       return metMIs;
     };
+    return new MatchingSupplier( supplier,
+        matchingMethods.stream().map( MatchingMethod::getMatcherRating ).min( Double::compare ).get() );
+  }
+
+  private static Map<Method, Collection<Method>> convertMethod2MethodCollection(
+      Map<Method, Collection<MatchingMethod>> collectPossibleMatches ) {
+    Map<Method, Collection<Method>> method2MethodCollection = new HashMap<>();
+    for ( Entry<Method, Collection<MatchingMethod>> entry : collectPossibleMatches.entrySet() ) {
+      method2MethodCollection.put( entry.getKey(),
+          entry.getValue().stream().map( MatchingMethod::getMethod ).collect( Collectors.toList() ) );
+    }
+
+    return method2MethodCollection;
+  }
+
+  @Override
+  public double matchesWithRating( Class<?> checkType, Class<?> queryType ) {
+    return matchesType( checkType, queryType ) ? MATCHER_BASE_RATING : -1;
   }
 
 }

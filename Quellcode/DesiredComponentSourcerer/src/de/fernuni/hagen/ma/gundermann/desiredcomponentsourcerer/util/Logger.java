@@ -1,5 +1,9 @@
 package de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -52,4 +56,14 @@ public class Logger {
     info( String.format( pattern, args ) );
   }
 
+  public static void toFile( String pattern, Object... args ) {
+    String line = String.format( pattern, args );
+    try {
+      Files.write( Paths.get( "C:\\Users\\ngundermann\\Desktop\\tmp.csv" ), line.getBytes(),
+          StandardOpenOption.APPEND );
+    }
+    catch ( IOException e ) {
+      throw new RuntimeException( e );
+    }
+  }
 }

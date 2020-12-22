@@ -18,6 +18,8 @@ import java.util.stream.Stream;
  */
 public class WrappedTypeMatcher implements TypeMatcher {
 
+  private static final double MATCHER_BASE_RATING = 300d;
+
   // Versuch: Cache der Wrapped-Prüfungen
   // Grund: Bei der Wrapped-Prüfung von boolean und Boolean über den CombinedMethodMatcher kam es zu einem StackOverflow
   // Idee: Die geprüften Kombinationen werden gecached. Sofern eine gecachedte Kombination nochmal geprüft wird, wird
@@ -199,6 +201,11 @@ public class WrappedTypeMatcher implements TypeMatcher {
       enhancedInfos.add( enhancedInfo );
     }
     return enhancedInfos;
+  }
+
+  @Override
+  public double matchesWithRating( Class<?> checkType, Class<?> queryType ) {
+    return matchesType( checkType, queryType ) ? MATCHER_BASE_RATING : -1;
   }
 
 }

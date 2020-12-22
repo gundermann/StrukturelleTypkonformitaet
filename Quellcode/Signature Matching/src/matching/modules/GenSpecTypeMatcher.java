@@ -27,6 +27,8 @@ import util.Logger;
 // erfüllt.
 public class GenSpecTypeMatcher implements TypeMatcher {
 
+  private static final double MATCHER_BASE_RATING = 200d;
+
   static int counter = 0;
 
   // Versuch: Cache der Wrapped-Prüfungen
@@ -209,6 +211,11 @@ public class GenSpecTypeMatcher implements TypeMatcher {
     catch ( NoSuchMethodException e ) {
       return null;
     }
+  }
+
+  @Override
+  public double matchesWithRating( Class<?> checkType, Class<?> queryType ) {
+    return matchesType( checkType, queryType ) ? MATCHER_BASE_RATING : -1;
   }
 
 }

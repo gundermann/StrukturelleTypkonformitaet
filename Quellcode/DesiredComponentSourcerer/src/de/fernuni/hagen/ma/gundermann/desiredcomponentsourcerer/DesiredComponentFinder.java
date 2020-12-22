@@ -67,6 +67,12 @@ public class DesiredComponentFinder {
     Map<Class<?>, PartlyTypeMatchingInfo> componentInterface2PartlyMatchingInfos = findPartlyMatchingComponentInterfaces(
         desiredInterface, typeMatcher );
 
+    // FIXME INFO OUTPUT
+    componentInterface2PartlyMatchingInfos.values().forEach( i -> {
+      Logger.toFile( "%f;%s;\n", i.getQualitativeMatchRating(),
+          i.getCheckType().getSimpleName() );
+    } );
+
     Optional<DesiredInterface> result = Optional
         .ofNullable( getCombinedMatchingComponent( desiredInterface, componentInterface2PartlyMatchingInfos ) );
     Logger.infoF( "finish search with matcher: %s", typeMatcher.getClass().getSimpleName() );
@@ -108,6 +114,14 @@ public class DesiredComponentFinder {
       Class<DesiredInterface> desiredInterface ) {
     Logger.infoF( "find components for combination: %s",
         combinationInfos.getComponentClasses().stream().map( Class::toString ).collect( Collectors.joining( " + " ) ) );
+
+    if ( combinationInfos.getComponentClasses().stream().map( Class::getSimpleName )
+        .anyMatch( n -> n.equals( "StammdatenAuskunftService" ) )
+        && combinationInfos.getComponentClasses().stream().map( Class::getSimpleName )
+            .anyMatch( n -> n.equals( "ElerFTStammdatenAuskunftService" ) ) ) {
+      System.out.println( "hwg" );
+    }
+
     CombinationTypeConverter<DesiredInterface> converter = new CombinationTypeConverter<>(
         desiredInterface );
     ComponentTester<DesiredInterface> componentTester = new ComponentTester<>( desiredInterface );

@@ -29,4 +29,9 @@ public class CombinedMethodMatcher implements MethodMatcher {
     return combination.calculateMatchingInfos( checkMethod, queryMethod );
   }
 
+  @Override
+  public double matchesWithRating( Method checkMethod, Method queryMethod ) {
+    return combination.matchesWithRating( checkMethod, queryMethod );
+  }
+
 }

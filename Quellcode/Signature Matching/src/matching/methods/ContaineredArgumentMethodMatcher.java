@@ -23,4 +23,10 @@ public class ContaineredArgumentMethodMatcher implements MethodMatcher {
     return null;
   }
 
+  @Override
+  public double matchesWithRating( Method checkMethod, Method queryMethod ) {
+    // TODO Auto-generated method stub
+    return 0;
+  }
+
 }

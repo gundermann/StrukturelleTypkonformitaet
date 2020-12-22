@@ -32,7 +32,7 @@ public class FindIntubatingFireFighterTest {
   @Test
   public void findCombined() {
     Class<IntubatingFireFighter> desiredInterface = IntubatingFireFighter.class;
-    EJBContainer.CONTAINER.reset();
+    // EJBContainer.CONTAINER.reset();
     EJBContainer.CONTAINER.registerBean( FireFighter.class, new VolunteerFireFighter() );
     EJBContainer.CONTAINER.registerBean( Doctor.class, new EmergencyDoctor() );
     IntubatingFireFighter desiredBean = new DesiredComponentFinder(

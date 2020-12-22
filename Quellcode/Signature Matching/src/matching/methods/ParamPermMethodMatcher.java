@@ -21,10 +21,56 @@ import util.Permuter;
  */
 public class ParamPermMethodMatcher implements MethodMatcher {
 
+  private static final double MATCHER_BASE_RATING = 600d;
+
   private final Supplier<TypeMatcher> innerTypeMatcherSupplier;
 
   public ParamPermMethodMatcher( Supplier<TypeMatcher> innerTypeMatcherSupplier ) {
     this.innerTypeMatcherSupplier = innerTypeMatcherSupplier;
+  }
+
+  @Override
+  public double matchesWithRating( Method checkMethod, Method queryMethod ) {
+    MethodStructure ms1 = MethodStructure.createFromDeclaredMethod( checkMethod );
+    MethodStructure ms2 = MethodStructure.createFromDeclaredMethod( queryMethod );
+    return getMatchRating( ms1, ms2 );
+  }
+
+  private double getMatchRating( MethodStructure ms1, MethodStructure ms2 ) {
+    double returnTypeRating = innerTypeMatcherSupplier.get().matchesWithRating( ms1.getReturnType(),
+        ms2.getReturnType() );
+    if ( returnTypeRating < 0 ) {
+      return -1;
+    }
+    if ( ms1.getSortedArgumentTypes().length != ms2.getSortedArgumentTypes().length ) {
+      return -1;
+    }
+
+    return MATCHER_BASE_RATING + returnTypeRating
+        + getMatchRatingWithPermutedArguments( ms1.getSortedArgumentTypes(), ms2.getSortedArgumentTypes(),
+            this::getMatchRatingWithArgumentTypes );
+  }
+
+  private double getMatchRatingWithArgumentTypes( Class<?>[] argumentTypes1, Class<?>[] argumentTypes2 ) {
+    double rating = -1;
+    for ( int i = 0; i < argumentTypes1.length; i++ ) {
+      double innerMatcherRating = innerTypeMatcherSupplier.get().matchesWithRating( argumentTypes1[i],
+          argumentTypes2[i] );
+      rating = Math.max( innerMatcherRating, rating );
+    }
+    return rating;
+  }
+
+  private double getMatchRatingWithPermutedArguments( Class<?>[] sortedArgumentTypes1, Class<?>[] sortedArgumentTypes2,
+      BiFunction<Class<?>[], Class<?>[], Double> matchingFunction ) {
+    Collection<Class<?>[]> permutations = permuteAgruments( sortedArgumentTypes1 ).values();
+    for ( Class<?>[] combination : permutations ) {
+      double argRating = matchingFunction.apply( combination, sortedArgumentTypes2 );
+      if ( argRating > 0 ) {
+        return argRating;
+      }
+    }
+    return 0;
   }
 
   @Override

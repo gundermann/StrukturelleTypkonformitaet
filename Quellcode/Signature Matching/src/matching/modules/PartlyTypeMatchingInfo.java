@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Map;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import matching.methods.MethodMatchingInfo;
 
@@ -15,7 +16,7 @@ public class PartlyTypeMatchingInfo {
   // koennen, stehen hier nicht drin. D.h. bei einem Exact Matching waere diese Liste leer.
   private final Collection<Method> originalMethods;
 
-  private final Map<Method, Supplier<Collection<MethodMatchingInfo>>> methodMatchingInfoSupplier;
+  private final Map<Method, MatchingSupplier> methodMatchingInfoSupplier;
 
   private final Class<?> checkType;
 
@@ -25,7 +26,7 @@ public class PartlyTypeMatchingInfo {
   private int countOfPotentialMethods;
 
   PartlyTypeMatchingInfo( Class<?> checkType, Collection<Method> originalMethods,
-      Map<Method, Supplier<Collection<MethodMatchingInfo>>> methodMatchingInfoSupplier, int countOfPotentialMethods ) {
+      Map<Method, MatchingSupplier> methodMatchingInfoSupplier, int countOfPotentialMethods ) {
     this.checkType = checkType;
     this.originalMethods = originalMethods;
     this.methodMatchingInfoSupplier = methodMatchingInfoSupplier;
@@ -37,7 +38,8 @@ public class PartlyTypeMatchingInfo {
   }
 
   public Map<Method, Supplier<Collection<MethodMatchingInfo>>> getMethodMatchingInfoSupplier() {
-    return methodMatchingInfoSupplier;
+    return methodMatchingInfoSupplier.entrySet().stream()
+        .collect( Collectors.toMap( e -> e.getKey(), e -> e.getValue().getMethodMatchingInfosSupplier() ) );
   }
 
   public Class<?> getCheckType() {
@@ -65,8 +67,8 @@ public class PartlyTypeMatchingInfo {
   }
 
   public double getQualitativeMatchRating() {
-    // TODO
-    return -100d;
+    return methodMatchingInfoSupplier.values().stream().map( MatchingSupplier::getMatcherRating ).max( Double::compare )
+        .orElse( -1d );
   }
 
 }
