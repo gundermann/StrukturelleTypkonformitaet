@@ -3,9 +3,13 @@ package de.fernuni.hagen.ma.gundermann.ejb;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import java.nio.file.Paths;
+
+import org.junit.Before;
 import org.junit.Test;
 
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.DesiredComponentFinder;
+import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.Logger;
 import de.fernuni.hagen.ma.gundermann.ejb.desired.IntubatingPatientFireFighter;
 import de.fernuni.hagen.ma.gundermann.ejb.provided.beans.FireFighter;
 import de.fernuni.hagen.ma.gundermann.ejb.provided.beans.Intubator;
@@ -16,6 +20,12 @@ import de.fernuni.hagen.ma.gundermann.ejb.provided.beans.impl.VolunteerFireFight
  * TODO Auch dieser Test benoetigt relativ viel Zeit. (Siehe Kommentar in {@link FindIntubatingFreeingTest})
  */
 public class FindIntubatingPatientFireFighterTest {
+
+  @Before
+  public void setup() {
+    Logger.setOutputFile(
+        Paths.get( "C:\\Users\\ngundermann\\Desktop\\tmp_" + this.getClass().getSimpleName() + ".csv" ).toFile() );
+  }
 
   /**
    * Hier werden zwei Komponenten verbunden, die das erwartete Interface sowohl strukturell als auch semantisch nur in

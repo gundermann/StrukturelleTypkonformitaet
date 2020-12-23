@@ -1,8 +1,8 @@
 package de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,6 +12,20 @@ public class Logger {
   private static boolean isOn = true;
 
   private static Collection<AppendableLogger> appendedLogger = new ArrayList<>();
+
+  private static File output;
+
+  public static void setOutputFile( File output ) {
+    try {
+      if ( !output.exists() ) {
+        output.createNewFile();
+      }
+      Logger.output = output;
+    }
+    catch ( IOException e ) {
+      throw new RuntimeException( e );
+    }
+  }
 
   public static void appendLogger( AppendableLogger logger ) {
     if ( !appendedLogger.contains( logger ) ) {
@@ -58,9 +72,12 @@ public class Logger {
 
   public static void toFile( String pattern, Object... args ) {
     String line = String.format( pattern, args );
+    log( "OUTPUT:", line );
     try {
-      Files.write( Paths.get( "C:\\Users\\ngundermann\\Desktop\\tmp.csv" ), line.getBytes(),
-          StandardOpenOption.APPEND );
+      if ( output != null ) {
+        Files.write( output.toPath(), line.getBytes(),
+            StandardOpenOption.APPEND );
+      }
     }
     catch ( IOException e ) {
       throw new RuntimeException( e );
