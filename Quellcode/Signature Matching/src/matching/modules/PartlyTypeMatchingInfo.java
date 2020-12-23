@@ -67,7 +67,7 @@ public class PartlyTypeMatchingInfo {
   }
 
   public double getQualitativeMatchRating() {
-    return methodMatchingInfoSupplier.values().stream().map( MatchingSupplier::getMatcherRating ).max( Double::compare )
+    return methodMatchingInfoSupplier.values().stream().map( MatchingSupplier::getMatcherRating ).min( Double::compare )
         .orElse( -1d );
   }
 

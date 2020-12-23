@@ -21,7 +21,7 @@ import util.Permuter;
  */
 public class ParamPermMethodMatcher implements MethodMatcher {
 
-  private static final double MATCHER_BASE_RATING = 600d;
+  private static final double MATCHER_BASE_RATING = 0d;
 
   private final Supplier<TypeMatcher> innerTypeMatcherSupplier;
 
