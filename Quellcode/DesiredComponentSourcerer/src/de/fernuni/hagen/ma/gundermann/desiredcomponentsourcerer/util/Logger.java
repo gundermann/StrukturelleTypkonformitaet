@@ -3,6 +3,8 @@ package de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,13 +16,20 @@ public class Logger {
   private static Collection<AppendableLogger> appendedLogger = new ArrayList<>();
 
   private static File output;
+  
+  private static String OUTPUT_DIR = "./output";
 
-  public static void setOutputFile( File output ) {
+  public static void setOutputFile( String filename) {
     try {
-      if ( !output.exists() ) {
-        output.createNewFile();
+    	Path outputPath = Paths.get(OUTPUT_DIR);
+    	if(!outputPath.toFile().exists()) {
+    		outputPath.toFile().mkdir();
+    	}
+    	Path output = Paths.get(OUTPUT_DIR + "/" + filename);
+      if ( !output.toFile().exists() ) {
+        output.toFile().createNewFile();
       }
-      Logger.output = output;
+      Logger.output = output.toFile();
     }
     catch ( IOException e ) {
       throw new RuntimeException( e );
