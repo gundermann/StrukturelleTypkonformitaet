@@ -39,14 +39,14 @@ public abstract class MatcherCombiner {
       }
 
       @Override
-      public double matchesWithRating( Method checkMethod, Method queryMethod ) {
+      public MatcherRate matchesWithRating( Method checkMethod, Method queryMethod ) {
         for ( MethodMatcher m : matcher ) {
-          double rating = m.matchesWithRating( checkMethod, queryMethod );
-          if ( rating >= 0 ) {
-            return rating;
+        	MatcherRate rate = m.matchesWithRating( checkMethod, queryMethod );
+          if ( rate != null ) {
+            return rate;
           }
         }
-        return -1;
+        return null;
       }
 
     };
@@ -76,14 +76,14 @@ public abstract class MatcherCombiner {
       }
 
       @Override
-      public double matchesWithRating( Class<?> checkType, Class<?> queryType ) {
+      public MatcherRate matchesWithRating( Class<?> checkType, Class<?> queryType ) {
         for ( TypeMatcher m : matcher ) {
-          double rating = m.matchesWithRating( checkType, queryType );
-          if ( rating >= 0 ) {
+          MatcherRate rating = m.matchesWithRating( checkType, queryType );
+          if ( rating != null ) {
             return rating;
           }
         }
-        return -1;
+        return null;
       }
 
     };

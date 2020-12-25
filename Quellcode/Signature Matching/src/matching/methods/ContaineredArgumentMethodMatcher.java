@@ -3,10 +3,12 @@ package matching.methods;
 import java.lang.reflect.Method;
 import java.util.Set;
 
+import matching.MatcherRate;
+
 /**
  * Dieser {@link MethodMatcher} soll in der Lage sein, zwei Methoden mit einer unterschiedlichen Anzahl von Parametern
  * zu matchen. Dabei wird davon ausgegangen, dass die Parameter-Typen der Methode mit den wenigeren Parametern einen
- * Container darstellen, der die Parameter, zu denen kein passender Typ gefunden werden kann, enthält.
+ * Container darstellen, der die Parameter, zu denen kein passender Typ gefunden werden kann, enthï¿½lt.
  */
 // TODO
 public class ContaineredArgumentMethodMatcher implements MethodMatcher {
@@ -24,9 +26,9 @@ public class ContaineredArgumentMethodMatcher implements MethodMatcher {
   }
 
   @Override
-  public double matchesWithRating( Method checkMethod, Method queryMethod ) {
+  public MatcherRate matchesWithRating( Method checkMethod, Method queryMethod ) {
     // TODO Auto-generated method stub
-    return 0;
+    return null;
   }
 
 }

@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 
 import matching.MatcherCombiner;
+import matching.MatcherRate;
 import matching.modules.ExactTypeMatcher;
 import matching.modules.GenSpecTypeMatcher;
 import matching.modules.WrappedTypeMatcher;
@@ -30,7 +31,7 @@ public class CombinedMethodMatcher implements MethodMatcher {
   }
 
   @Override
-  public double matchesWithRating( Method checkMethod, Method queryMethod ) {
+  public MatcherRate matchesWithRating( Method checkMethod, Method queryMethod ) {
     return combination.matchesWithRating( checkMethod, queryMethod );
   }
 

@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import matching.MatcherRate;
 import matching.methods.MethodMatchingInfo;
 
 //Aequivalent zur ModuleMatchingInfo
@@ -66,9 +67,9 @@ public class PartlyTypeMatchingInfo {
     return Double.valueOf( methodMatchingInfoSupplier.keySet().size() ) / Double.valueOf( countOfPotentialMethods );
   }
 
-  public double getQualitativeMatchRating() {
-    return methodMatchingInfoSupplier.values().stream().map( MatchingSupplier::getMatcherRating ).min( Double::compare )
-        .orElse( -1d );
+  public MatcherRate getQualitativeMatchRating() {
+    return methodMatchingInfoSupplier.values().stream().map( MatchingSupplier::getMatcherRating ).min( MatcherRate::compare )
+        .orElse( null );
   }
 
 }

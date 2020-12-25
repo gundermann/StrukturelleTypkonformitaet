@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import matching.MatcherRate;
 import matching.methods.MethodMatchingInfo.ParamPosition;
 import matching.modules.ModuleMatchingInfo;
 import matching.modules.TypeMatcher;
@@ -76,30 +77,33 @@ public class CommonMethodMatcher implements MethodMatcher {
   }
 
   @Override
-  public double matchesWithRating( Method checkMethod, Method queryMethod ) {
+  public MatcherRate matchesWithRating( Method checkMethod, Method queryMethod ) {
     MethodStructure ms1 = MethodStructure.createFromDeclaredMethod( checkMethod );
     MethodStructure ms2 = MethodStructure.createFromDeclaredMethod( queryMethod );
     return getMatchRating( ms1, ms2 );
   }
 
-  private double getMatchRating( MethodStructure ms1, MethodStructure ms2 ) {
+  private MatcherRate getMatchRating( MethodStructure ms1, MethodStructure ms2 ) {
     if ( ms1.getSortedArgumentTypes().length != ms2.getSortedArgumentTypes().length ) {
-      return -1;
+      return null;
     }
 
-    double rating = typeMatcherSupplier.get().matchesWithRating( ms1.getReturnType(), ms2.getReturnType() );
-    if ( rating < 0 ) {
+    MatcherRate rating = typeMatcherSupplier.get().matchesWithRating( ms1.getReturnType(), ms2.getReturnType() );
+    if ( rating != null ) {
       return rating;
     }
 
+    MatcherRate rate = new MatcherRate();
+    rate.add(this.getClass().getSimpleName(), MATCHER_BASE_RATING);
+    
     for ( int i = 0; i < ms1.getSortedArgumentTypes().length; i++ ) {
-      double argRating = typeMatcherSupplier.get().matchesWithRating( ms1.getSortedArgumentTypes()[i],
+    	MatcherRate argRating = typeMatcherSupplier.get().matchesWithRating( ms1.getSortedArgumentTypes()[i],
           ms2.getSortedArgumentTypes()[i] );
-      if ( argRating < 0 ) {
-        return -1;
+      if ( argRating == null ) {
+        return null;
       }
-      rating += argRating;
+      rate.add(argRating);
     }
-    return rating + MATCHER_BASE_RATING;
+    return rate;
   }
 }

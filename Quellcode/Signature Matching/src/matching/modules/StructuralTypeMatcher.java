@@ -13,6 +13,8 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import matching.MatcherRate;
+import matching.methods.MatchingMethod;
 import matching.methods.MethodMatcher;
 import matching.methods.MethodMatchingInfo;
 import matching.methods.ParamPermMethodMatcher;
@@ -105,9 +107,9 @@ public class StructuralTypeMatcher implements PartlyTypeMatcher {
     for ( Method queryMethod : queryMethods ) {
       Collection<MatchingMethod> queryMethodMatches = new ArrayList<>();
       for ( Method checkMethod : checkMethods ) {
-        double rating = methodMatcher.matchesWithRating( checkMethod, queryMethod );
-        if ( rating >= 0 ) {
-          queryMethodMatches.add( new MatchingMethod( checkMethod, rating ) );
+        MatcherRate rate = methodMatcher.matchesWithRating( checkMethod, queryMethod );
+        if ( rate != null ) {
+          queryMethodMatches.add( new MatchingMethod( checkMethod, rate ) );
         }
       }
       if ( !queryMethodMatches.isEmpty() ) {
@@ -186,7 +188,7 @@ public class StructuralTypeMatcher implements PartlyTypeMatcher {
       return metMIs;
     };
     return new MatchingSupplier( supplier,
-        matchingMethods.stream().map( MatchingMethod::getMatcherRating ).min( Double::compare ).get() );
+        matchingMethods.stream().map( MatchingMethod::getRate ).min( MatcherRate::compare ).get() );
   }
 
   private static Map<Method, Collection<Method>> convertMethod2MethodCollection(
@@ -201,8 +203,13 @@ public class StructuralTypeMatcher implements PartlyTypeMatcher {
   }
 
   @Override
-  public double matchesWithRating( Class<?> checkType, Class<?> queryType ) {
-    return matchesType( checkType, queryType ) ? MATCHER_BASE_RATING : -1;
+  public MatcherRate matchesWithRating( Class<?> checkType, Class<?> queryType ) {
+	  if(matchesType( checkType, queryType )) {
+		  MatcherRate rate = new MatcherRate();
+		  rate.add(this.getClass().getSimpleName(), MATCHER_BASE_RATING);
+		  return rate;
+	  }
+	  return null;
   }
 
 }

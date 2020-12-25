@@ -3,6 +3,8 @@ package matching.modules;
 import java.util.Collection;
 import java.util.Collections;
 
+import matching.MatcherRate;
+
 public class ExactTypeMatcher implements TypeMatcher {
 
   private static final double MATCHER_BASE_RATING = 100d;
@@ -23,8 +25,13 @@ public class ExactTypeMatcher implements TypeMatcher {
   }
 
   @Override
-  public double matchesWithRating( Class<?> checkType, Class<?> queryType ) {
-    return matchesType( checkType, queryType ) ? MATCHER_BASE_RATING : -1;
+  public MatcherRate matchesWithRating( Class<?> checkType, Class<?> queryType ) {
+	  if(matchesType( checkType, queryType )) {
+		  MatcherRate rate = new MatcherRate();
+		  rate.add(this.getClass().getSimpleName(), MATCHER_BASE_RATING);
+		  return rate;
+	  }
+	  return null;
   }
 
 }
