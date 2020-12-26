@@ -83,7 +83,7 @@ public class StructuralTypeMatcherInfoCalculationTest {
     Collection<ModuleMatchingInfo> matchingInfos = matcher.calculateTypeMatchingInfos( EnumNative.class,
         InterfaceWrapper.class );
     assertTrue( !matchingInfos.isEmpty() );
-    assertThat( matchingInfos.size(), equalTo( 156 ) );
+    assertThat( matchingInfos.size(), equalTo( 144 ) );
 
     PartlyTypeMatchingInfo partlyTypeMatchingInfos = matcher.calculatePartlyTypeMatchingInfos( EnumNative.class,
         InterfaceWrapper.class );
@@ -100,7 +100,7 @@ public class StructuralTypeMatcherInfoCalculationTest {
           assertThat( entry.getValue().get().size(), equalTo( 2 ) );
           break;
         case "getNull":
-          assertThat( entry.getValue().get().size(), equalTo( 13 ) );
+          assertThat( entry.getValue().get().size(), equalTo( 12 ) );
           break;
         case "getOne":
           assertThat( entry.getValue().get().size(), equalTo( 3 ) );
@@ -239,7 +239,7 @@ public class StructuralTypeMatcherInfoCalculationTest {
           assertThat( entry.getValue().get().size(), equalTo( 3 ) );
           break;
         case "getNull":
-          assertThat( entry.getValue().get().size(), equalTo( 13 ) );
+          assertThat( entry.getValue().get().size(), equalTo( 12 ) );
           break;
         default:
           fail( "no MatchingMethodInfo for " + entry.getKey().getName() );
@@ -265,7 +265,7 @@ public class StructuralTypeMatcherInfoCalculationTest {
           assertThat( entry.getValue().get().size(), equalTo( 4 ) );
           break;
         case "getNull":
-          assertThat( entry.getValue().get().size(), equalTo( 14 ) );
+          assertThat( entry.getValue().get().size(), equalTo( 13 ) );
           break;
         default:
           fail( "no MatchingMethodInfo for " + entry.getKey().getName() );

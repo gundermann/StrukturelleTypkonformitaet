@@ -1,6 +1,7 @@
 package matching.modules;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -64,7 +65,7 @@ public class StructuralTypeMatcher implements PartlyTypeMatcher {
     Logger.infoF( "QueryMethods: %s",
         Stream.of( queryMethods ).map( m -> m.getName() ).collect( Collectors.joining( ", " ) ) );
     Map<Method, Collection<Method>> possibleMatches = convertMethod2MethodCollection(
-        collectPossibleMatches( queryMethods, checkType.getMethods() ) );
+        collectPossibleMatches( queryMethods, getPotentialDelegateMethods(checkType.getMethods()) ) );
     Map<Method, Collection<MethodMatchingInfo>> possibleMethodMatches = collectMethodMatchingInfos( queryMethods,
         possibleMatches );
     possibleMatches.entrySet()
@@ -162,8 +163,8 @@ public class StructuralTypeMatcher implements PartlyTypeMatcher {
     Logger.infoF( "QueryMethods: %s",
         Stream.of( queryMethods ).map( m -> m.getName() ).collect( Collectors.joining( ", " ) ) );
 
-    // gleicht nur die public-Methods ab
-    Method[] potentialMethods = checkType.getMethods();
+    // gleicht nur die nicht statischen public-Methods ab
+    Method[] potentialMethods = getPotentialDelegateMethods(checkType.getMethods());
     Map<Method, Collection<MatchingMethod>> possibleMatches = collectPossibleMatches( queryMethods,
         potentialMethods );
     Map<Method, MatchingSupplier> matchingInfoSupplier = new HashMap<>();
@@ -176,6 +177,10 @@ public class StructuralTypeMatcher implements PartlyTypeMatcher {
         .forEach( e -> Logger.infoF( "Supplier for MethodMatchingInfos collected - Method: %s",
             e.getKey().getName() ) );
     return factory.create( Arrays.asList( queryMethods ), matchingInfoSupplier, potentialMethods.length );
+  }
+  
+  private Method[] getPotentialDelegateMethods(Method[] methods) {
+	 return Stream.of(methods).filter(m -> !Modifier.isStatic(m.getModifiers())).collect(Collectors.toList()).toArray(new Method[] {});
   }
 
   private MatchingSupplier getSupplierOfMultipleMatchingMethods( Method queryMethod,
