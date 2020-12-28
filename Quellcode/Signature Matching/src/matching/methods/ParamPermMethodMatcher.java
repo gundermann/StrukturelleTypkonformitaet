@@ -11,6 +11,7 @@ import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 import matching.MatcherRate;
+import matching.Setting;
 import matching.methods.MethodMatchingInfo.ParamPosition;
 import matching.modules.ModuleMatchingInfo;
 import matching.modules.TypeMatcher;
@@ -21,8 +22,6 @@ import util.Permuter;
  * k�nnen.
  */
 public class ParamPermMethodMatcher implements MethodMatcher {
-
-  private static final double MATCHER_BASE_RATING = 0d;
 
   private final Supplier<TypeMatcher> innerTypeMatcherSupplier;
 
@@ -38,7 +37,7 @@ public class ParamPermMethodMatcher implements MethodMatcher {
   }
 
   private MatcherRate getMatchRating( MethodStructure ms1, MethodStructure ms2 ) {
-	  MatcherRate returnTypeRating = innerTypeMatcherSupplier.get().matchesWithRating( ms1.getReturnType(),
+    MatcherRate returnTypeRating = innerTypeMatcherSupplier.get().matchesWithRating( ms1.getReturnType(),
         ms2.getReturnType() );
     if ( returnTypeRating == null ) {
       return null;
@@ -46,33 +45,34 @@ public class ParamPermMethodMatcher implements MethodMatcher {
     if ( ms1.getSortedArgumentTypes().length != ms2.getSortedArgumentTypes().length ) {
       return null;
     }
-    
+
     MatcherRate rate = new MatcherRate();
-    rate.add(this.getClass().getSimpleName(), MATCHER_BASE_RATING);
-    rate.add(returnTypeRating);
-    rate.add(getMatchRatingWithPermutedArguments( ms1.getSortedArgumentTypes(), ms2.getSortedArgumentTypes(),
-            this::getMatchRatingWithArgumentTypes ));
-    
+    rate.add( this.getClass().getSimpleName(), Setting.PARAM_PERM_METHOD_TYPE_MATCHER_BASE_RATING );
+    rate.add( returnTypeRating );
+    rate.add( getMatchRatingWithPermutedArguments( ms1.getSortedArgumentTypes(), ms2.getSortedArgumentTypes(),
+        this::getMatchRatingWithArgumentTypes ) );
+
     return rate;
   }
 
   private MatcherRate getMatchRatingWithArgumentTypes( Class<?>[] argumentTypes1, Class<?>[] argumentTypes2 ) {
-	MatcherRate rating = new MatcherRate();
+    MatcherRate rating = new MatcherRate();
     for ( int i = 0; i < argumentTypes1.length; i++ ) {
-    	MatcherRate innerMatcherRating = innerTypeMatcherSupplier.get().matchesWithRating( argumentTypes1[i],
+      MatcherRate innerMatcherRating = innerTypeMatcherSupplier.get().matchesWithRating( argumentTypes1[i],
           argumentTypes2[i] );
-    	if(innerMatcherRating != null && rating.getMatcherRating() < innerMatcherRating.getMatcherRating()) {
-    		rating = innerMatcherRating;
-    	}
+      if ( innerMatcherRating != null && rating.getMatcherRating() < innerMatcherRating.getMatcherRating() ) {
+        rating = innerMatcherRating;
+      }
     }
     return rating;
   }
 
-  private MatcherRate getMatchRatingWithPermutedArguments( Class<?>[] sortedArgumentTypes1, Class<?>[] sortedArgumentTypes2,
+  private MatcherRate getMatchRatingWithPermutedArguments( Class<?>[] sortedArgumentTypes1,
+      Class<?>[] sortedArgumentTypes2,
       BiFunction<Class<?>[], Class<?>[], MatcherRate> matchingFunction ) {
     Collection<Class<?>[]> permutations = permuteAgruments( sortedArgumentTypes1 ).values();
     for ( Class<?>[] combination : permutations ) {
-    	MatcherRate argRating = matchingFunction.apply( combination, sortedArgumentTypes2 );
+      MatcherRate argRating = matchingFunction.apply( combination, sortedArgumentTypes2 );
       if ( argRating != null ) {
         return argRating;
       }

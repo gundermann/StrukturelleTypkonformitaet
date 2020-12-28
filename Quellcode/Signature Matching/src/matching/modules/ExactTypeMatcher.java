@@ -4,10 +4,9 @@ import java.util.Collection;
 import java.util.Collections;
 
 import matching.MatcherRate;
+import matching.Setting;
 
 public class ExactTypeMatcher implements TypeMatcher {
-
-  private static final double MATCHER_BASE_RATING = 100d;
 
   @Override
   public boolean matchesType( Class<?> checkType, Class<?> queryType ) {
@@ -26,12 +25,12 @@ public class ExactTypeMatcher implements TypeMatcher {
 
   @Override
   public MatcherRate matchesWithRating( Class<?> checkType, Class<?> queryType ) {
-	  if(matchesType( checkType, queryType )) {
-		  MatcherRate rate = new MatcherRate();
-		  rate.add(this.getClass().getSimpleName(), MATCHER_BASE_RATING);
-		  return rate;
-	  }
-	  return null;
+    if ( matchesType( checkType, queryType ) ) {
+      MatcherRate rate = new MatcherRate();
+      rate.add( this.getClass().getSimpleName(), Setting.EXACT_TYPE_MATCHER_RATING );
+      return rate;
+    }
+    return null;
   }
 
 }

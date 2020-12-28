@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import matching.MatcherRate;
+import matching.Setting;
 import matching.methods.MethodMatchingInfo;
 import matching.methods.MethodMatchingInfo.ParamPosition;
 import matching.methods.MethodMatchingInfoFactory;
@@ -24,11 +25,10 @@ import util.Logger;
  */
 
 // TODO QUERSTION: Dieser Matcher geh�rt doch eigentlich auch in die Kategorie "PartlyTypeMatcher" oder?
-// Zumindest, wenn ich Gen2Spec matchen m�chte. Dann kann es passieren, dass der Gen nur teilweise die Methoden des Spec
+// Zumindest, wenn ich Gen2Spec matchen m�chte. Dann kann es passieren, dass der Gen nur teilweise die Methoden des
+// Spec
 // erf�llt.
 public class GenSpecTypeMatcher implements TypeMatcher {
-
-  private static final double MATCHER_BASE_RATING = 200d;
 
   static int counter = 0;
 
@@ -51,7 +51,8 @@ public class GenSpecTypeMatcher implements TypeMatcher {
     // Versuch 3: wie Versuch 2 mit Cache
     Class<?>[] cacheKey = new Class<?>[] { checkType, queryType };
     if ( isCombinationCached( cacheKey ) ) {
-      // false, weil die �berpr�fung noch nicht stattgefunden bzw. wenn sie bereits true ermittelt hatte, dann w�re die
+      // false, weil die �berpr�fung noch nicht stattgefunden bzw. wenn sie bereits true ermittelt hatte, dann
+      // w�re die
       // �berpr�fung bereits erfolgreich gewesen
       return getResultFromCache( cacheKey );
     }
@@ -158,7 +159,8 @@ public class GenSpecTypeMatcher implements TypeMatcher {
         genMethods.remove( genM );
         Logger.infoF( "matching methods found: %s === %s", specM, genM );
         MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( specM, genM );
-        // Hier kann wirklich der gleiche TypeMatcher verwendet werden, weil f�r �berschriebene Methode bestimmte Regeln
+        // Hier kann wirklich der gleiche TypeMatcher verwendet werden, weil f�r �berschriebene Methode bestimmte
+        // Regeln
         // gelten.
         // Regel 1: Der Returntype kann spezieller werden. Liskov l�sst gr��en. (Kovarianz)
         ModuleMatchingInfo returnTypeMatchingInfo = calculateTypeMatchingInfos( genM.getReturnType(),
@@ -216,12 +218,12 @@ public class GenSpecTypeMatcher implements TypeMatcher {
 
   @Override
   public MatcherRate matchesWithRating( Class<?> checkType, Class<?> queryType ) {
-	  if(matchesType( checkType, queryType )) {
-		  MatcherRate rate = new MatcherRate();
-		  rate.add(this.getClass().getSimpleName(), MATCHER_BASE_RATING);
-		  return rate;
-	  }
-	  return null;
+    if ( matchesType( checkType, queryType ) ) {
+      MatcherRate rate = new MatcherRate();
+      rate.add( this.getClass().getSimpleName(), Setting.GEN_SPEC_TYPE_MATCHER_BASE_RATING );
+      return rate;
+    }
+    return null;
   }
 
 }

@@ -7,6 +7,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import matching.MatcherRate;
+import matching.Setting;
 import matching.methods.MethodMatchingInfo;
 
 //Aequivalent zur ModuleMatchingInfo
@@ -68,8 +69,8 @@ public class PartlyTypeMatchingInfo {
   }
 
   public MatcherRate getQualitativeMatchRating() {
-    return methodMatchingInfoSupplier.values().stream().map( MatchingSupplier::getMatcherRating ).min( MatcherRate::compare )
-        .orElse( null );
+    return Setting.QUALITATIVE_MATCHER_RATE_CUMULATION
+        .apply( methodMatchingInfoSupplier.values().stream().map( MatchingSupplier::getMatcherRating ) );
   }
 
 }

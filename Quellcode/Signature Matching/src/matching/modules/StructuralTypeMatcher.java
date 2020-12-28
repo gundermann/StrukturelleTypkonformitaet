@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import matching.MatcherRate;
+import matching.Setting;
 import matching.methods.MatchingMethod;
 import matching.methods.MethodMatcher;
 import matching.methods.MethodMatchingInfo;
@@ -22,8 +23,6 @@ import matching.methods.ParamPermMethodMatcher;
 import util.Logger;
 
 public class StructuralTypeMatcher implements PartlyTypeMatcher {
-
-  private static final double MATCHER_BASE_RATING = 400d;
 
   private final MethodMatcher methodMatcher;
 
@@ -65,7 +64,7 @@ public class StructuralTypeMatcher implements PartlyTypeMatcher {
     Logger.infoF( "QueryMethods: %s",
         Stream.of( queryMethods ).map( m -> m.getName() ).collect( Collectors.joining( ", " ) ) );
     Map<Method, Collection<Method>> possibleMatches = convertMethod2MethodCollection(
-        collectPossibleMatches( queryMethods, getPotentialDelegateMethods(checkType.getMethods()) ) );
+        collectPossibleMatches( queryMethods, getPotentialDelegateMethods( checkType.getMethods() ) ) );
     Map<Method, Collection<MethodMatchingInfo>> possibleMethodMatches = collectMethodMatchingInfos( queryMethods,
         possibleMatches );
     possibleMatches.entrySet()
@@ -164,7 +163,7 @@ public class StructuralTypeMatcher implements PartlyTypeMatcher {
         Stream.of( queryMethods ).map( m -> m.getName() ).collect( Collectors.joining( ", " ) ) );
 
     // gleicht nur die nicht statischen public-Methods ab
-    Method[] potentialMethods = getPotentialDelegateMethods(checkType.getMethods());
+    Method[] potentialMethods = getPotentialDelegateMethods( checkType.getMethods() );
     Map<Method, Collection<MatchingMethod>> possibleMatches = collectPossibleMatches( queryMethods,
         potentialMethods );
     Map<Method, MatchingSupplier> matchingInfoSupplier = new HashMap<>();
@@ -178,9 +177,10 @@ public class StructuralTypeMatcher implements PartlyTypeMatcher {
             e.getKey().getName() ) );
     return factory.create( Arrays.asList( queryMethods ), matchingInfoSupplier, potentialMethods.length );
   }
-  
-  private Method[] getPotentialDelegateMethods(Method[] methods) {
-	 return Stream.of(methods).filter(m -> !Modifier.isStatic(m.getModifiers())).collect(Collectors.toList()).toArray(new Method[] {});
+
+  private Method[] getPotentialDelegateMethods( Method[] methods ) {
+    return Stream.of( methods ).filter( m -> !Modifier.isStatic( m.getModifiers() ) ).collect( Collectors.toList() )
+        .toArray( new Method[] {} );
   }
 
   private MatchingSupplier getSupplierOfMultipleMatchingMethods( Method queryMethod,
@@ -209,12 +209,12 @@ public class StructuralTypeMatcher implements PartlyTypeMatcher {
 
   @Override
   public MatcherRate matchesWithRating( Class<?> checkType, Class<?> queryType ) {
-	  if(matchesType( checkType, queryType )) {
-		  MatcherRate rate = new MatcherRate();
-		  rate.add(this.getClass().getSimpleName(), MATCHER_BASE_RATING);
-		  return rate;
-	  }
-	  return null;
+    if ( matchesType( checkType, queryType ) ) {
+      MatcherRate rate = new MatcherRate();
+      rate.add( this.getClass().getSimpleName(), Setting.STRUCTURAL_TYPE_MATCHER_BASE_RATING );
+      return rate;
+    }
+    return null;
   }
 
 }

@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import matching.MatcherRate;
+import matching.Setting;
 
 /**
  * Dieser Matcher beachtet, dass die Typen (Return- und Argumenttypen) einer der beiden Methoden in einem Typ der
@@ -20,11 +21,11 @@ import matching.MatcherRate;
  */
 public class WrappedTypeMatcher implements TypeMatcher {
 
-  private static final double MATCHER_BASE_RATING = 300d;
-
   // Versuch: Cache der Wrapped-Pr�fungen
-  // Grund: Bei der Wrapped-Pr�fung von boolean und Boolean �ber den CombinedMethodMatcher kam es zu einem StackOverflow
-  // Idee: Die gepr�ften Kombinationen werden gecached. Sofern eine gecachedte Kombination nochmal gepr�ft wird, wird
+  // Grund: Bei der Wrapped-Pr�fung von boolean und Boolean �ber den CombinedMethodMatcher kam es zu einem
+  // StackOverflow
+  // Idee: Die gepr�ften Kombinationen werden gecached. Sofern eine gecachedte Kombination nochmal gepr�ft wird,
+  // wird
   // die Pr�fung einfach �bersprungen.
   final Map<Class<?>[], Boolean> cachedWrappedTypeChecks = new HashMap<>();
 
@@ -78,7 +79,8 @@ public class WrappedTypeMatcher implements TypeMatcher {
     // Dritter Versuch: wie zweiter Versucht nur mit Cache.
     Class<?>[] cacheKey = new Class<?>[] { checkType, queryType };
     if ( isCombinationCached( cacheKey ) ) {
-      // false, weil die �berpr�fung noch nicht stattgefunden bzw. wenn sie bereits true ermittelt hatte, dann w�re die
+      // false, weil die �berpr�fung noch nicht stattgefunden bzw. wenn sie bereits true ermittelt hatte, dann
+      // w�re die
       // �berpr�fung bereits erfolgreich gewesen
       return getResultFromCache( cacheKey );
     }
@@ -115,7 +117,8 @@ public class WrappedTypeMatcher implements TypeMatcher {
   // // Anschlussfrage: Warum ist das notwendig? Der Glue-Code verwendet Reflection. Damit interessiert die Sichtbarkeit
   // // der Methoden nicht. Wenn man das weiter denkt, dann sind nicht einmal die Methoden relevant, weil:
   // // 1. Die Attribute per Relflection abgegriffen werden k�nnen
-  // // 2. Nicht sichergestellt werden kann, dass eine Methode, die den ein Objekt zur�ckgibt, welches es gleichen Typ,
+  // // 2. Nicht sichergestellt werden kann, dass eine Methode, die den ein Objekt zur�ckgibt, welches es gleichen
+  // Typ,
   // // wie ein Attribut hat, auch genau dieses Attribut zur�ckggibt.
   // Method[] methodsOfWrapper = checkingClass.getDeclaredMethods();
   // for ( Method method : methodsOfWrapper ) {
@@ -207,12 +210,12 @@ public class WrappedTypeMatcher implements TypeMatcher {
 
   @Override
   public MatcherRate matchesWithRating( Class<?> checkType, Class<?> queryType ) {
-	  if(matchesType( checkType, queryType )) {
-		  MatcherRate rate = new MatcherRate();
-		  rate.add(this.getClass().getSimpleName(), MATCHER_BASE_RATING);
-		  return rate;
-	  }
-	  return null;
+    if ( matchesType( checkType, queryType ) ) {
+      MatcherRate rate = new MatcherRate();
+      rate.add( this.getClass().getSimpleName(), Setting.WRAPPEN_TYPE_MATCHER_BASE_RATING );
+      return rate;
+    }
+    return null;
   }
 
 }
