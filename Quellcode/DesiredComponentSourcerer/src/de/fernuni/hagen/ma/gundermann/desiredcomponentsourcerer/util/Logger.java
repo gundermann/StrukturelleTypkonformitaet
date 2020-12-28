@@ -13,23 +13,26 @@ public class Logger {
 
   private static boolean isOn = true;
 
+  private static boolean doOutput = false;
+
   private static Collection<AppendableLogger> appendedLogger = new ArrayList<>();
 
   private static File output;
-  
+
   private static String OUTPUT_DIR = "./output";
 
-  public static void setOutputFile( String filename) {
+  public static void setOutputFile( String filename ) {
     try {
-    	Path outputPath = Paths.get(OUTPUT_DIR);
-    	if(!outputPath.toFile().exists()) {
-    		outputPath.toFile().mkdir();
-    	}
-    	Path output = Paths.get(OUTPUT_DIR + "/" + filename);
+      Path outputPath = Paths.get( OUTPUT_DIR );
+      if ( !outputPath.toFile().exists() ) {
+        outputPath.toFile().mkdir();
+      }
+      Path output = Paths.get( OUTPUT_DIR + "/" + filename );
       if ( !output.toFile().exists() ) {
         output.toFile().createNewFile();
       }
       Logger.output = output.toFile();
+      switchOutputOn();
     }
     catch ( IOException e ) {
       throw new RuntimeException( e );
@@ -48,6 +51,14 @@ public class Logger {
 
   public static void switchOff() {
     isOn = false;
+  }
+
+  public static void switchOutputOn() {
+    doOutput = true;
+  }
+
+  public static void switchOutputOff() {
+    doOutput = false;
   }
 
   public static void info( String msg ) {
@@ -82,6 +93,9 @@ public class Logger {
   public static void toFile( String pattern, Object... args ) {
     String line = String.format( pattern, args );
     log( "OUTPUT:", line );
+    if ( !doOutput ) {
+      return;
+    }
     try {
       if ( output != null ) {
         Files.write( output.toPath(), line.getBytes(),
