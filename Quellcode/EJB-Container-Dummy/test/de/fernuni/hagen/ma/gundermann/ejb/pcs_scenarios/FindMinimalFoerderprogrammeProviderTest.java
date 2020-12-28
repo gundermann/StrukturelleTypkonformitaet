@@ -3,8 +3,6 @@ package de.fernuni.hagen.ma.gundermann.ejb.pcs_scenarios;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
 
-import java.nio.file.Paths;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,9 +17,9 @@ public class FindMinimalFoerderprogrammeProviderTest {
 
   @Before
   public void setup() {
-	    Logger.setOutputFile(
-	            "tmp_" + this.getClass().getSimpleName() + ".csv" );
- }
+    Logger.setOutputFile(
+        "tmp_" + this.getClass().getSimpleName() + ".csv" );
+  }
 
   @Test
   public void findFullMatchingMinimalFoerderprogrammeProvider() {

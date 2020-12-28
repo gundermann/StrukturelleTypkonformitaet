@@ -3,8 +3,6 @@ package de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-import java.nio.file.Paths;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -24,9 +22,9 @@ public class FindIntubatingPatientFireFighterTest {
 
   @Before
   public void setup() {
-	    Logger.setOutputFile(
-	            "tmp_" + this.getClass().getSimpleName() + ".csv" );
- }
+    Logger.setOutputFile(
+        "tmp_" + this.getClass().getSimpleName() + ".csv" );
+  }
 
   /**
    * Hier werden zwei Komponenten verbunden, die das erwartete Interface sowohl strukturell als auch semantisch nur in

@@ -3,8 +3,6 @@ package de.fernuni.hagen.ma.gundermann.ejb.pcs_scenarios;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-import java.nio.file.Paths;
-
 import org.junit.Before;
 import org.junit.Test;
 

@@ -3,8 +3,6 @@ package de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-import java.nio.file.Paths;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -21,9 +19,9 @@ public class FindIntubatingFireFighterTest {
 
   @Before
   public void setup() {
-	    Logger.setOutputFile(
-	            "tmp_" + this.getClass().getSimpleName() + ".csv" );
- }
+    Logger.setOutputFile(
+        "tmp_" + this.getClass().getSimpleName() + ".csv" );
+  }
 
   /**
    * Hier werden zwei Komponenten verbunden, von denen nur eine das erwartete Interface strukturell vollstaendig
@@ -43,12 +41,12 @@ public class FindIntubatingFireFighterTest {
   @Test
   public void findCombined() {
     Class<IntubatingFireFighter> desiredInterface = IntubatingFireFighter.class;
-//     EJBContainer.CONTAINER.reset();
+    // EJBContainer.CONTAINER.reset();
     EJBContainer.CONTAINER.registerBean( FireFighter.class, new VolunteerFireFighter() );
     EJBContainer.CONTAINER.registerBean( Doctor.class, new EmergencyDoctor() );
     IntubatingFireFighter desiredBean = new DesiredComponentFinder(
         EJBContainer.CONTAINER.getRegisteredBeanInterfaces(),
         EJBContainer.CONTAINER::getOptBean ).getDesiredComponent( desiredInterface );
-		assertThat(desiredBean, notNullValue());
-	}
+    assertThat( desiredBean, notNullValue() );
+  }
 }

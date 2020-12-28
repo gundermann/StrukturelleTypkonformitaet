@@ -3,8 +3,6 @@ package de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-import java.nio.file.Paths;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,9 +17,9 @@ import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.beans.impl.Emerg
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.beans.impl.VolunteerFireFighter;
 
 /**
- * TODO dieser Test benoetigt verhaeltnismae�ig viel Zeit. Vermutlich liegt es daran, dass viele der deg-Bean-Interfaces
- * strutkurell vollstaendig passen und die semantisch passenden Interfaces im Container an das Ende der Liste angefuegt
- * wurden. </br>
+ * TODO dieser Test benoetigt verhaeltnismae�ig viel Zeit. Vermutlich liegt es daran, dass viele der
+ * deg-Bean-Interfaces strutkurell vollstaendig passen und die semantisch passenden Interfaces im Container an das Ende
+ * der Liste angefuegt wurden. </br>
  * </br>
  * Loeseung: Die Vorsortierung der Komponenten erfolgt zus�tzlich noch �ber ein qualitatives Kriterium, welches das
  * Verhaeltnis von originalen Methoden der Quell-Komponenten zu den nutzbaren Methoden der Ziel-Komponente sicherstellt:
@@ -31,13 +29,13 @@ public class FindIntubatingFreeingTest {
 
   @Before
   public void setup() {
-	    Logger.setOutputFile(
-	            "tmp_" + this.getClass().getSimpleName() + ".csv" );
- }
+    Logger.setOutputFile(
+        "tmp_" + this.getClass().getSimpleName() + ".csv" );
+  }
 
   /**
-   * Hier werden zwei Komponenten verbunden, die das erwartete Interface strukturell jeder f�r sich, semantisch aber nur
-   * in Kombination erfuellen. </br>
+   * Hier werden zwei Komponenten verbunden, die das erwartete Interface strukturell jeder f�r sich, semantisch aber
+   * nur in Kombination erfuellen. </br>
    * <b>COMP: A, B</b> </br>
    * <b>STRUCT MATCH:</b>
    * <ul>
