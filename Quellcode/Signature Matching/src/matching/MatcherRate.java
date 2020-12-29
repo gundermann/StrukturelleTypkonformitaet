@@ -1,5 +1,8 @@
 package matching;
 
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 public class MatcherRate {
 
   private double matcherRating;
@@ -34,6 +37,11 @@ public class MatcherRate {
 
   public String[] getMatcherNames() {
     return matcherNames;
+  }
+
+  @Override
+  public String toString() {
+    return Stream.of( getMatcherNames() ).collect( Collectors.joining( "->" ) );
   }
 
   public static int compare( MatcherRate r1, MatcherRate r2 ) {
