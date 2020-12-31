@@ -19,7 +19,7 @@ import util.Permuter;
 
 /**
  * Dieser Matcher beachtet, dass die Argumenttypen der beiden Methoden in unterschiedlicher Reihenfolge angegeben sein
- * k�nnen.
+ * koennen.
  */
 public class ParamPermMethodMatcher implements MethodMatcher {
 
@@ -46,38 +46,43 @@ public class ParamPermMethodMatcher implements MethodMatcher {
       return null;
     }
 
-    MatcherRate rate = new MatcherRate();
-    rate.add( this.getClass().getSimpleName(), Setting.PARAM_PERM_METHOD_TYPE_MATCHER_BASE_RATING );
-    rate.add( returnTypeRating );
-    rate.add( getMatchRatingWithPermutedArguments( ms1.getSortedArgumentTypes(), ms2.getSortedArgumentTypes(),
-        this::getMatchRatingWithArgumentTypes ) );
+    Collection<MatcherRate> rates = getMatchRatingWithPermutedArguments( ms1.getSortedArgumentTypes(),
+        ms2.getSortedArgumentTypes(),
+        this::getMatchRatingWithArgumentTypes );
 
-    return rate;
+    rates.add( returnTypeRating );
+    MatcherRate resultingRate = new MatcherRate();
+    resultingRate.add( this.getClass().getSimpleName(), Setting.PARAM_PERM_METHOD_TYPE_MATCHER_BASE_RATING );
+    resultingRate.add( Setting.QUALITATIVE_COMPONENT_METHOD_MATCH_RATE_CUMULATION
+        .apply( rates.stream() ) );
+    return resultingRate;
   }
 
-  private MatcherRate getMatchRatingWithArgumentTypes( Class<?>[] argumentTypes1, Class<?>[] argumentTypes2 ) {
-    MatcherRate rating = new MatcherRate();
+  private Collection<MatcherRate> getMatchRatingWithArgumentTypes( Class<?>[] argumentTypes1,
+      Class<?>[] argumentTypes2 ) {
+    Collection<MatcherRate> rates = new ArrayList<>();
     for ( int i = 0; i < argumentTypes1.length; i++ ) {
       MatcherRate innerMatcherRating = innerTypeMatcherSupplier.get().matchesWithRating( argumentTypes1[i],
           argumentTypes2[i] );
-      if ( innerMatcherRating != null && rating.getMatcherRating() < innerMatcherRating.getMatcherRating() ) {
-        rating = innerMatcherRating;
+      if ( innerMatcherRating == null ) {
+        return null;
       }
+      rates.add( innerMatcherRating );
     }
-    return rating;
+    return rates;
   }
 
-  private MatcherRate getMatchRatingWithPermutedArguments( Class<?>[] sortedArgumentTypes1,
+  private Collection<MatcherRate> getMatchRatingWithPermutedArguments( Class<?>[] sortedArgumentTypes1,
       Class<?>[] sortedArgumentTypes2,
-      BiFunction<Class<?>[], Class<?>[], MatcherRate> matchingFunction ) {
+      BiFunction<Class<?>[], Class<?>[], Collection<MatcherRate>> matchingFunction ) {
     Collection<Class<?>[]> permutations = permuteAgruments( sortedArgumentTypes1 ).values();
     for ( Class<?>[] combination : permutations ) {
-      MatcherRate argRating = matchingFunction.apply( combination, sortedArgumentTypes2 );
+      Collection<MatcherRate> argRating = matchingFunction.apply( combination, sortedArgumentTypes2 );
       if ( argRating != null ) {
         return argRating;
       }
     }
-    return new MatcherRate();
+    return new ArrayList<>();
   }
 
   @Override

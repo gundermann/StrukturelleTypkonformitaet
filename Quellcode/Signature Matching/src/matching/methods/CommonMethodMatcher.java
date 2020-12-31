@@ -9,14 +9,12 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import matching.MatcherRate;
+import matching.Setting;
 import matching.methods.MethodMatchingInfo.ParamPosition;
 import matching.modules.ModuleMatchingInfo;
 import matching.modules.TypeMatcher;
 
 public class CommonMethodMatcher implements MethodMatcher {
-
-  // Anpassung des MatcherBaseRatings bringt nichts, da dieser Matcher nur im Test verwendet wird
-  private static final double MATCHER_BASE_RATING = 0;
 
   private final Supplier<TypeMatcher> typeMatcherSupplier;
 
@@ -87,23 +85,22 @@ public class CommonMethodMatcher implements MethodMatcher {
     if ( ms1.getSortedArgumentTypes().length != ms2.getSortedArgumentTypes().length ) {
       return null;
     }
-
-    MatcherRate rating = typeMatcherSupplier.get().matchesWithRating( ms1.getReturnType(), ms2.getReturnType() );
-    if ( rating != null ) {
-      return rating;
+    MatcherRate returnRate = typeMatcherSupplier.get().matchesWithRating( ms1.getReturnType(), ms2.getReturnType() );
+    if ( returnRate == null ) {
+      return null;
     }
 
-    MatcherRate rate = new MatcherRate();
-    rate.add(this.getClass().getSimpleName(), MATCHER_BASE_RATING);
-    
+    Collection<MatcherRate> rates = new ArrayList<>();
+    rates.add( returnRate );
+
     for ( int i = 0; i < ms1.getSortedArgumentTypes().length; i++ ) {
-    	MatcherRate argRating = typeMatcherSupplier.get().matchesWithRating( ms1.getSortedArgumentTypes()[i],
+      MatcherRate argRating = typeMatcherSupplier.get().matchesWithRating( ms1.getSortedArgumentTypes()[i],
           ms2.getSortedArgumentTypes()[i] );
       if ( argRating == null ) {
         return null;
       }
-      rate.add(argRating);
+      rates.add( argRating );
     }
-    return rate;
+    return Setting.QUALITATIVE_COMPONENT_METHOD_MATCH_RATE_CUMULATION.apply( rates.stream() );
   }
 }

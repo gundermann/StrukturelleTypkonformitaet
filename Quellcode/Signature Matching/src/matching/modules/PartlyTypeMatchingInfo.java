@@ -69,7 +69,7 @@ public class PartlyTypeMatchingInfo {
   }
 
   public MatcherRate getQualitativeMatchRating() {
-    return Setting.QUALITATIVE_MATCHER_RATE_CUMULATION
+    return Setting.QUALITATIVE_COMPONENT_MATCH_RATE_CUMULATION
         .apply( methodMatchingInfoSupplier.values().stream().map( MatchingSupplier::getMatcherRating ) );
   }
 
