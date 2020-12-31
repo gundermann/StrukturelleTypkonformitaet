@@ -9,6 +9,10 @@ public class MatcherRate {
 
   private String[] matcherNames = new String[] {};
 
+  public MatcherRate() {
+
+  }
+
   public void add( String matcherName, double additionalMatcherRating ) {
     this.matcherRating += additionalMatcherRating;
     String[] temp = new String[this.matcherNames.length + 1];
@@ -45,7 +49,7 @@ public class MatcherRate {
   }
 
   public static int compare( MatcherRate r1, MatcherRate r2 ) {
-    return Double.compare( r1.getMatcherRating(), r2.getMatcherRating() );
+    return Setting.COMPARE_QUALITATIVE_METHOD_MATCH_RATE.apply( r1, r2 );
   }
 
 }

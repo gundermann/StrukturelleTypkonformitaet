@@ -46,13 +46,19 @@ public class ParamPermMethodMatcher implements MethodMatcher {
       return null;
     }
 
-    MatcherRate rate = new MatcherRate();
-    rate.add( this.getClass().getSimpleName(), Setting.PARAM_PERM_METHOD_TYPE_MATCHER_BASE_RATING );
-    rate.add( returnTypeRating );
-    rate.add( getMatchRatingWithPermutedArguments( ms1.getSortedArgumentTypes(), ms2.getSortedArgumentTypes(),
-        this::getMatchRatingWithArgumentTypes ) );
+    MatcherRate argMatcherRate = getMatchRatingWithPermutedArguments( ms1.getSortedArgumentTypes(),
+        ms2.getSortedArgumentTypes(),
+        this::getMatchRatingWithArgumentTypes );
 
-    return rate;
+    MatcherRate resultingRate = new MatcherRate();
+    resultingRate.add( this.getClass().getSimpleName(), Setting.PARAM_PERM_METHOD_TYPE_MATCHER_BASE_RATING );
+    if ( Setting.HIGHER_QUALITATIVE_METHOD_MATCH_RATE_CONDITION.apply( returnTypeRating, argMatcherRate ) ) {
+      resultingRate.add( returnTypeRating );
+    }
+    else {
+      resultingRate.add( argMatcherRate );
+    }
+    return resultingRate;
   }
 
   private MatcherRate getMatchRatingWithArgumentTypes( Class<?>[] argumentTypes1, Class<?>[] argumentTypes2 ) {
@@ -60,7 +66,7 @@ public class ParamPermMethodMatcher implements MethodMatcher {
     for ( int i = 0; i < argumentTypes1.length; i++ ) {
       MatcherRate innerMatcherRating = innerTypeMatcherSupplier.get().matchesWithRating( argumentTypes1[i],
           argumentTypes2[i] );
-      if ( innerMatcherRating != null && rating.getMatcherRating() < innerMatcherRating.getMatcherRating() ) {
+      if ( Setting.HIGHER_QUALITATIVE_METHOD_MATCH_RATE_CONDITION.apply( innerMatcherRating, rating ) ) {
         rating = innerMatcherRating;
       }
     }

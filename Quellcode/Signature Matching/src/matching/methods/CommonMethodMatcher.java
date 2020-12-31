@@ -9,14 +9,12 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import matching.MatcherRate;
+import matching.Setting;
 import matching.methods.MethodMatchingInfo.ParamPosition;
 import matching.modules.ModuleMatchingInfo;
 import matching.modules.TypeMatcher;
 
 public class CommonMethodMatcher implements MethodMatcher {
-
-  // Anpassung des MatcherBaseRatings bringt nichts, da dieser Matcher nur im Test verwendet wird
-  private static final double MATCHER_BASE_RATING = 0;
 
   private final Supplier<TypeMatcher> typeMatcherSupplier;
 
@@ -93,17 +91,16 @@ public class CommonMethodMatcher implements MethodMatcher {
       return rating;
     }
 
-    MatcherRate rate = new MatcherRate();
-    rate.add(this.getClass().getSimpleName(), MATCHER_BASE_RATING);
-    
     for ( int i = 0; i < ms1.getSortedArgumentTypes().length; i++ ) {
-    	MatcherRate argRating = typeMatcherSupplier.get().matchesWithRating( ms1.getSortedArgumentTypes()[i],
+      MatcherRate argRating = typeMatcherSupplier.get().matchesWithRating( ms1.getSortedArgumentTypes()[i],
           ms2.getSortedArgumentTypes()[i] );
       if ( argRating == null ) {
         return null;
       }
-      rate.add(argRating);
+      if ( Setting.HIGHER_QUALITATIVE_METHOD_MATCH_RATE_CONDITION.apply( argRating, rating ) ) {
+        rating = argRating;
+      }
     }
-    return rate;
+    return rating;
   }
 }

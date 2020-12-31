@@ -193,7 +193,10 @@ public class StructuralTypeMatcher implements PartlyTypeMatcher {
       return metMIs;
     };
     return new MatchingSupplier( supplier,
-        matchingMethods.stream().map( MatchingMethod::getRate ).min( MatcherRate::compare ).get() );
+        matchingMethods.stream().map( MatchingMethod::getRate )
+            .reduce(
+                ( m1, m2 ) -> Setting.HIGHER_QUALITATIVE_METHOD_MATCH_RATE_CONDITION.apply( m1, m2 ) ? m1 : m2 )
+            .get() );
   }
 
   private static Map<Method, Collection<Method>> convertMethod2MethodCollection(
