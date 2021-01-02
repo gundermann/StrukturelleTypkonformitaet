@@ -78,7 +78,7 @@ public class Setting {
     return result;
   };
 
-  public static Function<Stream<MatcherRate>, MatcherRate> QUALITATIVE_COMPONENT_MATCH_RATE_CUMULATION = matcherRateCol -> ALL_AVG
+  public static Function<Stream<MatcherRate>, MatcherRate> QUALITATIVE_COMPONENT_MATCH_RATE_CUMULATION = matcherRateCol -> MIN_MAX_AVG
       .apply( matcherRateCol.collect( Collectors.toList() ) );
 
   private static Function<Stream<MatcherRate>, MatcherRate> HIGHER_QUALITATIVE_METHOD_MATCH_RATE_CONDITION = matcherRateCol -> matcherRateCol

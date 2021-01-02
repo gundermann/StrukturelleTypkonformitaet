@@ -85,12 +85,12 @@ public class CommonMethodMatcher implements MethodMatcher {
     if ( ms1.getSortedArgumentTypes().length != ms2.getSortedArgumentTypes().length ) {
       return null;
     }
+
+    Collection<MatcherRate> rates = new ArrayList<>();
     MatcherRate returnRate = typeMatcherSupplier.get().matchesWithRating( ms1.getReturnType(), ms2.getReturnType() );
     if ( returnRate == null ) {
       return null;
     }
-
-    Collection<MatcherRate> rates = new ArrayList<>();
     rates.add( returnRate );
 
     for ( int i = 0; i < ms1.getSortedArgumentTypes().length; i++ ) {

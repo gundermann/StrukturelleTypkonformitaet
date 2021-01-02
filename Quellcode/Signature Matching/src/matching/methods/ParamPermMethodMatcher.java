@@ -64,7 +64,7 @@ public class ParamPermMethodMatcher implements MethodMatcher {
     for ( int i = 0; i < argumentTypes1.length; i++ ) {
       MatcherRate innerMatcherRating = innerTypeMatcherSupplier.get().matchesWithRating( argumentTypes1[i],
           argumentTypes2[i] );
-      if ( innerMatcherRating == null ) {
+      if(innerMatcherRating == null) {
         return null;
       }
       rates.add( innerMatcherRating );
