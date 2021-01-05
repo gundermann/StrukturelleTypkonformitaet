@@ -16,6 +16,10 @@ import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.Selector;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.CollectionUtil;
 import matching.modules.PartlyTypeMatchingInfo;
 
+/**
+ * Selektor für die Kombination von strukturell 100%ig matchenden Komponenten
+ */
+@Deprecated
 public class CombinationSelector implements Selector {
 
   private final List<PartlyTypeMatchingInfo> infos;
@@ -72,5 +76,11 @@ public class CombinationSelector implements Selector {
       }
     }
     return relevantTypeMatchingInfos;
+  }
+
+  @Override
+  public void addHigherPotentialType( Class<?> higherPotentialType ) {
+    // TODO Auto-generated method stub
+
   }
 }

@@ -17,7 +17,6 @@ import matching.modules.PartlyTypeMatchingInfo;
 import matching.modules.TypeMatcher;
 import tester.ComponentTester;
 import tester.TestResult;
-import tester.TestResult.Result;
 
 public class DesiredComponentFinder {
 
@@ -67,7 +66,7 @@ public class DesiredComponentFinder {
     Map<Class<?>, PartlyTypeMatchingInfo> componentInterface2PartlyMatchingInfos = findPartlyMatchingComponentInterfaces(
         desiredInterface, typeMatcher );
 
-    // FIXME INFO OUTPUT
+    // INFO OUTPUT
     componentInterface2PartlyMatchingInfos.values().forEach( i -> {
       Logger.toFile( "%f;%s;%f;%s;\n", i.getQualitativeMatchRating().getMatcherRating(),
           i.getQualitativeMatchRating().toString(), i.getQuantitaiveMatchRating(),
@@ -96,32 +95,32 @@ public class DesiredComponentFinder {
 
   private <DesiredInterface> DesiredInterface getCombinedMatchingComponent(
       Class<DesiredInterface> desiredInterface,
-      Map<Class<?>, PartlyTypeMatchingInfo> compnentInterface2PartlyMatchingInfos ) {
+      Map<Class<?>, PartlyTypeMatchingInfo> componentInterface2PartlyMatchingInfos ) {
     Logger.info( "create ComponentInfos" );
     BestMatchingComponentCombinationFinder combinationFinder = new BestMatchingComponentCombinationFinder(
-        compnentInterface2PartlyMatchingInfos );
+        componentInterface2PartlyMatchingInfos );
 
     while ( combinationFinder.hasNextCombination() ) {
       CombinationInfo combinationInfos = combinationFinder.getNextCombination();
-      DesiredInterface component = getPartlyMatchedTestedComponent( combinationInfos, desiredInterface );
-      if ( component != null ) {
-        return component;
+      TestedComponent<DesiredInterface> testedComponent = getPartlyMatchedTestedComponent( combinationInfos,
+          desiredInterface );
+      if ( testedComponent != null ) {
+        if ( testedComponent.allTestsPassed() ) {
+          return testedComponent.getComponent();
+        }
+        if ( testedComponent.anyTestPassed() ) {
+          combinationFinder.optimzeForCurrentCombination();
+        }
       }
     }
     return null;
   }
 
-  private <DesiredInterface> DesiredInterface getPartlyMatchedTestedComponent( CombinationInfo combinationInfos,
+  private <DesiredInterface> TestedComponent<DesiredInterface> getPartlyMatchedTestedComponent(
+      CombinationInfo combinationInfos,
       Class<DesiredInterface> desiredInterface ) {
     Logger.infoF( "find components for combination: %s",
         combinationInfos.getComponentClasses().stream().map( Class::toString ).collect( Collectors.joining( " + " ) ) );
-
-    if ( combinationInfos.getComponentClasses().stream().map( Class::getSimpleName )
-        .anyMatch( n -> n.equals( "StammdatenAuskunftService" ) )
-        && combinationInfos.getComponentClasses().stream().map( Class::getSimpleName )
-            .anyMatch( n -> n.equals( "ElerFTStammdatenAuskunftService" ) ) ) {
-      System.out.println( "hwg" );
-    }
 
     CombinationTypeConverter<DesiredInterface> converter = new CombinationTypeConverter<>(
         desiredInterface );
@@ -142,10 +141,7 @@ public class DesiredComponentFinder {
     DesiredInterface convertedComponent = converter.convert( components2MatchingInfo );
     TestResult testResult = componentTester.testComponent( convertedComponent );
     Logger.infoF( "passed tests: %d/%d", testResult.getPassedTests(), testResult.getTestCount() );
-    if ( testResult.getResult() == Result.PASSED ) {
-      return convertedComponent;
-    }
-    return null;
+    return new TestedComponent<>( convertedComponent, testResult );
   }
 
   private Class<?>[] getRegisteredComponentInterfaces() {

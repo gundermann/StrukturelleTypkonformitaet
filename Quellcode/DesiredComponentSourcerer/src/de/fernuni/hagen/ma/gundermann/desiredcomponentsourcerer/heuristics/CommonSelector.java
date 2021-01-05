@@ -17,6 +17,9 @@ import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.Selector;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.CollectionUtil;
 import matching.modules.PartlyTypeMatchingInfo;
 
+/**
+ * Selektor für die Kombination von Komponenten, sodass alle erwarteten Methoden bedient werden.
+ */
 public class CommonSelector implements Selector {
 
   private final List<PartlyTypeMatchingInfo> infos;
@@ -25,9 +28,11 @@ public class CommonSelector implements Selector {
 
   private Collection<Collection<CombinationPartInfo>> cachedCalculatedInfos = new ArrayList<>();
 
-  private Collection<Collection<PartlyTypeMatchingInfo>> cachedMatchingInfoCombinations = new ArrayList<>();
+  private List<Collection<PartlyTypeMatchingInfo>> cachedMatchingInfoCombinations = new ArrayList<>();
 
   private final Collection<Method> originalMethods;
+
+  private final Collection<Class<?>> higherPotentialTypes = new ArrayList<>();
 
   public CommonSelector( List<PartlyTypeMatchingInfo> infos ) {
     this.infos = infos;
@@ -57,9 +62,17 @@ public class CommonSelector implements Selector {
     return Optional.of( new CombinationInfo( CollectionUtil.pop( cachedCalculatedInfos ) ) );
   }
 
+  @Override
+  public void addHigherPotentialType( Class<?> higherPotentialType ) {
+    this.higherPotentialTypes.add( higherPotentialType );
+  }
+
   private void collectRelevantMatchingInfoCombinations() {
-    cachedMatchingInfoCombinations = Combinator.generateCombis( infos,
-        combinatiedComponentCount );
+    cachedMatchingInfoCombinations = new ArrayList<>( Combinator.generateCombis( infos,
+        combinatiedComponentCount ) );
+    // re-organize cache with respect to search optimization
+    Collections.sort( cachedMatchingInfoCombinations, new HigherPotentialTypesFirstComparator(
+        higherPotentialTypes ) );
   }
 
   private Map<Method, Collection<PartlyTypeMatchingInfo>> collectRelevantInfosPerMethod() {

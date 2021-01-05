@@ -24,6 +24,8 @@ public class QuantitaiveMatchingInfoComparator implements Comparator<PartlyTypeM
   }
 
   // TODO ich glaube das hier bringt nicht wirklich viel.
+  // Fuer die pcs-Tests bringt das sehr viel. Je spezieller die erwarteten Komponenten werden, desto mehr bringt diese
+  // Heuristik
   private int compareOriginalOfferedRating( PartlyTypeMatchingInfo o1, PartlyTypeMatchingInfo o2 ) {
     Double ranking1 = Optional.ofNullable( o1 )
         .map( PartlyTypeMatchingInfo::getQuantitativeMatchedToPotentialMethodsRating )

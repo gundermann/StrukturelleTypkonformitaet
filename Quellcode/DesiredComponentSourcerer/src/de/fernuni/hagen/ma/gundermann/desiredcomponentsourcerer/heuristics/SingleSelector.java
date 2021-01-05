@@ -17,6 +17,10 @@ import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.Selector;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.CollectionUtil;
 import matching.modules.PartlyTypeMatchingInfo;
 
+/**
+ * Selektor für strukturell 100%ig matchende Komponenten
+ */
+@Deprecated
 public class SingleSelector implements Selector {
 
   private final List<PartlyTypeMatchingInfo> infos;
@@ -59,6 +63,12 @@ public class SingleSelector implements Selector {
       relevantTypeMatchingInfos.put( m, Collections.singletonList( info ) );
     }
     return relevantTypeMatchingInfos;
+  }
+
+  @Override
+  public void addHigherPotentialType( Class<?> higherPotentialType ) {
+    // TODO Auto-generated method stub
+
   }
 
 }

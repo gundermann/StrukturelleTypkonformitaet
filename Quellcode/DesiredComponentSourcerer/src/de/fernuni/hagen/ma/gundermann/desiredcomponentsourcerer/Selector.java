@@ -8,4 +8,6 @@ public interface Selector {
 
   Optional<CombinationInfo> getNext();
 
+  void addHigherPotentialType( Class<?> higherPotentialType );
+
 }
