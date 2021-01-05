@@ -12,6 +12,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import matching.MatcherRate;
+import matching.Setting;
 import matching.methods.MethodMatchingInfo;
 import matching.methods.MethodMatchingInfo.ParamPosition;
 import matching.methods.MethodMatchingInfoFactory;
@@ -19,33 +21,39 @@ import util.Logger;
 
 /**
  * Dieser Matcher achtet darauf, dass die Typen (Return- und Argumenttypen) der beiden Methoden auch Generelisierungen
- * bzw. Spezialisierungen von einander sein können.
+ * bzw. Spezialisierungen von einander sein kï¿½nnen.
  */
+
+// TODO QUERSTION: Dieser Matcher gehï¿½rt doch eigentlich auch in die Kategorie "PartlyTypeMatcher" oder?
+// Zumindest, wenn ich Gen2Spec matchen mï¿½chte. Dann kann es passieren, dass der Gen nur teilweise die Methoden des
+// Spec
+// erfï¿½llt.
 public class GenSpecTypeMatcher implements TypeMatcher {
 
   static int counter = 0;
 
-  // Versuch: Cache der Wrapped-Prüfungen
+  // Versuch: Cache der Wrapped-Prï¿½fungen
   // Grund: Im WrappedTypeMethodMatcher wird auch ein Cache verwendet und es ist sicherlich aus Performance-Sicht
   // sinnvoll auch hier einen Cache aufzubauen.
   Map<Class<?>[], Boolean> cachedGenSpecTypesChecks = new HashMap<>();
 
   @Override
   public boolean matchesType( Class<?> checkType, Class<?> queryType ) {
-    // Versuch 1: Über die Methode isAssignableFrom feststellen, ob die Typen voneinander erben.
+    // Versuch 1: ï¿½ber die Methode isAssignableFrom feststellen, ob die Typen voneinander erben.
     // Problem: native Typen erben nicht von Object
     // #####################Frage: Ist das wirklich ein Problem, oder ist das so korrekt????????#####################
     // return t1.isAssignableFrom( t2 ) || t2.isAssignableFrom( t1 );
 
-    // Versuche 2: wie Versuch 1 mit zusätzlicher Equals-Prüfung, aufgrund des in Versuch 1 erwähnten Problems
+    // Versuche 2: wie Versuch 1 mit zusï¿½tzlicher Equals-Prï¿½fung, aufgrund des in Versuch 1 erwï¿½hnten Problems
     // return t1.equals( Object.class ) || t2.equals( Object.class ) || t1.isAssignableFrom( t2 )
     // || t2.isAssignableFrom( t1 );
 
     // Versuch 3: wie Versuch 2 mit Cache
     Class<?>[] cacheKey = new Class<?>[] { checkType, queryType };
     if ( isCombinationCached( cacheKey ) ) {
-      // false, weil die Überprüfung noch nicht stattgefunden bzw. wenn sie bereits true ermittelt hatte, dann wäre die
-      // Überprüfung bereits erfolgreich gewesen
+      // false, weil die ï¿½berprï¿½fung noch nicht stattgefunden bzw. wenn sie bereits true ermittelt hatte, dann
+      // wï¿½re die
+      // ï¿½berprï¿½fung bereits erfolgreich gewesen
       return getResultFromCache( cacheKey );
     }
     cachedGenSpecTypesChecks.put( cacheKey, null );
@@ -57,7 +65,7 @@ public class GenSpecTypeMatcher implements TypeMatcher {
   }
 
   private boolean isCombinationCached( Class<?>[] newCacheKey ) {
-    // Hier ist die Richtung der geprüften Typen egal. Also
+    // Hier ist die Richtung der geprï¿½ften Typen egal. Also
     for ( Class<?>[] cacheKey : cachedGenSpecTypesChecks.keySet() ) {
       if ( Objects.equals( cacheKey[0], newCacheKey[0] ) && Objects.equals( cacheKey[1], newCacheKey[1] ) ||
           Objects.equals( cacheKey[0], newCacheKey[1] ) && Objects.equals( cacheKey[1], newCacheKey[0] ) ) {
@@ -91,7 +99,7 @@ public class GenSpecTypeMatcher implements TypeMatcher {
       Logger.infoF( "finish calculation: %d", c );
       result = Collections.singletonList( factory.create() );
     }
-    // für primitive Typen, die auch als Object verwendet werden können
+    // fï¿½r primitive Typen, die auch als Object verwendet werden kï¿½nnen
     else if ( ( checkType.isPrimitive() && queryType.equals( Object.class ) )
         || ( queryType.isPrimitive() && checkType.equals( Object.class ) ) ) {
       Logger.infoF( "assumtion: Object > primitiv" );
@@ -99,7 +107,7 @@ public class GenSpecTypeMatcher implements TypeMatcher {
       result = Collections.singletonList( factory.create() );
     }
     else if ( queryType.isAssignableFrom( checkType )
-    // Wurde nur für native Typen gemacht
+    // Wurde nur fï¿½r native Typen gemacht
     // || queryType.equals( Object.class )
     ) {
       // queryType > checkType
@@ -107,8 +115,8 @@ public class GenSpecTypeMatcher implements TypeMatcher {
       // Spec: checkType
 
       // Versuch 1
-      // TODO ich bin mir unsicher, ob die Übergabe von this an dieser Stelle korrekt ist, oder ob die
-      // ModuleMatchingInfos an dieser Stelle nicht auch durch den kombinierten Matcher ermittelt werden müssen. Das
+      // TODO ich bin mir unsicher, ob die ï¿½bergabe von this an dieser Stelle korrekt ist, oder ob die
+      // ModuleMatchingInfos an dieser Stelle nicht auch durch den kombinierten Matcher ermittelt werden mï¿½ssen. Das
       // dauert aber sehr lange.
       // return new ModuleMatcher<>( queryType, this ).calculateMatchingInfos( checkType );
 
@@ -121,7 +129,7 @@ public class GenSpecTypeMatcher implements TypeMatcher {
     }
     else if ( checkType.isAssignableFrom( queryType )
 
-    // Wurde nur für native Typen gemacht
+    // Wurde nur fï¿½r native Typen gemacht
     // || checkType.equals( Object.class )
     ) {
       // queryType < checkType
@@ -139,10 +147,10 @@ public class GenSpecTypeMatcher implements TypeMatcher {
       Class<?> specType ) {
     Map<Method, Collection<MethodMatchingInfo>> matchingInfos = new HashMap<>();
 
-    // Es wird davon ausgegangen, dass nur für die überschreibbaren Methoden MatchingInfos erzeugt werden können.
-    // Und für jede überschreibbare Methode muss eine MatchingInfo erzeugt werden.
+    // Es wird davon ausgegangen, dass nur fï¿½r die ï¿½berschreibbaren Methoden MatchingInfos erzeugt werden kï¿½nnen.
+    // Und fï¿½r jede ï¿½berschreibbare Methode muss eine MatchingInfo erzeugt werden.
     Collection<Method> genMethods = getOverrideableMethods( genType );
-    // Methoden, die im speziellen Typ deklariert aber nicht überschrieben wurden, können keine passenede Methode im
+    // Methoden, die im speziellen Typ deklariert aber nicht ï¿½berschrieben wurden, kï¿½nnen keine passenede Methode im
     // Supertyp haben.
     Method[] specMethods = specType.getDeclaredMethods();
     for ( Method specM : specMethods ) {
@@ -151,13 +159,14 @@ public class GenSpecTypeMatcher implements TypeMatcher {
         genMethods.remove( genM );
         Logger.infoF( "matching methods found: %s === %s", specM, genM );
         MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( specM, genM );
-        // Hier kann wirklich der gleiche TypeMatcher verwendet werden, weil für überschriebene Methode bestimmte Regeln
+        // Hier kann wirklich der gleiche TypeMatcher verwendet werden, weil fï¿½r ï¿½berschriebene Methode bestimmte
+        // Regeln
         // gelten.
-        // Regel 1: Der Returntype kann spezieller werden. Liskov lässt grüßen. (Kovarianz)
+        // Regel 1: Der Returntype kann spezieller werden. Liskov lï¿½sst grï¿½ï¿½en. (Kovarianz)
         ModuleMatchingInfo returnTypeMatchingInfo = calculateTypeMatchingInfos( genM.getReturnType(),
             specM.getReturnType() ).iterator().next();
 
-        // Regel 2: Die Argumente können allgemeiner werden. Liskov lässt grüßen (Kontravarianz)
+        // Regel 2: Die Argumente kï¿½nnen allgemeiner werden. Liskov lï¿½sst grï¿½ï¿½en (Kontravarianz)
         Map<ParamPosition, Collection<ModuleMatchingInfo>> argumentTypeMatchingInfos = calculateArgumentTypesMatchingInfos(
             specM.getParameterTypes(), genM.getParameterTypes() );
         matchingInfos.put( genM,
@@ -205,6 +214,16 @@ public class GenSpecTypeMatcher implements TypeMatcher {
     catch ( NoSuchMethodException e ) {
       return null;
     }
+  }
+
+  @Override
+  public MatcherRate matchesWithRating( Class<?> checkType, Class<?> queryType ) {
+    if ( matchesType( checkType, queryType ) ) {
+      MatcherRate rate = new MatcherRate();
+      rate.add( this.getClass().getSimpleName(), Setting.GEN_SPEC_TYPE_MATCHER_BASE_RATING );
+      return rate;
+    }
+    return null;
   }
 
 }

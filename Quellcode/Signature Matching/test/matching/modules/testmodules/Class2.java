@@ -4,27 +4,27 @@ import java.math.BigInteger;
 
 public class Class2 {
 
-  int addPartlyNativeWrapped( Integer a, int b ) {
+  public int addPartlyNativeWrapped( Integer a, int b ) {
     return a + b;
   }
 
-  int subPartlyNativeWrapped( int a, Integer b ) {
+  public int subPartlyNativeWrapped( int a, Integer b ) {
     return a - b;
   }
 
-  int addPartlyWrapped( BigInteger a, int b ) {
+  public int addPartlyWrapped( BigInteger a, int b ) {
     return a.intValue() + b;
   }
 
-  int subPartlyWrapped( int a, BigInteger b ) {
+  public int subPartlyWrapped( int a, BigInteger b ) {
     return a - b.intValue();
   }
 
-  Number addGen( BigInteger a, Number b ) {
+  public Number addGen( BigInteger a, Number b ) {
     return a.doubleValue() + b.doubleValue();
   }
 
-  Number addSpec( Number a, BigInteger b ) {
+  public Number addSpec( Number a, BigInteger b ) {
     return a.intValue() + b.doubleValue();
   }
 

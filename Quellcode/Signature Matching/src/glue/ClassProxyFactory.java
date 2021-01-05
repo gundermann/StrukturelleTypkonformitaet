@@ -1,10 +1,14 @@
 package glue;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.objenesis.Objenesis;
 import org.objenesis.ObjenesisStd;
 import org.objenesis.instantiator.ObjectInstantiator;
 
-import matching.modules.ModuleMatchingInfo;
+import matching.methods.MethodMatchingInfo;
 import net.sf.cglib.proxy.Callback;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.Factory;
@@ -20,11 +24,10 @@ public class ClassProxyFactory<T> implements ProxyFactory<T> {
 
   @SuppressWarnings( "unchecked" )
   @Override
-  public T createProxy( Object component, ModuleMatchingInfo matchingInfo ) {
+  public T createProxy( Map<Object, Collection<MethodMatchingInfo>> components2MatchingInfo ) {
     Enhancer enhancer = new Enhancer();
     enhancer.setSuperclass( targetStrcture );
-    BehaviourDelegateInvocationHandler handler = new BehaviourDelegateInvocationHandler( component,
-        matchingInfo );
+    BehaviourDelegateInvocationHandler handler = new BehaviourDelegateInvocationHandler( components2MatchingInfo );
 
     MethodInterceptor methodInterceptor = ( obj, method, args, proxyMethod ) -> {
       return handler.intercept( obj, method, args, proxyMethod );
@@ -37,6 +40,13 @@ public class ClassProxyFactory<T> implements ProxyFactory<T> {
     Object proxyInstance = instantiator.newInstance();
     ( (Factory) proxyInstance ).setCallbacks( new Callback[] { methodInterceptor } );
     return (T) proxyInstance;
+  }
+
+  @Override
+  public T createProxy( Object component, Collection<MethodMatchingInfo> matchingInfos ) {
+    Map<Object, Collection<MethodMatchingInfo>> components2MatchingInfo = new HashMap<>();
+    components2MatchingInfo.put( component, matchingInfos );
+    return createProxy( components2MatchingInfo );
   }
 
   // private void logFieldError( String fieldname, String classname ) {

@@ -24,7 +24,7 @@ public class ExactSignatureMatchingTypeConverterTest {
     Class<InterfaceWrapper> source = InterfaceWrapper.class;
     Class<Enum2> target = Enum2.class;
     Enum2 convertationObject = Enum2.CONSTANT_1;
-    SignatureMatchingTypeConverter<InterfaceWrapper> converter = new SignatureMatchingTypeConverter<>( source );
+    SingleTypeConverter<InterfaceWrapper> converter = new SingleTypeConverter<>( source );
 
     Set<MethodMatchingInfo> methodMatchingInfos = new HashSet<>();
     MethodMatchingInfo methodMatchingInfoGetFalse = EasyMock.createNiceMock( MethodMatchingInfo.class );

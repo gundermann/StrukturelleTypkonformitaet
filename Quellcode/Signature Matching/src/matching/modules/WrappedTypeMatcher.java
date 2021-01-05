@@ -12,16 +12,21 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import matching.MatcherRate;
+import matching.Setting;
+
 /**
  * Dieser Matcher beachtet, dass die Typen (Return- und Argumenttypen) einer der beiden Methoden in einem Typ der
- * anderen Methode enthalten sein können (Wrapper).
+ * anderen Methode enthalten sein kï¿½nnen (Wrapper).
  */
 public class WrappedTypeMatcher implements TypeMatcher {
 
-  // Versuch: Cache der Wrapped-Prüfungen
-  // Grund: Bei der Wrapped-Prüfung von boolean und Boolean über den CombinedMethodMatcher kam es zu einem StackOverflow
-  // Idee: Die geprüften Kombinationen werden gecached. Sofern eine gecachedte Kombination nochmal geprüft wird, wird
-  // die Prüfung einfach übersprungen.
+  // Versuch: Cache der Wrapped-Prï¿½fungen
+  // Grund: Bei der Wrapped-Prï¿½fung von boolean und Boolean ï¿½ber den CombinedMethodMatcher kam es zu einem
+  // StackOverflow
+  // Idee: Die geprï¿½ften Kombinationen werden gecached. Sofern eine gecachedte Kombination nochmal geprï¿½ft wird,
+  // wird
+  // die Prï¿½fung einfach ï¿½bersprungen.
   final Map<Class<?>[], Boolean> cachedWrappedTypeChecks = new HashMap<>();
 
   private final Supplier<TypeMatcher> innerMethodMatcherSupplier;
@@ -31,7 +36,7 @@ public class WrappedTypeMatcher implements TypeMatcher {
   }
 
   /**
-   * Prüft auf Wrapped
+   * Prï¿½ft auf Wrapped
    *
    * @param t1
    * @param t2
@@ -41,15 +46,15 @@ public class WrappedTypeMatcher implements TypeMatcher {
   @Override
   public boolean matchesType( Class<?> t1, Class<?> t2 ) {
     return
-    // Darf die Gleichheit hier geprüft werden?
-    // NEIN: Das ist wenn überhaupt die Aufgabe des inneren Matchers
+    // Darf die Gleichheit hier geprï¿½ft werden?
+    // NEIN: Das ist wenn ï¿½berhaupt die Aufgabe des inneren Matchers
     // t1.equals( t2 ) ||
     isWrappedIn( t1, t2 )
         || isWrappedIn( t2, t1 );
   }
 
   /**
-   * Prüft auf Wrapped in eine Richtung
+   * Prï¿½ft auf Wrapped in eine Richtung
    *
    * @param t1
    * @param t2
@@ -61,7 +66,7 @@ public class WrappedTypeMatcher implements TypeMatcher {
 
   private boolean isWrappedIn( Class<?> checkType, Class<?> queryType ) {
     // Hier ist die Frage, ob nur ein Attribut vom Typ des wrappedType im Wrapper vorhanden sein muss, oder nur eine
-    // Methode mit den Rückgabewert des wrappedType, oder sogar beides.
+    // Methode mit den Rï¿½ckgabewert des wrappedType, oder sogar beides.
 
     // Erster Versuch: beides (siehe Frage-Antwort-Spiel in containsMethodWithType
     // return containsFieldWithType( wrapperType, wrappedType ) &&
@@ -74,8 +79,9 @@ public class WrappedTypeMatcher implements TypeMatcher {
     // Dritter Versuch: wie zweiter Versucht nur mit Cache.
     Class<?>[] cacheKey = new Class<?>[] { checkType, queryType };
     if ( isCombinationCached( cacheKey ) ) {
-      // false, weil die Überprüfung noch nicht stattgefunden bzw. wenn sie bereits true ermittelt hatte, dann wäre die
-      // Überprüfung bereits erfolgreich gewesen
+      // false, weil die ï¿½berprï¿½fung noch nicht stattgefunden bzw. wenn sie bereits true ermittelt hatte, dann
+      // wï¿½re die
+      // ï¿½berprï¿½fung bereits erfolgreich gewesen
       return getResultFromCache( cacheKey );
     }
     cachedWrappedTypeChecks.put( cacheKey, null );
@@ -106,13 +112,14 @@ public class WrappedTypeMatcher implements TypeMatcher {
 
   // @Deprecated
   // private boolean containsMethodWithType( Class<?> checkingClass, Class<?> returnType ) {
-  // // Frage: Sollen hier nur auf sichtbare Methoden geprüft werden
-  // // Antwort: Ja, denn die Methoden müssen später durch den Glue-Code aufgerufen werden
+  // // Frage: Sollen hier nur auf sichtbare Methoden geprï¿½ft werden
+  // // Antwort: Ja, denn die Methoden mï¿½ssen spï¿½ter durch den Glue-Code aufgerufen werden
   // // Anschlussfrage: Warum ist das notwendig? Der Glue-Code verwendet Reflection. Damit interessiert die Sichtbarkeit
   // // der Methoden nicht. Wenn man das weiter denkt, dann sind nicht einmal die Methoden relevant, weil:
-  // // 1. Die Attribute per Relflection abgegriffen werden können
-  // // 2. Nicht sichergestellt werden kann, dass eine Methode, die den ein Objekt zurückgibt, welches es gleichen Typ,
-  // // wie ein Attribut hat, auch genau dieses Attribut zurückggibt.
+  // // 1. Die Attribute per Relflection abgegriffen werden kï¿½nnen
+  // // 2. Nicht sichergestellt werden kann, dass eine Methode, die den ein Objekt zurï¿½ckgibt, welches es gleichen
+  // Typ,
+  // // wie ein Attribut hat, auch genau dieses Attribut zurï¿½ckggibt.
   // Method[] methodsOfWrapper = checkingClass.getDeclaredMethods();
   // for ( Method method : methodsOfWrapper ) {
   // if ( method.getReturnType().equals( returnType ) ) {
@@ -160,9 +167,9 @@ public class WrappedTypeMatcher implements TypeMatcher {
     Field[] fieldsOfWrapper = filterStaticFields( wrapperClass.getDeclaredFields() );
     TypeMatcher innerMethodMatcher = innerMethodMatcherSupplier.get();
     for ( Field field : fieldsOfWrapper ) {
-      // TODO hier wird nur auf der ersten Ebene geprüft. Eine tiefere Verschachtelung wird noch nicht ermöglicht.
-      // ABER: Der ganze Matcher macht das noch nicht. Auch beim Prüfen des Matchings wird nur auf der obersten Ebene
-      // geprüft.
+      // TODO hier wird nur auf der ersten Ebene geprï¿½ft. Eine tiefere Verschachtelung wird noch nicht ermï¿½glicht.
+      // ABER: Der ganze Matcher macht das noch nicht. Auch beim Prï¿½fen des Matchings wird nur auf der obersten Ebene
+      // geprï¿½ft.
       if ( innerMethodMatcher.matchesType( field.getType(), wrappedType ) ) {
         Collection<ModuleMatchingInfo> infosFromInnerMatcher = innerMethodMatcher
             .calculateTypeMatchingInfos( field.getType(), wrappedType );
@@ -180,7 +187,7 @@ public class WrappedTypeMatcher implements TypeMatcher {
   }
 
   /**
-   * Die statischen Felder müssen herausgefiltert werden.
+   * Die statischen Felder mï¿½ssen herausgefiltert werden.
    *
    * @param declaredFields
    * @return
@@ -199,6 +206,16 @@ public class WrappedTypeMatcher implements TypeMatcher {
       enhancedInfos.add( enhancedInfo );
     }
     return enhancedInfos;
+  }
+
+  @Override
+  public MatcherRate matchesWithRating( Class<?> checkType, Class<?> queryType ) {
+    if ( matchesType( checkType, queryType ) ) {
+      MatcherRate rate = new MatcherRate();
+      rate.add( this.getClass().getSimpleName(), Setting.WRAPPEN_TYPE_MATCHER_BASE_RATING );
+      return rate;
+    }
+    return null;
   }
 
 }

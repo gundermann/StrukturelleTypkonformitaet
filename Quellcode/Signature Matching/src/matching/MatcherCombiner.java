@@ -38,6 +38,17 @@ public abstract class MatcherCombiner {
         return new HashSet<>();
       }
 
+      @Override
+      public MatcherRate matchesWithRating( Method checkMethod, Method queryMethod ) {
+        for ( MethodMatcher m : matcher ) {
+        	MatcherRate rate = m.matchesWithRating( checkMethod, queryMethod );
+          if ( rate != null ) {
+            return rate;
+          }
+        }
+        return null;
+      }
+
     };
   }
 
@@ -62,6 +73,17 @@ public abstract class MatcherCombiner {
           }
         }
         return new ArrayList<>();
+      }
+
+      @Override
+      public MatcherRate matchesWithRating( Class<?> checkType, Class<?> queryType ) {
+        for ( TypeMatcher m : matcher ) {
+          MatcherRate rating = m.matchesWithRating( checkType, queryType );
+          if ( rating != null ) {
+            return rating;
+          }
+        }
+        return null;
       }
 
     };

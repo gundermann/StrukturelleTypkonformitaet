@@ -5,6 +5,7 @@
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="lib" path="lib/hamcrest-all-1.3.jar"/>
 	<classpathentry kind="lib" path="lib/junit4.jar"/>
+	<classpathentry kind="lib" path="lib/easymock-3.0.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Signature Matching"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/profil-repository"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/ComponentTester"/>

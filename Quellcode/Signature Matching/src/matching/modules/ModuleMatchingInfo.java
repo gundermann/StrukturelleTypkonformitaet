@@ -71,22 +71,6 @@ public class ModuleMatchingInfo {
   }
 
   /**
-   * Diese Methode führt eine Bewertung hinsichtlich der Vollständigkeit bzgl. der erwünschten Methoden. Wenn das target
-   * bspw. nur einen Teil der in der source erwarteten Methoden liefern kann , dann wird hier ein niedrigerer Wert
-   * geliefert, als wenn das target vollständig die source matched.
-   *
-   * @deprecated TODO das muss woanders hin verschobenw reden
-   * @return
-   */
-  @Deprecated
-  public int getRating() {
-    // Der Algorithmus muss noch angepasst werden!!!!
-    int desiredMethodCount = source.getMethods().length;
-    int matchedMethodCount = methodMatchingInfos.size();
-    return matchedMethodCount / desiredMethodCount * 100;
-  }
-
-  /**
    * @return empty Set, if the source type is the same, or a superclass or a superinterface of the target type
    */
   public Collection<MethodMatchingInfo> getMethodMatchingInfos() {

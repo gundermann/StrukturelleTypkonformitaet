@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import matching.MatcherRate;
+import matching.Setting;
 import matching.methods.MethodMatchingInfo.ParamPosition;
 import matching.modules.ModuleMatchingInfo;
 import matching.modules.TypeMatcher;
@@ -70,5 +72,35 @@ public class CommonMethodMatcher implements MethodMatcher {
     }
 
     return matchingMap;
+  }
+
+  @Override
+  public MatcherRate matchesWithRating( Method checkMethod, Method queryMethod ) {
+    MethodStructure ms1 = MethodStructure.createFromDeclaredMethod( checkMethod );
+    MethodStructure ms2 = MethodStructure.createFromDeclaredMethod( queryMethod );
+    return getMatchRating( ms1, ms2 );
+  }
+
+  private MatcherRate getMatchRating( MethodStructure ms1, MethodStructure ms2 ) {
+    if ( ms1.getSortedArgumentTypes().length != ms2.getSortedArgumentTypes().length ) {
+      return null;
+    }
+
+    Collection<MatcherRate> rates = new ArrayList<>();
+    MatcherRate returnRate = typeMatcherSupplier.get().matchesWithRating( ms1.getReturnType(), ms2.getReturnType() );
+    if ( returnRate == null ) {
+      return null;
+    }
+    rates.add( returnRate );
+
+    for ( int i = 0; i < ms1.getSortedArgumentTypes().length; i++ ) {
+      MatcherRate argRating = typeMatcherSupplier.get().matchesWithRating( ms1.getSortedArgumentTypes()[i],
+          ms2.getSortedArgumentTypes()[i] );
+      if ( argRating == null ) {
+        return null;
+      }
+      rates.add( argRating );
+    }
+    return Setting.QUALITATIVE_COMPONENT_METHOD_MATCH_RATE_CUMULATION.apply( rates.stream() );
   }
 }

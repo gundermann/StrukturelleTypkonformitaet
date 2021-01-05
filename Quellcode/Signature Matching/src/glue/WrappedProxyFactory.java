@@ -1,8 +1,9 @@
 package glue;
 
 import java.lang.reflect.Field;
+import java.util.Collection;
 
-import matching.modules.ModuleMatchingInfo;
+import matching.methods.MethodMatchingInfo;
 import util.Logger;
 
 public class WrappedProxyFactory<T> implements ProxyFactory<T> {
@@ -15,7 +16,7 @@ public class WrappedProxyFactory<T> implements ProxyFactory<T> {
 
   @SuppressWarnings( "unchecked" )
   @Override
-  public T createProxy( Object component, ModuleMatchingInfo matchingInfo ) {
+  public T createProxy( Object component, Collection<MethodMatchingInfo> matchingInfos ) {
     try {
       Field wrappedField = getDeclaredFieldOfClassHierachry( component.getClass(),
           sourceDelegationAttribute );
