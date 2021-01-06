@@ -26,6 +26,8 @@ public class DesiredComponentFinder {
 
   private final Function<Class<?>, Optional<?>> optComponentGetter;
 
+  private int testedComponentVariations = 0;
+
   public DesiredComponentFinder( Class<?>[] registeredComponentInterfaces,
       Function<Class<?>, Optional<?>> optComponentGetter ) {
     this.registeredComponentInterfaces = Stream.of( registeredComponentInterfaces ).distinct()
@@ -51,10 +53,13 @@ public class DesiredComponentFinder {
           partlyTypeMatcher[i] );
       if ( optDesiredBean.isPresent() ) {
         Logger.info( "component found" );
+        Logger.infoF( "Tested Components variations: %d", testedComponentVariations );
         return optDesiredBean.get();
       }
       Logger.info( "component not found" );
     }
+
+    Logger.infoF( "Tested Components variations: %d", testedComponentVariations );
     return null;
   }
 
@@ -138,6 +143,7 @@ public class DesiredComponentFinder {
 
     Logger.infoF( "test component: %s",
         combinationInfos.getComponentClasses().stream().map( Class::getName ).collect( Collectors.joining( "," ) ) );
+    testedComponentVariations++;
     DesiredInterface convertedComponent = converter.convert( components2MatchingInfo );
     TestResult testResult = componentTester.testComponent( convertedComponent );
     Logger.infoF( "passed tests: %d/%d", testResult.getPassedTests(), testResult.getTestCount() );
