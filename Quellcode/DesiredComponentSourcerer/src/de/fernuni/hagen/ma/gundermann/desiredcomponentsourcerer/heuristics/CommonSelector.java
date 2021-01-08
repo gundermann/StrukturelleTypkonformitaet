@@ -85,6 +85,10 @@ public class CommonSelector implements Selector {
     Collection<PartlyTypeMatchingInfo> combi = CollectionUtil.pop( cachedMatchingInfoCombinations );
     Map<Method, Collection<PartlyTypeMatchingInfo>> matchingInfoPerMethod = getMatchingInfoPerMethod( combi );
     // Pruefen, ob auch alle erwarteten Methoden erfuellt wurden.
+    if ( combinatiedComponentCount == 1
+        && combi.iterator().next().getCheckType().getSimpleName().startsWith( "FireFighter" ) ) {
+      System.out.println( "hwg" );
+    }
     if ( !matchingInfoPerMethod.keySet().containsAll( originalMethods ) ) {
       return new HashMap<>();
     }

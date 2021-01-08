@@ -50,6 +50,10 @@ public class ParamPermMethodMatcher implements MethodMatcher {
         ms2.getSortedArgumentTypes(),
         this::getMatchRatingWithArgumentTypes );
 
+    if ( ms1.getSortedArgumentTypes().length > 0 && rates.isEmpty() ) {
+      return null;
+    }
+
     rates.add( returnTypeRating );
     MatcherRate resultingRate = new MatcherRate();
     resultingRate.add( this.getClass().getSimpleName(), Setting.PARAM_PERM_METHOD_TYPE_MATCHER_BASE_RATING );
@@ -64,7 +68,7 @@ public class ParamPermMethodMatcher implements MethodMatcher {
     for ( int i = 0; i < argumentTypes1.length; i++ ) {
       MatcherRate innerMatcherRating = innerTypeMatcherSupplier.get().matchesWithRating( argumentTypes1[i],
           argumentTypes2[i] );
-      if(innerMatcherRating == null) {
+      if ( innerMatcherRating == null ) {
         return null;
       }
       rates.add( innerMatcherRating );

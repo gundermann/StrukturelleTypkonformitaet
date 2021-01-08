@@ -43,7 +43,7 @@ class Tester {
           Method calledPivotMethod = null;
           Optional<SigMaGlueException> optSigMaGlueExc = findCausedSigMaGlueExcetion( e );
           if ( optSigMaGlueExc.isPresent() && testInstance instanceof PivotMethodTestInfo
-              && PivotMethodTestInfo.class.cast( testInstance ).pivotMethodCallExecuted() ) {
+              && !PivotMethodTestInfo.class.cast( testInstance ).pivotMethodCallExecuted() ) {
             calledPivotMethod = optSigMaGlueExc.get().getCalledSourceMethod();
             System.out.println( String.format( "called pivot method found: %s", calledPivotMethod.getName() ) );
           }
