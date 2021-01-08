@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.CombinationFinderUtils;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.CombinationInfo;
@@ -15,6 +16,8 @@ import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.CombinationPartI
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.Combinator;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.Selector;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.CollectionUtil;
+import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.Logger;
+import matching.methods.MethodMatchingInfo;
 import matching.modules.PartlyTypeMatchingInfo;
 
 /**
@@ -33,6 +36,8 @@ public class CommonSelector implements Selector {
   private final Collection<Method> originalMethods;
 
   private final Collection<Class<?>> higherPotentialTypes = new ArrayList<>();
+
+  private final Collection<Integer> methodMatchingInfoHCBlacklist = new ArrayList<>();
 
   public CommonSelector( List<PartlyTypeMatchingInfo> infos ) {
     this.infos = infos;
@@ -70,6 +75,7 @@ public class CommonSelector implements Selector {
   private void collectRelevantMatchingInfoCombinations() {
     cachedMatchingInfoCombinations = new ArrayList<>( Combinator.generateCombis( infos,
         combinatiedComponentCount ) );
+
     // re-organize cache with respect to search optimization
     Collections.sort( cachedMatchingInfoCombinations, new HigherPotentialTypesFirstComparator(
         higherPotentialTypes ) );
@@ -88,7 +94,7 @@ public class CommonSelector implements Selector {
   private void fillCachedComponent2MatchingInfo( Map<Method, Collection<PartlyTypeMatchingInfo>> typeMatchingInfos ) {
     Map<Method, Collection<CombinationPartInfo>> combiPartInfos = CombinationFinderUtils
         .transformToCombinationPartInfosPerMethod(
-            typeMatchingInfos );
+            typeMatchingInfos, this.methodMatchingInfoHCBlacklist );
     this.cachedCalculatedInfos = new Combinator<Method, CombinationPartInfo>().generateCombis( combiPartInfos );
   }
 
@@ -102,5 +108,13 @@ public class CommonSelector implements Selector {
       }
     }
     return relevantTypeMatchingInfos;
+  }
+
+  @Override
+  public void addToBlacklist( MethodMatchingInfo methodMatchingInfo ) {
+    this.methodMatchingInfoHCBlacklist.add( methodMatchingInfo.hashCode() );
+    // FIXME analyse
+    Logger.infoF( "BLACKLIST: %s",
+        this.methodMatchingInfoHCBlacklist.stream().map( String::valueOf ).collect( Collectors.joining( "," ) ) );
   }
 }

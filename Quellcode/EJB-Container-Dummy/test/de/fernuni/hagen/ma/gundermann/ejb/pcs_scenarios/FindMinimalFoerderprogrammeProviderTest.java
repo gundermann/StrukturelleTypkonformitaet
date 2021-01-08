@@ -19,6 +19,9 @@ public class FindMinimalFoerderprogrammeProviderTest {
   public void setup() {
     Logger.setOutputFile(
         "tmp_" + this.getClass().getSimpleName() + ".csv" );
+
+    Logger.setLogFile(
+        "tmp_" + this.getClass().getSimpleName() + ".log" );
   }
 
   @Test

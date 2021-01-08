@@ -4,7 +4,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Optional;
 
+import glue.SigMaGlueException;
+import spi.PivotMethodTestInfo;
 import tester.annotation.QueryTypeInstanceSetter;
 import tester.annotation.QueryTypeTest;
 
@@ -22,28 +25,59 @@ class Tester {
         }
         setter.setAccessible( true );
         setter.invoke( testInstance, component );
-        invokeTests( testInstance, testResult );
+
+        try {
+          invokeTests( testInstance, testResult );
+        }
+        catch ( WrappedAssertionError ae ) {
+          String assertionError = ae.getMessage();
+          if ( assertionError.isEmpty() ) {
+            assertionError = "assertion error";
+          }
+          System.out.println( String.format( "TEST FAILED: %s => %s", ae.getTestName(), ae.getMessage() ) );
+          testResult.failed( ae );
+          return testResult;
+        }
+        catch ( InvocationTargetException e ) {
+          e.printStackTrace();
+          Method calledPivotMethod = null;
+          Optional<SigMaGlueException> optSigMaGlueExc = findCausedSigMaGlueExcetion( e );
+          if ( optSigMaGlueExc.isPresent() && testInstance instanceof PivotMethodTestInfo
+              && PivotMethodTestInfo.class.cast( testInstance ).pivotMethodCallExecuted() ) {
+            calledPivotMethod = optSigMaGlueExc.get().getCalledSourceMethod();
+            System.out.println( String.format( "called pivot method found: %s", calledPivotMethod.getName() ) );
+          }
+          e.printStackTrace();
+          testResult.canceled( e, calledPivotMethod );
+          return testResult;
+        }
+        catch ( IllegalAccessException | IllegalArgumentException e ) {
+          e.printStackTrace();
+          testResult.canceled( e, null );
+          return testResult;
+        }
       }
       catch ( InstantiationException | IllegalAccessException | IllegalArgumentException
           | InvocationTargetException e ) {
         e.printStackTrace();
-        testResult.canceled();
+        testResult.canceled( e, null );
         return testResult;
       }
-      catch ( WrappedAssertionError ae ) {
-        String assertionError = ae.getMessage();
-        if ( assertionError.isEmpty() ) {
-          assertionError = "assertion error";
-        }
-        System.out.println( String.format( "TEST FAILED: %s => %s", ae.getTestName(), ae.getMessage() ) );
-        testResult.failed();
-        return testResult;
 
-      }
     }
-    System.out.println( String.format( "TEST PASSED" ) );
+    System.out.println( String.format( "TESTS PASSED" ) );
     testResult.passed();
     return testResult;
+  }
+
+  private Optional<SigMaGlueException> findCausedSigMaGlueExcetion( Throwable e ) {
+    if ( SigMaGlueException.class.isInstance( e ) ) {
+      return Optional.of( SigMaGlueException.class.cast( e ) );
+    }
+    if ( e.getCause() == null ) {
+      return Optional.empty();
+    }
+    return findCausedSigMaGlueExcetion( e.getCause() );
   }
 
   private void invokeTests( Object testInstance, TestResult testResult )
@@ -64,7 +98,7 @@ class Tester {
         throw e;
       }
       testResult.incrementPassedTests();
-      System.out.println( String.format( "Test passed: %d/%d", counter++, testMethods.length ) );
+      System.out.println( String.format( "test passed: %d/%d", counter++, testMethods.length ) );
     }
   }
 

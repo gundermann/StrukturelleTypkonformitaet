@@ -14,6 +14,7 @@ import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.CombinationPartI
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.Combinator;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.Selector;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.CollectionUtil;
+import matching.methods.MethodMatchingInfo;
 import matching.modules.PartlyTypeMatchingInfo;
 
 /**
@@ -62,7 +63,7 @@ public class CombinationSelector implements Selector {
   private void fillCachedComponent2MatchingInfo( Map<Method, Collection<PartlyTypeMatchingInfo>> typeMatchingInfos ) {
     Map<Method, Collection<CombinationPartInfo>> combiPartInfos = CombinationFinderUtils
         .transformToCombinationPartInfosPerMethod(
-            typeMatchingInfos );
+            typeMatchingInfos, new ArrayList<>() );
     this.cachedCalculatedInfos = new Combinator<Method, CombinationPartInfo>().generateCombis( combiPartInfos );
   }
 
@@ -80,6 +81,12 @@ public class CombinationSelector implements Selector {
 
   @Override
   public void addHigherPotentialType( Class<?> higherPotentialType ) {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public void addToBlacklist( MethodMatchingInfo methodMatchingInfo ) {
     // TODO Auto-generated method stub
 
   }

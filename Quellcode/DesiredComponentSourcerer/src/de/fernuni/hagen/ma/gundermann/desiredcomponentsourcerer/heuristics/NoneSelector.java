@@ -1,6 +1,10 @@
-package de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer;
+package de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics;
 
 import java.util.Optional;
+
+import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.CombinationInfo;
+import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.Selector;
+import matching.methods.MethodMatchingInfo;
 
 /**
  * Selektor, der gar keine Komponente selektiert
@@ -19,6 +23,12 @@ public class NoneSelector implements Selector {
 
   @Override
   public void addHigherPotentialType( Class<?> higherPotentialType ) {
+    // do nothing
+
+  }
+
+  @Override
+  public void addToBlacklist( MethodMatchingInfo methodMatchingInfo ) {
     // do nothing
 
   }

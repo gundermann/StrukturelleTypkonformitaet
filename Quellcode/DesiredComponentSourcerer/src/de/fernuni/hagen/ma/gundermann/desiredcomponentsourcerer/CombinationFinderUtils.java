@@ -24,7 +24,8 @@ public abstract class CombinationFinderUtils {
   }
 
   public static Map<Method, Collection<CombinationPartInfo>> transformToCombinationPartInfosPerMethod(
-      Map<Method, Collection<PartlyTypeMatchingInfo>> method2typeMatchingInfos ) {
+      Map<Method, Collection<PartlyTypeMatchingInfo>> method2typeMatchingInfos,
+      Collection<Integer> methodMatchingInfoHCBlacklist ) {
     Map<Method, Collection<CombinationPartInfo>> transformed = new HashMap<>();
     for ( Entry<Method, Collection<PartlyTypeMatchingInfo>> entry : method2typeMatchingInfos.entrySet() ) {
       Method method = entry.getKey();
@@ -33,6 +34,8 @@ public abstract class CombinationFinderUtils {
           .map( Transformator::transformTypeInfo2CombinationPartInfos )
           .flatMap( Collection::stream )
           .filter( cpi -> Objects.equals( cpi.getSourceMethod(), method ) )
+          // filter blacklist items by hashcode
+          .filter( cpi -> !methodMatchingInfoHCBlacklist.contains( cpi.getMatchingInfo().hashCode() ) )
           .collect( Collectors.toList() );
       transformed.put( method, combiPartInfos );
     }

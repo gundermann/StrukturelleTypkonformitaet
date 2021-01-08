@@ -7,7 +7,9 @@ import java.util.Map;
 import java.util.Optional;
 
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.CommonSelector;
+import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.NoneSelector;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.QuantitaiveMatchingInfoComparator;
+import matching.methods.MethodMatchingInfo;
 import matching.modules.PartlyTypeMatchingInfo;
 
 public class BestMatchingComponentCombinationFinder {
@@ -47,11 +49,15 @@ public class BestMatchingComponentCombinationFinder {
     return new NoneSelector();
   }
 
-  public void optimzeForCurrentCombination() {
+  public void optimizeForCurrentCombination() {
     if ( nextCombinationInfo.isPresent() ) {
       nextCombinationInfo.get().getComponentClasses().forEach( this.commonSelector::addHigherPotentialType );
     }
 
+  }
+
+  public void optimizeMatchingInfoBlacklist( MethodMatchingInfo methodMatchingInfo ) {
+    commonSelector.addToBlacklist( methodMatchingInfo );
   }
 
 }

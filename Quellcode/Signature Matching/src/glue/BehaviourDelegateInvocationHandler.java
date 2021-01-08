@@ -33,23 +33,43 @@ public class BehaviourDelegateInvocationHandler implements MethodInterceptor, In
   public Object intercept( Object callObject, Method method, Object[] args, MethodProxy methodProxy ) throws Throwable {
     Optional<ComponentWithMatchingInfo> optMatchingInfo = getMethodMatchingInfo( method );
     if ( optMatchingInfo.isPresent() ) {
-      return invokeOnComponentWithMatchingInfo( optMatchingInfo.get(), args );
+      try {
+        return invokeOnComponentWithMatchingInfo( optMatchingInfo.get(), args );
+      }
+      catch ( Throwable e ) {
+        throw new SigMaGlueException( e, method );
+      }
     }
-    return methodProxy.invokeSuper( callObject, args );
+    try {
+      return methodProxy.invokeSuper( callObject, args );
+    }
+    catch ( Throwable e ) {
+      throw new SigMaGlueException( e, method );
+    }
   }
 
   @Override
   public Object invoke( Object methodProxy, Method method, Object[] args ) throws Throwable {
     Optional<ComponentWithMatchingInfo> optMatchingInfo = getMethodMatchingInfo( method );
     if ( optMatchingInfo.isPresent() ) {
-      return invokeOnComponentWithMatchingInfo( optMatchingInfo.get(), args );
+      try {
+        return invokeOnComponentWithMatchingInfo( optMatchingInfo.get(), args );
+      }
+      catch ( Throwable e ) {
+        throw new SigMaGlueException( e, method );
+      }
     }
 
     // Default-Methode
     // (Hierbei handelt es sich um Methoden, dei von jedem Objekt erf�llt werden und
     // f�r die aufgrund einer fehlenden
     // Implementierung keine MatchingInfo existiert)
-    return method.invoke( getSingleComponent(), args );
+    try {
+      return method.invoke( getSingleComponent(), args );
+    }
+    catch ( Throwable e ) {
+      throw new SigMaGlueException( e, method );
+    }
   }
 
   private Object getSingleComponent() {

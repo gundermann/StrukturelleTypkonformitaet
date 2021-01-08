@@ -73,7 +73,7 @@ public class DesiredComponentFinder {
 
     // INFO OUTPUT
     componentInterface2PartlyMatchingInfos.values().forEach( i -> {
-      Logger.toFile( "%f;%s;%f;%s;\n", i.getQualitativeMatchRating().getMatcherRating(),
+      Logger.toFile( "%f;%s;%f;%s;", i.getQualitativeMatchRating().getMatcherRating(),
           i.getQualitativeMatchRating().toString(), i.getQuantitaiveMatchRating(),
           i.getCheckType().getSimpleName() );
     } );
@@ -114,7 +114,10 @@ public class DesiredComponentFinder {
           return testedComponent.getComponent();
         }
         if ( testedComponent.anyTestPassed() ) {
-          combinationFinder.optimzeForCurrentCombination();
+          combinationFinder.optimizeForCurrentCombination();
+        }
+        if ( testedComponent.isPivotMatchingInfoFound() ) {
+          combinationFinder.optimizeMatchingInfoBlacklist( testedComponent.getPivotMatchingInfo() );
         }
       }
     }
@@ -143,11 +146,44 @@ public class DesiredComponentFinder {
 
     Logger.infoF( "test component: %s",
         combinationInfos.getComponentClasses().stream().map( Class::getName ).collect( Collectors.joining( "," ) ) );
+
+    // FIXME analyse
+    // Logger.info( "HASHCODES:" );
+    // components2MatchingInfo.values().stream().flatMap( Collection::stream ).forEach(
+    // i -> Logger.infoF( "%s : %d", i.getSource(), i.hashCode() ) );
+
     testedComponentVariations++;
     DesiredInterface convertedComponent = converter.convert( components2MatchingInfo );
     TestResult testResult = componentTester.testComponent( convertedComponent );
-    Logger.infoF( "passed tests: %d/%d", testResult.getPassedTests(), testResult.getTestCount() );
+    logTestResult( testResult );
+    if ( testResult.getPivotMethodCall() != null ) {
+      Optional<MethodMatchingInfo> optMatchingInfoOfPivotMethod = components2MatchingInfo.values().stream()
+          .flatMap( Collection::stream )
+          .filter( mmi -> mmi.getSource().equals( testResult.getPivotMethodCall() ) ).findFirst();
+
+      if ( optMatchingInfoOfPivotMethod.isPresent() ) {
+        return new TestedComponent<>( convertedComponent, testResult,
+            optMatchingInfoOfPivotMethod.get() );
+      }
+    }
     return new TestedComponent<>( convertedComponent, testResult );
+  }
+
+  private void logTestResult( TestResult testResult ) {
+    Logger.infoF( "passed tests: %d/%d", testResult.getPassedTests(), testResult.getTestCount() );
+    switch ( testResult.getResult() ) {
+      case CANCELED:
+        Logger.infoF( "test canceled: %s\n%s", testResult.getException().getMessage(),
+            Stream.of( testResult.getException().getStackTrace() ).map( StackTraceElement::toString )
+                .map( s -> "\t\t\t" + s )
+                .collect( Collectors.joining( "\n" ) ) );
+        break;
+      case FAILED:
+        Logger.infoF( "test failed: %s => %s", testResult.getPivotTestName(), testResult.getException().getMessage() );
+        break;
+      default:
+        break;
+    }
   }
 
   private Class<?>[] getRegisteredComponentInterfaces() {

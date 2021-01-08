@@ -21,18 +21,40 @@ public class Logger {
 
   private static String OUTPUT_DIR = "./output";
 
+  private static boolean logToFile = false;
+
+  private static File logFile;
+
   public static void setOutputFile( String filename ) {
     try {
       Path outputPath = Paths.get( OUTPUT_DIR );
       if ( !outputPath.toFile().exists() ) {
         outputPath.toFile().mkdir();
       }
-      Path output = Paths.get( OUTPUT_DIR + "/" + filename );
-      if ( !output.toFile().exists() ) {
-        output.toFile().createNewFile();
+      Path o = Paths.get( OUTPUT_DIR + "/" + filename );
+      if ( !o.toFile().exists() ) {
+        o.toFile().createNewFile();
       }
-      Logger.output = output.toFile();
+      Logger.output = o.toFile();
       switchOutputOn();
+    }
+    catch ( IOException e ) {
+      throw new RuntimeException( e );
+    }
+  }
+
+  public static void setLogFile( String filename ) {
+    try {
+      Path outputPath = Paths.get( OUTPUT_DIR );
+      if ( !outputPath.toFile().exists() ) {
+        outputPath.toFile().mkdir();
+      }
+      Path o = Paths.get( OUTPUT_DIR + "/" + filename );
+      if ( !o.toFile().exists() ) {
+        o.toFile().createNewFile();
+      }
+      Logger.logFile = o.toFile();
+      switchLogFileOn();
     }
     catch ( IOException e ) {
       throw new RuntimeException( e );
@@ -61,6 +83,10 @@ public class Logger {
     doOutput = false;
   }
 
+  private static void switchLogFileOn() {
+    logToFile = true;
+  }
+
   public static void info( String msg ) {
     log( "INFO:", msg );
   }
@@ -78,6 +104,19 @@ public class Logger {
       else {
         System.err.println( String.format( "%s %s", prefix, msg ) );
         appendedLogger.forEach( l -> l.logError( String.format( "%s %s", prefix, msg ) ) );
+      }
+      logToFile( String.format( "%s %s", prefix, msg ) );
+    }
+  }
+
+  private static void logToFile( String logEntry ) {
+    if ( logToFile && logFile != null ) {
+      try {
+        Files.write( logFile.toPath(), ( logEntry + "\n" ).getBytes(),
+            StandardOpenOption.APPEND );
+      }
+      catch ( IOException e ) {
+        throw new RuntimeException( e );
       }
     }
   }
@@ -98,7 +137,7 @@ public class Logger {
     }
     try {
       if ( output != null ) {
-        Files.write( output.toPath(), line.getBytes(),
+        Files.write( output.toPath(), ( line + "\n" ).getBytes(),
             StandardOpenOption.APPEND );
       }
     }
