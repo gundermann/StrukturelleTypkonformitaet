@@ -114,10 +114,10 @@ public class DesiredComponentFinder {
           return testedComponent.getComponent();
         }
         if ( testedComponent.anyTestPassed() ) {
-          combinationFinder.optimizeForCurrentCombination();
+          // combinationFinder.optimizeForCurrentCombination();
         }
         if ( testedComponent.isPivotMatchingInfoFound() ) {
-          combinationFinder.optimizeMatchingInfoBlacklist( testedComponent.getPivotMatchingInfo() );
+          // combinationFinder.optimizeMatchingInfoBlacklist( testedComponent.getPivotMatchingInfo() );
         }
       }
     }

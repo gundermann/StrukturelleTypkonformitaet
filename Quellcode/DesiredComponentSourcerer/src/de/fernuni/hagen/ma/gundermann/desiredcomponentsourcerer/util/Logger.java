@@ -23,6 +23,8 @@ public class Logger {
 
   private static boolean logToFile = false;
 
+  private static String LOG_DIR = "./log";
+
   private static File logFile;
 
   public static void setOutputFile( String filename ) {
@@ -45,11 +47,11 @@ public class Logger {
 
   public static void setLogFile( String filename ) {
     try {
-      Path outputPath = Paths.get( OUTPUT_DIR );
+      Path outputPath = Paths.get( LOG_DIR );
       if ( !outputPath.toFile().exists() ) {
         outputPath.toFile().mkdir();
       }
-      Path o = Paths.get( OUTPUT_DIR + "/" + filename );
+      Path o = Paths.get( LOG_DIR + "/" + filename );
       if ( !o.toFile().exists() ) {
         o.toFile().createNewFile();
       }

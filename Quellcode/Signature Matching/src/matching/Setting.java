@@ -10,6 +10,7 @@ import java.util.stream.Stream;
 public class Setting {
 
   // SETTING F
+  // SETTING _MinMaxAvg
   private static Function<Collection<MatcherRate>, MatcherRate> MIN_MAX_AVG = matcherRateCol -> {
     Optional<MatcherRate> optMin = matcherRateCol.stream()
         .min( MatcherRate::compare );
@@ -27,6 +28,7 @@ public class Setting {
   };
 
   // SETTING G
+  // SETTING _AVG
   private static Function<Collection<MatcherRate>, MatcherRate> ALL_AVG = matcherRateCol -> {
     double avg = matcherRateCol.stream().mapToDouble( MatcherRate::getMatcherRating ).average().orElse( Double.NaN );
     if ( avg == Double.NaN ) {
@@ -51,32 +53,14 @@ public class Setting {
 
   public static double PARAM_PERM_METHOD_TYPE_MATCHER_BASE_RATING = 0d;
 
-  // is MatcherRate >= Exact
-  private static boolean isMatcherRateRelevant( MatcherRate mr ) {
-    return mr.getMatcherRating() >= EXACT_TYPE_MATCHER_RATING;
-  }
-
-  // SETTING _MIN>=Exact
+  // SETTING _MIN
   private static BiFunction<MatcherRate, MatcherRate, Boolean> MIN_RATE_PER_METHOD = ( higher,
       lower ) -> ( COMPARE_QUALITATIVE_METHOD_MATCH_RATE.apply( higher, lower ) < 0
-          || lower.getMatcherRating() < EXACT_TYPE_MATCHER_RATING )
-          && isMatcherRateRelevant( higher );
+          || lower.getMatcherRating() < EXACT_TYPE_MATCHER_RATING );
 
   // SETTING _MAX
   private static BiFunction<MatcherRate, MatcherRate, Boolean> MAX_RATE_PER_METHOD = ( higher,
       lower ) -> COMPARE_QUALITATIVE_METHOD_MATCH_RATE.apply( higher, lower ) > 0;
-
-  // SETTING _AVG
-  private static Function<Stream<MatcherRate>, MatcherRate> ALL_AVG_PER_METHOD = matcherRateStream -> {
-    double avg = matcherRateStream.filter( Setting::isMatcherRateRelevant )
-        .mapToDouble( MatcherRate::getMatcherRating ).average().orElse( Double.NaN );
-    if ( avg == Double.NaN ) {
-      return null;
-    }
-    MatcherRate result = new MatcherRate();
-    result.add( "Avarage", avg );
-    return result;
-  };
 
   public static Function<Stream<MatcherRate>, MatcherRate> QUALITATIVE_COMPONENT_MATCH_RATE_CUMULATION = matcherRateCol -> MIN_MAX_AVG
       .apply( matcherRateCol.collect( Collectors.toList() ) );
@@ -84,9 +68,8 @@ public class Setting {
   private static Function<Stream<MatcherRate>, MatcherRate> HIGHER_QUALITATIVE_METHOD_MATCH_RATE_CONDITION = matcherRateCol -> matcherRateCol
       .reduce( ( higher,
           lower ) -> higher != null && lower != null
-              && MAX_RATE_PER_METHOD.apply( higher, lower ) ? higher : lower )
+              && MIN_RATE_PER_METHOD.apply( higher, lower ) ? higher : lower )
       .get();
 
-  public static Function<Stream<MatcherRate>, MatcherRate> QUALITATIVE_COMPONENT_METHOD_MATCH_RATE_CUMULATION = matcherRateCol -> ALL_AVG
-      .apply( matcherRateCol.collect( Collectors.toList() ) );
+  public static Function<Stream<MatcherRate>, MatcherRate> QUALITATIVE_COMPONENT_METHOD_MATCH_RATE_CUMULATION = HIGHER_QUALITATIVE_METHOD_MATCH_RATE_CONDITION;
 }
