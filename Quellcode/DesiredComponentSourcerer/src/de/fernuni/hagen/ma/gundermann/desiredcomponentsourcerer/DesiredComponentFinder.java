@@ -114,9 +114,11 @@ public class DesiredComponentFinder {
           return testedComponent.getComponent();
         }
         if ( testedComponent.anyTestPassed() ) {
+          // H: combinate passed tests components first
           // combinationFinder.optimizeForCurrentCombination();
         }
         if ( testedComponent.isPivotMatchingInfoFound() ) {
+          // H: blacklist by pivot test calls
           // combinationFinder.optimizeMatchingInfoBlacklist( testedComponent.getPivotMatchingInfo() );
         }
       }
@@ -130,6 +132,7 @@ public class DesiredComponentFinder {
     Logger.infoF( "find components for combination: %s",
         combinationInfos.getComponentClasses().stream().map( Class::toString ).collect( Collectors.joining( " + " ) ) );
 
+    testedComponentVariations++;
     CombinationTypeConverter<DesiredInterface> converter = new CombinationTypeConverter<>(
         desiredInterface );
     ComponentTester<DesiredInterface> componentTester = new ComponentTester<>( desiredInterface );
@@ -152,7 +155,6 @@ public class DesiredComponentFinder {
     // components2MatchingInfo.values().stream().flatMap( Collection::stream ).forEach(
     // i -> Logger.infoF( "%s : %d", i.getSource(), i.hashCode() ) );
 
-    testedComponentVariations++;
     DesiredInterface convertedComponent = converter.convert( components2MatchingInfo );
     TestResult testResult = componentTester.testComponent( convertedComponent );
     logTestResult( testResult );
