@@ -17,7 +17,6 @@ import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.Combinator;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.Selector;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.CollectionUtil;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.Logger;
-import matching.MatcherRate;
 import matching.methods.MethodMatchingInfo;
 import matching.modules.PartlyTypeMatchingInfo;
 
@@ -84,20 +83,10 @@ public class CommonSelector implements Selector {
     // sort by matcher rate
     Collections.sort( cachedMatchingInfoCombinations, new AccumulatedMatchingRateComparator() );
 
-    for ( int i = 0; i < cachedMatchingInfoCombinations.size(); i++ ) {
-      Logger.infoF( "RATING ===> %s ||| %s",
-          String.valueOf(
-              cachedMatchingInfoCombinations.get( i ).stream().map( PartlyTypeMatchingInfo::getQualitativeMatchRating )
-                  .map( MatcherRate::getMatcherRating ).reduce( 0d, ( a, b ) -> a + b ) ),
-          cachedMatchingInfoCombinations.get( i ).stream().map( PartlyTypeMatchingInfo::getCheckType )
-              .map( Class::getSimpleName )
-              .collect( Collectors.joining( " + " ) ) );
-    }
-
     // H: combinate passed tests components first
     // re-organize cache with respect to search optimization
-    // Collections.sort( cachedMatchingInfoCombinations, new HigherPotentialTypesFirstComparator(
-    // higherPotentialTypes ) );
+    Collections.sort( cachedMatchingInfoCombinations, new HigherPotentialTypesFirstComparator(
+        higherPotentialTypes ) );
   }
 
   private Map<Method, Collection<PartlyTypeMatchingInfo>> collectRelevantInfosPerMethod() {

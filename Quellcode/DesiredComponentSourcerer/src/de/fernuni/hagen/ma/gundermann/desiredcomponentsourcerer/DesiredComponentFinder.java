@@ -115,7 +115,7 @@ public class DesiredComponentFinder {
         }
         if ( testedComponent.anyTestPassed() ) {
           // H: combinate passed tests components first
-          // combinationFinder.optimizeForCurrentCombination();
+          combinationFinder.optimizeForCurrentCombination();
         }
         if ( testedComponent.isPivotMatchingInfoFound() ) {
           // H: blacklist by pivot test calls
