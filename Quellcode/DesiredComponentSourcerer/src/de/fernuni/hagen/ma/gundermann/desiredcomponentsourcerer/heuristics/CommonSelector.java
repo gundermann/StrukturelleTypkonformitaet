@@ -17,6 +17,7 @@ import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.Combinator;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.Selector;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.CollectionUtil;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.Logger;
+import matching.MatcherRate;
 import matching.methods.MethodMatchingInfo;
 import matching.modules.PartlyTypeMatchingInfo;
 
@@ -62,6 +63,9 @@ public class CommonSelector implements Selector {
       Map<Method, Collection<PartlyTypeMatchingInfo>> relevantTypeMatchingInfos = collectRelevantInfosPerMethod();
       if ( !relevantTypeMatchingInfos.isEmpty() ) {
         fillCachedComponent2MatchingInfo( relevantTypeMatchingInfos );
+        if ( cachedCalculatedInfos.isEmpty() ) {
+          return getNext();
+        }
       }
     }
     return Optional.of( new CombinationInfo( CollectionUtil.pop( cachedCalculatedInfos ) ) );
@@ -80,10 +84,20 @@ public class CommonSelector implements Selector {
     // sort by matcher rate
     Collections.sort( cachedMatchingInfoCombinations, new AccumulatedMatchingRateComparator() );
 
+    for ( int i = 0; i < cachedMatchingInfoCombinations.size(); i++ ) {
+      Logger.infoF( "RATING ===> %s ||| %s",
+          String.valueOf(
+              cachedMatchingInfoCombinations.get( i ).stream().map( PartlyTypeMatchingInfo::getQualitativeMatchRating )
+                  .map( MatcherRate::getMatcherRating ).reduce( 0d, ( a, b ) -> a + b ) ),
+          cachedMatchingInfoCombinations.get( i ).stream().map( PartlyTypeMatchingInfo::getCheckType )
+              .map( Class::getSimpleName )
+              .collect( Collectors.joining( " + " ) ) );
+    }
+
     // H: combinate passed tests components first
     // re-organize cache with respect to search optimization
-    Collections.sort( cachedMatchingInfoCombinations, new HigherPotentialTypesFirstComparator(
-        higherPotentialTypes ) );
+    // Collections.sort( cachedMatchingInfoCombinations, new HigherPotentialTypesFirstComparator(
+    // higherPotentialTypes ) );
   }
 
   private Map<Method, Collection<PartlyTypeMatchingInfo>> collectRelevantInfosPerMethod() {
@@ -101,6 +115,11 @@ public class CommonSelector implements Selector {
         .transformToCombinationPartInfosPerMethod(
             typeMatchingInfos, this.methodMatchingInfoHCBlacklist );
     this.cachedCalculatedInfos = new Combinator<Method, CombinationPartInfo>().generateCombis( combiPartInfos );
+
+    if ( combinatiedComponentCount > 1 ) {
+      this.cachedCalculatedInfos = this.cachedCalculatedInfos.stream()
+          .filter( new SeldCombinatedPartFilter() ).collect( Collectors.toList() );
+    }
   }
 
   private Map<Method, Collection<PartlyTypeMatchingInfo>> getMatchingInfoPerMethod(
@@ -117,7 +136,7 @@ public class CommonSelector implements Selector {
 
   @Override
   public void addToBlacklist( MethodMatchingInfo methodMatchingInfo ) {
-    this.methodMatchingInfoHCBlacklist.add( methodMatchingInfo.hashCode() );
+    // this.methodMatchingInfoHCBlacklist.add( methodMatchingInfo.hashCode() );
     // FIXME analyse
     Logger.infoF( "BLACKLIST: %s",
         this.methodMatchingInfoHCBlacklist.stream().map( String::valueOf ).collect( Collectors.joining( "," ) ) );
