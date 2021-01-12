@@ -107,20 +107,26 @@ public class DesiredComponentFinder {
 
     while ( combinationFinder.hasNextCombination() ) {
       CombinationInfo combinationInfos = combinationFinder.getNextCombination();
-      TestedComponent<DesiredInterface> testedComponent = getPartlyMatchedTestedComponent( combinationInfos,
-          desiredInterface );
-      if ( testedComponent != null ) {
-        if ( testedComponent.allTestsPassed() ) {
-          return testedComponent.getComponent();
+      try {
+        TestedComponent<DesiredInterface> testedComponent = getPartlyMatchedTestedComponent( combinationInfos,
+            desiredInterface );
+        if ( testedComponent != null ) {
+          if ( testedComponent.allTestsPassed() ) {
+            return testedComponent.getComponent();
+          }
+          if ( testedComponent.anyTestPassed() ) {
+            // H: combinate passed tests components first
+            // combinationFinder.optimizeForCurrentCombination();
+          }
+          if ( testedComponent.isPivotMatchingInfoFound() ) {
+            // H: blacklist by pivot test calls
+            // combinationFinder.optimizeMatchingInfoBlacklist( testedComponent.getPivotMatchingInfo() );
+          }
         }
-        if ( testedComponent.anyTestPassed() ) {
-          // H: combinate passed tests components first
-          combinationFinder.optimizeForCurrentCombination();
-        }
-        if ( testedComponent.isPivotMatchingInfoFound() ) {
-          // H: blacklist by pivot test calls
-          // combinationFinder.optimizeMatchingInfoBlacklist( testedComponent.getPivotMatchingInfo() );
-        }
+      }
+      catch ( NoComponentImplementationFoundException e ) {
+        // H: blacklist if no implementation available
+        combinationFinder.optimizeCheckTypeBlacklist( e.getComponentInterface() );
       }
     }
     return null;
@@ -128,7 +134,7 @@ public class DesiredComponentFinder {
 
   private <DesiredInterface> TestedComponent<DesiredInterface> getPartlyMatchedTestedComponent(
       CombinationInfo combinationInfos,
-      Class<DesiredInterface> desiredInterface ) {
+      Class<DesiredInterface> desiredInterface ) throws NoComponentImplementationFoundException {
     Logger.infoF( "find components for combination: %s",
         combinationInfos.getComponentClasses().stream().map( Class::toString ).collect( Collectors.joining( " + " ) ) );
 
@@ -142,7 +148,7 @@ public class DesiredComponentFinder {
     for ( Class<?> componentClass : combinationInfos.getComponentClasses() ) {
       Optional<?> optComponent = getComponent( componentClass );
       if ( !optComponent.isPresent() ) {
-        return null;
+        throw new NoComponentImplementationFoundException( componentClass );
       }
       components2MatchingInfo.put( optComponent.get(), combinationInfos.getModuleMatchingInfo( componentClass ) );
     }

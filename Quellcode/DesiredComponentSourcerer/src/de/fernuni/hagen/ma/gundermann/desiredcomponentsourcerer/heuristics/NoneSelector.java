@@ -33,4 +33,10 @@ public class NoneSelector implements Selector {
 
   }
 
+  @Override
+  public void addToBlacklist( Class<?> componentInterface ) {
+    // do nothing
+
+  }
+
 }

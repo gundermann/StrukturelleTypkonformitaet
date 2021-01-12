@@ -14,4 +14,6 @@ public interface Selector {
 
   void addToBlacklist( MethodMatchingInfo methodMatchingInfo );
 
+  void addToBlacklist( Class<?> componentInterface );
+
 }

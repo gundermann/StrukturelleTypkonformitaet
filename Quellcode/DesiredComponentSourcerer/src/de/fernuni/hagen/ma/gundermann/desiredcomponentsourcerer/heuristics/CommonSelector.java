@@ -37,7 +37,11 @@ public class CommonSelector implements Selector {
 
   private final Collection<Class<?>> higherPotentialTypes = new ArrayList<>();
 
+  // H: blacklist by pivot test calls
   private final Collection<Integer> methodMatchingInfoHCBlacklist = new ArrayList<>();
+
+  // H: blacklist if no implementation available
+  private final Collection<Integer> checkTypeHCBlacklist = new ArrayList<>();
 
   public CommonSelector( List<PartlyTypeMatchingInfo> infos ) {
     this.infos = infos;
@@ -76,7 +80,12 @@ public class CommonSelector implements Selector {
   }
 
   private void collectRelevantMatchingInfoCombinations() {
-    cachedMatchingInfoCombinations = new ArrayList<>( Combinator.generateCombis( infos,
+    // H: blacklist if no implementation available
+    Collection<PartlyTypeMatchingInfo> relevantInfos = infos.stream()
+        .filter( ptmi -> !this.checkTypeHCBlacklist.contains( ptmi.getCheckType().hashCode() ) )
+        .collect( Collectors.toList() );
+
+    cachedMatchingInfoCombinations = new ArrayList<>( Combinator.generateCombis( relevantInfos,
         combinatiedComponentCount ) );
 
     // H: combinate low matcher rating first
@@ -125,9 +134,26 @@ public class CommonSelector implements Selector {
 
   @Override
   public void addToBlacklist( MethodMatchingInfo methodMatchingInfo ) {
-    // this.methodMatchingInfoHCBlacklist.add( methodMatchingInfo.hashCode() );
+    // H: blacklist by pivot test calls
+    this.methodMatchingInfoHCBlacklist.add( methodMatchingInfo.hashCode() );
     // FIXME analyse
     Logger.infoF( "BLACKLIST: %s",
         this.methodMatchingInfoHCBlacklist.stream().map( String::valueOf ).collect( Collectors.joining( "," ) ) );
+
+    // TODO update cache
+  }
+
+  @Override
+  public void addToBlacklist( Class<?> componentInterface ) {
+    // H: blacklist if no implementation available
+    this.checkTypeHCBlacklist.add( componentInterface.hashCode() );
+
+    // update cache
+    cachedCalculatedInfos = cachedCalculatedInfos.stream()
+        .filter( infoCol -> infoCol.stream()
+            .map( CombinationPartInfo::getComponentClass )
+            .map( Class::hashCode )
+            .noneMatch( this.checkTypeHCBlacklist::contains ) )
+        .collect( Collectors.toList() );
   }
 }

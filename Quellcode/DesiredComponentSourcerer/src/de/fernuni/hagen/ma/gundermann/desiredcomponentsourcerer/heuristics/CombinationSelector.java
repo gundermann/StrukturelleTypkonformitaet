@@ -90,4 +90,10 @@ public class CombinationSelector implements Selector {
     // TODO Auto-generated method stub
 
   }
+
+  @Override
+  public void addToBlacklist( Class<?> componentInterface ) {
+    // TODO Auto-generated method stub
+
+  }
 }

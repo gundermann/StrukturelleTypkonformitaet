@@ -78,4 +78,10 @@ public class SingleSelector implements Selector {
 
   }
 
+  @Override
+  public void addToBlacklist( Class<?> componentInterface ) {
+    // TODO Auto-generated method stub
+
+  }
+
 }

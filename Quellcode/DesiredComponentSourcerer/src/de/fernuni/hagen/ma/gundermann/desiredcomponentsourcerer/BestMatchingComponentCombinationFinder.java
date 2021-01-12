@@ -60,4 +60,8 @@ public class BestMatchingComponentCombinationFinder {
     commonSelector.addToBlacklist( methodMatchingInfo );
   }
 
+  public void optimizeCheckTypeBlacklist( Class<?> componentInterface ) {
+    commonSelector.addToBlacklist( componentInterface );
+  }
+
 }
