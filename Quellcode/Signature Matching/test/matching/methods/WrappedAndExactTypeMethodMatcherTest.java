@@ -7,15 +7,15 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import matching.MatcherCombiner;
+import matching.modules.CombinableTypeMatcher;
 import matching.modules.ExactTypeMatcher;
-import matching.modules.TypeMatcher;
 import matching.modules.WrappedTypeMatcher;
 
 public class WrappedAndExactTypeMethodMatcherTest {
 
-  private TypeMatcher exactTypeMatcher = new ExactTypeMatcher();
+  private CombinableTypeMatcher exactTypeMatcher = new ExactTypeMatcher();
 
-  private TypeMatcher wrappedTypeMatcher = new WrappedTypeMatcher( () -> exactTypeMatcher );
+  private CombinableTypeMatcher wrappedTypeMatcher = new WrappedTypeMatcher( () -> exactTypeMatcher );
 
   private MethodMatcher matcher = new CommonMethodMatcher(
       MatcherCombiner.combine( wrappedTypeMatcher, exactTypeMatcher ) );

@@ -2,12 +2,16 @@ package matching;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.function.Supplier;
 
 import matching.methods.MethodMatcher;
 import matching.methods.MethodMatchingInfo;
+import matching.modules.CombinableTypeMatcher;
 import matching.modules.ModuleMatchingInfo;
 import matching.modules.TypeMatcher;
 
@@ -41,7 +45,7 @@ public abstract class MatcherCombiner {
       @Override
       public MatcherRate matchesWithRating( Method checkMethod, Method queryMethod ) {
         for ( MethodMatcher m : matcher ) {
-        	MatcherRate rate = m.matchesWithRating( checkMethod, queryMethod );
+          MatcherRate rate = m.matchesWithRating( checkMethod, queryMethod );
           if ( rate != null ) {
             return rate;
           }
@@ -52,12 +56,13 @@ public abstract class MatcherCombiner {
     };
   }
 
-  public static Supplier<TypeMatcher> combine( TypeMatcher... matcher ) {
+  public static Supplier<TypeMatcher> combine( CombinableTypeMatcher... matcher ) {
     return () -> new TypeMatcher() {
 
       @Override
       public boolean matchesType( Class<?> checkType, Class<?> queryType ) {
-        for ( TypeMatcher m : matcher ) {
+
+        for ( CombinableTypeMatcher m : getSortedMatcher() ) {
           if ( m.matchesType( checkType, queryType ) ) {
             return true;
           }
@@ -65,9 +70,16 @@ public abstract class MatcherCombiner {
         return false;
       }
 
+      private Collection<CombinableTypeMatcher> getSortedMatcher() {
+        List<CombinableTypeMatcher> matcherList = Arrays.asList( matcher );
+        Collections.sort( matcherList,
+            ( l1, l2 ) -> Double.compare( l1.getTypeMatcherRate(), l2.getTypeMatcherRate() ) );
+        return matcherList;
+      }
+
       @Override
       public Collection<ModuleMatchingInfo> calculateTypeMatchingInfos( Class<?> checkType, Class<?> queryType ) {
-        for ( TypeMatcher m : matcher ) {
+        for ( CombinableTypeMatcher m : getSortedMatcher() ) {
           if ( m.matchesType( checkType, queryType ) ) {
             return m.calculateTypeMatchingInfos( checkType, queryType );
           }
@@ -77,7 +89,7 @@ public abstract class MatcherCombiner {
 
       @Override
       public MatcherRate matchesWithRating( Class<?> checkType, Class<?> queryType ) {
-        for ( TypeMatcher m : matcher ) {
+        for ( CombinableTypeMatcher m : getSortedMatcher() ) {
           MatcherRate rating = m.matchesWithRating( checkType, queryType );
           if ( rating != null ) {
             return rating;

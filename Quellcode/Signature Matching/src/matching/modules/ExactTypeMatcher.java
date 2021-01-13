@@ -3,10 +3,9 @@ package matching.modules;
 import java.util.Collection;
 import java.util.Collections;
 
-import matching.MatcherRate;
 import matching.Setting;
 
-public class ExactTypeMatcher implements TypeMatcher {
+public class ExactTypeMatcher implements CombinableTypeMatcher {
 
   @Override
   public boolean matchesType( Class<?> checkType, Class<?> queryType ) {
@@ -24,13 +23,8 @@ public class ExactTypeMatcher implements TypeMatcher {
   }
 
   @Override
-  public MatcherRate matchesWithRating( Class<?> checkType, Class<?> queryType ) {
-    if ( matchesType( checkType, queryType ) ) {
-      MatcherRate rate = new MatcherRate();
-      rate.add( this.getClass().getSimpleName(), Setting.EXACT_TYPE_MATCHER_RATING );
-      return rate;
-    }
-    return null;
+  public double getTypeMatcherRate() {
+    return Setting.EXACT_TYPE_MATCHER_RATING;
   }
 
 }

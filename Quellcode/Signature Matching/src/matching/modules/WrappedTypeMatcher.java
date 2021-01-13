@@ -12,14 +12,13 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import matching.MatcherRate;
 import matching.Setting;
 
 /**
  * Dieser Matcher beachtet, dass die Typen (Return- und Argumenttypen) einer der beiden Methoden in einem Typ der
  * anderen Methode enthalten sein k�nnen (Wrapper).
  */
-public class WrappedTypeMatcher implements TypeMatcher {
+public class WrappedTypeMatcher implements CombinableTypeMatcher {
 
   // Versuch: Cache der Wrapped-Pr�fungen
   // Grund: Bei der Wrapped-Pr�fung von boolean und Boolean �ber den CombinedMethodMatcher kam es zu einem
@@ -209,13 +208,8 @@ public class WrappedTypeMatcher implements TypeMatcher {
   }
 
   @Override
-  public MatcherRate matchesWithRating( Class<?> checkType, Class<?> queryType ) {
-    if ( matchesType( checkType, queryType ) ) {
-      MatcherRate rate = new MatcherRate();
-      rate.add( this.getClass().getSimpleName(), Setting.WRAPPEN_TYPE_MATCHER_BASE_RATING );
-      return rate;
-    }
-    return null;
+  public double getTypeMatcherRate() {
+    return Setting.WRAPPEN_TYPE_MATCHER_BASE_RATING;
   }
 
 }

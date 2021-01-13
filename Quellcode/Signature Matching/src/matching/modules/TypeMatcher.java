@@ -11,4 +11,5 @@ public interface TypeMatcher {
   Collection<ModuleMatchingInfo> calculateTypeMatchingInfos( Class<?> checkType, Class<?> queryType );
 
   MatcherRate matchesWithRating( Class<?> checkType, Class<?> queryType );
+
 }

@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import matching.MatcherCombiner;
+import matching.modules.CombinableTypeMatcher;
 import matching.modules.ExactTypeMatcher;
 import matching.modules.GenSpecTypeMatcher;
 import matching.modules.PartlyTypeMatcher;
@@ -18,11 +19,11 @@ import matching.modules.WrappedTypeMatcher;
 public enum DefaultTypeMatcherHeuristic {
   INSTANCE;
 
-  private final TypeMatcher exactTM = new ExactTypeMatcher();
+  private final CombinableTypeMatcher exactTM = new ExactTypeMatcher();
 
   private final Long exactTMPrio = 0L;
 
-  private final TypeMatcher genSpecTM = new GenSpecTypeMatcher();
+  private final CombinableTypeMatcher genSpecTM = new GenSpecTypeMatcher();
 
   private final Long genSpecTMPrio = 100L;
 
@@ -30,7 +31,7 @@ public enum DefaultTypeMatcherHeuristic {
 
   private final Long combinedGenSpecExactPrio = 200L;
 
-  private final TypeMatcher wrappedTM = new WrappedTypeMatcher( () -> combinedGenSpecExactTM );
+  private final CombinableTypeMatcher wrappedTM = new WrappedTypeMatcher( () -> combinedGenSpecExactTM );
 
   private final Long wrappedTMPrio = 300L;
 

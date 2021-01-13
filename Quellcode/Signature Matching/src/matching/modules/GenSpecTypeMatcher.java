@@ -12,7 +12,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import matching.MatcherRate;
 import matching.Setting;
 import matching.methods.MethodMatchingInfo;
 import matching.methods.MethodMatchingInfo.ParamPosition;
@@ -28,7 +27,7 @@ import util.Logger;
 // Zumindest, wenn ich Gen2Spec matchen m�chte. Dann kann es passieren, dass der Gen nur teilweise die Methoden des
 // Spec
 // erf�llt.
-public class GenSpecTypeMatcher implements TypeMatcher {
+public class GenSpecTypeMatcher implements CombinableTypeMatcher {
 
   static int counter = 0;
 
@@ -217,13 +216,8 @@ public class GenSpecTypeMatcher implements TypeMatcher {
   }
 
   @Override
-  public MatcherRate matchesWithRating( Class<?> checkType, Class<?> queryType ) {
-    if ( matchesType( checkType, queryType ) ) {
-      MatcherRate rate = new MatcherRate();
-      rate.add( this.getClass().getSimpleName(), Setting.GEN_SPEC_TYPE_MATCHER_BASE_RATING );
-      return rate;
-    }
-    return null;
+  public double getTypeMatcherRate() {
+    return Setting.GEN_SPEC_TYPE_MATCHER_BASE_RATING;
   }
 
 }
