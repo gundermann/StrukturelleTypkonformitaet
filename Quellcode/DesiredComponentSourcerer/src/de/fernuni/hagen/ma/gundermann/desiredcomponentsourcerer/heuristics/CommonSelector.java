@@ -61,14 +61,15 @@ public class CommonSelector implements Selector {
       if ( cachedMatchingInfoCombinations.isEmpty() ) {
         combinatiedComponentCount++;
         collectRelevantMatchingInfoCombinations();
+        return getNext();
       }
 
       Map<Method, Collection<PartlyTypeMatchingInfo>> relevantTypeMatchingInfos = collectRelevantInfosPerMethod();
       if ( !relevantTypeMatchingInfos.isEmpty() ) {
         fillCachedComponent2MatchingInfo( relevantTypeMatchingInfos );
-        if ( cachedCalculatedInfos.isEmpty() ) {
-          return getNext();
-        }
+        // if ( cachedCalculatedInfos.isEmpty() ) {
+        return getNext();
+        // }
       }
     }
     return Optional.of( new CombinationInfo( CollectionUtil.pop( cachedCalculatedInfos ) ) );
@@ -84,6 +85,13 @@ public class CommonSelector implements Selector {
     Collection<PartlyTypeMatchingInfo> relevantInfos = infos.stream()
         .filter( ptmi -> !this.checkTypeHCBlacklist.contains( ptmi.getCheckType().hashCode() ) )
         .collect( Collectors.toList() );
+
+    // sonderlocke fuer combinatiedComponentCount == 1
+    if ( combinatiedComponentCount == 1 ) {
+      relevantInfos = relevantInfos.stream()
+          .filter( CombinationFinderUtils::isFullMatchingComponent )
+          .collect( Collectors.toList() );
+    }
 
     cachedMatchingInfoCombinations = new ArrayList<>( Combinator.generateCombis( relevantInfos,
         combinatiedComponentCount ) );

@@ -126,7 +126,7 @@ public class DesiredComponentFinder {
       }
       catch ( NoComponentImplementationFoundException e ) {
         // H: blacklist if no implementation available
-        combinationFinder.optimizeCheckTypeBlacklist( e.getComponentInterface() );
+        // combinationFinder.optimizeCheckTypeBlacklist( e.getComponentInterface() );
       }
     }
     return null;

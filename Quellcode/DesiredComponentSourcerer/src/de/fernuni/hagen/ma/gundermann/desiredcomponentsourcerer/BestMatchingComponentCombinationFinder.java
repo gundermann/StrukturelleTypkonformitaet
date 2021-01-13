@@ -1,14 +1,12 @@
 package de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.CommonSelector;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.NoneSelector;
-import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.QuantitaiveMatchingInfoComparator;
 import matching.methods.MethodMatchingInfo;
 import matching.modules.PartlyTypeMatchingInfo;
 
@@ -24,7 +22,7 @@ public class BestMatchingComponentCombinationFinder {
       Map<Class<?>, PartlyTypeMatchingInfo> componentInterface2PartlyMatchingInfos ) {
     quantitativeSortedInfos = new ArrayList<>(
         componentInterface2PartlyMatchingInfos.values() );
-    Collections.sort( quantitativeSortedInfos, new QuantitaiveMatchingInfoComparator() );
+    // Collections.sort( quantitativeSortedInfos, new QuantitaiveMatchingInfoComparator() );
     this.commonSelector = new CommonSelector( quantitativeSortedInfos );
   }
 
