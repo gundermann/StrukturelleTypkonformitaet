@@ -15,6 +15,7 @@ import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.CombinationInfo;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.CombinationPartInfo;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.Combinator;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.Selector;
+import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.AnalyzationUtils;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.CollectionUtil;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.Logger;
 import matching.methods.MethodMatchingInfo;
@@ -148,7 +149,22 @@ public class CommonSelector implements Selector {
     Logger.infoF( "BLACKLIST: %s",
         this.methodMatchingInfoHCBlacklist.stream().map( String::valueOf ).collect( Collectors.joining( "," ) ) );
 
-    // TODO update cache
+    Logger.infoF( "CONTAINED HC: %s",
+        cachedCalculatedInfos.stream().flatMap( cpis -> cpis.stream().map( cpi -> cpi.getMatchingInfo().hashCode() ) )
+            .map( String::valueOf ).collect( Collectors.joining( "," ) ) );
+
+    AnalyzationUtils.filterCount = 0;
+    cachedCalculatedInfos = cachedCalculatedInfos.stream()
+        .filter( cpis -> cpis.stream()
+            .noneMatch( cpi -> {
+              if ( methodMatchingInfoHCBlacklist.contains( cpi.getMatchingInfo().hashCode() ) ) {
+                AnalyzationUtils.filterCount++;
+                return true;
+              }
+              return false;
+            } ) )
+        .collect( Collectors.toList() );
+    Logger.infoF( "filtered by blacklist: %d", AnalyzationUtils.filterCount );
   }
 
   @Override

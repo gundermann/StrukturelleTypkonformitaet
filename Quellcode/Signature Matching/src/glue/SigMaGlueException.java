@@ -26,4 +26,9 @@ public class SigMaGlueException extends Throwable {
     return calledSourceMethod;
   }
 
+  @Override
+  public String getMessage() {
+    return "Unable to use method matching: " + calledSourceMethod.getName();
+  }
+
 }

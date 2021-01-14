@@ -120,7 +120,7 @@ public class DesiredComponentFinder {
           }
           if ( testedComponent.isPivotMatchingInfoFound() ) {
             // H: blacklist by pivot test calls
-            // combinationFinder.optimizeMatchingInfoBlacklist( testedComponent.getPivotMatchingInfo() );
+            combinationFinder.optimizeMatchingInfoBlacklist( testedComponent.getPivotMatchingInfo() );
           }
         }
       }

@@ -9,6 +9,8 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.AnalyzationUtils;
+import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.Logger;
 import matching.modules.PartlyTypeMatchingInfo;
 
 public abstract class CombinationFinderUtils {
@@ -26,19 +28,36 @@ public abstract class CombinationFinderUtils {
   public static Map<Method, Collection<CombinationPartInfo>> transformToCombinationPartInfosPerMethod(
       Map<Method, Collection<PartlyTypeMatchingInfo>> method2typeMatchingInfos,
       Collection<Integer> methodMatchingInfoHCBlacklist ) {
+    // Logger.infoF( "BLACKLIST: %s",
+    // methodMatchingInfoHCBlacklist.stream().map( String::valueOf ).collect( Collectors.joining( "," ) ) );
+
+    AnalyzationUtils.filterCount = 0;
     Map<Method, Collection<CombinationPartInfo>> transformed = new HashMap<>();
     for ( Entry<Method, Collection<PartlyTypeMatchingInfo>> entry : method2typeMatchingInfos.entrySet() ) {
       Method method = entry.getKey();
       Collection<PartlyTypeMatchingInfo> tmpInfos = entry.getValue();
-      List<CombinationPartInfo> combiPartInfos = tmpInfos.stream()
-          .map( Transformator::transformTypeInfo2CombinationPartInfos )
-          .flatMap( Collection::stream )
+
+      Collection<CombinationPartInfo> tmpTransformed = tmpInfos.stream()
+          .map( Transformator::transformTypeInfo2CombinationPartInfos ).flatMap( Collection::stream )
+          .collect( Collectors.toList() );
+      // Logger.infoF( "CONTAINED HC: %s",
+      // tmpTransformed.stream().map( cpi -> cpi.getMatchingInfo().hashCode() )
+      // .map( String::valueOf ).collect( Collectors.joining( "," ) ) );
+
+      List<CombinationPartInfo> combiPartInfos = tmpTransformed.stream()
           .filter( cpi -> Objects.equals( cpi.getSourceMethod(), method ) )
           // filter blacklist items by hashcode
-          .filter( cpi -> !methodMatchingInfoHCBlacklist.contains( cpi.getMatchingInfo().hashCode() ) )
+          .filter( cpi -> {
+            if ( !methodMatchingInfoHCBlacklist.contains( cpi.getMatchingInfo().hashCode() ) ) {
+              return true;
+            }
+            AnalyzationUtils.filterCount++;
+            return false;
+          } )
           .collect( Collectors.toList() );
       transformed.put( method, combiPartInfos );
     }
+    Logger.infoF( "filtered by blacklist: %d", AnalyzationUtils.filterCount );
     return transformed;
   }
 }

@@ -7,15 +7,25 @@ import static org.hamcrest.Matchers.notNullValue;
 import java.util.Collection;
 import java.util.Date;
 
+import org.junit.Before;
+
 import DE.data_experts.profi.profilcs.antrag2015.stammdaten.business.impl.Foerderprogramm;
 import DE.data_experts.profi.util.allg.DvFoerderprogramm;
 import de.fernuni.hagen.ma.gundermann.ejb.pcs_scenarios.desired.MinimalFoerderprogrammeProvider;
+import spi.PivotMethodTestInfo;
 import tester.annotation.QueryTypeInstanceSetter;
 import tester.annotation.QueryTypeTest;
 
-public class MinimalFoerderprogrammProviderTest {
+public class MinimalFoerderprogrammProviderTest implements PivotMethodTestInfo {
 
   private MinimalFoerderprogrammeProvider provider;
+
+  private boolean pivotMethodCallExecuted;
+
+  @Before
+  public void before() {
+    reset();
+  }
 
   @QueryTypeInstanceSetter
   public void setProvider( MinimalFoerderprogrammeProvider provider ) {
@@ -25,6 +35,7 @@ public class MinimalFoerderprogrammProviderTest {
   @QueryTypeTest
   public void testEmptyCollection() {
     Collection<String> alleFreigegebenenFPs = provider.getAlleFreigegebenenFPs();
+    markPivotMethodCallExecuted();
     assertThat( alleFreigegebenenFPs, notNullValue() );
   }
 
@@ -32,6 +43,7 @@ public class MinimalFoerderprogrammProviderTest {
   public void testGetFoerderprogramm() {
     String fpCode = "123";
     Foerderprogramm fp = provider.getFoerderprogramm( fpCode, 2015, new Date() );
+    markPivotMethodCallExecuted();
     assertThat( fp, notNullValue() );
     DvFoerderprogramm dvFP = fp.getFoerderprogramm();
     assertThat( dvFP, notNullValue() );
@@ -45,6 +57,21 @@ public class MinimalFoerderprogrammProviderTest {
     // package
     // siehe issue: https://code.google.com/archive/p/hamcrest/issues/128
 
+  }
+
+  @Override
+  public void reset() {
+    pivotMethodCallExecuted = false;
+  }
+
+  @Override
+  public void markPivotMethodCallExecuted() {
+    pivotMethodCallExecuted = true;
+  }
+
+  @Override
+  public boolean pivotMethodCallExecuted() {
+    return pivotMethodCallExecuted;
   }
 
 }

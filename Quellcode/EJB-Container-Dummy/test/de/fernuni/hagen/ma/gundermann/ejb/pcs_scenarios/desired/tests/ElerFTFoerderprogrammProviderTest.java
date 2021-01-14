@@ -5,25 +5,37 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.util.Collection;
 
+import org.junit.Before;
+
 import DE.data_experts.profi.profilcs.antrag2015.eler.ft.stammdaten.business.ElerFTFoerderprogramm;
 import de.fernuni.hagen.ma.gundermann.ejb.pcs_scenarios.desired.ElerFTFoerderprogrammeProvider;
+import spi.PivotMethodTestInfo;
 import tester.annotation.QueryTypeInstanceSetter;
 import tester.annotation.QueryTypeTest;
 
-public class ElerFTFoerderprogrammProviderTest {
+public class ElerFTFoerderprogrammProviderTest implements PivotMethodTestInfo {
 
   private ElerFTFoerderprogrammeProvider provider;
+
+  private boolean pivotMethodCallExecuted;
+
+  @Before
+  public void before() {
+    reset();
+  }
 
   @QueryTypeInstanceSetter
   public void setProvider( ElerFTFoerderprogrammeProvider provider ) {
     this.provider = provider;
   }
 
-  // @Test - ja man k�nnte diese Annotation zur Indentifikation der Test-Methoden verwenden. Allerdings werden sie dann
+  // @Test - ja man k�nnte diese Annotation zur Indentifikation der Test-Methoden verwenden. Allerdings werden sie
+  // dann
   // auch automatisch bei JUnit-Tests ausgef�hrt.
   @QueryTypeTest
   public void testEmptyCollection() {
     Collection<ElerFTFoerderprogramm> alleFreigegebenenFPs = provider.getAlleFreigegebenenFPs();
+    markPivotMethodCallExecuted();
     assertThat( alleFreigegebenenFPs, notNullValue() );
   }
 
@@ -38,4 +50,19 @@ public class ElerFTFoerderprogrammProviderTest {
   // fp, new Date() );
   // assertThat( alleFreigegebenenFPs, notNullValue() );
   // }
+
+  @Override
+  public void reset() {
+    pivotMethodCallExecuted = false;
+  }
+
+  @Override
+  public void markPivotMethodCallExecuted() {
+    pivotMethodCallExecuted = true;
+  }
+
+  @Override
+  public boolean pivotMethodCallExecuted() {
+    return pivotMethodCallExecuted;
+  }
 }
