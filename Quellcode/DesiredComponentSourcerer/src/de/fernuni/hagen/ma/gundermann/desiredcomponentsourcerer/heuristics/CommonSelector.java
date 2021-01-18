@@ -68,9 +68,7 @@ public class CommonSelector implements Selector {
       Map<Method, Collection<PartlyTypeMatchingInfo>> relevantTypeMatchingInfos = collectRelevantInfosPerMethod();
       if ( !relevantTypeMatchingInfos.isEmpty() ) {
         fillCachedComponent2MatchingInfo( relevantTypeMatchingInfos );
-        // if ( cachedCalculatedInfos.isEmpty() ) {
         return getNext();
-        // }
       }
     }
     return Optional.of( new CombinationInfo( CollectionUtil.pop( cachedCalculatedInfos ) ) );
@@ -83,11 +81,16 @@ public class CommonSelector implements Selector {
 
   private void collectRelevantMatchingInfoCombinations() {
     // H: blacklist if no implementation available
+    AnalyzationUtils.filterCount = 0;
     Collection<PartlyTypeMatchingInfo> relevantInfos = infos.stream()
-        .filter( ptmi -> !this.checkTypeHCBlacklist.contains( ptmi.getCheckType().hashCode() ) )
+        .filter( ptmi -> AnalyzationUtils
+            .filterWithAnalyticalCount( !this.checkTypeHCBlacklist.contains( ptmi.getCheckType().hashCode() ) ) )
         .collect( Collectors.toList() );
 
+    Logger.infoF( "filtered by component blacklist: %d", AnalyzationUtils.filterCount );
+
     // sonderlocke fuer combinatiedComponentCount == 1
+    // TODO auslagern in SingleSelector
     if ( combinatiedComponentCount == 1 ) {
       relevantInfos = relevantInfos.stream()
           .filter( CombinationFinderUtils::isFullMatchingComponent )
@@ -145,26 +148,14 @@ public class CommonSelector implements Selector {
   public void addToBlacklist( MethodMatchingInfo methodMatchingInfo ) {
     // H: blacklist by pivot test calls
     this.methodMatchingInfoHCBlacklist.add( methodMatchingInfo.hashCode() );
-    // FIXME analyse
-    Logger.infoF( "BLACKLIST: %s",
-        this.methodMatchingInfoHCBlacklist.stream().map( String::valueOf ).collect( Collectors.joining( "," ) ) );
-
-    Logger.infoF( "CONTAINED HC: %s",
-        cachedCalculatedInfos.stream().flatMap( cpis -> cpis.stream().map( cpi -> cpi.getMatchingInfo().hashCode() ) )
-            .map( String::valueOf ).collect( Collectors.joining( "," ) ) );
 
     AnalyzationUtils.filterCount = 0;
     cachedCalculatedInfos = cachedCalculatedInfos.stream()
         .filter( cpis -> cpis.stream()
-            .noneMatch( cpi -> {
-              if ( methodMatchingInfoHCBlacklist.contains( cpi.getMatchingInfo().hashCode() ) ) {
-                AnalyzationUtils.filterCount++;
-                return true;
-              }
-              return false;
-            } ) )
+            .noneMatch( cpi -> AnalyzationUtils.filterWithAnalyticalCount(
+                methodMatchingInfoHCBlacklist.contains( cpi.getMatchingInfo().hashCode() ) ) ) )
         .collect( Collectors.toList() );
-    Logger.infoF( "filtered by blacklist: %d", AnalyzationUtils.filterCount );
+    Logger.infoF( "filtered by method matching info blacklist: %d", AnalyzationUtils.filterCount );
   }
 
   @Override
@@ -173,11 +164,14 @@ public class CommonSelector implements Selector {
     this.checkTypeHCBlacklist.add( componentInterface.hashCode() );
 
     // update cache
+    AnalyzationUtils.filterCount = 0;
     cachedCalculatedInfos = cachedCalculatedInfos.stream()
-        .filter( infoCol -> infoCol.stream()
+        .filter( infoCol -> AnalyzationUtils.filterWithAnalyticalCount( infoCol.stream()
             .map( CombinationPartInfo::getComponentClass )
             .map( Class::hashCode )
-            .noneMatch( this.checkTypeHCBlacklist::contains ) )
+            .noneMatch( this.checkTypeHCBlacklist::contains ) ) )
         .collect( Collectors.toList() );
+
+    Logger.infoF( "filtered by component blacklist: %d", AnalyzationUtils.filterCount );
   }
 }

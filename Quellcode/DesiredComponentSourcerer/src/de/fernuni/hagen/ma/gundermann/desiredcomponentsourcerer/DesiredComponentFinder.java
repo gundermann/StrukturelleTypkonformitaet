@@ -116,7 +116,7 @@ public class DesiredComponentFinder {
           }
           if ( testedComponent.anyTestPassed() ) {
             // H: combinate passed tests components first
-            // combinationFinder.optimizeForCurrentCombination();
+            combinationFinder.optimizeForCurrentCombination();
           }
           if ( testedComponent.isPivotMatchingInfoFound() ) {
             // H: blacklist by pivot test calls
@@ -126,7 +126,7 @@ public class DesiredComponentFinder {
       }
       catch ( NoComponentImplementationFoundException e ) {
         // H: blacklist if no implementation available
-        // combinationFinder.optimizeCheckTypeBlacklist( e.getComponentInterface() );
+        combinationFinder.optimizeCheckTypeBlacklist( e.getComponentInterface() );
       }
     }
     return null;
@@ -155,11 +155,6 @@ public class DesiredComponentFinder {
 
     Logger.infoF( "test component: %s",
         combinationInfos.getComponentClasses().stream().map( Class::getName ).collect( Collectors.joining( "," ) ) );
-
-    // FIXME analyse
-    // Logger.info( "HASHCODES:" );
-    // components2MatchingInfo.values().stream().flatMap( Collection::stream ).forEach(
-    // i -> Logger.infoF( "%s : %d", i.getSource(), i.hashCode() ) );
 
     DesiredInterface convertedComponent = converter.convert( components2MatchingInfo );
     TestResult testResult = componentTester.testComponent( convertedComponent );

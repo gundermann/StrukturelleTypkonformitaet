@@ -47,17 +47,12 @@ public abstract class CombinationFinderUtils {
       List<CombinationPartInfo> combiPartInfos = tmpTransformed.stream()
           .filter( cpi -> Objects.equals( cpi.getSourceMethod(), method ) )
           // filter blacklist items by hashcode
-          .filter( cpi -> {
-            if ( !methodMatchingInfoHCBlacklist.contains( cpi.getMatchingInfo().hashCode() ) ) {
-              return true;
-            }
-            AnalyzationUtils.filterCount++;
-            return false;
-          } )
+          .filter( cpi -> AnalyzationUtils.filterWithAnalyticalCount(
+              !methodMatchingInfoHCBlacklist.contains( cpi.getMatchingInfo().hashCode() ) ) )
           .collect( Collectors.toList() );
       transformed.put( method, combiPartInfos );
     }
-    Logger.infoF( "filtered by blacklist: %d", AnalyzationUtils.filterCount );
+    Logger.infoF( "filtered by method matching info blacklist: %d", AnalyzationUtils.filterCount );
     return transformed;
   }
 }
