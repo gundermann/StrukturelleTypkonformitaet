@@ -5,7 +5,7 @@ import java.util.function.Predicate;
 
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.CombinationPartInfo;
 
-public class SeldCombinatedPartFilter implements Predicate<Collection<CombinationPartInfo>> {
+public class SelfCombinatedPartFilter implements Predicate<Collection<CombinationPartInfo>> {
 
   @Override
   public boolean test( Collection<CombinationPartInfo> col ) {

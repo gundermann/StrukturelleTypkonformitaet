@@ -15,9 +15,7 @@ import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.CombinationInfo;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.CombinationPartInfo;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.Combinator;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.Selector;
-import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.AnalyzationUtils;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.CollectionUtil;
-import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.Logger;
 import matching.methods.MethodMatchingInfo;
 import matching.modules.PartlyTypeMatchingInfo;
 
@@ -81,13 +79,8 @@ public class CommonSelector implements Selector {
 
   private void collectRelevantMatchingInfoCombinations() {
     // H: blacklist if no implementation available
-    AnalyzationUtils.filterCount = 0;
-    Collection<PartlyTypeMatchingInfo> relevantInfos = infos.stream()
-        .filter( ptmi -> AnalyzationUtils
-            .filterWithAnalyticalCount( !this.checkTypeHCBlacklist.contains( ptmi.getCheckType().hashCode() ) ) )
-        .collect( Collectors.toList() );
-
-    Logger.infoF( "filtered by component blacklist: %d", AnalyzationUtils.filterCount );
+    Collection<PartlyTypeMatchingInfo> relevantInfos = new CheckTypeBlacklistFilter( this.checkTypeHCBlacklist )
+        .filter( infos );
 
     // sonderlocke fuer combinatiedComponentCount == 1
     // TODO auslagern in SingleSelector
@@ -128,7 +121,7 @@ public class CommonSelector implements Selector {
 
     if ( combinatiedComponentCount > 1 ) {
       this.cachedCalculatedInfos = this.cachedCalculatedInfos.stream()
-          .filter( new SeldCombinatedPartFilter() ).collect( Collectors.toList() );
+          .filter( new SelfCombinatedPartFilter() ).collect( Collectors.toList() );
     }
   }
 
@@ -149,13 +142,8 @@ public class CommonSelector implements Selector {
     // H: blacklist by pivot test calls
     this.methodMatchingInfoHCBlacklist.add( methodMatchingInfo.hashCode() );
 
-    AnalyzationUtils.filterCount = 0;
-    cachedCalculatedInfos = cachedCalculatedInfos.stream()
-        .filter( cpis -> cpis.stream()
-            .noneMatch( cpi -> AnalyzationUtils.filterWithAnalyticalCount(
-                methodMatchingInfoHCBlacklist.contains( cpi.getMatchingInfo().hashCode() ) ) ) )
-        .collect( Collectors.toList() );
-    Logger.infoF( "filtered by method matching info blacklist: %d", AnalyzationUtils.filterCount );
+    cachedCalculatedInfos = new MethodMatchingInfoBlacklistFilter( this.methodMatchingInfoHCBlacklist )
+        .filterWithNestedCriteria( cachedCalculatedInfos );
   }
 
   @Override
@@ -164,14 +152,7 @@ public class CommonSelector implements Selector {
     this.checkTypeHCBlacklist.add( componentInterface.hashCode() );
 
     // update cache
-    AnalyzationUtils.filterCount = 0;
-    cachedCalculatedInfos = cachedCalculatedInfos.stream()
-        .filter( infoCol -> AnalyzationUtils.filterWithAnalyticalCount( infoCol.stream()
-            .map( CombinationPartInfo::getComponentClass )
-            .map( Class::hashCode )
-            .noneMatch( this.checkTypeHCBlacklist::contains ) ) )
-        .collect( Collectors.toList() );
-
-    Logger.infoF( "filtered by component blacklist: %d", AnalyzationUtils.filterCount );
+    cachedCalculatedInfos = new CheckTypeBlacklistFilter( this.checkTypeHCBlacklist )
+        .filterWithNestedCriteria( cachedCalculatedInfos );
   }
 }
