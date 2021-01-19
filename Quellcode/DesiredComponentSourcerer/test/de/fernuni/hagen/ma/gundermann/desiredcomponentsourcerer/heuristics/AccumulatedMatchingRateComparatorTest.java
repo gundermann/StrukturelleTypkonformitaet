@@ -25,11 +25,15 @@ public class AccumulatedMatchingRateComparatorTest {
     Collection<PartlyTypeMatchingInfo> col500 = Arrays.asList( pi300, pi200 );
     Collection<PartlyTypeMatchingInfo> col400 = Arrays.asList( pi300, pi100 );
     Collection<PartlyTypeMatchingInfo> col300 = Arrays.asList( pi100, pi200 );
-    Collection<PartlyTypeMatchingInfo> col200 = Arrays.asList( pi100, pi100 );
+    Collection<PartlyTypeMatchingInfo> col200_2 = Arrays.asList( pi100, pi100 );
+    Collection<PartlyTypeMatchingInfo> col200 = Arrays.asList( pi200 );
     Collection<PartlyTypeMatchingInfo> col100 = Arrays.asList( pi100 );
 
+    assertThat( comparator.compare( col100, col200_2 ), equalTo( -1 ) );
     assertThat( comparator.compare( col100, col200 ), equalTo( -1 ) );
+    assertThat( comparator.compare( col200, col200_2 ), equalTo( 0 ) );
     assertThat( comparator.compare( col200, col300 ), equalTo( -1 ) );
+    assertThat( comparator.compare( col200_2, col300 ), equalTo( -1 ) );
     assertThat( comparator.compare( col300, col400 ), equalTo( -1 ) );
     assertThat( comparator.compare( col400, col500 ), equalTo( -1 ) );
 

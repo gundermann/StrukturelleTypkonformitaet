@@ -14,26 +14,34 @@ import matching.modules.PartlyTypeMatchingInfo;
  */
 
 // TODO Unit-Test
-final class CheckTypeBlacklistFilter {
+public final class CheckTypeBlacklistFilter {
 
   private final Collection<Integer> hashCodeBlacklist;
 
-  CheckTypeBlacklistFilter( final Collection<Integer> checkTypeHCBlacklist ) {
+  private final String info;
+
+  public CheckTypeBlacklistFilter( final Collection<Integer> checkTypeHCBlacklist ) {
     this.hashCodeBlacklist = checkTypeHCBlacklist;
+    this.info = "";
   }
 
-  Collection<PartlyTypeMatchingInfo> filter( final List<PartlyTypeMatchingInfo> infos ) {
+  public CheckTypeBlacklistFilter( final Collection<Integer> checkTypeHCBlacklist, String info ) {
+    this.hashCodeBlacklist = checkTypeHCBlacklist;
+    this.info = " " + info;
+  }
+
+  public Collection<PartlyTypeMatchingInfo> filter( final List<PartlyTypeMatchingInfo> infos ) {
     AnalyzationUtils.filterCount = 0;
     Collection<PartlyTypeMatchingInfo> filtered = infos.stream()
         .filter( ptmi -> AnalyzationUtils
             .filterWithAnalyticalCount( !this.hashCodeBlacklist.contains( ptmi.getCheckType().hashCode() ) ) )
         .collect( Collectors.toList() );
 
-    Logger.infoF( "filtered by %s: %d", getClass().getSimpleName(), AnalyzationUtils.filterCount );
+    Logger.infoF( "filtered by %s%s: %d", getClass().getSimpleName(), info, AnalyzationUtils.filterCount );
     return filtered;
   }
 
-  Collection<Collection<CombinationPartInfo>> filterWithNestedCriteria(
+  public Collection<Collection<CombinationPartInfo>> filterWithNestedCriteria(
       Collection<Collection<CombinationPartInfo>> infos ) {
     AnalyzationUtils.filterCount = 0;
     Collection<Collection<CombinationPartInfo>> filtered = infos.stream()
@@ -43,7 +51,7 @@ final class CheckTypeBlacklistFilter {
             .noneMatch( this.hashCodeBlacklist::contains ) ) )
         .collect( Collectors.toList() );
 
-    Logger.infoF( "filtered by %s: %d", getClass().getSimpleName(), AnalyzationUtils.filterCount );
+    Logger.infoF( "filtered by %s%s: %d", getClass().getSimpleName(), info, AnalyzationUtils.filterCount );
     return filtered;
   }
 

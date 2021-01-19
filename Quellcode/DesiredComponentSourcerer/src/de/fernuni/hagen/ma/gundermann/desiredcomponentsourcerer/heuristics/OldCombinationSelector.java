@@ -2,14 +2,11 @@ package de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.CombinationFinderUtils;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.CombinationInfo;
@@ -21,80 +18,82 @@ import matching.methods.MethodMatchingInfo;
 import matching.modules.PartlyTypeMatchingInfo;
 
 /**
- * Selektor für strukturell 100%ig matchende Komponenten
+ * Selektor für die Kombination von strukturell 100%ig matchenden Komponenten
  */
-public class SingleSelector implements Selector {
+@Deprecated
+public class OldCombinationSelector implements Selector {
 
-  private List<Collection<PartlyTypeMatchingInfo>> infos;
+  private final List<PartlyTypeMatchingInfo> infos;
 
-  private int selectedIndex = -1;
+  private int combinatiedComponentCount = 1; // initial 1, damit mit der Kombination aus 2 Komponenten begonnen wird
 
   private Collection<Collection<CombinationPartInfo>> cachedCalculatedInfos = new ArrayList<>();
 
-  // H: blacklist by pivot test calls
-  private final Collection<Integer> methodMatchingInfoHCBlacklist = new ArrayList<>();
-
-  public SingleSelector( List<PartlyTypeMatchingInfo> infos ) {
-    this.infos = infos.stream()
-        .filter( CombinationFinderUtils::isFullMatchingComponent )
-        .map( i -> Collections.singletonList( i ) )
-        .sorted( new AccumulatedMatchingRateComparator() )
-        .collect( Collectors.toList() );
+  public OldCombinationSelector( List<PartlyTypeMatchingInfo> infos ) {
+    this.infos = infos;
   }
 
   @Override
   public boolean hasNext() {
-    return infos.size() > selectedIndex + 1 || !cachedCalculatedInfos.isEmpty();
+    return !cachedCalculatedInfos.isEmpty() || combinatiedComponentCount < infos.size();
   }
 
   @Override
   public Optional<CombinationInfo> getNext() {
     if ( cachedCalculatedInfos.isEmpty() ) {
-      selectedIndex++;
-      PartlyTypeMatchingInfo info = infos.get( selectedIndex ).iterator().next();
-      Map<Method, Collection<PartlyTypeMatchingInfo>> relevantTypeMatchingInfos = getMatchingInfoPerMethod( info );
+      combinatiedComponentCount++;
+      Map<Method, Collection<PartlyTypeMatchingInfo>> relevantTypeMatchingInfos = collectRelevantInfosPerMethod();
       fillCachedComponent2MatchingInfo( relevantTypeMatchingInfos );
     }
     return Optional.of( new CombinationInfo( CollectionUtil.pop( cachedCalculatedInfos ) ) );
   }
 
+  private Map<Method, Collection<PartlyTypeMatchingInfo>> collectRelevantInfosPerMethod() {
+    Map<Method, Collection<PartlyTypeMatchingInfo>> relevantTypeMatchingInfos = new HashMap<>();
+    Collection<Collection<PartlyTypeMatchingInfo>> matchingInfoCombinations = Combinator.generateCombis( infos,
+        combinatiedComponentCount );
+    for ( Collection<PartlyTypeMatchingInfo> infoCombi : matchingInfoCombinations ) {
+      Map<Method, Collection<PartlyTypeMatchingInfo>> matchingInfoPerMethod = getMatchingInfoPerMethod( infoCombi );
+      relevantTypeMatchingInfos = CollectionUtil.mergeMapsWithCollectionValue( relevantTypeMatchingInfos,
+          matchingInfoPerMethod );
+    }
+    return relevantTypeMatchingInfos;
+  }
+
   private void fillCachedComponent2MatchingInfo( Map<Method, Collection<PartlyTypeMatchingInfo>> typeMatchingInfos ) {
     Map<Method, Collection<CombinationPartInfo>> combiPartInfos = CombinationFinderUtils
         .transformToCombinationPartInfosPerMethod(
-            typeMatchingInfos, this.methodMatchingInfoHCBlacklist );
+            typeMatchingInfos, new ArrayList<>() );
     this.cachedCalculatedInfos = new Combinator<Method, CombinationPartInfo>().generateCombis( combiPartInfos );
   }
 
-  private Map<Method, Collection<PartlyTypeMatchingInfo>> getMatchingInfoPerMethod( PartlyTypeMatchingInfo info ) {
+  private Map<Method, Collection<PartlyTypeMatchingInfo>> getMatchingInfoPerMethod(
+      Collection<PartlyTypeMatchingInfo> relevantInfos ) {
     Map<Method, Collection<PartlyTypeMatchingInfo>> relevantTypeMatchingInfos = new HashMap<>();
-    Collection<Method> methodsWithMatchingInfo = info.getMethodMatchingInfoSupplier().keySet();
-    for ( Method m : methodsWithMatchingInfo ) {
-      relevantTypeMatchingInfos.put( m, Collections.singletonList( info ) );
+    for ( PartlyTypeMatchingInfo info : relevantInfos ) {
+      Collection<Method> methodsWithMatchingInfo = info.getMethodMatchingInfoSupplier().keySet();
+      for ( Method m : methodsWithMatchingInfo ) {
+        relevantTypeMatchingInfos.compute( m, CollectionUtil.remapping_addToValueCollection( info ) );
+      }
     }
     return relevantTypeMatchingInfos;
   }
 
   @Override
   public void addHigherPotentialType( Class<?> higherPotentialType ) {
-    // irrelevant fuer diesen Selector
+    // TODO Auto-generated method stub
 
   }
 
   @Override
   public void addToBlacklist( MethodMatchingInfo methodMatchingInfo ) {
-    // H: blacklist by pivot test calls
-    this.methodMatchingInfoHCBlacklist.add( methodMatchingInfo.hashCode() );
+    // TODO Auto-generated method stub
 
-    cachedCalculatedInfos = new MethodMatchingInfoBlacklistFilter( this.methodMatchingInfoHCBlacklist, "update" )
-        .filterWithNestedCriteria( cachedCalculatedInfos );
   }
 
   @Override
   public void addToBlacklist( Class<?> componentInterface ) {
-    // H: blacklist if no implementation available
-    // update cache
-    cachedCalculatedInfos = new CheckTypeBlacklistFilter( Arrays.asList( componentInterface.hashCode() ), "update" )
-        .filterWithNestedCriteria( cachedCalculatedInfos );
-  }
+    // TODO Auto-generated method stub
 
+  }
 }

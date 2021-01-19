@@ -5,14 +5,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.CommonSelector;
+import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.CombinationSelector;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.NoneSelector;
+import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.SingleSelector;
 import matching.methods.MethodMatchingInfo;
 import matching.modules.PartlyTypeMatchingInfo;
 
 public class BestMatchingComponentCombinationFinder {
 
-  private final Selector commonSelector;
+  private final Selector combinationSelector;
+
+  private final Selector singleSelector;
 
   private final List<PartlyTypeMatchingInfo> quantitativeSortedInfos;
 
@@ -22,8 +25,8 @@ public class BestMatchingComponentCombinationFinder {
       Map<Class<?>, PartlyTypeMatchingInfo> componentInterface2PartlyMatchingInfos ) {
     quantitativeSortedInfos = new ArrayList<>(
         componentInterface2PartlyMatchingInfos.values() );
-    // Collections.sort( quantitativeSortedInfos, new QuantitaiveMatchingInfoComparator() );
-    this.commonSelector = new CommonSelector( quantitativeSortedInfos );
+    this.combinationSelector = new CombinationSelector( quantitativeSortedInfos );
+    this.singleSelector = new SingleSelector( quantitativeSortedInfos );
   }
 
   public boolean hasNextCombination() {
@@ -41,25 +44,33 @@ public class BestMatchingComponentCombinationFinder {
   }
 
   private Selector getSelectorForNextCombination() {
-    if ( commonSelector.hasNext() ) {
-      return commonSelector;
+    if ( singleSelector.hasNext() ) {
+      return singleSelector;
+    }
+    if ( combinationSelector.hasNext() ) {
+      return combinationSelector;
     }
     return new NoneSelector();
   }
 
   public void optimizeForCurrentCombination() {
     if ( nextCombinationInfo.isPresent() ) {
-      nextCombinationInfo.get().getComponentClasses().forEach( this.commonSelector::addHigherPotentialType );
+      nextCombinationInfo.get().getComponentClasses().forEach( cc -> {
+        this.combinationSelector.addHigherPotentialType( cc );
+        this.singleSelector.addHigherPotentialType( cc );
+      } );
     }
 
   }
 
   public void optimizeMatchingInfoBlacklist( MethodMatchingInfo methodMatchingInfo ) {
-    commonSelector.addToBlacklist( methodMatchingInfo );
+    combinationSelector.addToBlacklist( methodMatchingInfo );
+    singleSelector.addToBlacklist( methodMatchingInfo );
   }
 
   public void optimizeCheckTypeBlacklist( Class<?> componentInterface ) {
-    commonSelector.addToBlacklist( componentInterface );
+    combinationSelector.addToBlacklist( componentInterface );
+    singleSelector.addToBlacklist( componentInterface );
   }
 
 }

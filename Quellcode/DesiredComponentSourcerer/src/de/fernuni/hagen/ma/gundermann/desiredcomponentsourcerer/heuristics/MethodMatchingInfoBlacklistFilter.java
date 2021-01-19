@@ -18,8 +18,11 @@ public final class MethodMatchingInfoBlacklistFilter {
 
   private final boolean handleAnalyzationUtils;
 
-  public MethodMatchingInfoBlacklistFilter( final Collection<Integer> checkTypeHCBlacklist ) {
+  private final String info;
+
+  public MethodMatchingInfoBlacklistFilter( final Collection<Integer> checkTypeHCBlacklist, String info ) {
     this.hashCodeBlacklist = checkTypeHCBlacklist;
+    this.info = " " + info;
     this.handleAnalyzationUtils = true;
   }
 
@@ -27,34 +30,37 @@ public final class MethodMatchingInfoBlacklistFilter {
       boolean handleAnalyzationUtils ) {
     this.hashCodeBlacklist = methodMatchingInfoHCBlacklist;
     this.handleAnalyzationUtils = handleAnalyzationUtils;
+    this.info = "";
   }
 
   public Collection<CombinationPartInfo> filter( final Collection<CombinationPartInfo> infos ) {
-    if ( handleAnalyzationUtils )
+    if ( handleAnalyzationUtils ) {
       AnalyzationUtils.filterCount = 0;
-
+    }
     Collection<CombinationPartInfo> filtered = infos.stream()
         .filter( ptmi -> AnalyzationUtils
             .filterWithAnalyticalCount( !this.hashCodeBlacklist.contains( ptmi.getMatchingInfo().hashCode() ) ) )
         .collect( Collectors.toList() );
-    if ( handleAnalyzationUtils )
-      Logger.infoF( "filtered by %s: %d", getClass().getSimpleName(), AnalyzationUtils.filterCount );
+    if ( handleAnalyzationUtils ) {
+      Logger.infoF( "filtered by %s%s: %d", getClass().getSimpleName(), info, AnalyzationUtils.filterCount );
+    }
     return filtered;
   }
 
   public Collection<Collection<CombinationPartInfo>> filterWithNestedCriteria(
       Collection<Collection<CombinationPartInfo>> infos ) {
-    if ( handleAnalyzationUtils )
+    if ( handleAnalyzationUtils ) {
       AnalyzationUtils.filterCount = 0;
+    }
 
     Collection<Collection<CombinationPartInfo>> filtered = infos.stream()
-        .filter( cpis -> cpis.stream()
-            .noneMatch( cpi -> AnalyzationUtils.filterWithAnalyticalCount(
-                this.hashCodeBlacklist.contains( cpi.getMatchingInfo().hashCode() ) ) ) )
+        .filter( cpis -> AnalyzationUtils.filterWithAnalyticalCount( !cpis.stream()
+            .anyMatch( cpi -> this.hashCodeBlacklist.contains( cpi.getMatchingInfo().hashCode() ) ) ) )
         .collect( Collectors.toList() );
 
-    if ( handleAnalyzationUtils )
-      Logger.infoF( "filtered by %s: %d", getClass().getSimpleName(), AnalyzationUtils.filterCount );
+    if ( handleAnalyzationUtils ) {
+      Logger.infoF( "filtered by %s%s: %d", getClass().getSimpleName(), info, AnalyzationUtils.filterCount );
+    }
     return filtered;
   }
 
