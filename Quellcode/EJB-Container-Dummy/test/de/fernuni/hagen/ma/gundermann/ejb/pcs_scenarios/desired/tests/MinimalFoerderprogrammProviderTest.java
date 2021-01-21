@@ -32,14 +32,14 @@ public class MinimalFoerderprogrammProviderTest implements PivotMethodTestInfo {
     this.provider = provider;
   }
 
-  @QueryTypeTest
+  @QueryTypeTest( testedSingleMethod = "getAlleFreigegebenenFPs" )
   public void testEmptyCollection() {
     Collection<String> alleFreigegebenenFPs = provider.getAlleFreigegebenenFPs();
     markPivotMethodCallExecuted();
     assertThat( alleFreigegebenenFPs, notNullValue() );
   }
 
-  @QueryTypeTest
+  @QueryTypeTest( testedSingleMethod = "getAlleFreigegebenenFPs" )
   public void testGetFoerderprogramm() {
     String fpCode = "123";
     Foerderprogramm fp = provider.getFoerderprogramm( fpCode, 2015, new Date() );

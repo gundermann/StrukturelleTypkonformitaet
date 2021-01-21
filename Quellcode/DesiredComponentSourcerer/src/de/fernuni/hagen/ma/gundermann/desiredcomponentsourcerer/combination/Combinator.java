@@ -1,4 +1,4 @@
-package de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer;
+package de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -3,7 +3,7 @@ package de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics;
 import java.util.Collection;
 import java.util.function.Predicate;
 
-import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.CombinationPartInfo;
+import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.CombinationPartInfo;
 
 public class SelfCombinatedPartFilter implements Predicate<Collection<CombinationPartInfo>> {
 

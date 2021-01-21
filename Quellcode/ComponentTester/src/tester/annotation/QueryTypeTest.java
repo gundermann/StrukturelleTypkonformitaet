@@ -9,4 +9,11 @@ import java.lang.annotation.Target;
 @Target( ElementType.METHOD )
 public @interface QueryTypeTest {
 
+  /**
+   * @return Name der Methode des erwarteten Interfaces, die als einzige in diesem Test getestet wird. Leer, wenn
+   *         mehrere Methoden getestet werden.
+   */
+  // ACHTUNG: Dadurch werden gleichnamige Methode mit unterschiedlichen Signaturen in den erwarteten Interfaces
+  // ausgeschlossen!!!
+  String testedSingleMethod() default "";
 }

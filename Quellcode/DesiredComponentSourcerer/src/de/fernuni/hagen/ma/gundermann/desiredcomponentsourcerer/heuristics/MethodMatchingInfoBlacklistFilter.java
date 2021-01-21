@@ -3,7 +3,7 @@ package de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.CombinationPartInfo;
+import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.CombinationPartInfo;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.AnalyzationUtils;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.Logger;
 

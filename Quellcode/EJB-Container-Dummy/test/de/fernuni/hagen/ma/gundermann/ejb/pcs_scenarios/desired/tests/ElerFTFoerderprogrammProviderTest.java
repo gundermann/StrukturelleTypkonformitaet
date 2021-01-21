@@ -32,7 +32,7 @@ public class ElerFTFoerderprogrammProviderTest implements PivotMethodTestInfo {
   // @Test - ja man k�nnte diese Annotation zur Indentifikation der Test-Methoden verwenden. Allerdings werden sie
   // dann
   // auch automatisch bei JUnit-Tests ausgef�hrt.
-  @QueryTypeTest
+  @QueryTypeTest( testedSingleMethod = "getAlleFreigegebenenFPs" )
   public void testEmptyCollection() {
     Collection<ElerFTFoerderprogramm> alleFreigegebenenFPs = provider.getAlleFreigegebenenFPs();
     markPivotMethodCallExecuted();

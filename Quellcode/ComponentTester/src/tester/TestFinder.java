@@ -22,6 +22,7 @@ class TestFinder<T> {
     // - eine Annotation weniger
     // Nachteile:
     // - stärkere Bedingungen an die Ablage der Testklassen (mit der Annotation können die Testklassen sonstwo liegen.)
+    // - die Angabe weiterer Informationen ist dadurch nicht gewaehrleistet
     if ( qt.isAnnotationPresent( QueryTypeTestReference.class ) ) {
       QueryTypeTestReference queryTypeTestReference = qt.getAnnotation( QueryTypeTestReference.class );
       for ( Class<?> testClass : queryTypeTestReference.testClasses() ) {

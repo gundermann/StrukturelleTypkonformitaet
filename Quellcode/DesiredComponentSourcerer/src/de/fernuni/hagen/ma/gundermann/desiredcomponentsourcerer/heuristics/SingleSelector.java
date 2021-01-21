@@ -11,11 +11,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.CombinationFinderUtils;
-import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.CombinationInfo;
-import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.CombinationPartInfo;
-import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.Combinator;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.Selector;
+import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.CombinationFinderUtils;
+import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.CombinationInfo;
+import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.CombinationPartInfo;
+import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.Combinator;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.CollectionUtil;
 import matching.methods.MethodMatchingInfo;
 import matching.modules.PartlyTypeMatchingInfo;
@@ -81,9 +81,11 @@ public class SingleSelector implements Selector {
   }
 
   @Override
-  public void addToBlacklist( MethodMatchingInfo methodMatchingInfo ) {
+  public void addToBlacklist( Collection<MethodMatchingInfo> methodMatchingInfo ) {
     // H: blacklist by pivot test calls
-    this.methodMatchingInfoHCBlacklist.add( methodMatchingInfo.hashCode() );
+    // H: blacklist failed single methods tested
+    this.methodMatchingInfoHCBlacklist
+        .addAll( methodMatchingInfo.stream().map( MethodMatchingInfo::hashCode ).collect( Collectors.toList() ) );
 
     cachedCalculatedInfos = new MethodMatchingInfoBlacklistFilter( this.methodMatchingInfoHCBlacklist, "update" )
         .filterWithNestedCriteria( cachedCalculatedInfos );

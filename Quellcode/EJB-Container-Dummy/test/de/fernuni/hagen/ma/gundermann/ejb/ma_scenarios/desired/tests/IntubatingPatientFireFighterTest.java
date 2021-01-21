@@ -28,7 +28,7 @@ public class IntubatingPatientFireFighterTest implements PivotMethodTestInfo {
     reset();
   }
 
-  @QueryTypeTest
+  @QueryTypeTest( testedSingleMethod = "free" )
   public void free() {
     Fire fire = new Fire();
     intubatingPatientFireFighter.extinguishFire( fire );
@@ -36,7 +36,7 @@ public class IntubatingPatientFireFighterTest implements PivotMethodTestInfo {
     assertFalse( fire.isActive() );
   }
 
-  @QueryTypeTest
+  @QueryTypeTest( testedSingleMethod = "intubate" )
   public void intubate() {
     IntubationPartient patient = new IntubationPartient();
     intubatingPatientFireFighter.intubate( patient );

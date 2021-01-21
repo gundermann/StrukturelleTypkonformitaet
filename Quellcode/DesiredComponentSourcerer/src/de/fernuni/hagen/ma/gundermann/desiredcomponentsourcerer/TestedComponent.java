@@ -1,5 +1,8 @@
 package de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import matching.methods.MethodMatchingInfo;
 import tester.TestResult;
 import tester.TestResult.Result;
@@ -10,17 +13,15 @@ class TestedComponent<S> {
 
   private TestResult testResult;
 
-  private MethodMatchingInfo pivotMatchingInfo;
+  private Collection<MethodMatchingInfo> outsortedMatchingInfos = new ArrayList<>();
 
   TestedComponent( S component, TestResult testResult ) {
     this.component = component;
     this.testResult = testResult;
   }
 
-  TestedComponent( S component, TestResult testResult, MethodMatchingInfo pivotMatchingInfo ) {
-    this.component = component;
-    this.testResult = testResult;
-    this.pivotMatchingInfo = pivotMatchingInfo;
+  void addOutsortedMatchingInfo( MethodMatchingInfo outsortedMatchingInfo ) {
+    outsortedMatchingInfos.add( outsortedMatchingInfo );
   }
 
   S getComponent() {
@@ -39,12 +40,12 @@ class TestedComponent<S> {
     return testResult.getPassedTests() > 0;
   }
 
-  boolean isPivotMatchingInfoFound() {
-    return pivotMatchingInfo != null;
+  boolean isOutsortedMatchingInfoFound() {
+    return !outsortedMatchingInfos.isEmpty();
   }
 
-  MethodMatchingInfo getPivotMatchingInfo() {
-    return pivotMatchingInfo;
+  Collection<MethodMatchingInfo> getOutsortedMatchingInfos() {
+    return outsortedMatchingInfos;
   }
 
 }

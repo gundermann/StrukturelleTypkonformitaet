@@ -2,157 +2,68 @@ package tester;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Optional;
 
-import org.junit.After;
-import org.junit.Before;
-
-import glue.SigMaGlueException;
-import spi.PivotMethodTestInfo;
 import tester.annotation.QueryTypeInstanceSetter;
 import tester.annotation.QueryTypeTest;
 
 class Tester {
 
   TestResult testComponent( Object component, Collection<Class<?>> testClasses ) {
-    TestResult testResult = new TestResult();
+    TestResult testResult = new TestResult( TestType.NONE );
     for ( Class<?> testClass : testClasses ) {
       try {
-        Object testInstance = testClass.newInstance();
-        Method setter = findQueryTypeSetter( testClass, component.getClass() );
-        if ( setter == null ) {
-          System.out.println( "setter not found in test class: " + testClass.getName() );
+        Object testInstance = setupTestObject( testClass, component );
+        if ( testInstance == null ) {
           continue;
         }
-        setter.setAccessible( true );
-        setter.invoke( testInstance, component );
+        if ( containsAnySingleMethodTests( testClass ) ) {
+          testResult = new SingleMethodTestEvaluator().test( testInstance );
+        }
+        else {
+          testResult = new CommonTestEvaluator().test( testInstance );
+        }
 
-        try {
-          // setup
-
-          // test
-          invokeTests( testInstance, testResult );
-
-          // tear down
-        }
-        catch ( WrappedAssertionError ae ) {
-          String assertionError = ae.getMessage();
-          if ( assertionError.isEmpty() ) {
-            assertionError = "assertion error";
-          }
-          System.out.println( String.format( "TEST FAILED: %s => %s", ae.getTestName(), ae.getMessage() ) );
-          testResult.failed( ae );
-          return testResult;
-        }
-        catch ( InvocationTargetException e ) {
-          e.printStackTrace();
-          Method calledPivotMethod = null;
-          Optional<SigMaGlueException> optSigMaGlueExc = findCausedSigMaGlueExcetion( e );
-          if ( optSigMaGlueExc.isPresent() && testInstance instanceof PivotMethodTestInfo
-              && !PivotMethodTestInfo.class.cast( testInstance ).pivotMethodCallExecuted() ) {
-            calledPivotMethod = optSigMaGlueExc.get().getCalledSourceMethod();
-            System.out.println( String.format( "called pivot method found: %s", calledPivotMethod.getName() ) );
-            testResult.canceled( optSigMaGlueExc.get(), calledPivotMethod );
-          }
-          else {
-            testResult.canceled( e, calledPivotMethod );
-          }
-          return testResult;
-        }
-        catch ( IllegalAccessException | IllegalArgumentException e ) {
-          e.printStackTrace();
-          testResult.canceled( e, null );
-          return testResult;
-        }
       }
       catch ( InstantiationException | IllegalAccessException | IllegalArgumentException
           | InvocationTargetException e ) {
-        e.printStackTrace();
-        testResult.canceled( e, null );
+        // e.printStackTrace();
+        testResult.canceled( e );
         return testResult;
       }
 
     }
-    System.out.println( String.format( "TESTS PASSED" ) );
-    testResult.passed();
+    if ( testResult.getResult() == null ) {
+      System.out.println( String.format( "TESTS PASSED" ) );
+      testResult.passed();
+    }
     return testResult;
   }
 
-  private Optional<SigMaGlueException> findCausedSigMaGlueExcetion( Throwable e ) {
-    if ( SigMaGlueException.class.isInstance( e ) ) {
-      return Optional.of( SigMaGlueException.class.cast( e ) );
-    }
-    if ( e.getCause() == null ) {
-      return Optional.empty();
-    }
-    return findCausedSigMaGlueExcetion( e.getCause() );
-  }
-
-  private void invokeTests( Object testInstance, TestResult testResult )
-      throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, WrappedAssertionError {
-    Method[] testMethods = findTestMethods( testInstance.getClass() );
-    testResult.addTests( testMethods.length );
-    Optional<Method> optBefore = findBeforeMethod( testInstance.getClass() );
-    Optional<Method> optAfter = findAfterMethod( testInstance.getClass() );
-    int counter = 1;
-    for ( Method test : testMethods ) {
-      test.setAccessible( true );
-      try {
-        // setup
-        if ( optBefore.isPresent() ) {
-          optBefore.get().invoke( testInstance );
-        }
-        // test
-        test.invoke( testInstance );
-
-        // tear down
-        if ( optAfter.isPresent() ) {
-          optAfter.get().invoke( testInstance );
-        }
-      }
-      catch ( InvocationTargetException e ) {
-        Throwable targetException = e.getTargetException();
-        if ( AssertionError.class.equals( targetException.getClass() ) ) {
-          throw new WrappedAssertionError( AssertionError.class.cast( targetException ), test );
-        }
-        throw e;
-      }
-      testResult.incrementPassedTests();
-      System.out.println( String.format( "test passed: %d/%d", counter++, testMethods.length ) );
-    }
-  }
-
-  private Optional<Method> findAfterMethod( Class<?> testClass ) {
+  private boolean containsAnySingleMethodTests( Class<?> testClass ) {
     Method[] declaredMethods = testClass.getDeclaredMethods();
     for ( Method method : declaredMethods ) {
-      if ( method.getAnnotation( After.class ) != null ) {
-        return Optional.of( method );
+      QueryTypeTest queryTypeTestAnnotation = method.getAnnotation( QueryTypeTest.class );
+      if ( queryTypeTestAnnotation != null ) {
+        if ( queryTypeTestAnnotation.testedSingleMethod() != "" ) {
+          return true;
+        }
       }
     }
-    return Optional.empty();
+    return false;
   }
 
-  private Optional<Method> findBeforeMethod( Class<?> testClass ) {
-    Method[] declaredMethods = testClass.getDeclaredMethods();
-    for ( Method method : declaredMethods ) {
-      if ( method.getAnnotation( Before.class ) != null ) {
-        return Optional.of( method );
-      }
+  private Object setupTestObject( Class<?> testClass, Object component )
+      throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    Object testInstance = testClass.newInstance();
+    Method setter = findQueryTypeSetter( testClass, component.getClass() );
+    if ( setter == null ) {
+      System.out.println( "setter not found in test class: " + testClass.getName() );
+      return null;
     }
-    return Optional.empty();
-  }
-
-  private Method[] findTestMethods( Class<?> testClass ) {
-    Method[] declaredMethods = testClass.getDeclaredMethods();
-    Collection<Method> testMethods = new ArrayList<>();
-    for ( Method method : declaredMethods ) {
-      if ( method.getAnnotation( QueryTypeTest.class ) != null ) {
-        testMethods.add( method );
-      }
-    }
-    return testMethods.toArray( new Method[] {} );
+    setter.setAccessible( true );
+    setter.invoke( testInstance, component );
+    return testInstance;
   }
 
   private Method findQueryTypeSetter( Class<?> testClass, Class<?> componentType ) {

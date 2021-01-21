@@ -30,7 +30,7 @@ public class IntubatingFreeingTest implements PivotMethodTestInfo {
     this.intubatingFreeing = intubatingFireFighter;
   }
 
-  @QueryTypeTest
+  @QueryTypeTest( testedSingleMethod = "free" )
   public void free() {
     Collection<Suffer> suffer = Arrays.asList( Suffer.LOCKED );
     AccidentParticipant patient = new AccidentParticipant( suffer );
@@ -39,7 +39,7 @@ public class IntubatingFreeingTest implements PivotMethodTestInfo {
     assertTrue( patient.isStabilized() );
   }
 
-  @QueryTypeTest
+  @QueryTypeTest( testedSingleMethod = "intubate" )
   public void intubate() {
     Collection<Suffer> suffer = Arrays.asList( Suffer.BREATH_PROBLEMS );
     AccidentParticipant patient = new AccidentParticipant( suffer );

@@ -16,7 +16,7 @@ public class ComponentTester<S> {
     Collection<Class<?>> testClasses = testFinder.findTestClassesOfQueryType();
     if ( testClasses.isEmpty() ) {
       System.out.println( "no test classes defined" );
-      return new TestResult( false );
+      return new TestResult( false, TestType.NONE );
     }
     return new Tester().testComponent( component, testClasses );
   }

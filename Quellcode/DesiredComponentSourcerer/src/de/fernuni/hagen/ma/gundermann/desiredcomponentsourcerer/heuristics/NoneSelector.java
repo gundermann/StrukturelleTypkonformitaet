@@ -1,9 +1,10 @@
 package de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics;
 
+import java.util.Collection;
 import java.util.Optional;
 
-import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.CombinationInfo;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.Selector;
+import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.CombinationInfo;
 import matching.methods.MethodMatchingInfo;
 
 /**
@@ -28,7 +29,7 @@ public class NoneSelector implements Selector {
   }
 
   @Override
-  public void addToBlacklist( MethodMatchingInfo methodMatchingInfo ) {
+  public void addToBlacklist( Collection<MethodMatchingInfo> methodMatchingInfo ) {
     // do nothing
 
   }

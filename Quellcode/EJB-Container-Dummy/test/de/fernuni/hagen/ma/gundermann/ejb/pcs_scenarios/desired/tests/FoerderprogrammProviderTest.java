@@ -29,7 +29,7 @@ public class FoerderprogrammProviderTest implements PivotMethodTestInfo {
     this.provider = provider;
   }
 
-  @QueryTypeTest
+  @QueryTypeTest( testedSingleMethod = "getAlleFreigegebenenFPs" )
   public void testEmptyCollection() {
     Collection<Foerderprogramm> alleFreigegebenenFPs = provider.getAlleFreigegebenenFPs();
     markPivotMethodCallExecuted();

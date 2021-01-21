@@ -1,10 +1,12 @@
-package de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer;
+package de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.Selector;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.CombinationSelector;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.NoneSelector;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.SingleSelector;
@@ -22,7 +24,7 @@ public class BestMatchingComponentCombinationFinder {
 
   private Optional<CombinationInfo> nextCombinationInfo = Optional.empty();
 
-  BestMatchingComponentCombinationFinder(
+  public BestMatchingComponentCombinationFinder(
       Map<Class<?>, PartlyTypeMatchingInfo> componentInterface2PartlyMatchingInfos ) {
     quantitativeSortedInfos = new ArrayList<>(
         componentInterface2PartlyMatchingInfos.values() );
@@ -67,9 +69,9 @@ public class BestMatchingComponentCombinationFinder {
 
   }
 
-  public void optimizeMatchingInfoBlacklist( MethodMatchingInfo methodMatchingInfo ) {
+  public void optimizeMatchingInfoBlacklist( Collection<MethodMatchingInfo> collection ) {
     for ( int i = currentSelectorIndex; i < selectors.length; i++ ) {
-      selectors[i].addToBlacklist( methodMatchingInfo );
+      selectors[i].addToBlacklist( collection );
     }
   }
 

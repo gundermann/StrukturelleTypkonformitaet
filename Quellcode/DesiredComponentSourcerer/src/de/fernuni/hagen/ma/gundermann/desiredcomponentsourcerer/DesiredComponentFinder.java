@@ -1,5 +1,6 @@
 package de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer;
 
+import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,6 +9,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.BestMatchingComponentCombinationFinder;
+import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.CombinationInfo;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.DefaultTypeMatcherHeuristic;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.Logger;
 import glue.CombinationTypeConverter;
@@ -17,6 +20,7 @@ import matching.modules.PartlyTypeMatchingInfo;
 import matching.modules.TypeMatcher;
 import tester.ComponentTester;
 import tester.TestResult;
+import tester.TestType;
 
 public class DesiredComponentFinder {
 
@@ -118,9 +122,10 @@ public class DesiredComponentFinder {
             // H: combinate passed tests components first
             combinationFinder.optimizeForCurrentCombination();
           }
-          if ( testedComponent.isPivotMatchingInfoFound() ) {
+          if ( testedComponent.isOutsortedMatchingInfoFound() ) {
             // H: blacklist by pivot test calls
-            combinationFinder.optimizeMatchingInfoBlacklist( testedComponent.getPivotMatchingInfo() );
+            // H: blacklist failed single methods tested
+            combinationFinder.optimizeMatchingInfoBlacklist( testedComponent.getOutsortedMatchingInfos() );
           }
         }
       }
@@ -159,20 +164,31 @@ public class DesiredComponentFinder {
     DesiredInterface convertedComponent = converter.convert( components2MatchingInfo );
     TestResult testResult = componentTester.testComponent( convertedComponent );
     logTestResult( testResult );
-    if ( testResult.getPivotMethodCall() != null ) {
-      Optional<MethodMatchingInfo> optMatchingInfoOfPivotMethod = components2MatchingInfo.values().stream()
+    TestedComponent<DesiredInterface> testedComponent = new TestedComponent<>( convertedComponent, testResult );
+    Collection<Method> pivotMethodCalls = testResult.getPivotMethodCalls();
+    if ( pivotMethodCalls != null && !pivotMethodCalls.isEmpty() ) {
+      Logger.infoF( "outsource by pivot method: %s",
+          pivotMethodCalls.stream().map( Method::getName ).collect( Collectors.joining( ", " ) ) );
+      components2MatchingInfo.values().stream()
           .flatMap( Collection::stream )
-          .filter( mmi -> mmi.getSource().equals( testResult.getPivotMethodCall() ) ).findFirst();
+          .filter( mmi -> pivotMethodCalls.contains( mmi.getSource() ) )
+          .forEach( testedComponent::addOutsortedMatchingInfo );
 
-      if ( optMatchingInfoOfPivotMethod.isPresent() ) {
-        return new TestedComponent<>( convertedComponent, testResult,
-            optMatchingInfoOfPivotMethod.get() );
-      }
     }
-    return new TestedComponent<>( convertedComponent, testResult );
+    Collection<String> failedSingleMethods = testResult.getFailedSingleMethods();
+    if ( failedSingleMethods != null && !failedSingleMethods.isEmpty() ) {
+      Logger.infoF( "outsource by failed single method: %s",
+          failedSingleMethods.stream().collect( Collectors.joining( ", " ) ) );
+      components2MatchingInfo.values().stream()
+          .flatMap( Collection::stream )
+          .filter( mmi -> failedSingleMethods.contains( mmi.getSource().getName() ) )
+          .forEach( testedComponent::addOutsortedMatchingInfo );
+    }
+    return testedComponent;
   }
 
   private void logTestResult( TestResult testResult ) {
+    Logger.infoF( "used test type: %s", testResult.getTestType().name() );
     Logger.infoF( "passed tests: %d/%d", testResult.getPassedTests(), testResult.getTestCount() );
     switch ( testResult.getResult() ) {
       case CANCELED:
@@ -182,7 +198,17 @@ public class DesiredComponentFinder {
                 .collect( Collectors.joining( "\n" ) ) );
         break;
       case FAILED:
-        Logger.infoF( "test failed: %s => %s", testResult.getPivotTestName(), testResult.getException().getMessage() );
+        if ( testResult.getTestType() == TestType.COMMON ) {
+          Logger.infoF( "test failed: %s => %s", testResult.getPivotTestName(),
+              testResult.getException().getMessage() );
+        }
+        else if ( testResult.getTestType() == TestType.SINGLE_METHOD ) {
+          Logger.infoF( "single test methods failed by assertion: %s",
+              testResult.getFailedSingleMethods().stream().collect( Collectors.joining( ", " ) ) );
+          Logger.infoF( "failed pivot methods: %s",
+              testResult.getPivotMethodCalls().stream().map( mmi -> mmi.getName() )
+                  .collect( Collectors.joining( ", " ) ) );
+        }
         break;
       default:
         break;

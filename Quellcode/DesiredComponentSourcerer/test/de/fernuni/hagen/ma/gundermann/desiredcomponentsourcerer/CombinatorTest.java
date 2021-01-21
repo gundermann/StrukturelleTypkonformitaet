@@ -11,6 +11,8 @@ import java.util.Map;
 
 import org.junit.Test;
 
+import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.Combinator;
+
 public class CombinatorTest {
 
   @Test

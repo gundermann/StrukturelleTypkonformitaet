@@ -1,7 +1,9 @@
 package de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer;
 
+import java.util.Collection;
 import java.util.Optional;
 
+import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.CombinationInfo;
 import matching.methods.MethodMatchingInfo;
 
 public interface Selector {
@@ -12,7 +14,7 @@ public interface Selector {
 
   void addHigherPotentialType( Class<?> higherPotentialType );
 
-  void addToBlacklist( MethodMatchingInfo methodMatchingInfo );
+  void addToBlacklist( Collection<MethodMatchingInfo> collection );
 
   void addToBlacklist( Class<?> componentInterface );
 

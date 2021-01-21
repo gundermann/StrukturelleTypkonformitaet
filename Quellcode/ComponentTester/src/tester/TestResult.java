@@ -1,10 +1,14 @@
 package tester;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class TestResult {
 
   private Result result;
+
+  private final TestType testType;
 
   private int testCount = 0;
 
@@ -14,19 +18,33 @@ public class TestResult {
 
   private String pivotTestName;
 
-  private Method pivotMethodCalled;
+  private Collection<Method> pivotMethodsCalled = new ArrayList<>();
 
-  public TestResult( boolean testPassed ) {
+  private Collection<String> failedSingleMethods = new ArrayList<>();
+
+  public TestResult( boolean testPassed, TestType testType ) {
     this.result = testPassed ? Result.PASSED : Result.FAILED;
+    this.testType = testType;
   }
 
-  public TestResult() {
+  public TestResult( TestType testType ) {
+    this.testType = testType;
   }
 
+  public TestType getTestType() {
+    return testType;
+  }
+
+  public void canceled( Throwable e ) {
+    this.result = Result.CANCELED;
+    this.throwable = e;
+  }
+
+  @Deprecated
   public void canceled( Throwable e, Method pivotMethod ) {
     this.result = Result.CANCELED;
     this.throwable = e;
-    this.pivotMethodCalled = pivotMethod;
+    addPivotMethodCalled( pivotMethod );
   }
 
   public void failed( WrappedAssertionError ae ) {
@@ -67,8 +85,22 @@ public class TestResult {
     return pivotTestName;
   }
 
-  public Method getPivotMethodCall() {
-    return pivotMethodCalled;
+  public void addPivotMethodCalled( Method pivotMethod ) {
+    if ( pivotMethod != null ) {
+      pivotMethodsCalled.add( pivotMethod );
+    }
+  }
+
+  public Collection<Method> getPivotMethodCalls() {
+    return pivotMethodsCalled;
+  }
+
+  public void addFailedSingleMethod( String singleMethod ) {
+    failedSingleMethods.add( singleMethod );
+  }
+
+  public Collection<String> getFailedSingleMethods() {
+    return failedSingleMethods;
   }
 
   public static enum Result {

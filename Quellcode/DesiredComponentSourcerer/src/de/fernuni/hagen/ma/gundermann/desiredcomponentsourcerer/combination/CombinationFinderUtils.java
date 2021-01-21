@@ -1,4 +1,4 @@
-package de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer;
+package de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.Transformator;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.MethodMatchingInfoBlacklistFilter;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.AnalyzationUtils;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.Logger;
