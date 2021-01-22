@@ -165,6 +165,8 @@ public class DesiredComponentFinder {
     TestResult testResult = componentTester.testComponent( convertedComponent );
     logTestResult( testResult );
     TestedComponent<DesiredInterface> testedComponent = new TestedComponent<>( convertedComponent, testResult );
+
+    // H: blacklist by pivot test calls
     Collection<Method> pivotMethodCalls = testResult.getPivotMethodCalls();
     if ( pivotMethodCalls != null && !pivotMethodCalls.isEmpty() ) {
       Logger.infoF( "outsource by pivot method: %s",
@@ -173,8 +175,9 @@ public class DesiredComponentFinder {
           .flatMap( Collection::stream )
           .filter( mmi -> pivotMethodCalls.contains( mmi.getSource() ) )
           .forEach( testedComponent::addOutsortedMatchingInfo );
-
     }
+
+    // H: blacklist failed single methods tested
     Collection<String> failedSingleMethods = testResult.getFailedSingleMethods();
     if ( failedSingleMethods != null && !failedSingleMethods.isEmpty() ) {
       Logger.infoF( "outsource by failed single method: %s",

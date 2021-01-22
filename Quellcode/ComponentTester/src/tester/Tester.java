@@ -40,12 +40,13 @@ class Tester {
     return testResult;
   }
 
-  private boolean containsAnySingleMethodTests( Class<?> testClass ) {
+  boolean containsAnySingleMethodTests( Class<?> testClass ) {
     Method[] declaredMethods = testClass.getDeclaredMethods();
     for ( Method method : declaredMethods ) {
       QueryTypeTest queryTypeTestAnnotation = method.getAnnotation( QueryTypeTest.class );
       if ( queryTypeTestAnnotation != null ) {
-        if ( queryTypeTestAnnotation.testedSingleMethod() != "" ) {
+        if ( queryTypeTestAnnotation.testedSingleMethod() != ""
+            && !queryTypeTestAnnotation.testedSingleMethod().isEmpty() ) {
           return true;
         }
       }

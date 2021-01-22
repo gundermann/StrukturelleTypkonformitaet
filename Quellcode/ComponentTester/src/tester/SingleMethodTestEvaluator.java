@@ -41,7 +41,7 @@ public class SingleMethodTestEvaluator {
     if ( optSigMaGlueExc.isPresent() && testInstance instanceof PivotMethodTestInfo
         && !PivotMethodTestInfo.class.cast( testInstance ).pivotMethodCallExecuted() ) {
       Method calledPivotMethod = optSigMaGlueExc.get().getCalledSourceMethod();
-      System.out.println( String.format( "called pivot method found: %s", calledPivotMethod.getName() ) );
+      // System.out.println( String.format( "called pivot method found: %s", calledPivotMethod.getName() ) );
       testResult.addPivotMethodCalled( calledPivotMethod );
       testResult.canceled( optSigMaGlueExc.get() );
     }
@@ -56,7 +56,7 @@ public class SingleMethodTestEvaluator {
     if ( assertionError.isEmpty() ) {
       assertionError = "assertion error";
     }
-    System.out.println( String.format( "TEST FAILED: %s => %s", ae.getTestName(), ae.getMessage() ) );
+    // System.out.println( String.format( "TEST FAILED: %s => %s", ae.getTestName(), ae.getMessage() ) );
     testResult.failed( ae );
     if ( testedSingleMethod != null && !testedSingleMethod.isEmpty() ) {
       testResult.addFailedSingleMethod( testedSingleMethod );
@@ -79,7 +79,7 @@ public class SingleMethodTestEvaluator {
     testResult.addTests( testMethods.length );
     Optional<Method> optBefore = findBeforeMethod( testInstance.getClass() );
     Optional<Method> optAfter = findAfterMethod( testInstance.getClass() );
-    int counter = 1;
+    // int counter = 1;
     for ( Method test : testMethods ) {
       test.setAccessible( true );
       try {
@@ -109,10 +109,12 @@ public class SingleMethodTestEvaluator {
         else {
           handleError( e, testInstance, testResult );
         }
-        continue;
+        // Setting _ALLSMT
+        // continue;
+        return;
       }
       testResult.incrementPassedTests();
-      System.out.println( String.format( "test passed: %d/%d", counter++, testMethods.length ) );
+      // System.out.println( String.format( "test passed: %d/%d", counter++, testMethods.length ) );
     }
   }
 
