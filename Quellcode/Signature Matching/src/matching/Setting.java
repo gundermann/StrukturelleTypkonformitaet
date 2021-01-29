@@ -47,9 +47,9 @@ public final class Setting {
 
   public static final double GEN_SPEC_TYPE_MATCHER_BASE_RATING = 200d;
 
-  public static final double STRUCTURAL_TYPE_MATCHER_BASE_RATING = 1000d;
+  public static final double STRUCTURAL_TYPE_MATCHER_BASE_RATING = 400d;
 
-  public static final double WRAPPEN_TYPE_MATCHER_BASE_RATING = 600d;
+  public static final double WRAPPEN_TYPE_MATCHER_BASE_RATING = 300d;
 
   public static final double PARAM_PERM_METHOD_TYPE_MATCHER_BASE_RATING = 0d;
 
