@@ -1,0 +1,246 @@
+
+\usepackage[german]{babel}
+\usepackage[ansinew]{inputenc}
+\usepackage[T1]{fontenc} %Umlaute
+\usepackage{lmodern}
+\usepackage[top=2cm, left=2cm, bottom=2cm, right=2cm]{geometry}
+\usepackage{fancybox, graphicx}
+\usepackage{float}
+\usepackage{listings} 
+\usepackage{multirow}
+\usepackage{color}		 % für Farben im allgemeinen
+\usepackage{colortbl}
+\usepackage{cite}
+\usepackage{bibgerm}
+\usepackage{palatino}
+\usepackage{chngpage}
+\usepackage{chngcntr}
+\counterwithout{figure}{chapter}
+\counterwithout{table}{chapter}
+\renewcommand{\floatpagefraction}{0.85}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+\definecolor{rot}{rgb}{1,0.3,0}
+\definecolor{gelb}{rgb}{1,1,0}
+\definecolor{gruen}{rgb}{0,1,0.4}
+
+
+\fancyhf{}
+\fancyhead[RE]{\slshape \nouppercase{\leftmark}}    % Even page header: "page   chapter"
+\fancyhead[LO]{\slshape \nouppercase{\rightmark}}   % Odd  page header: "section   page"
+\fancyhead[RO,LE]{\bfseries \thepage} 
+\renewcommand{\headrulewidth}{1pt}    % Underline headers
+\renewcommand{\footrulewidth}{0pt}    
+
+\fancypagestyle{plain}{               % No chapter+section on chapter start pages
+\fancyhf{}
+\fancyhead[RO,LE]{\bfseries \thepage}
+\renewcommand{\headrulewidth}{1pt}
+\renewcommand{\footrulewidth}{0pt}
+}
+
+% Left headings: "1  INTRODUCTION"
+%\renewcommand{\chaptermark}[1]{%
+%\markboth{\thechapter\ \ \ \ #1}{}}
+
+% Right headings: "1.1  Basics"
+\renewcommand{\sectionmark}[1]{%
+\markright{\thesection\ \ \ \ #1}{}}
+
+%\lstset{language=java} 
+\lstset{basicstyle=\scriptsize}
+\lstset{numbers=left, numberstyle=\tiny, numbersep=2pt, breaklines=true} 
+\lstset{ numberbychapter=false}
+\graphicspath{{Bilder/}}
+\newcommand{\listoflolentryname}{\lstlistingname} 
+\usepackage{float}
+%\newcommand{\fullcite}{\citep} %for "Author [1980]"
+\usepackage[pdftex,plainpages=false,pdfpagelabels]{hyperref}
+\usepackage[nonumberlist]{glossaries}
+
+\makeglossaries
+\loadglsentries{glossary}
+
+% --- Farbdefinitionen ----------------------------------------
+\definecolor{rot}{rgb}{1,0.3,0}
+\definecolor{gelb}{rgb}{1,1,0}
+\definecolor{gruen}{rgb}{0,1,0.4}
+\definecolor{darkblue}{rgb}{0.2,0.3,1}
+\definecolor{lightblue}{rgb}{0.6,0.7,1}
+\definecolor{white}{rgb}{1,1,1}
+
+\linespread{1.5}
+
+\bibliographystyle{geralpha}
+
+\renewcommand{\floatpagefraction}{0.85}
+
+\usepackage[figuresright]{rotating}
+\usepackage{geometry}
+\geometry{a5paper,left=20mm,right=20mm} 
+
+\newlength{\fullwidth} % Width of text plus margin notes
+\setlength{\fullwidth}{\textwidth}
+
+
+%----------------------------------------------------------------------------------
+% \myBigFigure	[ LABEL_PREFIX (optional) ]
+%				{ FILENAME (without extension) }
+%				{ CAPTION TEXT }
+%				{ SHORT VERSION OF CAPTION TEXT }
+%
+%Bild wird in kompletter Breite gesetzt
+%picture using full width of the page
+\newcommand{\myBigFigure}[4][Abb]
+{
+\begin{figure}[H]
+	\center{
+	\begin{minipage}{\fullwidth}
+		\includegraphics[width= \fullwidth]{pics/#2}
+		\caption{#3}
+		\label{#1_#4}
+	\end{minipage}
+	}
+\end{figure}
+}
+
+
+%----------------------------------------------------------------------------------
+% \myBigFigure	[ LABEL_PREFIX (optional) ]
+%				{ FILENAME (without extension) }
+%				{ CAPTION TEXT }
+%				{ SHORT VERSION OF CAPTION TEXT }
+%
+%Bild wird in kompletter Breite gesetzt
+%picture using full width of the page
+\newcommand{\myBigFigureCited}[5][Abb]
+{
+\begin{figure}[H]
+	\center{
+	\begin{minipage}{\fullwidth}
+		\includegraphics[width= \fullwidth]{#2}
+		\caption[#3]{#3#4}
+		\label{#1_#5}
+	\end{minipage}
+	}
+\end{figure}
+}
+
+
+%----------------------------------------------------------------------------------
+% \dcite	{ Text }
+%				{ source }
+%				{ page }
+%
+%Direktes Zitat
+\newcommand{\dcite}[3]
+{
+\emph{\glqq#1\grqq}\cite[S.#3]{#2}}
+
+%----------------------------------------------------------------------------------
+% \dcite	{ Text }
+%				{ source }
+%				{ page }
+%
+%Direktes Zitat
+\newcommand{\simpledcite}[2]
+{
+\emph{\glqq#1\grqq}\cite{#2}}
+
+%----------------------------------------------------------------------------------
+% \vcite	
+%				{ source }
+%				{ page }
+%
+%Direktes Zitat
+\newcommand{\vcite}[2]
+{
+(vgl. \cite[S.#2]{#1})}
+
+
+%----------------------------------------------------------------------------------
+% \vcite	
+%				{ source }
+%				{ page }
+%
+%Direktes Zitat
+\newcommand{\simplevcite}[1]
+{
+(vgl. \cite{#1})}
+
+%----------------------------------------------------------------------------------
+% \myHUGEFigure	[ LABEL_PREFIX (optional) ]
+%				{ FILENAME (without extension) }
+%				{ CAPTION TEXT }
+%				{ SHORT VERSION OF CAPTION TEXT }
+%
+%Bild wird rotiert und quer in kompletter Breite gesetzt
+%landscape picture using the full width of the rotated page
+\newcommand{\myHugeFigure}[4][Abb]
+{
+\begin{sidewaysfigure}[H]
+	
+		\includegraphics[width= \textheight]{#2}
+		\caption{#3}
+		\label{#1_#4}
+	
+\end{sidewaysfigure}
+}
+
+
+%----------------------------------------------------------------------------------
+% \myHUGEFigure	[ LABEL_PREFIX (optional) ]
+%				{ FILENAME (without extension) }
+%				{ CAPTION TEXT }
+%				{ SHORT VERSION OF CAPTION TEXT }
+%
+%Bild wird rotiert und quer in kompletter Breite gesetzt
+%landscape picture using the full width of the rotated page
+\newcommand{\myHugeFigureCited}[5][Abb]
+{
+\begin{sidewaysfigure}[t!bp]
+	
+		\includegraphics[width= \textheight]{#2}
+		\caption[#3]{#3#4}
+		\label{#1_#5}
+	
+\end{sidewaysfigure}
+}
+
+
+%-----------------------------------------------------------------------
+% \abbref		{ PIC REFERENCE }
+%
+%Verweis auf eine Abbildung
+\newcommand{\abbref}[1]{Abb. \ref{#1}}
+
+
+\newcommand{\gloss}[1]{\emph{\gls{#1}}}
+
+\newcommand{\glossLink}[2]{\emph{\glslink{#1}{#2}}}
+
+\newcommand{\Ks}{\emph{Basiskomponenten} }
+
+\newcommand{\K}{\emph{Basiskomponente} }
+\newcommand{\knks}{\emph{komplexen Komponenten} }
+
+\newcommand{\kks}{\emph{komplexe Komponenten} }
+
+\newcommand{\guis}{\emph{\glspl{GUI}} }
+
+\newcommand{\gui}{\emph{\acrshort{GUI}} }
+
+\newcommand{\g}{\emph{GUI-DSL} }
+
+\renewcommand{\deg}{\emph{data experts GmbH} }
+
+\newcommand{\gk}{\emph{GUI-Komponente} }
+\newcommand{\gks}{\emph{GUI-Kompo\-nen\-ten} }
+
+\newcommand{\MCF}{\emph{MCF} }
+\newcommand{\pcs}{\emph{profil c/s} }
+
+\newcommand{\DSL}{\emph{DSL} }
+
