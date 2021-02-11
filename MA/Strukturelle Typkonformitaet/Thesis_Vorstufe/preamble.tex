@@ -1,4 +1,3 @@
-
 \usepackage[german]{babel}
 \usepackage[ansinew]{inputenc}
 \usepackage[T1]{fontenc} %Umlaute
@@ -53,7 +52,7 @@
 \lstset{basicstyle=\scriptsize}
 \lstset{numbers=left, numberstyle=\tiny, numbersep=2pt, breaklines=true} 
 \lstset{ numberbychapter=false}
-\graphicspath{{Bilder/}}
+\graphicspath{{pics/}}
 \newcommand{\listoflolentryname}{\lstlistingname} 
 \usepackage{float}
 %\newcommand{\fullcite}{\citep} %for "Author [1980]"
@@ -70,6 +69,10 @@
 \definecolor{darkblue}{rgb}{0.2,0.3,1}
 \definecolor{lightblue}{rgb}{0.6,0.7,1}
 \definecolor{white}{rgb}{1,1,1}
+\definecolor{pblue}{rgb}{0.13,0.13,1}
+\definecolor{pgreen}{rgb}{0,0.5,0}
+\definecolor{pred}{rgb}{0.9,0,0}
+\definecolor{pgrey}{rgb}{0.46,0.45,0.48}
 
 \linespread{1.5}
 
@@ -79,11 +82,25 @@
 
 \usepackage[figuresright]{rotating}
 \usepackage{geometry}
-\geometry{a5paper,left=20mm,right=20mm} 
+\geometry{a4paper,left=20mm,right=20mm} 
 
 \newlength{\fullwidth} % Width of text plus margin notes
 \setlength{\fullwidth}{\textwidth}
 
+
+\lstset{language=Java,
+  showspaces=false,
+  showtabs=false,
+  breaklines=true,
+  showstringspaces=false,
+  breakatwhitespace=true,
+  commentstyle=\color{pgreen},
+  keywordstyle=\color{pblue},
+  stringstyle=\color{pred},
+  basicstyle=\fontsize{9}{10}\selectfont\ttfamily,
+  moredelim=[il][\textcolor{pgrey}]{$$},
+  moredelim=[is][\textcolor{pgrey}]{\%\%}{\%\%}
+}
 
 %----------------------------------------------------------------------------------
 % \myBigFigure	[ LABEL_PREFIX (optional) ]
@@ -98,7 +115,7 @@
 \begin{figure}[H]
 	\center{
 	\begin{minipage}{\fullwidth}
-		\includegraphics[width= \fullwidth]{pics/#2}
+		\includegraphics[width= \fullwidth]{#2}
 		\caption{#3}
 		\label{#1_#4}
 	\end{minipage}
@@ -148,6 +165,7 @@
 \newcommand{\simpledcite}[2]
 {
 \emph{\glqq#1\grqq}\cite{#2}}
+
 
 %----------------------------------------------------------------------------------
 % \vcite	
@@ -215,6 +233,12 @@
 %
 %Verweis auf eine Abbildung
 \newcommand{\abbref}[1]{Abb. \ref{#1}}
+
+%-----------------------------------------------------------------------
+% \listref		{ PIC REFERENCE }
+%
+%Verweis auf ein Listing
+\newcommand{\lstref}[1]{Listing \ref{#1}}
 
 
 \newcommand{\gloss}[1]{\emph{\gls{#1}}}
