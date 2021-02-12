@@ -1,5 +1,5 @@
-\usepackage[german]{babel}
 \usepackage[ansinew]{inputenc}
+\usepackage[german]{babel}
 \usepackage[T1]{fontenc} %Umlaute
 \usepackage{lmodern}
 \usepackage[top=2cm, left=2cm, bottom=2cm, right=2cm]{geometry}
@@ -98,8 +98,114 @@
   keywordstyle=\color{pblue},
   stringstyle=\color{pred},
   basicstyle=\fontsize{9}{10}\selectfont\ttfamily,
-  moredelim=[il][\textcolor{pgrey}]{$$},
+  moredelim=[il][\textcolor{pgrey}]{$ $},
   moredelim=[is][\textcolor{pgrey}]{\%\%}{\%\%}
+}
+
+
+%----------------------------------------------------------------------------------
+% \matchTyp		{ LEFT }
+%				{ MATCHERVAR }
+%				{ RIGHT }
+%
+% Gleichung, die ein Matching darstellt
+\newcommand{\matchTyp}[3]
+{
+#1 \equiv_{#2} #3
+}
+
+%----------------------------------------------------------------------------------
+% \inhTyp		{ CHILD }
+%				{ PARENT }
+%
+% Gleichung, die eine Vererbung darstellt
+\newcommand{\inhTyp}[2]
+{
+#1 \leq #2
+}
+
+%----------------------------------------------------------------------------------
+% \selTyp		{ WRAPPER }
+%				{ ATTR }
+%
+% Gleichung, die eine Selektion darstellt
+\newcommand{\selTyp}[2]
+{
+#1 \# #2
+}
+
+%----------------------------------------------------------------------------------
+% \delegate		{ SOURCE }
+%				{ TARGET }
+%
+% Gleichung, die eine Delegation darstellt
+\newcommand{\delegate}[2]
+{
+#1 \Rightarrow #2
+}
+
+%----------------------------------------------------------------------------------
+% \applyMatcher		{ MATCHER }
+%					{ PARAM }
+%
+% Gleichung, die Applikation eines Matchers auf einen Parameter 
+\newcommand{\applyMatcher}[2]
+{
+(#1)#2
+}
+
+%----------------------------------------------------------------------------------
+% matcherEquivDef		{ MATCHER }
+%						
+%
+% Umgebung für die Definition der Übereinstimmung eines Matchers
+\newenvironment{matcherEquivDef}[1]{
+\begin{addmargin}[1in]{0cm}
+\underline{Übereinstimmung (#1)}
+\end{addmargin}
+\begin{eqnarray*}
+}
+{
+\end{eqnarray*}
+}
+
+%----------------------------------------------------------------------------------
+% matcherConvDef		{ MATCHER }
+%						{ ANNAHME }
+%
+% Umgebung für die Definition der Übereinstimmung eines Matchers
+\newenvironment{matcherConvDef}[2]{
+\begin{addmargin}[1in]{0cm}
+\underline{Konvertierung (#1)}\newline
+#2
+\end{addmargin}
+\begin{eqnarray*}
+}
+{
+\end{eqnarray*}
+}
+
+%----------------------------------------------------------------------------------
+% \myFigure	[ LABEL_PREFIX (optional) ]
+%				{ FILENAME (without extension) }
+%				{ CAPTION TEXT }
+%				{ SHORT VERSION OF CAPTION TEXT }
+%
+%Bild wird in Originalgroesse gesetzt
+%picture using full width of the page
+\newcommand{\myFigure}[3]
+{
+\begin{figure}[H]
+	\center{
+	\begin{minipage}{\fullwidth}
+	\center{
+		\includegraphics{#1}
+		\caption{#2}
+		\label{Abb_#3}
+		}
+	\end{minipage}
+	}
+\end{figure}
 }
 
 %----------------------------------------------------------------------------------
@@ -232,7 +338,7 @@
 % \abbref		{ PIC REFERENCE }
 %
 %Verweis auf eine Abbildung
-\newcommand{\abbref}[1]{Abb. \ref{#1}}
+\newcommand{\abbref}[1]{Abb. \ref{Abb_#1}}
 
 %-----------------------------------------------------------------------
 % \listref		{ PIC REFERENCE }

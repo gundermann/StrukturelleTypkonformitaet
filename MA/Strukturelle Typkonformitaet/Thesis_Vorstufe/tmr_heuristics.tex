@@ -1,0 +1,26 @@
+\subsection{Type-Matcher Rating basierte Heuristiken}
+Wie die Überschrift bereits andeutet, werden die Type-Matcher mit einem Rating versehen. Das Rating wird durch einen numerischen Wert dargestellt. Auf dieser Basis werden zwei Kategorien von Type-Matcher Ratings unterschieden:
+\begin{enumerate}
+\item Qualitatives Type-Matcher Rating
+\item Quantitatives Type-Matcher Rating
+\end{enumerate}
+\subsubsection{Qualitatives Type-Matcher Rating}
+Das qualitative Type-Matcher Rating beschreibt den Grad der strukturellen Übereinstimmung des Source- und des Target-Typen. Dafür wird jeder Type-Matcher mit einem Basiswert versehen. Die konkreten Basiswerte sind im Abschnitt Evaluation beschrieben. Dieser Basiswert wird beim Erzeugen der Typ-Konvertierungsvarianten an die methodendelegationsrelevanten Informationen gehängt, sodass zu jeder Methode, zu der eine Methoden-Konvertierungsvariante existiert, auch ein Wert bzgl. des qualitatives Type-Matcher Rating zur Verfügung steht.\\\\
+Der konkrete Wert für das qualitative Type-Matcher-Rating ermittelt sich grundlegend, wie bereits erwähnt, anhand eines Basiswertes. Sofern ein Type-Matcher jedoch einen internen Type-Matcher verwendet, um die konkreten methodendelegationsrelevanten Informationen zu erzeugen, ergibt sich der Wert des Type-Matcher-Ratings aus einer Akkumulation der Basiswerte des Type-Matchers und des internen Type-Matchers.\\\\
+Damit ist das qualitative Type-Matcher Rating von folgenden Faktoren abhängig:
+\begin{enumerate}
+\item Die Wahl des Basiswertes der einzelnen Type-Matcher
+\item Das Akkumulationsverfahren für das Type-Matcher Rating einer Typ-Konvertierungsvariante
+\item Das Akkumulationsverfahren für das Type-Matcher Rating einer Methoden-Konvertierungsvariante
+\end{enumerate}
+Alle drei Punkt werden bei der Evaluierung dieser Heuristik betrachtet.
+\subsubsection{Quantitatives Type-Matcher Rating}
+Das quantitative Type-Matcher Rating beschreibt, zu wie vielen der erwarteten Methoden in der erzeugten Typ-Konvertierungsvariante methodendelegationsrelevante Informationen vorliegen. Hierzu wird der methodendelegationsrelevante Informationen innerhalb der Typ-konvertierungsvariante durch die Anzahl der erwarteten Methoden geteilt. So stellt das quantitative Type-Matcher Rating also einen Prozentsatz dar. \\\\
+Darauf aufbauend werden im Folgenden zwei Heuristiken vorgestellt, durch die es ermöglicht wird die ermittelten Typ-Konvertierungsvarianten in eine Reihenfolge zu bringen. So kann die Selektion der Kombination von Methoden-Konvertierungsvarianten im 3. Schritt der 2. Stufe des Explorationsalgorithmus anhand dieser Sortierung erfolgen.
+\subsection{Heuristik - TMR\_Quant: Beachtung des quantitativen Type-Matcher Ratings}
+Es wird davon ausgegangen, dass eine angebotene Komponente, deren Schnittstelle strukturell mit der erwarteten Schnittstelle übereinstimmt und dabei zu jeder erwarteten Methode eine passende Methode anbietet, eher die semantischen Erwartungen erfüllt, als eine Kombination aus mehreren angebotenen Komponenten.\\\\
+Daher sollten bei der Selektion der Kombinationen von Methoden-Konvertierungsvarianten in Schritt 3 der 2. Stufe des Explorationsalgorithmus (siehe \ref{sem_eval_step3}) zuerst diejenigen Kombinationen gewählt werden, deren Elemente (Methoden-Konvertierungsvarianten) aus ein und derselben Typ-Konvertierungsvariante stammen, sprich deren quantitatives Type-Matcher Rating möglichst hoch ist.
+\subsection{Heuristik - TMR\_Qual: Beachtung des qualitativen Type-Matcher Ratings}
+Es wird davon ausgegangen, dass eine von einer angebotene Komponente angebotene Methode, die strukturell mit einer erwarteten Methode zu einem höheren Grad übereinstimmt, auch eher die semantischen Erwartungen an diese Methode erfüllt.\\\\
+Daher sollten bei der Selektion der Kombinationen von Methoden-Konvertierungsvarianten in Schritt 3 der 2. Stufe des Explorationsalgorithmus  (siehe \ref{sem_eval_step3}) zuerst diejenigen Kombinationen gewählt werden, deren Elemente (Methoden-Konvertierungsvarianten) aus den methodendelegationsrelevanten Informationen mit den niedrigsten qualitativen Type-Matcher Rating der Typ-Konvertierungsvarianten erzeugt wurden.
+
