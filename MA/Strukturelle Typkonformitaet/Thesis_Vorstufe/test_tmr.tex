@@ -1,0 +1,115 @@
+\subsection{Type-Matcher Rating basierte Heuristiken}
+\subsubsection{Ausgangspunkt}
+Für ein erwarteten Interfaces konnten mehrere angebotene Interfaces gefunden werden, die eine strukturelle Übereinstimmung aufwiesen. Tabelle 1 zeigt die Anzahl der strukturell übereinstimmenden angebotenen Interfaces je erwartetes Interface.
+\begin{table}[H]
+\centering
+\small
+			\begin{tabular}[c]{|c|c|}
+			\hline
+			\hline
+				 \textbf{erwartetes Interface} & \textbf{Anzahl strukturell übereinstimmender angebotener Interfaces} \\
+				\hline\hline
+				TEI1 & 169 \\
+				\hline
+				TEI2 & 179\\
+				\hline
+				TEI3 & 187\\
+				\hline
+				TEI4 & 62\\
+				\hline
+				TEI5 & 60\\
+				\hline
+				TEI6 & 33\\
+				\hline
+				\hline
+			\end{tabular} 
+ \caption{Anzahl strukturell übereinstimmender angebotener Interfaces je erwartetes Interfaces}
+ \label{tab_amount_matched_interfaces}
+\end{table}
+\noindent
+Die Abbildungen 22 - 30 zeigen für jedes der erwarteten Interfaces und einen Durchlauf des Explorationsalgorithmus eine Vier-Felder-Tafel, aus der hervorgeht, wie viele Kombinationen der ermittelten Typ-Konvertierungsvarianten der angebotenen Interfaces innerhalb des Durchlaufs erzeugt werden könnten. Die Nummer des Durchlaufs wird in der oberen rechten Ecke der Tafel abgebildet. In der Spalte positiv ist die Anzahl der Kombinationen verzeichnet, die innerhalb des Durchlaufs tatsächlich erzeugt wurden. Die Zahl in der Spalte ?negativ? drückt hingegen aus, wie viele der Kombinationen aufgrund bestimmter Kriterien (bzw. Heuristiken) gar nicht erst erzeugt wurden.  Die Zeile ?falsch? beschreibt die Anzahl der Kombinationen, aus denen benötigte Komponenten erzeugt werden, die die semantischen Tests nicht bestehen. Dementsprechend stellt die Zeile richtig die Anzahl der Kombinationen dar, aus denen sich benötigte Komponenten lassen, die die semantischen Test bestehen.\\\\
+Zuletzt ist zu erwähnen, dass der Fall, in dem eine Kombination nicht erzeugt wurde und dennoch für die Erstellung einer benötigten Komponente genutzt wurde, die die semantischen Tests besteht, (negativ und richtig) nicht auftreten kann.\\\\
+Die Anzahl der möglichen Kombinationen von Typ-Konvertierungsvarianten wird aufgrund ihrere Größe in den Tafeln mit $TK$ beschrieben. Der Wert für $TK$ berechnet sich in Abhängigkeit von der Nummer des Durchlaufs $d$ und der Anzahl der strukturell passenden angebotenen Interfaces $n$ (siehe auch Abschnitt Explorationskomponente, 2. Stufe, 2. Kombination von Typ-Konvertierungsvarianten).
+\begin{equation*}
+TK = \frac{n!}{(n!-d!)*d!}
+\end{equation*}
+\vft{1}{TK-1}{0}{1}{0}{Ausgangspunkt Test-System TMR für TEI1}{tmr_start_tei1}
+\vft{1}{TK-1}{0}{1}{0}{Ausgangspunkt Test-System TMR für TEI2}{tmr_start_tei2}
+\vft{1}{TK-1}{0}{1}{0}{Ausgangspunkt Test-System TMR für TEI3}{tmr_start_tei3}
+\vft{1}{TK}{0}{0}{0}{Ausgangspunkt Test-System TMR für TEI4 1. Durchlauf}{tmr_start_tei4_1}
+\vft{1}{TK}{0}{0}{0}{Ausgangspunkt Test-System TMR für TEI5 1. Durchlauf}{tmr_start_tei5_1}
+\vft{1}{TK}{0}{0}{0}{Ausgangspunkt Test-System TMR für TEI6 1. Durchlauf}{tmr_start_tei6_1}
+\vft{2}{TK-1}{0}{1}{0}{Ausgangspunkt Test-System TMR für TEI4 2. Durchlauf}{tmr_start_tei4_2}
+\vft{2}{TK-1}{0}{1}{0}{Ausgangspunkt Test-System TMR für TEI5 2. Durchlauf}{tmr_start_tei5_2}
+\vft{2}{TK-1}{0}{1}{0}{Ausgangspunkt Test-System TMR für TEI6 2. Durchlauf}{tmr_start_tei6_2}
+\noindent
+Für die Interfaces TEI4 - TEI6 werden zwei Durchläufe benötigt, da die semantischen Test nur von einer benötigten Komponente bestanden werden, die auch einer Kombination zweier Typ-Konvertierungsvarianten erzeugt wurde.\\\\
+Die Typ-Matcher Rating basierten Heuristiken sollten zu einer Reduktion der Anzahl von kombinierbaren Typ-Konvertierungsvarianten, die die semantischen Tests nicht bestehen würden, führen (positiv und falsch).
+\subsubsection{Ergebnisse TMR\_Quant}
+Durch die Verwendung der Heuristik TMR\_Quant kann für die ersten 3 erwarteten Interfaces eine Besserung erzielt werden. Der Grund dafür ist, dass die benötigte Komponente, die letztendlich alle semantischen Tests besteht auf der Basis genau einer Typ-Konvertierungsvariante erzeugt wurde. Damit benötigt der Explorationsalgorithmus lediglich einen Durchlauf. TMR\_Quant sorgt dennoch dafür, dass die erzeugten Kombinationen von Typ-Konvertierungsvarianten im 2. Schritt reduziert werden, da solche, die ein quantitatives Type-Matcher Rating von < 100\% haben nicht in die Ergebnismenge des 2. Schrittes einfließen. Die unten aufgeführten Tafeln zeigen die Auswirkung auf die ersten drei erwarteten Interfaces (TEI1 - TEI3).
+\vft{1}{TK-28}{TK-140}{1}{0}{TMR\_Quant Test-System TMR für TEI1}{tmr_quant_tei1}
+\vft{1}{TK-21}{TK-157}{1}{0}{TMR\_Quant Test-System TMR für TEI2}{tmr_quant_tei2}
+\vft{1}{TK-23}{TK-163}{1}{0}{TMR\_Quant Test-System TMR für TEI3}{tmr_quant_tei3}
+\noindent
+Für die anderen erwarteten Interfaces (TEI4 - TEI6) kann durch diese Heuristik höchstens für den ersten Durchlauf eine eine Verbesserung erzielen. Die unteren Tafeln zeigen, dass sich diese Verbesserung signifikant nur auf das erwartete Interface TEI4 auswirkt.
+\vft{1}{TK-30}{TK-32}{0}{0}{TMR\_Quant Test-System TMR für TEI4}{tmr_quant_tei4}
+\vft{1}{TK}{0}{0}{0}{TMR\_Quant Test-System TMR für TEI5}{tmr_quant_tei5}
+\vft{1}{TK-31}{TK-2}{0}{0}{TMR\_Quant Test-System TMR für TEI6}{tmr_quant_tei6}
+
+\subsubsection{Ergebnisse TMR\_Qual}
+Für die Heuristik TMR\_Qual gibt es drei Aspekte, deren Konfiguration zu unterschiedlichen Ergebnissen führen kann:
+\begin{enumerate}
+\item Die Wahl des Basiswertes der einzelnen Type-Matcher
+\item Die Ermittlung des akkumulierten Type-Matcher Ratings einer Typ-Konvertierungsvariante
+\item Die Ermittlung des akkumulierten Type-Matcher Ratings einer Methoden-Konvertierungsvariante
+\end{enumerate}
+\myparagraph{Auswahl der Basiswerte} 
+Die Basiswerte wurden bei den Untersuchungen konstant gelassen. Die konkreten Basiswerte, die für die Untersuchungen verwendet wurden, sind der Tabelle 2 zu entnehmen.\\\\
+Die Werte bilden meiner Meinung nach die Wertigkeit der einzelnen Type-Matcher in Hinblick auf die Typisierung innerhalb der Sprache Java ab. So ist der ExactTypeMatcher, der nur zwei identische Typen als übereinstimmend bewertet, mit dem niedrigsten Wert und damit der höchsten Qualität hinsichtlich TMR\_Qual zu konfigurieren. Gleich dahinter folgt der GenSpecTypeMatcher, der Typen als übereinstimmend bewertet, wenn sie innerhalb der Sprache auch miteinander substituiert werden können. An dritter Stelle kommt meiner Meinung nach der WrappedTypeMatcher, da dieser immerhin eine vollständige Übereinstimmung von Typen fordert (auch wenn ein Typen innerhalb eines anderes enthalten ist), während der StructuralTypeMatcher lediglich einen Teil der deklarierten Methoden für eine Übereinstimmung fordert.
+\begin{table}[H]
+\centering
+\small
+			\begin{tabular}[c]{|c|c|}
+			\hline
+			\hline
+				 \textbf{Type-Matcher} & \textbf{Basiswert} \\
+				\hline\hline
+				ExactTypeMatcher & 100 \\
+				\hline
+				ExactTypeMatcher & 200\\
+				\hline
+				WrappedTypeMatcher & 300\\
+				\hline
+				StructuralTypeMatcher & 400\\
+				\hline
+				\hline
+			\end{tabular} 
+ \caption{Type-Matcher mit Basiswerten
+}
+ \label{tab_basevalues}
+\end{table}
+\noindent
+\myparagraph{Auswahl des Akkumulationsverfahren des Type-Matcher Ratings einer\\Typ-Konvertierungsvariante}
+Das Akkumulationsverfahren für das Type-Matcher Rating einer Typ-Konvertierungsvariante  $TMRTK$ ist von dem Type-Matcher Rating der verwendeten Type-Matcher abhängig. Das Type-Matcher Rating der verwendeten Type-Matcher wird als Funktion $tmr(m)$ beschrieben. Dabei stellt m den jeweiligen Type-Matcher dar. Die Funktion $tmr(m)$ ist durch die Tabelle 2 definiert.
+Für einen Menge von Type-Matcher $m_1, m_2, ..., m_i$, die zur Erzeugung einer Typ-Konvertierungsvariante verwendet wurden, werden folgende Akkumulationsverfahren für das Type-Matcher Rating der Typ-Konvertierungsvariante im weiteren Verlauf evaluiert:
+\begin{enumerate}
+\item Wahl des Duchschnitts
+\begin{equation*}
+TMR_{TK} = \frac{ \sum_{n=1}^{i} tmr(m_n)}{i}
+\end{equation*}
+\item Wahl des Maximums
+\begin{equation*}
+TMR_{TK} = max(tmr(m_1), ..., tmr(m_i))
+\end{equation*}
+\item Wahl des Minimums
+\begin{equation*}
+TMR_{TK} = min(tmr(m_1), ..., tmr(m_i))
+\end{equation*}
+\item Wahl des Durchschnitts aus Minimum und Maximum
+\begin{equation*}
+TMR_{TK} = \frac{min(tmr(m_1), ..., tmr(m_i)) +  max(tmr(m_1), ..., tmr(m_i))}{2}
+\end{equation*}
+
+\end{enumerate}
+
+\myparagraph{Auswahl des Akkumulationsverfahren des Type-Matcher Ratings einer\\Methoden-Konvertierungsvariante}

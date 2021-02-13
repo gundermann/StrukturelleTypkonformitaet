@@ -14,6 +14,7 @@
 \usepackage{palatino}
 \usepackage{chngpage}
 \usepackage{chngcntr}
+\usepackage{amsmath}
 \counterwithout{figure}{chapter}
 \counterwithout{table}{chapter}
 \renewcommand{\floatpagefraction}{0.85}
@@ -103,6 +104,41 @@
 }
 
 
+\usepackage{varwidth}
+\newcommand\tabrotate[1]{\begin{turn}{90}\rlap{#1}\end{turn}}
+\newcommand\tabvarwidth[2][3cm]{\begin{varwidth}[b]{#1}\centering #2\end{varwidth}}
+\newcommand{\myparagraph}[1]{\paragraph{#1}\mbox{}\\}
+
+%----------------------------------------------------------------------------------
+% \vft		{ NUMBER }
+%			{ UPPER_LEFT }
+%			{ UPPER_RIGHT }
+%			{ LOWER_LEFT }
+%			{ LOWER_RIGHT }
+%			{ CAPTION }
+%			{ LABEL }
+%
+% Gleichung, die ein Matching darstellt
+\newcommand{\vft}[7]{
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}[c]{|c|c|c|}
+\hline
+#1 & \cellcolor{gruen}\textbf{positiv} & \cellcolor{rot}\textbf{negativ} \\
+\hline
+\cellcolor{rot}&\cellcolor{rot}&\cellcolor{rot}\\
+\tabrotate{\cellcolor{rot}\textbf{falsch}} & \cellcolor{rot}#2 & \tabvarwidth{\cellcolor{rot}#3} \\
+\hline
+\cellcolor{gruen}&\cellcolor{gruen}&\cellcolor{rot}\\
+\tabrotate{\cellcolor{gruen}richtig} & \cellcolor{gruen}#4 & \cellcolor{rot}#5\\
+\hline
+
+\end{tabular}
+\caption{#6}
+ \label{Tab_#7}
+\end{table}
+}
 %----------------------------------------------------------------------------------
 % \matchTyp		{ LEFT }
 %				{ MATCHERVAR }
