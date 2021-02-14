@@ -7,6 +7,7 @@
 \usepackage{float}
 \usepackage{listings} 
 \usepackage{multirow}
+\usepackage{multicol}
 \usepackage{color}		 % für Farben im allgemeinen
 \usepackage{colortbl}
 \usepackage{cite}
@@ -15,9 +16,11 @@
 \usepackage{chngpage}
 \usepackage{chngcntr}
 \usepackage{amsmath}
+\usepackage{setspace}
 \counterwithout{figure}{chapter}
 \counterwithout{table}{chapter}
 \renewcommand{\floatpagefraction}{0.85}
+
 
 \usepackage{fancyhdr}
 \pagestyle{fancy}
@@ -75,6 +78,7 @@
 \definecolor{pred}{rgb}{0.9,0,0}
 \definecolor{pgrey}{rgb}{0.46,0.45,0.48}
 
+\onehalfspacing
 \linespread{1.5}
 
 \bibliographystyle{geralpha}
@@ -123,18 +127,19 @@
 \begin{table}[H]
 \centering
 \small
+\doublespacing
 \begin{tabular}[c]{|c|c|c|}
 \hline
 #1 & \cellcolor{gruen}\textbf{positiv} & \cellcolor{rot}\textbf{negativ} \\
 \hline
 \cellcolor{rot}&\cellcolor{rot}&\cellcolor{rot}\\
-\tabrotate{\cellcolor{rot}\textbf{falsch}} & \cellcolor{rot}#2 & \tabvarwidth{\cellcolor{rot}#3} \\
+\tabrotate{\cellcolor{rot}\textbf{falsch}} & \multirow{-2}{*}{\cellcolor{rot}#2}&\multirow{-2}{*}{\cellcolor{rot}#3}\\
 \hline
 \cellcolor{gruen}&\cellcolor{gruen}&\cellcolor{rot}\\
-\tabrotate{\cellcolor{gruen}richtig} & \cellcolor{gruen}#4 & \cellcolor{rot}#5\\
+\tabrotate{\cellcolor{gruen}richtig} &\multirow{-2}{*}{\cellcolor{gruen}#4}&\multirow{-2}{*}{\cellcolor{rot}#5} \\
 \hline
-
 \end{tabular}
+\singlespacing
 \caption{#6}
  \label{Tab_#7}
 \end{table}
