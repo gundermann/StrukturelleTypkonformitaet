@@ -64,19 +64,30 @@ public final class Setting {
   private static final BiFunction<MatcherRate, MatcherRate, Boolean> MAX_RATE_PER_METHOD = ( higher,
       lower ) -> COMPARE_QUALITATIVE_METHOD_MATCH_RATE.apply( higher, lower ) > 0;
 
-  private static final Function<Stream<MatcherRate>, MatcherRate> HIGHER_QUALITATIVE_METHOD_MATCH_RATE_CONDITION = matcherRateCol -> matcherRateCol
+  private static final Function<Stream<MatcherRate>, MatcherRate> HIGHER_QUALITATIVE_METHOD_MATCH_RATE_CONDITION_MIN = matcherRateCol -> matcherRateCol
       .reduce( ( higher,
           lower ) -> higher != null && lower != null
-              && MAX_RATE_PER_METHOD.apply( higher, lower ) ? higher : lower )
+              &&
+              // MAX_RATE_PER_METHOD
+              MIN_RATE_PER_METHOD
+                  .apply( higher, lower ) ? higher : lower )
+      .get();
+
+  private static final Function<Stream<MatcherRate>, MatcherRate> HIGHER_QUALITATIVE_METHOD_MATCH_RATE_CONDITION_MAX = matcherRateCol -> matcherRateCol
+      .reduce( ( higher,
+          lower ) -> higher != null && lower != null
+              &&
+              MAX_RATE_PER_METHOD
+                  .apply( higher, lower ) ? higher : lower )
       .get();
 
   public static final Function<Stream<MatcherRate>, MatcherRate> QUALITATIVE_COMPONENT_MATCH_RATE_CUMULATION = //
-      // HIGHER_QUALITATIVE_METHOD_MATCH_RATE_CONDITION //
+      // HIGHER_QUALITATIVE_METHOD_MATCH_RATE_CONDITION_MIN //
       matcherRateCol -> ALL_AVG.apply( matcherRateCol.collect( Collectors.toList() ) )//
   ;
 
   public static final Function<Stream<MatcherRate>, MatcherRate> QUALITATIVE_COMPONENT_METHOD_MATCH_RATE_CUMULATION = //
       matcherRateCol -> ALL_AVG.apply( matcherRateCol.collect( Collectors.toList() ) ) //
-  // HIGHER_QUALITATIVE_METHOD_MATCH_RATE_CONDITION //
+  // HIGHER_QUALITATIVE_METHOD_MATCH_RATE_CONDITION_MAX //
   ;
 }

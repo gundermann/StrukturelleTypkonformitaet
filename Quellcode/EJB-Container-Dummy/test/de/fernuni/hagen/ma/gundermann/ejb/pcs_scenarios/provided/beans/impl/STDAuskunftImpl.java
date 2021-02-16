@@ -13,6 +13,8 @@ import DE.data_experts.profi.profilcs.antrag.dv.business.DvFoerdergegenstand;
 import DE.data_experts.profi.profilcs.antrag.dv.business.DvProduktcode;
 import DE.data_experts.profi.profilcs.antrag.dv.business.KuerzungsgrundCode;
 import DE.data_experts.profi.profilcs.antrag2015.eler.ft.stammdaten.business.ElerFTFoerderprogramm;
+import DE.data_experts.profi.profilcs.antrag2015.stammdaten.business.impl.Finanzierungskonfiguration;
+import DE.data_experts.profi.profilcs.antrag2015.stammdaten.business.impl.Finanzierungsschluessel;
 import DE.data_experts.profi.profilcs.antrag2015.stammdaten.business.impl.Foerdergegenstand;
 import DE.data_experts.profi.profilcs.antrag2015.stammdaten.business.impl.FoerdergegenstandGruppe;
 import DE.data_experts.profi.profilcs.antrag2015.stammdaten.business.impl.Foerderprogramm;
@@ -21,6 +23,7 @@ import DE.data_experts.profi.profilcs.antrag2015.stammdaten.business.impl.Produk
 import DE.data_experts.profi.profilcs.antrag2015.stammdaten.business.impl.ProduktcodeArt;
 import DE.data_experts.profi.profilcs.antrag2015.stammdaten.business.impl.Vorgang;
 import DE.data_experts.profi.profilcs.antrag2015.stammdaten.ejb.StammdatenAuskunftService;
+import DE.data_experts.profi.profilcs.antrag2015.stammdaten.query.FinanzierungskonfigurationQuery;
 import DE.data_experts.profi.profilcs.antrag2015.stammdaten.query.FoerdergegenstandQuery;
 import DE.data_experts.profi.profilcs.antrag2015.stammdaten.query.LandesmassnahmeQuery;
 import DE.data_experts.profi.profilcs.antrag2015.stammdaten.query.ProduktcodeQuery;
@@ -168,12 +171,6 @@ public class STDAuskunftImpl implements StammdatenAuskunftService {
   }
 
   @Override
-  public Collection<Produktcode> getProduktcodes( DvAntragsJahr jahr, Foerdergegenstand fg ) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
   public Collection<Produktcode> getProduktcodes( ProduktcodeQuery query ) {
     // TODO Auto-generated method stub
     return null;
@@ -216,14 +213,61 @@ public class STDAuskunftImpl implements StammdatenAuskunftService {
   }
 
   @Override
-  public Map<DvFoerdergegenstand, DvProduktcode> getProduktcodesJeFg( DvFoerderprogramm fp, DvAntragsJahr jahr,
-      Collection<DvFoerdergegenstand> fgs, ProduktcodeArt pcArt ) {
+  public Collection<Produktcode> getProduktcodes( DvAntragsJahr jahr, DvFoerdergegenstand fg ) {
     // TODO Auto-generated method stub
     return null;
   }
 
   @Override
-  public Collection<Produktcode> getProduktcodes( DvAntragsJahr jahr, DvFoerdergegenstand fg ) {
+  public Collection<Finanzierungskonfiguration> getFinanzierungskonfigurationen(
+      FinanzierungskonfigurationQuery arg0 ) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Collection<Finanzierungskonfiguration> getFinanzierungskonfigurationen( Finanzierungsschluessel arg0,
+      DvAntragsJahr arg1 ) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Collection<Finanzierungsschluessel> getFinanzierungsschluessel( DvFoerderprogramm arg0 ) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Collection<Foerdergegenstand> getFoerdergegenstaendeZuFinanzierungsschluessel( DvFoerderprogramm arg0,
+      Finanzierungsschluessel arg1 ) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Produktcode getProduktcode( DvAntragsJahr arg0, DvFoerdergegenstand arg1, ProduktcodeArt arg2,
+      Finanzierungsschluessel arg3 ) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Collection<Produktcode> getProduktcodes( DvAntragsJahr arg0, Finanzierungsschluessel arg1 ) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Collection<Produktcode> getProduktcodes( DvAntragsJahr arg0, DvFoerdergegenstand arg1,
+      Finanzierungsschluessel arg2 ) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Map<DvFoerdergegenstand, DvProduktcode> getProduktcodesJeFg( DvFoerderprogramm arg0, DvAntragsJahr arg1,
+      Collection<DvFoerdergegenstand> arg2, ProduktcodeArt arg3, Finanzierungsschluessel arg4 ) {
     // TODO Auto-generated method stub
     return null;
   }
