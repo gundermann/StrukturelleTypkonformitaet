@@ -141,7 +141,7 @@
 \end{tabular}
 \singlespacing
 \caption{#6}
- \label{Tab_#7}
+ \label{tab:#7}
 \end{table}
 }
 %----------------------------------------------------------------------------------
@@ -380,6 +380,23 @@
 %
 %Verweis auf eine Abbildung
 \newcommand{\abbref}[1]{Abb. \ref{Abb_#1}}
+
+
+
+%-----------------------------------------------------------------------
+% \tabref		{ PIC REFERENCE }
+%
+%Verweis auf eine Tabelle
+\newcommand{\tabref}[1]{Tabelle \ref{tab:#1}}
+
+%-----------------------------------------------------------------------
+% \tabsrefs		{ TAB REFERENCE_START }
+%				{ TAB REFERENCE_END }
+%
+%Verweis auf eine Tabelle
+\newcommand{\tabsrefs}[2]{Tabellen \ref{tab:#1}-\ref{tab:#2}}
+
+
 
 %-----------------------------------------------------------------------
 % \listref		{ PIC REFERENCE }
