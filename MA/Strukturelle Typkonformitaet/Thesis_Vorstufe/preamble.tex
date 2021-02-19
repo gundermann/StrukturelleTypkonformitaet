@@ -17,6 +17,7 @@
 \usepackage{chngcntr}
 \usepackage{amsmath}
 \usepackage{setspace}
+\usepackage{subcaption}
 \counterwithout{figure}{chapter}
 \counterwithout{table}{chapter}
 \renewcommand{\floatpagefraction}{0.85}
@@ -242,7 +243,7 @@
 	\center{
 		\includegraphics{#1}
 		\caption{#2}
-		\label{Abb_#3}
+		\label{abb:#3}
 		}
 	\end{minipage}
 	}
@@ -250,25 +251,46 @@
 }
 
 %----------------------------------------------------------------------------------
-% \myBigFigure	[ LABEL_PREFIX (optional) ]
+% \myBigFigure	[ WIDTH (optional) ]
 %				{ FILENAME (without extension) }
 %				{ CAPTION TEXT }
 %				{ SHORT VERSION OF CAPTION TEXT }
 %
 %Bild wird in kompletter Breite gesetzt
 %picture using full width of the page
-\newcommand{\myBigFigure}[4][Abb]
+\newcommand{\myBigFigure}[4][\fullwidth]
 {
 \begin{figure}[H]
 	\center{
-	\begin{minipage}{\fullwidth}
-		\includegraphics[width= \fullwidth]{#2}
+	\begin{minipage}{#1}
+		\includegraphics[width=#1]{#2}
 		\caption{#3}
-		\label{#1_#4}
+		\label{abb:#4}
 	\end{minipage}
 	}
 \end{figure}
 }
+
+
+%----------------------------------------------------------------------------------
+% \myBigFigureGraphic	
+%						[ PARAMS (optional) ]
+%				{ FILENAME (without extension) }
+%				{ CAPTION TEXT }
+%				{ SHORT VERSION OF CAPTION TEXT }
+%
+%Bild wird in kompletter Breite gesetzt
+%picture using full width of the page
+\newcommand{\myBigFigureGraphic}[5][width=\fullwidth]
+{
+\begin{figure}[H]
+	\center
+	\includegraphics[#1]{#2}
+	\caption{#3}
+	\label{abb:#4}
+\end{figure}
+}
+
 
 
 %----------------------------------------------------------------------------------
@@ -279,7 +301,7 @@
 %
 %Bild wird in kompletter Breite gesetzt
 %picture using full width of the page
-\newcommand{\myBigFigureCited}[5][Abb]
+\newcommand{\myBigFigureCited}[5][abb:]
 {
 \begin{figure}[H]
 	\center{
@@ -343,7 +365,7 @@
 %
 %Bild wird rotiert und quer in kompletter Breite gesetzt
 %landscape picture using the full width of the rotated page
-\newcommand{\myHugeFigure}[4][Abb]
+\newcommand{\myHugeFigure}[4][abb:]
 {
 \begin{sidewaysfigure}[H]
 	
@@ -363,7 +385,7 @@
 %
 %Bild wird rotiert und quer in kompletter Breite gesetzt
 %landscape picture using the full width of the rotated page
-\newcommand{\myHugeFigureCited}[5][Abb]
+\newcommand{\myHugeFigureCited}[5][abb:]
 {
 \begin{sidewaysfigure}[t!bp]
 	
@@ -379,7 +401,7 @@
 % \abbref		{ PIC REFERENCE }
 %
 %Verweis auf eine Abbildung
-\newcommand{\abbref}[1]{Abb. \ref{Abb_#1}}
+\newcommand{\abbref}[1]{Abb. \ref{abb:#1}}
 
 
 
@@ -395,6 +417,14 @@
 %
 %Verweis auf eine Tabelle
 \newcommand{\tabsrefs}[2]{Tabellen \ref{tab:#1}-\ref{tab:#2}}
+
+%-----------------------------------------------------------------------
+% \abbsrefs		{ PIC REFERENCE_START }
+%				{ PIC REFERENCE_END }
+%
+%Verweis auf eine Tabelle
+\newcommand{\abbsrefs}[2]{Abbildungen \ref{abb:#1}-\ref{abb:#2}}
+
 
 
 

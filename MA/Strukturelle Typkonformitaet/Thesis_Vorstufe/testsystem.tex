@@ -1,3 +1,69 @@
 \section{Test-System}
-Wie bereits erwähnt werden im Test-System die 889 angebotenen Interfaces verwendet, die auch im Heiß-System verwendet werden. Darüber hinaus wurden noch 6 weitere angebotene Interfaces dem Test-System hinzugefügt, um bestimmte Konstellationen gezielter zu evaluieren. Damit stehen in diesem System für die Evaluation der insgesamt wurde 6 erwartete Interfaces für die Evaluation verwendet. Die 6 erwarteten Interfaces wurden wie folgt deklariert (siehe Abbildung 16 - 21).
+Wie bereits erwähnt werden im Test-System die 889 angebotenen Interfaces verwendet, die auch im Heiß-System verwendet werden. Darüber hinaus wurden noch 6 weitere angebotene Interfaces dem Test-System hinzugefügt, um bestimmte Konstellationen gezielter zu evaluieren. Damit stehen in diesem System für die Evaluation der insgesamt wurde 6 erwartete Interfaces für die Evaluation verwendet. Die 6 erwarteten Interfaces wurden wie folgt deklariert (siehe \abbsrefs{tei1}{tei6}).
+
+
+\myBigFigure{ElerFTFoerderprogrammeProvider}{Erwartetes Interface: ElerFTFoerderprogrammeProvider}{tei1}
+\myBigFigure{FoerderprogrammeProvider}{Erwartetes Interface: FoerderprogrammeProvider}{tei2}
+
+
+\begin{figure}[H]
+\begin{minipage}[b]{.57\linewidth}
+%\begin{flushleft}
+  \centering
+  \includegraphics[width=\linewidth]{MinimalFoerderprogrammeProvider}
+  \captionof{figure}{Erwartetes Interface: MinimalFoerderprogrammeProvider}
+  \label{abb:tei3}
+
+%\end{flushleft}
+\end{minipage}%
+\hspace{.03\linewidth}% Abstand zwischen Bilder
+\begin{minipage}[b]{.4\linewidth}
+%\begin{flushright}
+
+  \centering
+  \includegraphics[width=\linewidth]{IntubatingFireFighter}
+  \captionof{figure}{Erwartetes Interface: IntubatingFireFighter}
+  \label{abb:tei4}
+
+%\end{flushright}
+\end{minipage}
+\end{figure}
+
+
+
+\begin{multicols}{2}
+\myBigFigure[8cm]{IntubatingFreeing}{Erwartetes Interface: IntubatingFreeing}{tei5}
+\myBigFigure[8cm]{IntubatingPatientFireFighter}{Erwartetes Interface: IntubatingPatientFireFighter}{tei6}
+\end{multicols}
+\newpage
+\noindent
+Im weiteren Verlauf werden die oben beschriebenen Interfaces durch die Kürzel in \tabref{eIShort} identifiziert.
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|l|c|}
+\hline
+\hline
+\centering\textbf{erwartetes Inferface} & \textbf{Kürzel} \\
+\hline
+\hline
+ElerFTFoerderprogrammeProvider & TEI1\\
+\hline
+FoerderprogrammeProvider & TEI2\\
+\hline
+MinimalFoerderprogrammeProvider & TEI3\\
+\hline
+IntubatingFireFighter & TEI4\\
+\hline
+IntubatingFreeing & TEI5\\
+\hline
+IntubatingPatientFireFighter & TEI6\\
+\hline
+\hline
+\end{tabular}
+\caption{Kürzel der erwarteten Interfaces}
+ \label{tab:eIShort}
+\end{table}
+
+
 \input{test_tmr}
