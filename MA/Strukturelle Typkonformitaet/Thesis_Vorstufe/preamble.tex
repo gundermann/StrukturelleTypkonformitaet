@@ -273,6 +273,45 @@
 
 
 %----------------------------------------------------------------------------------
+% \myNeighboursFigures	NOT WORKING!!!!
+%   			[ PROPORTION OF DISTANCE (optional)]
+%				{ PROPORTION OF 1  }
+%				{ FILENAME OF 1 (without extension) }
+%				{ CAPTION TEXT OF 1 }
+%				{ REF OF 1}
+%				{ PROPORTION OF 1  }
+%				{ FILENAME OF 1 (without extension) }
+%				{ CAPTION TEXT OF 1 }
+%				{ REF OF 1}
+%
+%Zwei Bilder nebeneinander
+\newcommand{\myNeighboursFigures}[9][0.04]
+{
+
+\begin{figure}[H]
+\begin{minipage}[b]{(1-#1*(#2/100))\linewidth}
+  \centering
+  \includegraphics[width=\linewidth]{#3}
+  \captionof{figure}{#4}
+  \label{abb:#5}
+
+\end{minipage}%
+\hspace{#1\linewidth}% Abstand zwischen Bilder
+\begin{minipage}[b]{(1-#1*(#6/100))\linewidth}
+
+
+  \centering
+  \includegraphics[width=\linewidth]{#7}
+  \captionof{figure}{#8}
+  \label{abb:#9}
+
+\end{minipage}
+\end{figure}
+
+}
+
+
+%----------------------------------------------------------------------------------
 % \myBigFigureGraphic	
 %						[ PARAMS (optional) ]
 %				{ FILENAME (without extension) }
@@ -401,7 +440,7 @@
 % \abbref		{ PIC REFERENCE }
 %
 %Verweis auf eine Abbildung
-\newcommand{\abbref}[1]{Abb. \ref{abb:#1}}
+\newcommand{\abbref}[1]{Abbildung \ref{abb:#1}}
 
 
 

@@ -1,9 +1,31 @@
-\subsubsection{Durchführen der Tests}\label{sem_eval_step5}
+\subsubsection{Schritt 5: Durchführen der Tests}\label{sem_eval_step5}
 Die Testfälle aus der Testklasse werden über die Annotation @QueryTypeTest ermittelt und sequentiell ausgeführt. Als Ergebnis der Testausführung für eine benötigte Komponente wird ein Objekt des Typs TestResult zurückgegeben. Tritt bei der Testausführung eine Exception auf, wird diese im TestResult-Objekt hinterlegt. Im Anschluss wird das TestResult-Objekt direkt zurückgegeben, um die Ausführung der übrigen Tests zu verhindern. Wenn ein Test mit positivem Ergebnis durchgeführt wird, wird das Attribut passedTests im TestResult-Objekt inkrementiert. Sollten alle Tests erfolgreich durchgeführt worden sein, wird das TestResult Objekt zurückgegeben.\\\\
 Ab dem zweiten Durchlauf werden werden die benötigten Komponenten in Schritt 3 aus den  Typ-Konvertierungsvarianten mehrere angebotener Interfaces erzeugt. Das führt dazu, dass die Methodenaufrufe auf dem erwarteten Interface an unterschiedliche angebotene Komponenten delegiert werden. Hierbei kann der Fall eintreten, dass mehrere dieser Methoden von der Semantik her auf den gleichen Daten operieren müssen, die Delegation der Aufrufe aber an unterschiedliche Komponenten vorgenommen wird, die auch auf unterschiedlichen Daten arbeiten.\\\\
 Ein Beispiel hierfür wäre eine Art Stack, der durch das erwartete Interface Stack beschrieben. Dieses enthält eine push und eine pop Methoden mit der Elemente im Stack hinzugefügt bzw. entfernt werden können (siehe \abbref{expected_stack}). Hierbei ist anzunehmen, dass die beiden Methoden auf denselben Daten arbeiten, sodass nach dem Hinzufügen eines Elements a (push(a)) und dem darauf folgenden Aufruf der Methode pop() als Rückgabewert wieder das zuvor hinzugefügte Element a geliefert wird (siehe \abbref{sd_stack_1}). Wenn die beiden Methoden-Aufrufe jedoch an zwei unterschiedliche Objekte StackA und StackB delegiert werden, die auf unterschiedlichen Daten operieren, dann würde dieses Verhalten nicht nachgewiesen werden können (siehe \abbref{sd_stack_2}).
-\myFigure{expected_stack}{Erwartetes Interface Stack}{expected_stack}
-\myBigFigure{sd_stack_1}{Delegation der Stack-Methoden an genau eine angebotene Komponente}{sd_stack_1}
+
+\begin{figure}[H]
+\begin{minipage}[b]{.24\linewidth}
+  \centering
+  \includegraphics[width=\linewidth]{expected_stack}
+  \captionof{figure}{Erwartetes Interface Stack}
+  \label{abb:expected_stack}
+
+\end{minipage}%
+\hspace{.04\linewidth}% Abstand zwischen Bilder
+\begin{minipage}[b]{.72\linewidth}
+
+
+  \centering
+  \includegraphics[width=\linewidth]{sd_stack_1}
+  \captionof{figure}{Delegation der Stack-Methoden an genau eine angebotene Komponente}
+  \label{abb:sd_stack_1}
+
+\end{minipage}
+\end{figure}
+
+
+%\myBigFigure{expected_stack}{Erwartetes Interface Stack}{expected_stack}
+%\myBigFigure{sd_stack_1}{Delegation der Stack-Methoden an genau eine angebotene Komponente}{sd_stack_1}
 \myBigFigure{sd_stack_2}{Delegation der Stack-Methoden an unterschiedliche angebotene Komponenten}{sd_stack_2}
 \noindent
 In einem solchen Fall sollte der Zusammenhang dieser erwarteten Methoden in den Tests spezifiziert werden, sodass diese besonderen semantischen Anforderungen in diesem Schritt evaluiert werden können. \lstref{LST_StackTest} zeigt ein Beispiel bezogen auf das Szenario aus \abbref{sd_stack_1}.

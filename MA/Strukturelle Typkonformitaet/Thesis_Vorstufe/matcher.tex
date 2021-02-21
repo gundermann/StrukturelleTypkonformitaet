@@ -23,7 +23,7 @@ Sei $ m $ eine Methode des Typs $ A $ (bzw. $ B $) und $ a $ und $b$ jeweils ein
 \end{matcherConvDef}
 \noindent
 Der erste Fall stellt hierbei nichts anderes als einen Upcast des Typs $B$ auf den Typ $A$ dar. Der zweite Fall hingegen stellt einen Downcast des Typs $B$ auf den Typ $A$ dar. Hierbei ist zu beachten, dass ein Downcast eine gewisse Unsicherheit bzgl. der Ausführung birgt. So können beim Aufruf einer Methode auf einem Objekt $a$ von Typ $A$ nur solche Methoden delegiert werden, die von $B$ an $A$ vererbt wurden. Ein Aufruf einer Methode auf $a$, die nicht von $B$ an $A$ vererbt wurde, führt zu einem Laufzeitfehler.
-\subsubsection*{WrappedTypeMatcher}
+\subsubsection*{WrappedTypeMatcher}\label{wrappedTypeMatcher}
 Die bisherigen Type-Matcher sind in der Lade das Matching für zwei Typen festzustellen, ohne dafür Rücksicht auf deren innere Struktur nehmen zu müssen. Dies ist für identische oder hierarchisch organisierte Typen auch nicht notwendig. Es ist jedoch auch denkbar, dass die sich beiden Typen anderweitig assoziieren lassen. Ein Beispiel dafür wäre Boxed- bzw., noch allgemeiner gefasst, Wrapper-Typen. \abbref{wrapper} stellt ein einfaches Szenario für einen Typ A und einen dazu passenden Wrapper-Typen W dar. 
 \myFigure{wrapper}{Beispiel Wrapper-Typ allgemein}{wrapper}
 \noindent
