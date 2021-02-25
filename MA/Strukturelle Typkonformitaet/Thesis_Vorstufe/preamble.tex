@@ -163,7 +163,7 @@
 % Gleichung, die eine Vererbung darstellt
 \newcommand{\inhTyp}[2]
 {
-#1 \leq #2
+#1 < #2
 }
 
 %----------------------------------------------------------------------------------
@@ -250,6 +250,30 @@
 \end{figure}
 }
 
+
+%----------------------------------------------------------------------------------
+% \myScalableFigure	[ scale (optional) ]
+%				{ FILENAME (without extension) }
+%				{ CAPTION TEXT }
+%				{ SHORT VERSION OF CAPTION TEXT }
+%
+%Bild wird in Originalgroesse gesetzt
+%picture using full width of the page
+\newcommand{\myScalableFigure}[4][0.5\linewidth]
+{
+\begin{figure}[H]
+	\center{
+	\begin{minipage}{\fullwidth}
+	\center{
+		\includegraphics[width=#1]{#2}
+		\caption{#3}
+		\label{abb:#4}
+		}
+	\end{minipage}
+	}
+\end{figure}
+}
+
 %----------------------------------------------------------------------------------
 % \myBigFigure	[ WIDTH (optional) ]
 %				{ FILENAME (without extension) }
@@ -273,42 +297,41 @@
 
 
 %----------------------------------------------------------------------------------
-% \myNeighboursFigures	NOT WORKING!!!!
-%   			[ PROPORTION OF DISTANCE (optional)]
+% \myNeighbourFigures	NOT WORKING!!!!
 %				{ PROPORTION OF 1  }
 %				{ FILENAME OF 1 (without extension) }
 %				{ CAPTION TEXT OF 1 }
 %				{ REF OF 1}
+%   			[ PROPORTION OF DISTANCE (optional)]
 %				{ PROPORTION OF 1  }
 %				{ FILENAME OF 1 (without extension) }
 %				{ CAPTION TEXT OF 1 }
 %				{ REF OF 1}
 %
 %Zwei Bilder nebeneinander
-\newcommand{\myNeighboursFigures}[9][0.04]
-{
+%\newcommand{\myNeighbourFigures}[9]
+%{
+%\begin{figure}[H]
+%\begin{minipage}[b]{#1\linewidth}
+%  \centering
+%  \includegraphics[width=\linewidth]{#2}
+%  \captionof{figure}{#3}
+%  \label{abb:#4}%
 
-\begin{figure}[H]
-\begin{minipage}[b]{(1-#1*(#2/100))\linewidth}
-  \centering
-  \includegraphics[width=\linewidth]{#3}
-  \captionof{figure}{#4}
-  \label{abb:#5}
-
-\end{minipage}%
-\hspace{#1\linewidth}% Abstand zwischen Bilder
-\begin{minipage}[b]{(1-#1*(#6/100))\linewidth}
+%\end{minipage}%
+%\hspace{#5\linewidth}% Abstand zwischen Bilder
+%\begin{minipage}[b]{(#6\linewidth}
 
 
-  \centering
-  \includegraphics[width=\linewidth]{#7}
-  \captionof{figure}{#8}
-  \label{abb:#9}
+ % \centering
+ % \includegraphics[width=\linewidth]{#7}
+ % \captionof{figure}{#8}
+ % \label{abb:#9}
 
-\end{minipage}
-\end{figure}
+%\end{minipage}
+%\end{figure}
 
-}
+%}
 
 
 %----------------------------------------------------------------------------------

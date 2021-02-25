@@ -1,30 +1,26 @@
 \subsection{Type-Matcher Rating basierte Heuristiken}
 Wie die Überschrift bereits andeutet, werden die Type-Matcher mit einem Rating versehen. Das Rating wird durch einen numerischen Wert dargestellt. Auf dieser Basis werden zwei Kategorien von Type-Matcher Ratings unterschieden:
-\begin{enumerate}
-\item Qualitatives Type-Matcher Rating
-\item Quantitatives Type-Matcher Rating
-\end{enumerate}
 \myparagraph{Qualitatives Type-Matcher Rating}
-Das qualitative Type-Matcher Rating beschreibt den Grad der strukturellen Übereinstimmung des Source- und des Target-Typen. Dafür wird jeder Type-Matcher mit einem Basiswert versehen. Die konkreten Basiswerte sind im Abschnitt Evaluation beschrieben. Dieser Basiswert wird beim Erzeugen der Typ-Konvertierungsvarianten an die methodendelegationsrelevanten Informationen gehängt, sodass zu jeder Methode, zu der eine Methoden-Konvertierungsvariante existiert, auch ein Wert bzgl. des qualitatives Type-Matcher Rating zur Verfügung steht.\\\\
-Der konkrete Wert für das qualitative Type-Matcher-Rating ermittelt sich grundlegend, wie bereits erwähnt, anhand eines Basiswertes. Sofern ein Type-Matcher jedoch einen internen Type-Matcher verwendet, um die konkreten methodendelegationsrelevanten Informationen zu erzeugen, ergibt sich der Wert des Type-Matcher-Ratings aus einer Akkumulation der Basiswerte des Type-Matchers und des internen Type-Matchers.\\\\
+Das qualitative Type-Matcher Rating beschreibt den Grad der strukturellen Übereinstimmung des Source- und des Target-Typen. Dafür wird jeder Type-Matcher mit einem Basiswert versehen. Die konkreten Basiswerte sind im Abschnitt Evaluation beschrieben. Dieser Basiswert wird beim Erzeugen der Typ-Konvertierungsvarianten an die methodendelegationsrelevanten Informationen gehängt, sodass zu jeder Methode, zu der eine Methoden-Konvertierungsvariante existiert, auch ein Wert bzgl. des qualitatives Type-Matcher Ratings zur Verfügung steht.\\\\
+Der konkrete Wert für das qualitative Type-Matcher-Rating ermittelt sich grundlegend, wie bereits erwähnt, anhand eines Basiswertes. Sofern ein Type-Matcher jedoch wiederum eine Übereinstimmung verwendeter Typen fordert, um die konkreten methodendelegationsrelevanten Informationen zu erzeugen (WrappedTypeMatcher und StructuralTypeMatcher), ergibt sich der Wert des Type-Matcher-Ratings aus einer Akkumulation der Basiswerte aller verwendeten Type-Matcher.\\\\
 Damit ist das qualitative Type-Matcher Rating von folgenden Faktoren abhängig:
 \begin{enumerate}
 \item Die Wahl des Basiswertes der einzelnen Type-Matcher
 \item Das Akkumulationsverfahren für das Type-Matcher Rating einer Typ-Konvertierungsvariante
 \item Das Akkumulationsverfahren für das Type-Matcher Rating einer Methoden-Konvertierungsvariante
 \end{enumerate}
-Alle drei Punkt werden bei der Evaluierung dieser Heuristik betrachtet.
+Alle drei Punkt werden bei der Evaluierung dieser Heuristik untersucht.
 \myparagraph{Quantitatives Type-Matcher Rating}
-Das quantitative Type-Matcher Rating beschreibt, zu wie vielen der erwarteten Methoden in der erzeugten Typ-Konvertierungsvariante methodendelegationsrelevante Informationen vorliegen. Hierzu wird der methodendelegationsrelevante Informationen innerhalb der Typ-konvertierungsvariante durch die Anzahl der erwarteten Methoden geteilt. So stellt das quantitative Type-Matcher Rating also einen Prozentsatz dar.\\\\
-Darauf aufbauend werden im Folgenden zwei Heuristiken vorgestellt, durch die es ermöglicht wird die ermittelten Typ-Konvertierungsvarianten in eine Reihenfolge zu bringen. So kann die Selektion der Kombination von Methoden-Konvertierungsvarianten im 3. Schritt der 2. Stufe des Explorationsalgorithmus anhand dieser Sortierung erfolgen.
-\subsubsection{Heuristik - TMR\_Quant: Beachtung des quantitativen Type-Matcher Ratings}
+Das quantitative Type-Matcher Rating beschreibt, zu wie vielen der erwarteten Methoden in der erzeugten Typ-Konvertierungsvariante methodendelegationsrelevante Informationen vorliegen. So stellt das quantitative Type-Matcher Rating also einen Prozentsatz dar.\\\\
+Im Folgenden werden zwei Heuristiken vorgestellt, die auf den oben genannten Type-Matcher Ratings basieren.
+\subsubsection{Heuristik - TMR\_Quant: Beachtung des quantitativen Type-Matcher Ratings}\label{tmr_quant}
 \myparagraph{Szenario}
-\abbref{tmr_quantScen} zeigt ein Szenario, in dem ein erwartetes Interface IExpect mit zwei Methoden deklariert wurde. Auf der rechten Seite sind die beiden angebotenen Interfaces abgebildet (IOfferedA und IOfferedB), die laut den oben genannten Type-Matchern zu dem erwarteten Interface passen. Weiterhin soll in diesem Szenario davon ausgegangen werden, dass eine passende benötigte Komponente (Proxy) nur aufbauend auf den Methoden-Konvertierungsvarianten erzeugt werden kann, die aus dem angebotenen Interface IOfferedB erzeugt werden können.
+\abbref{tmr_quantScen} zeigt ein Szenario, in dem ein erwartetes Interface IExpect mit zwei Methoden deklariert wurde. Auf der rechten Seite sind die beiden angebotenen Interfaces abgebildet (IOfferedA und IOfferedB), die laut den oben genannten Type-Matchern zu dem erwarteten Interface passen. Weiterhin soll in diesem Szenario davon ausgegangen werden, dass eine passende benötigte Komponente (Proxy) nur aufbauend auf den Methoden-Konvertierungsvarianten erzeugt werden kann, die auf der Basis des angebotenen Interfaces IOfferedB erzeugt werden können.
 \myBigFigure{Scen_TMR_Quant}{Szenario für TMR\_Quant}{tmr_quantScen}
 \noindent
 %Es wird davon ausgegangen, dass eine angebotene Komponente, deren Schnittstelle strukturell mit der erwarteten Schnittstelle übereinstimmt und dabei zu jeder erwarteten Methode eine passende Methode anbietet, eher die semantischen Erwartungen erfüllt, als eine Kombination aus mehreren angebotenen Komponenten. 
 \myparagraph{Exploration ohne Heuristik}
-Der Explorationsalgorithmus würde diese passende benötigte Komponente ohnehin im ersten Durchlauf finden. Allerdings würde auch die Typ-Konvertierungsvariante für IOfferedA im ersten Durchlauf analysiert werden. Die Kombinationen von Typ-Konvertierungsvarianten der beiden angebotenen Interfaces, die im ersten Durchlauf des Explorationsalgorithmus erzeugt werden, sind \abbref{tmr_quant_tkvkombi} zu entnehmen. Darauf aufbauend, würde aus diesem Kombinationen von Typ-Konvertierungsvarianten die Kombinationen von Methoden-Konvertiertungsvarianten erzeugt werden, die \abbref{tmr_quant_mkvkombi} zu entnehmen sind.
+Der Explorationsalgorithmus würde die passende benötigte Komponente im ersten Durchlauf finden. Allerdings würde auch die Typ-Konvertierungsvariante für IOfferedA im schlimmsten Fall innerhalb des ersten Durchlaufs analysiert werden. Die Kombinationen von Typ-Konvertierungsvarianten der beiden angebotenen Interfaces, die im ersten Durchlauf des Explorationsalgorithmus erzeugt werden, sind \abbref{tmr_quant_tkvkombi} zu entnehmen. Darauf aufbauend, würde aus diesen Kombinationen von Typ-Konvertierungsvarianten die Kombinationen von Methoden-Konvertiertungsvarianten erzeugt werden, welche \abbref{tmr_quant_mkvkombi} zu entnehmen sind.
 
 
 \begin{figure}[H]
@@ -46,20 +42,17 @@ Der Explorationsalgorithmus würde diese passende benötigte Komponente ohnehin im
 
 \end{minipage}
 \end{figure}
-
-
-\noindent
 \myparagraph{Ableitung der Heuristik}
 Hierbei fällt auf, dass das Erzeugen der Methoden-Konvertierungsvarianten für IOfferedA unnötig war, weil nur für eine der erwarteten Methoden eine Methoden-Konvertierungsvariante erzeugt werden konnte. Dies kann durch die Beachtung des quantitativen Type-Matcher Ratings im ersten Durchlauf des Explorationsalgorithmus verhindert werden.\\\\
 Hierzu werden im Schritt 2 der 2. Stufe des Explorationsalgorithmus (siehe \ref{sem_eval_step2}) nur die Typ-Konvertierungsvarianten als Ergebnis ermittelt, die ein quantitatives Type-Matcher Rating von 100\% aufweisen. Damit wird bezogen auf das Szeanrio nur die Typ-Konvertierungsvariante des angebotenen Interfaces IOfferedB weiter analysiert.
-\subsubsection{Heuristik - TMR\_Qual: Beachtung des qualitativen Type-Matcher Ratings}
+\subsubsection{Heuristik - TMR\_Qual: Beachtung des qualitativen Type-Matcher Ratings}\label{tmr_qual}
 \myparagraph{Szenario}
-\abbref{tmr_qualScen} zeigt ein Szenario, in dem ein erwartetes Interface IExpect mit einer Methode deklariert wurde. Die Deklaration erfolgte unter der Verwendung bestehender allgemeiner Typen innerhalb des gesamten Systems, die in dem unteren Bereich der Abbildung dargestellt sind. Dabei gibt es zwei Typen, die in einer Vererbungsbeziehung stehen (Parent und Child) und einen Wrapper-Typen, der ein Attribut vom Typ Parent enthält. Zusätzlich sind auf der rechten Seite die angebotenen Interfaces abgebildet (IOfferedA und IOfferedB), die laut den oben genannten Type-Matchern zu dem erwarteten Interface passen. Auch diese verwenden die allgemeinen Typen. Für dieses Szenario ist davon auszugehene, dass eine passende benötigte Komponente (Proxy) nur aufbauend auf den Methoden-Konvertierungsvarianten erzeugt werden kann, die aus dem angebotenen Interface IOfferedB erzeugt werden können.
+\abbref{tmr_qualScen} zeigt ein Szenario, in dem ein erwartetes Interface IExpect mit einer Methode deklariert wurde. Die Deklaration erfolgte unter der Verwendung bestehender allgemeiner Typen innerhalb des gesamten Systems, die in dem unteren Bereich der Abbildung dargestellt sind. Dabei gibt es zwei Typen, die in einer Vererbungsbeziehung stehen (Common und Specific), und einen Wrapper-Typen, der ein Attribut vom Typ Common enthält. Zusätzlich sind auf der rechten Seite die angebotenen Interfaces abgebildet (IOfferedA und IOfferedB), die laut den oben genannten Type-Matchern zu dem erwarteten Interface passen. Auch diese verwenden die allgemeinen Typen. Für dieses Szenario ist davon auszugehen, dass eine passende benötigte Komponente (Proxy) nur aufbauend auf den Methoden-Konvertierungsvarianten erzeugt werden kann, die auf der Basis des angebotenen Interfaces IOfferedB erzeugt werden können.
 
 \myBigFigure{Scen_TMR_Qual}{Szenario für TMR\_Qual}{tmr_qualScen}
 
 \myparagraph{Exploration ohne Heuristik}
-Der Explorationsalgorithmus würde diese passende benötigte Komponente im ersten Durchlauf finden. Hierbei werden zuerst die Typ-Konvertierungsvarianten der beiden angebotenen Interfaces erzeugt, welche \abbref{tmr_qual_tkvkombi} zu entnehmen sind. \abbref{tmr_qual_mkvkombi} zeigt die im darauffolgenden Schritt des Explorationsalgorithmus (siehe \ref{sem_eval_step3}) erzeugten Kombinationen von Methoden-Konvertierungsvarianten. Zu erkennen ist, dass auch die Kombinationen von Methoden-Konvertierungsvarainten von IOfferedA erzeugt wurden und demnach im schlimmsten Fall auch weiter analysiert werden.
+Der Explorationsalgorithmus würde die passende benötigte Komponente im ersten Durchlauf finden. Hierbei werden zuerst die Typ-Konvertierungsvarianten der beiden angebotenen Interfaces erzeugt, welche \abbref{tmr_qual_tkvkombi} zu entnehmen sind. \abbref{tmr_qual_mkvkombi} zeigt die im darauffolgenden Schritt des Explorationsalgorithmus (siehe \ref{sem_eval_step3}) erzeugten Kombinationen von Methoden-Konvertierungsvarianten. Zu erkennen ist, dass auch die Kombinationen von Methoden-Konvertierungsvarainten von IOfferedA erzeugt wurden und demnach im schlimmsten Fall auch weiter analysiert werden.
 
 \begin{figure}[H]
 \begin{minipage}[b]{.38\linewidth}
@@ -84,7 +77,7 @@ Der Explorationsalgorithmus würde diese passende benötigte Komponente im ersten 
 
 
 \myparagraph{Ableitung der Heuristik}
-Bei der Betrachtung der Methode, die von der nachfragenden Komponente erwartet und von den angebotenen Komponenten A bereitgestellt wird, fällt auf, dass die Typen des Parameter und der Rückgabewerte der jeweiligen Methoden in einer Vererbungsbeziehung stehen. Dadurch ist eine Delegation der Form $\delegate{\text{IExpect}.\text{getExpected}}{\text{IOfferedB}.\text{get}}$ aufgrund des liskovschen Substitutionsprinzip möglich. Eine Delegation der Methoden aus IExpect an IOfferedA ist hingegen weitaus komplizierter (siehe \ref{wrappedTypeMatcher}).
-In Bezug auf die oben beschrieben Metriken zum Type-Matcher Rating bedeutet das, dass das qualitative Type-Matcher Rating der Typ-Konvertierungsvariante von IOfferedB geringer ist als das der Typ-Konvertierungsvariante von IOfferedA.\\\\
+Bei der Betrachtung der Methode, die von der nachfragenden Komponente erwartet und von den angebotenen Komponenten B bereitgestellt wird, fällt auf, dass die Typen des Parameter und der Rückgabewerte der jeweiligen Methoden in einer Vererbungsbeziehung stehen. Dadurch ist eine Delegation der Form $\delegate{\text{IExpect}.\text{getExpected}}{\text{IOfferedB}.\text{get}}$ aufgrund des liskovschen Substitutionsprinzip ohne weitere Konvertierung der Parameter- und Rückgabe-Typen möglich. Eine Delegation der Methoden aus IExpect an IOfferedA ist hingegen weitaus komplizierter (siehe \ref{wrappedTypeMatcher}).
+In Bezug auf das oben beschrieben Type-Matcher Rating bedeutet das, dass das qualitative Type-Matcher Rating der Typ-Konvertierungsvariante von IOfferedB geringer ist, als das der Typ-Konvertierungsvariante von IOfferedA.\\\\
 Für die Heuristik TMR\_Qual kann demnach abgeleitet werden, dass die Kombinationen von Methoden-Konvertierungsvarianten in Schritt 3 der 2. Stufe des Explorationsalgorithmus  (siehe \ref{sem_eval_step3}) zuerst aus denjenigen Kombinationen von Typ-Konvertierungsvarianten mit den niedrigsten qualitativen Type-Matcher Rating erzeugt und analysiert werden sollten.
 

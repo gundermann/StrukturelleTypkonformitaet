@@ -1,13 +1,32 @@
-\subsubsection*{Typ-Konvertierungsvariante}
+\subsubsection*{Typ- und Methoden-Konvertierungsvarianten}
 Die Konvertierung der einzelnen Type-Matcher liefert eine Menge von so genannten Typ-Konvertierungsvarianten. Eine Typ-Konvertierungsvariante beschreibt eine Möglichkeit, wie ein Typ in einen anderen konvertiert werden kann. Zu diesem Zweck enthält eine Typ-Konvertierungsvariante zwei Arten von Information: 
 \begin{enumerate}
 \item Objekterzeugungsrelevante Informationen
 \item Methodendelegationsrelevante Informationen
 \end{enumerate}
-Typ-Konvertierungsvarianten werden von einem konkreten Typ-Matcher für jede mögliche Form der Übereinstimmung erzeugt. Im speziellen Fall des ExactTypeMatchers und des SpecGenTypeMatcher kann, wenn überhaupt, nur eine Typ-Konvertierungsvariante erzeugt werden. Da die anderen Typ-Matcher mit internen Type-Matchern arbeiten, sind von diesen mehrere Typ-Konvertierungsvarianten zu erwarten.\\\\
+Typ-Konvertierungsvarianten werden von einem konkreten Typ-Matcher für jede mögliche Form der Übereinstimmung erzeugt. Im speziellen Fall des ExactTypeMatchers und des SpecGenTypeMatcher kann, wenn überhaupt, nur eine Typ-Konvertierungsvariante erzeugt werden. Da die anderen Typ-Matcher intern wiederum eine Übereinstimmung von Typen fordern, sind von diesen mehrere Typ-Konvertierungsvarianten zu erwarten.\\\\
 Die objekterzeugungsrelevanten Informationen sorgen dafür, dass das Proxy-Objekt zum Source-Typ korrekt erzeugt werden kann.\\\\
-Die methodendelegationsrelevanten Informationen sorgen dafür, dass das Rückgabe-Objekt und die Parameter-Objekte beim Methodenaufruf korrekt konvertiert werden und dass der Aufruf an die richtige Methode des Target-Typs delegiert wird. Daher wird eine methodendelegationsrelevante Information auch als Methoden-Konvertierungsvariante bezeichnet.\\\\
-In \abbref{konvar_voll} ist dieser Zusammenhang für ein angebotenes Interface AIv und einem erwarteten Interface EI, welche jeweils zwei Methoden enthalten (AM * bzw. EM *), skizziert. Hier wird angenommen, dass jeder der angebotenen Methoden strukturell zu jeder der erwarteten Methoden passen würde. Dementsprechend enthält die Typ-Konvertierungsvariante (TKV) insgesamt 4 Methoden-Konvertierungsvarianten, wovon jede eine Konvertierung entlang der eingezeichneten Pfeile ermöglicht.
-\myFigure{konvar_voll}{Typ- und Methoden-Konvertierungsvarianten von AIv}{konvar_voll}
-\noindent
-Dabei gilt jedoch, aufgrund der Überlegungen zur Kombination von angebotenen Komponenten (siehe auch \abbref{combinated_components}), dass eine Typ-Konvertierungsvariante nicht zu jeder der erwarteten Methoden solche methodendelegationsrelevanten Informationen enthält. \abbref{konvar_unv} zeigt einen solchen Fall mit dem angebotenen Interface AIu.\myFigure{konvar_unv}{Typ- und Methoden-Konvertierungsvarianten von AIu}{konvar_unv}
+Die methodendelegationsrelevanten Informationen werden verwendet um so genannten Methoden-Konvertierungsvarianten zu erzeugen. Diese sorgen dafür, dass das Rückgabe-Objekt und die Parameter-Objekte beim Methodenaufruf korrekt konvertiert werden und dass der Aufruf an die richtige Methode des Target-Typs delegiert wird.\\\\
+In \abbref{konvar_voll} ist dieser Zusammenhang für ein angebotenes Interface AIv und einem erwarteten Interface EI, welche jeweils zwei Methoden enthalten (AM * bzw. EM *), skizziert. Hier wird angenommen, dass jede der angebotenen Methoden strukturell mit jeder der erwarteten Methoden übereinstimmen würde. Dementsprechend enthält die Typ-Konvertierungsvariante (TKV) methodendelegationsrelevante Informationen, aus denen insgesamt 4 Methoden-Konvertierungsvarianten erzeugt werden, wovon jede eine Konvertierung entlang der eingezeichneten Pfeile ermöglicht.\\\\
+Dabei gilt jedoch, aufgrund der Überlegungen zur Kombination von angebotenen Komponenten (siehe auch \abbref{combinated_components}), dass eine Typ-Konvertierungsvariante nicht zu jeder der erwarteten Methoden solche methodendelegationsrelevanten Informationen enthält. \abbref{konvar_unv} zeigt einen solchen Fall mit dem angebotenen Interface AIu.
+\begin{figure}[H]
+\begin{minipage}[b]{.48\linewidth}
+  \centering
+  \includegraphics[width=\linewidth]{konvar_voll}
+  \captionof{figure}{Typ- und Methoden-Konvertierungsvarianten von AIv}
+  \label{abb:konvar_voll}
+
+\end{minipage}%
+\hspace{.04\linewidth}% Abstand zwischen Bilder
+\begin{minipage}[b]{.48\linewidth}
+
+
+  \centering
+  \includegraphics[width=\linewidth]{konvar_unv}
+  \captionof{figure}{Typ- und Methoden-Konvertierungsvarianten von AIu}
+  \label{abb:konvar_unv}
+
+\end{minipage}
+\end{figure}
+
+

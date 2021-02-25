@@ -1,15 +1,8 @@
 \subsection{2. Stufe - Semantische Evaluation}\label{sem_eval}
-Sofern alle Typ-Konvertierungsvarianten des erwarteten Interfaces bzgl. einer Menge von angebotenen Interfaces in der 1. Stufe ermittelt wurden, können die konkreten Implementierungen der angebotenen Interfaces hinsichtlich der spezifizierten erwarteten Semantik überprüft werden.\\\\
-Diese Prüfung wird über die vorab spezifizierten Testfälle des erwarteten Interfaces vorgenommen. In einem vorherigen Abschnitt wurde schon kurz beschrieben, wie eine solche Testklasse aufgebaut ist. In diesem Abschnitt wird beschrieben, wie die zu testenden Komponenten ermittelt werden und wie die Tests durchgeführt werden. 
-Die semantische Evaluation erfolgt in 6 Schritten:
-%\begin{enumerate}
-%\item Ermittlung der Testklassen zum erwarteten Interface
-%\item Ermitteln aller Kombinationen von Konvertierungsvarianten
-%\item Erzeugen einer benötigten Komponente
-%\item Injizieren der benötigten Komponente
-%\item Durchführung der Tests
-%\item Auswertung des Testergebnisses
-%\end{enumerate}
+Sofern alle Typ-Konvertierungsvarianten des erwarteten Interfaces bzgl. einer Menge von angebotenen Interfaces in der 1. Stufe ermittelt wurden, können die benötigten Komponenten erzeugt und getestet werden.\\\\
+Diese Prüfung wird über die vorab spezifizierten Testfälle des erwarteten Interfaces vorgenommen. In einem vorherigen Abschnitt wurde schon kurz beschrieben, wie eine solche Testklasse aufgebaut ist. In diesem Abschnitt wird beschrieben, wie die zu testenden benötigten Komponenten ermittelt werden und wie die Tests durchgeführt werden. 
+Dies erfolgt in 6 Schritten:
+
 \input{sem_eval_step1}
 \input{sem_eval_step2}
 \input{sem_eval_step3}

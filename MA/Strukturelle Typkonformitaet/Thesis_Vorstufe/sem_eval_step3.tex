@@ -1,18 +1,41 @@
 \subsubsection{Schritt 3: Erzeugen einer benötigten Komponente}\label{sem_eval_step3}
 Eine benötigte Komponente besteht aus einer Kombination von Methoden-Konvertierungsvarianten, wobei für jede erwartete Methode genau eine Methoden-Konvertierungsvariante innerhalb der benötigten Komponente existiert.\\\\
-Für die Ermittlung der Kombinationen von Methoden-Konvertierungsvarianten wird eine Kombination von Typ-Konvertierungsvarianten aus der Ergebnismenge des aktuellen Durchlaufs des zweiten Schrittes selektiert. Die darin enthaltenen Methoden-Konvertierungsvarianten werden hinsichtlich der Methoden aus dem erwarteten Interface miteinander kombiniert.\\\\
-Für die erste Kombinationen von Typ-Konvertierungsvarianten, die \abbref{tkv_alv_alu_1} zu entnehmen sind, ($TKV_{AIu}$) können folgende Kombinationen von Methoden-Konvertierungsvarianten erzeugt werden (siehe \abbref{comb_mkv_alv_1}).
-\myBigFigure{comb_mkv_alv_1}{Kombinationen von Methoden-Konvertierungsvarianten AIu}{comb_mkv_alv_1}
+Für die Ermittlung der Kombinationen von Methoden-Konvertierungsvarianten wird eine Kombination von Typ-Konvertierungsvarianten aus der Ergebnismenge des zweiten Schrittes im aktuellen Durchlauf  selektiert. Die daraus erzeugten Methoden-Konvertierungsvarianten werden hinsichtlich der Methoden aus dem erwarteten Interface miteinander kombiniert.\\\\
+Für die erste Kombination von Typ-Konvertierungsvarianten, die \abbref{tkv_alv_alu_1} zu entnehmen ist ($TKV_{AIv}$),  können folgende Kombinationen von Methoden-Konvertierungsvarianten erzeugt werden (siehe \abbref{comb_mkv_alv_1}).
+\myBigFigure{comb_mkv_alv_1}{Kombinationen von Methoden-Konvertierungsvarianten AIv}{comb_mkv_alv_1}
 \noindent
-Analog dazu werden für die zweite Kombinationen von Typ-Konvertierungsvarianten, die \abbref{tkv_alv_alu_1} zu entnehmen sind, ($TKV_{AIu}$) folgende Kombinationen von Methoden-Konvertierungsvarianten erzeugt (siehe \abbref{comb_mkv_alu_1}).
-\myFigure{comb_mkv_alu_1}{Kombinationen von Methoden-Konvertierungsvarianten AIu}{comb_mkv_alu_1}
+Analog dazu wird für die zweite Kombination von Typ-Konvertierungsvarianten, die \abbref{tkv_alv_alu_1} zu entnehmen ist ($TKV_{AIu}$), folgende Kombination von Methoden-Konvertierungsvarianten erzeugt (siehe \abbref{comb_mkv_alu_1}).\\\\
+Ausgehend von der Kombination von Typ-Konvertierungsvarianten aus \abbref{comb_tkv_alv_alu_1} ($TKV_{AIu+AIv}$), sind in \abbref{comb_mkv_alu_alv} die daraus resultieren Methoden-Konvertierungsvarianten dargestellt.Zu beachten ist, dass die ersten vier Kombinationen bereits im vorherigen Durchlauf erzeugt wurden (siehe \abbref{comb_mkv_alv_1}) und dementsprechend auch getestet wurden.
+
+
+
+\begin{figure}[H]
+\begin{minipage}[b]{.38\linewidth}
+  \centering
+  \includegraphics[width=.6\linewidth]{comb_mkv_alu_1}
+  \captionof{figure}{Kombinationen von Methoden-Konvertierungsvarianten AIu}
+  \label{abb:comb_mkv_alu_1}
+
+\end{minipage}%
+\hspace{.04\linewidth}% Abstand zwischen Bilder
+\begin{minipage}[b]{.58\linewidth}
+
+
+  \centering
+  \includegraphics[width=\linewidth]{comb_mkv_alu_alv}
+  \captionof{figure}{Kombinationen von Methoden-Konvertierungsvarianten AIu+AIv}
+  \label{abb:comb_mkv_alu_alv}
+
+\end{minipage}
+\end{figure}
+
+
 \noindent
-Ausgehend von der Kombination von Typ-Konvertierungsvarianten aus \abbref{comb_tkv_alv_alu_1} ($TKV_{AIu+AIv}$), sind in \abbref{comb_mkv_alu_alv} die daraus resultieren Methoden-Konvertierungsvarianten dargestellt.
-\myBigFigure{comb_mkv_alu_alv}{Kombinationen von Methoden-Konvertierungsvarianten AIu+AIv}{comb_mkv_alu_alv}
+
+
 \noindent
-Zu beachten ist, dass die ersten vier Kombinationen bereits im vorherigen Durchlauf erzeugt wurden (siehe \abbref{comb_mkv_alv_1}) und dementsprechend auch getestet wurden.\\\\
-Im Allgemeinen lässt sich sagen, dass die Anzahl der Kombinationen von Methoden-Konvertierungsvarianten von der Anzahl der Methoden im erwarteten Interface ($|EM|$) und der Anzahl an Methoden-Konvertierungsvarianten ($|MKV|$) innerhalb der selektierten Kombination von Typ-Konvertierungsvarianten abhängig ist. Da aus einer Kombination von Methoden-Konvertierungsvarianten jeweils eine benötigte Komponente erzeugt werden kann, gilt für die Anzahl der benötigten Komponenten ($|Komb_{ben}|$) dasselbe.
+Im Allgemeinen lässt sich sagen, dass die Anzahl der Kombinationen von Methoden-Konvertierungsvarianten von der Anzahl der Methoden im erwarteten Interface ($|EM|$) und der Anzahl von Methoden-Konvertierungsvarianten ($|MKV|$), die aus der selektierten Kombination von Typ-Konvertierungsvarianten erzeugt werden können. Da aus einer Kombination von Methoden-Konvertierungsvarianten jeweils eine benötigte Komponente erzeugt werden kann, gilt für die Anzahl der benötigten Komponenten ($|Komb_{ben}|$) dasselbe. Im schlimmsten Fall berechnet sich die Anzahl der benötigten Komponenten wie folgt:
 \begin{align*}
-|Komb_{ben}| = |Komb_{MKV}| = \frac{|MKV|!}{(|MVK|! - |EM|!)*|EM|!}
+|Komb_{ben}| = |Komb_{MKV}| = \frac{|MKV|!}{(|MVK| - |EM|)!*|EM|!}
 \end{align*}
 
