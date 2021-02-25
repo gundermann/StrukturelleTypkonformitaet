@@ -1,4 +1,4 @@
-\section{Koordination}
+\section{Koordination im Explorationsalgorithmus}
 Der Einsatz der Heuristiken muss bei der Suche koordiniert werden. Der Explorationsalgorithmus ist so aufgebaut, dass im 2. Schritt der 2. Stufe (siehe \ref{sem_eval_step2}) die Heuristiken zum Einsatz kommen.\\\\
 Begonnen wird mit der Heuristik TMR\_Quant, sodass zuerst alle möglichen Kombinationen von Methoden-Konvertierungsvarianten ermittelt werden, die aus einer einzelnen Typ-Konvertierungsvariante stammen. Sind die möglichen Kombinationen von Methoden-Konvertierungsvarianten ausgeschöpft, wird der Prozess mit der Ermittlung aller möglichen Kombinationen von Methoden-Konvertierungsvarianten, die aus 2 Typ-Konvertierungsvarianten stammen, wiederholt. Die Anzahl der zu kombinierenden Typ-Konvertierungsvarianten wird somit jedes mal erhört, wenn die bereits ermittelten Kombinationen von Methoden-Konvertierungsvarianten ausgeschöpft sind.\\\\
 Innerhalb eines der eben beschriebenen Iterationsschritte werden die anderen Heuristiken eingesetzt.\\\\
