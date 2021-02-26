@@ -4,7 +4,10 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
 import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.easymock.EasyMock;
@@ -27,7 +30,7 @@ public class ParamPermSignatureMatchingTypeConverterTest {
     Class<Desired1ParameterInterface> source = Desired1ParameterInterface.class;
     Class<Offered1ParameterClass> target = Offered1ParameterClass.class;
     Offered1ParameterClass convertationObject = new Offered1ParameterClass();
-    SingleTypeConverter<Desired1ParameterInterface> converter = new SingleTypeConverter<>(
+    TypeConverter<Desired1ParameterInterface> converter = new TypeConverter<>(
         source );
 
     Set<MethodMatchingInfo> methodMatchingInfos = new HashSet<>();
@@ -53,7 +56,9 @@ public class ParamPermSignatureMatchingTypeConverterTest {
     EasyMock.expect( moduleMatchingInfo.getMethodMatchingInfos() ).andReturn( methodMatchingInfos ).anyTimes();
     EasyMock.replay( moduleMatchingInfo );
 
-    Desired1ParameterInterface converted = converter.convert( convertationObject, moduleMatchingInfo );
+    Map<Object, Collection<MethodMatchingInfo>> obj2MatchingInfo = new HashMap<>();
+    obj2MatchingInfo.put( convertationObject, moduleMatchingInfo.getMethodMatchingInfos() );
+    Desired1ParameterInterface converted = converter.convert( obj2MatchingInfo );
 
     assertThat( converted.doStuffWith1Param( "helloworld" ), equalTo( "helloworld" ) );
     assertThat( converted.doStuffWith1Param( "hier gibt es keine Permutation" ),
@@ -68,7 +73,7 @@ public class ParamPermSignatureMatchingTypeConverterTest {
     Class<Desired2ParameterInterface> source = Desired2ParameterInterface.class;
     Class<Offered2ParameterClass> target = Offered2ParameterClass.class;
     Offered2ParameterClass convertationObject = new Offered2ParameterClass();
-    SingleTypeConverter<Desired2ParameterInterface> converter = new SingleTypeConverter<>(
+    TypeConverter<Desired2ParameterInterface> converter = new TypeConverter<>(
         source );
 
     Set<MethodMatchingInfo> methodMatchingInfos = new HashSet<>();
@@ -94,8 +99,9 @@ public class ParamPermSignatureMatchingTypeConverterTest {
     ModuleMatchingInfo moduleMatchingInfo = EasyMock.createNiceMock( ModuleMatchingInfo.class );
     EasyMock.expect( moduleMatchingInfo.getMethodMatchingInfos() ).andReturn( methodMatchingInfos ).anyTimes();
     EasyMock.replay( moduleMatchingInfo );
-
-    Desired2ParameterInterface converted = converter.convert( convertationObject, moduleMatchingInfo );
+    Map<Object, Collection<MethodMatchingInfo>> obj2MatchingInfo = new HashMap<>();
+    obj2MatchingInfo.put( convertationObject, moduleMatchingInfo.getMethodMatchingInfos() );
+    Desired2ParameterInterface converted = converter.convert( obj2MatchingInfo );
 
     assertThat( converted.doStuffWith2Params( "helloworld", 1 ), equalTo( "1helloworld" ) );
     assertThat( converted.doStuffWith2Params( " Permutation gibt es hier", 2 ),
@@ -112,7 +118,7 @@ public class ParamPermSignatureMatchingTypeConverterTest {
     Class<Desired3ParameterInterface> source = Desired3ParameterInterface.class;
     Class<Offered3ParameterClass> target = Offered3ParameterClass.class;
     Offered3ParameterClass convertationObject = new Offered3ParameterClass();
-    SingleTypeConverter<Desired3ParameterInterface> converter = new SingleTypeConverter<>(
+    TypeConverter<Desired3ParameterInterface> converter = new TypeConverter<>(
         source );
 
     Set<MethodMatchingInfo> methodMatchingInfos = new HashSet<>();
@@ -142,7 +148,9 @@ public class ParamPermSignatureMatchingTypeConverterTest {
     EasyMock.expect( moduleMatchingInfo.getMethodMatchingInfos() ).andReturn( methodMatchingInfos ).anyTimes();
     EasyMock.replay( moduleMatchingInfo );
 
-    Desired3ParameterInterface converted = converter.convert( convertationObject, moduleMatchingInfo );
+    Map<Object, Collection<MethodMatchingInfo>> obj2MatchingInfo = new HashMap<>();
+    obj2MatchingInfo.put( convertationObject, moduleMatchingInfo.getMethodMatchingInfos() );
+    Desired3ParameterInterface converted = converter.convert( obj2MatchingInfo );
 
     assertThat( converted.doStuffWith3Params( "helloworld", 1, false ), equalTo( "1falsehelloworld" ) );
     assertThat( converted.doStuffWith3Params( " Permutation gibt es hier", 6, true ),

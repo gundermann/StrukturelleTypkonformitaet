@@ -3,7 +3,10 @@ package glue;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.easymock.EasyMock;
@@ -25,7 +28,7 @@ public class WrappedTypeSignatureMatchingTypeConverterTest {
     Class<DesiredWrappedParameterInterface> source = DesiredWrappedParameterInterface.class;
     Class<OfferedWrapperParameterClass> target = OfferedWrapperParameterClass.class;
     OfferedWrapperParameterClass convertationObject = new OfferedWrapperParameterClass();
-    SingleTypeConverter<DesiredWrappedParameterInterface> converter = new SingleTypeConverter<>(
+    TypeConverter<DesiredWrappedParameterInterface> converter = new TypeConverter<>(
         source );
 
     Set<MethodMatchingInfo> methodMatchingInfos = new HashSet<>();
@@ -63,7 +66,9 @@ public class WrappedTypeSignatureMatchingTypeConverterTest {
     EasyMock.expect( moduleMatchingInfo.getMethodMatchingInfos() ).andReturn( methodMatchingInfos ).anyTimes();
     EasyMock.replay( moduleMatchingInfo );
 
-    DesiredWrappedParameterInterface converted = converter.convert( convertationObject, moduleMatchingInfo );
+    Map<Object, Collection<MethodMatchingInfo>> obj2MatchingInfo = new HashMap<>();
+    obj2MatchingInfo.put( convertationObject, moduleMatchingInfo.getMethodMatchingInfos() );
+    DesiredWrappedParameterInterface converted = converter.convert( obj2MatchingInfo );
     Wrapped wrapped_hello = new Wrapped( "hello" );
     Wrapped wrapped_world = new Wrapped( "world" );
 
@@ -78,7 +83,7 @@ public class WrappedTypeSignatureMatchingTypeConverterTest {
     Class<DesiredWrapperParameterInterface> source = DesiredWrapperParameterInterface.class;
     Class<OfferedWrappedParameterClass> target = OfferedWrappedParameterClass.class;
     OfferedWrappedParameterClass convertationObject = new OfferedWrappedParameterClass();
-    SingleTypeConverter<DesiredWrapperParameterInterface> converter = new SingleTypeConverter<>(
+    TypeConverter<DesiredWrapperParameterInterface> converter = new TypeConverter<>(
         source );
 
     Set<MethodMatchingInfo> methodMatchingInfos = new HashSet<>();
@@ -116,7 +121,9 @@ public class WrappedTypeSignatureMatchingTypeConverterTest {
     EasyMock.expect( moduleMatchingInfo.getMethodMatchingInfos() ).andReturn( methodMatchingInfos ).anyTimes();
     EasyMock.replay( moduleMatchingInfo );
 
-    DesiredWrapperParameterInterface converted = converter.convert( convertationObject, moduleMatchingInfo );
+    Map<Object, Collection<MethodMatchingInfo>> obj2MatchingInfo = new HashMap<>();
+    obj2MatchingInfo.put( convertationObject, moduleMatchingInfo.getMethodMatchingInfos() );
+    DesiredWrapperParameterInterface converted = converter.convert( obj2MatchingInfo );
     Wrapped wrapped_hello = new Wrapped( "hello" );
     Wrapped wrapped_world = new Wrapped( "world" );
     Wrapper wrapper_hello = new Wrapper( wrapped_hello );

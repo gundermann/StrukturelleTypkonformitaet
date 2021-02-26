@@ -153,9 +153,10 @@ public class BehaviourDelegateInvocationHandler implements MethodInterceptor, In
     // if ( moduleMatchingInfo.getSourceDelegate() != null ) {
     // source = moduleMatchingInfo.getSourceDelegate().apply( sourceType );
     // }
-    return new SingleTypeConverter<>( (Class<RT>) moduleMatchingInfo.getTarget(),
-        moduleMatchingInfo.getConverterCreator() ).convert( source,
-            moduleMatchingInfo );
+    Map<Object, Collection<MethodMatchingInfo>> comp2MatchingInfo = new HashMap<>();
+    comp2MatchingInfo.put( source, moduleMatchingInfo.getMethodMatchingInfos() );
+    return new TypeConverter<>( (Class<RT>) moduleMatchingInfo.getTarget(),
+        moduleMatchingInfo.getConverterCreator() ).convert( comp2MatchingInfo );
   }
 
   private Optional<ComponentWithMatchingInfo> getMethodMatchingInfo( Method method ) {

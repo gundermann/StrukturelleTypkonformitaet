@@ -4,8 +4,10 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.easymock.EasyMock;
@@ -24,7 +26,7 @@ public class ExactSignatureMatchingTypeConverterTest {
     Class<InterfaceWrapper> source = InterfaceWrapper.class;
     Class<Enum2> target = Enum2.class;
     Enum2 convertationObject = Enum2.CONSTANT_1;
-    SingleTypeConverter<InterfaceWrapper> converter = new SingleTypeConverter<>( source );
+    TypeConverter<InterfaceWrapper> converter = new TypeConverter<>( source );
 
     Set<MethodMatchingInfo> methodMatchingInfos = new HashSet<>();
     MethodMatchingInfo methodMatchingInfoGetFalse = EasyMock.createNiceMock( MethodMatchingInfo.class );
@@ -59,7 +61,11 @@ public class ExactSignatureMatchingTypeConverterTest {
     EasyMock.expect( moduleMatchingInfo.getMethodMatchingInfos() ).andReturn( methodMatchingInfos ).anyTimes();
     EasyMock.replay( moduleMatchingInfo, methodMatchingInfoGetFalse, methodMatchingInfoGetTrue,
         methodMatchingInfoGetOne, methodMatchingInfoGetNull );
-    InterfaceWrapper converted = converter.convert( convertationObject, moduleMatchingInfo );
+
+    Map<Object, Collection<MethodMatchingInfo>> obj2MatchingInfo = new HashMap<>();
+    obj2MatchingInfo.put( convertationObject, moduleMatchingInfo.getMethodMatchingInfos() );
+
+    InterfaceWrapper converted = converter.convert( obj2MatchingInfo );
     assertThat( converted.getFalse(), equalTo( convertationObject.getFalse() ) );
     assertThat( converted.getTrue(), equalTo( convertationObject.getTrue() ) );
     assertThat( converted.getOne(), equalTo( convertationObject.getOne() ) );

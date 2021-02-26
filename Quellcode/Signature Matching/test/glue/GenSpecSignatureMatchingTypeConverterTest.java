@@ -5,8 +5,10 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.easymock.EasyMock;
@@ -29,7 +31,7 @@ public class GenSpecSignatureMatchingTypeConverterTest {
     Class<DesiredGenInterface> source = DesiredGenInterface.class;
     Class<OfferedSpecClass> target = OfferedSpecClass.class;
     OfferedSpecClass convertationObject = new OfferedSpecClass();
-    SingleTypeConverter<DesiredGenInterface> converter = new SingleTypeConverter<>( source );
+    TypeConverter<DesiredGenInterface> converter = new TypeConverter<>( source );
 
     Set<MethodMatchingInfo> methodMatchingInfos = new HashSet<>();
 
@@ -101,7 +103,10 @@ public class GenSpecSignatureMatchingTypeConverterTest {
     EasyMock.expect( moduleMatchingInfo.getMethodMatchingInfos() ).andReturn( methodMatchingInfos ).anyTimes();
     EasyMock.replay( moduleMatchingInfo );
 
-    DesiredGenInterface converted = converter.convert( convertationObject, moduleMatchingInfo );
+    Map<Object, Collection<MethodMatchingInfo>> obj2MatchingInfo = new HashMap<>();
+    obj2MatchingInfo.put( convertationObject, moduleMatchingInfo.getMethodMatchingInfos() );
+
+    DesiredGenInterface converted = converter.convert( obj2MatchingInfo );
     General hello_1_10_Gen = new General( "hello", 1, 10L );
     General world_5_44_Gen = new General( "world", 5, 44L );
     Specific hello_2_Spec = new Specific( "hello", 2 );
@@ -150,7 +155,7 @@ public class GenSpecSignatureMatchingTypeConverterTest {
     Class<DesiredGenInterface> source = DesiredGenInterface.class;
     Class<OfferedGenClass> target = OfferedGenClass.class;
     OfferedGenClass convertationObject = new OfferedGenClass();
-    SingleTypeConverter<DesiredGenInterface> converter = new SingleTypeConverter<>( source );
+    TypeConverter<DesiredGenInterface> converter = new TypeConverter<>( source );
 
     Set<MethodMatchingInfo> methodMatchingInfos = new HashSet<>();
 
@@ -230,7 +235,10 @@ public class GenSpecSignatureMatchingTypeConverterTest {
     EasyMock.expect( moduleMatchingInfo.getMethodMatchingInfos() ).andReturn( methodMatchingInfos ).anyTimes();
     EasyMock.replay( moduleMatchingInfo );
 
-    DesiredGenInterface converted = converter.convert( convertationObject, moduleMatchingInfo );
+    Map<Object, Collection<MethodMatchingInfo>> obj2MatchingInfo = new HashMap<>();
+    obj2MatchingInfo.put( convertationObject, moduleMatchingInfo.getMethodMatchingInfos() );
+
+    DesiredGenInterface converted = converter.convert( obj2MatchingInfo );
     General hello_1_10_Gen = new General( "hello", 1, 10L );
     General world_5_44_Gen = new General( "world", 5, 44L );
     Specific hello_2_Spec = new Specific( "hello", 2 );
@@ -282,7 +290,7 @@ public class GenSpecSignatureMatchingTypeConverterTest {
     Class<DesiredSpecInterface> source = DesiredSpecInterface.class;
     Class<OfferedSpecClass> target = OfferedSpecClass.class;
     OfferedSpecClass convertationObject = new OfferedSpecClass();
-    SingleTypeConverter<DesiredSpecInterface> converter = new SingleTypeConverter<>( source );
+    TypeConverter<DesiredSpecInterface> converter = new TypeConverter<>( source );
 
     Set<MethodMatchingInfo> methodMatchingInfos = new HashSet<>();
 
@@ -375,7 +383,10 @@ public class GenSpecSignatureMatchingTypeConverterTest {
     EasyMock.expect( moduleMatchingInfo.getMethodMatchingInfos() ).andReturn( methodMatchingInfos ).anyTimes();
     EasyMock.replay( moduleMatchingInfo );
 
-    DesiredSpecInterface converted = converter.convert( convertationObject, moduleMatchingInfo );
+    Map<Object, Collection<MethodMatchingInfo>> obj2MatchingInfo = new HashMap<>();
+    obj2MatchingInfo.put( convertationObject, moduleMatchingInfo.getMethodMatchingInfos() );
+
+    DesiredSpecInterface converted = converter.convert( obj2MatchingInfo );
     Specific hello_true_Spec = new Specific( "hello", true );
     Specific world_true_Spec = new Specific( "world", true );
     Specific hello_2_false_Spec = new Specific( "hello", 2 );
@@ -418,7 +429,7 @@ public class GenSpecSignatureMatchingTypeConverterTest {
     Class<DesiredSpecInterface> source = DesiredSpecInterface.class;
     Class<OfferedGenClass> target = OfferedGenClass.class;
     OfferedGenClass convertationObject = new OfferedGenClass();
-    SingleTypeConverter<DesiredSpecInterface> converter = new SingleTypeConverter<>( source );
+    TypeConverter<DesiredSpecInterface> converter = new TypeConverter<>( source );
 
     Set<MethodMatchingInfo> methodMatchingInfos = new HashSet<>();
 
@@ -495,7 +506,10 @@ public class GenSpecSignatureMatchingTypeConverterTest {
     EasyMock.expect( moduleMatchingInfo.getMethodMatchingInfos() ).andReturn( methodMatchingInfos ).anyTimes();
     EasyMock.replay( moduleMatchingInfo );
 
-    DesiredSpecInterface converted = converter.convert( convertationObject, moduleMatchingInfo );
+    Map<Object, Collection<MethodMatchingInfo>> obj2MatchingInfo = new HashMap<>();
+    obj2MatchingInfo.put( convertationObject, moduleMatchingInfo.getMethodMatchingInfos() );
+
+    DesiredSpecInterface converted = converter.convert( obj2MatchingInfo );
     Specific hello_true_Spec = new Specific( "hello", true );
     Specific world_true_Spec = new Specific( "world", true );
     Specific hello_2_false_Spec = new Specific( "hello", 2 );
