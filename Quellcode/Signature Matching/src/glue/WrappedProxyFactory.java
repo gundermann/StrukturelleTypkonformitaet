@@ -8,28 +8,39 @@ import util.Logger;
 
 public class WrappedProxyFactory<T> implements ProxyFactory<T> {
 
-  private final String sourceDelegationAttribute;
+  private final Class<T> targetStrcture;
 
-  public WrappedProxyFactory( String sourceDelegationAttribute ) {
-    this.sourceDelegationAttribute = sourceDelegationAttribute;
+  private final String delegationAttribute;
+
+  public WrappedProxyFactory( Class<T> targetStrcture, String delegationAttribute ) {
+    this.targetStrcture = targetStrcture;
+    this.delegationAttribute = delegationAttribute;
   }
 
-  @SuppressWarnings( "unchecked" )
   @Override
   public T createProxy( Object component, Collection<MethodMatchingInfo> matchingInfos ) {
     try {
       Field wrappedField = getDeclaredFieldOfClassHierachry( component.getClass(),
-          sourceDelegationAttribute );
+          delegationAttribute );
       if ( wrappedField == null ) {
-        logFieldError( sourceDelegationAttribute, component.getClass().getName() );
+        logFieldError( delegationAttribute, component.getClass().getName() );
       }
       wrappedField.setAccessible( true );
-      return (T) wrappedField.get( component );
+      ProxyFactory<T> proxyFactory = getRelevantProxyFactoryCreator( matchingInfos )
+          .createProxyFactory( targetStrcture );
+      return proxyFactory.createProxy( wrappedField.get( component ), matchingInfos );
     }
     catch ( IllegalArgumentException | IllegalAccessException e ) {
-      logFieldError( sourceDelegationAttribute, component.getClass().getName() );
+      logFieldError( delegationAttribute, component.getClass().getName() );
     }
     return null;
+
+  }
+
+  // TODO Die ProxyFactory sollte im Matcher der ModuleMatchingInfo mitgegeben werden
+  private ProxyFactoryCreator getRelevantProxyFactoryCreator( Collection<MethodMatchingInfo> matchingInfos ) {
+    return matchingInfos.isEmpty() ? ProxyCreatorFactories.getIdentityFactoryCreator()
+        : ProxyCreatorFactories.getClassFactoryCreator();
   }
 
   private void logFieldError( String fieldname, String classname ) {

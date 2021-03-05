@@ -49,18 +49,32 @@ public class WrapperProxyFactory<T> implements ProxyFactory<T> {
     // Oberklassen zu suchen.
     //
     try {
-      Field wrappedField = getDeclaredFieldOfClassHierachry( proxyInstance.getClass(),
+      Field wrappedField = getDeclaredFieldOfClassHierachry( targetStrcture,
           targetDelegationAttribute );
       if ( wrappedField == null ) {
         logFieldError( targetDelegationAttribute, targetStrcture.getName() );
       }
       wrappedField.setAccessible( true );
-      wrappedField.set( proxyInstance, component );
+      wrappedField.set( proxyInstance,
+          createProxyOfWrappedComponent( wrappedField.getType(), component, matchingInfos ) );
     }
     catch ( IllegalArgumentException | IllegalAccessException e ) {
+      Logger.switchOn();
       logFieldError( targetDelegationAttribute, targetStrcture.getName() );
     }
     return (T) proxyInstance;
+  }
+
+  private Object createProxyOfWrappedComponent( Class<?> fieldType, Object component,
+      Collection<MethodMatchingInfo> matchingInfos ) {
+    ProxyFactoryCreator proxyFactoryCreator = getRelevantProxyFactoryCreator( matchingInfos );
+    return proxyFactoryCreator.createProxyFactory( fieldType ).createProxy( component, matchingInfos );
+  }
+
+  // TODO Die ProxyFactory sollte im Matcher der ModuleMatchingInfo mitgegeben werden
+  private ProxyFactoryCreator getRelevantProxyFactoryCreator( Collection<MethodMatchingInfo> matchingInfos ) {
+    return matchingInfos.isEmpty() ? ProxyCreatorFactories.getIdentityFactoryCreator()
+        : ProxyCreatorFactories.getClassFactoryCreator();
   }
 
   private void logFieldError( String fieldname, String classname ) {

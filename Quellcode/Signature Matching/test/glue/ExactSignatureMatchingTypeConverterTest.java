@@ -23,36 +23,36 @@ public class ExactSignatureMatchingTypeConverterTest {
 
   @Test
   public void exactFullMatching() throws NoSuchMethodException, SecurityException {
-    Class<InterfaceWrapper> source = InterfaceWrapper.class;
-    Class<Enum2> target = Enum2.class;
+    Class<InterfaceWrapper> libType = InterfaceWrapper.class;
+    Class<Enum2> queryType = Enum2.class;
     Enum2 convertationObject = Enum2.CONSTANT_1;
-    TypeConverter<InterfaceWrapper> converter = new TypeConverter<>( source );
+    TypeConverter<InterfaceWrapper> converter = new TypeConverter<>( libType );
 
     Set<MethodMatchingInfo> methodMatchingInfos = new HashSet<>();
     MethodMatchingInfo methodMatchingInfoGetFalse = EasyMock.createNiceMock( MethodMatchingInfo.class );
-    EasyMock.expect( methodMatchingInfoGetFalse.getTarget() ).andReturn( target.getMethod( "getFalse" ) ).anyTimes();
-    EasyMock.expect( methodMatchingInfoGetFalse.getSource() ).andReturn( source.getMethod( "getFalse" ) ).anyTimes();
+    EasyMock.expect( methodMatchingInfoGetFalse.getTarget() ).andReturn( queryType.getMethod( "getFalse" ) ).anyTimes();
+    EasyMock.expect( methodMatchingInfoGetFalse.getSource() ).andReturn( libType.getMethod( "getFalse" ) ).anyTimes();
     EasyMock.expect( methodMatchingInfoGetFalse.getArgumentTypeMatchingInfos() )
         .andReturn( new HashMap<ParamPosition, ModuleMatchingInfo>() ).anyTimes();
     methodMatchingInfos.add( methodMatchingInfoGetFalse );
 
     MethodMatchingInfo methodMatchingInfoGetTrue = EasyMock.createNiceMock( MethodMatchingInfo.class );
-    EasyMock.expect( methodMatchingInfoGetTrue.getTarget() ).andReturn( target.getMethod( "getTrue" ) ).anyTimes();
-    EasyMock.expect( methodMatchingInfoGetTrue.getSource() ).andReturn( source.getMethod( "getTrue" ) ).anyTimes();
+    EasyMock.expect( methodMatchingInfoGetTrue.getTarget() ).andReturn( queryType.getMethod( "getTrue" ) ).anyTimes();
+    EasyMock.expect( methodMatchingInfoGetTrue.getSource() ).andReturn( libType.getMethod( "getTrue" ) ).anyTimes();
     EasyMock.expect( methodMatchingInfoGetTrue.getArgumentTypeMatchingInfos() )
         .andReturn( new HashMap<ParamPosition, ModuleMatchingInfo>() ).anyTimes();
     methodMatchingInfos.add( methodMatchingInfoGetTrue );
 
     MethodMatchingInfo methodMatchingInfoGetOne = EasyMock.createNiceMock( MethodMatchingInfo.class );
-    EasyMock.expect( methodMatchingInfoGetOne.getTarget() ).andReturn( target.getMethod( "getOne" ) ).anyTimes();
-    EasyMock.expect( methodMatchingInfoGetOne.getSource() ).andReturn( source.getMethod( "getOne" ) ).anyTimes();
+    EasyMock.expect( methodMatchingInfoGetOne.getTarget() ).andReturn( queryType.getMethod( "getOne" ) ).anyTimes();
+    EasyMock.expect( methodMatchingInfoGetOne.getSource() ).andReturn( libType.getMethod( "getOne" ) ).anyTimes();
     EasyMock.expect( methodMatchingInfoGetOne.getArgumentTypeMatchingInfos() )
         .andReturn( new HashMap<ParamPosition, ModuleMatchingInfo>() ).anyTimes();
     methodMatchingInfos.add( methodMatchingInfoGetOne );
 
     MethodMatchingInfo methodMatchingInfoGetNull = EasyMock.createNiceMock( MethodMatchingInfo.class );
-    EasyMock.expect( methodMatchingInfoGetNull.getTarget() ).andReturn( target.getMethod( "getNull" ) ).anyTimes();
-    EasyMock.expect( methodMatchingInfoGetNull.getSource() ).andReturn( source.getMethod( "getNull" ) ).anyTimes();
+    EasyMock.expect( methodMatchingInfoGetNull.getTarget() ).andReturn( queryType.getMethod( "getNull" ) ).anyTimes();
+    EasyMock.expect( methodMatchingInfoGetNull.getSource() ).andReturn( libType.getMethod( "getNull" ) ).anyTimes();
     EasyMock.expect( methodMatchingInfoGetNull.getArgumentTypeMatchingInfos() )
         .andReturn( new HashMap<ParamPosition, ModuleMatchingInfo>() ).anyTimes();
     methodMatchingInfos.add( methodMatchingInfoGetNull );

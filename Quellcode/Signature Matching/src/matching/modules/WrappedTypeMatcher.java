@@ -164,25 +164,35 @@ public class WrappedTypeMatcher implements CombinableTypeMatcher {
       Class<?> wrappedType, boolean isTargetWrapper ) {
     Collection<ModuleMatchingInfo> allMatchingInfos = new ArrayList<>();
     Field[] fieldsOfWrapper = filterStaticFields( wrapperClass.getDeclaredFields() );
-    TypeMatcher innerMethodMatcher = innerMethodMatcherSupplier.get();
     for ( Field field : fieldsOfWrapper ) {
       // TODO hier wird nur auf der ersten Ebene gepr�ft. Eine tiefere Verschachtelung wird noch nicht erm�glicht.
       // ABER: Der ganze Matcher macht das noch nicht. Auch beim Pr�fen des Matchings wird nur auf der obersten Ebene
       // gepr�ft.
-      if ( innerMethodMatcher.matchesType( field.getType(), wrappedType ) ) {
-        Collection<ModuleMatchingInfo> infosFromInnerMatcher = innerMethodMatcher
-            .calculateTypeMatchingInfos( field.getType(), wrappedType );
-        final ModuleMatchingInfoFactory factory;
-        if ( isTargetWrapper ) {
-          factory = new ModuleMatchingInfoFactory( wrapperClass, field.getName(), wrappedType );
-        }
-        else {
-          factory = new ModuleMatchingInfoFactory( wrappedType, wrapperClass, field.getName() );
-        }
-        allMatchingInfos.addAll( enhanceInfosWithDelegate( infosFromInnerMatcher, factory ) );
+
+      Collection<ModuleMatchingInfo> infosFromInnerMatcher = new ArrayList<>();
+      ModuleMatchingInfoFactory factory = null;
+
+      if ( isTargetWrapper ) {
+        infosFromInnerMatcher = calcInnerMatchingInfos( field.getType(), wrappedType );
+        factory = new ModuleMatchingInfoFactory( wrapperClass, field.getName(), wrappedType );
       }
+      else {
+        infosFromInnerMatcher = calcInnerMatchingInfos( wrappedType, field.getType() );
+        factory = new ModuleMatchingInfoFactory( wrappedType, wrapperClass, field.getName() );
+      }
+      // wenn infosFromInnerMatcher leer ist, dann kann auch die factory null sein
+      allMatchingInfos.addAll( enhanceInfosWithDelegate( infosFromInnerMatcher, factory ) );
     }
     return allMatchingInfos;
+  }
+
+  private Collection<ModuleMatchingInfo> calcInnerMatchingInfos( Class<?> checkType, Class<?> queryType ) {
+    TypeMatcher innerMethodMatcher = innerMethodMatcherSupplier.get();
+    if ( innerMethodMatcher.matchesType( checkType, queryType ) ) {
+      return innerMethodMatcher
+          .calculateTypeMatchingInfos( checkType, queryType );
+    }
+    return new ArrayList<>();
   }
 
   /**

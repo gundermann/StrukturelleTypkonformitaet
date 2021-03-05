@@ -13,7 +13,7 @@ import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.Best
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.CombinationInfo;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.DefaultTypeMatcherHeuristic;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.Logger;
-import glue.CombinationTypeConverter;
+import glue.TypeConverter;
 import matching.methods.MethodMatchingInfo;
 import matching.modules.PartlyTypeMatcher;
 import matching.modules.PartlyTypeMatchingInfo;
@@ -144,7 +144,7 @@ public class DesiredComponentFinder {
         combinationInfos.getComponentClasses().stream().map( Class::toString ).collect( Collectors.joining( " + " ) ) );
 
     testedComponentVariations++;
-    CombinationTypeConverter<DesiredInterface> converter = new CombinationTypeConverter<>(
+    TypeConverter<DesiredInterface> converter = new TypeConverter<>(
         desiredInterface );
     ComponentTester<DesiredInterface> componentTester = new ComponentTester<>( desiredInterface );
 

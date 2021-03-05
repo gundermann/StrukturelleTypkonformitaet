@@ -138,7 +138,7 @@ public class BehaviourDelegateInvocationHandler implements MethodInterceptor, In
     Logger.info( String.format( "convert type %s -> %s",
         moduleMatchingInfo.getSource().getName(), moduleMatchingInfo.getTarget().getName() ) );
     // Wenn das zu konvertierende Objekt null ist, dann kann dies auch gleich zurückgegeben werden, da null-Objekte
-    // keinen speziellen Typ haben
+    // keinen speziellen Typ haben muessen
     // if ( sourceType == null || moduleMatchingInfo.getMethodMatchingInfos().isEmpty()
     // && moduleMatchingInfo.getTargetDelegate() == null
     // && moduleMatchingInfo.getSourceDelegate() == null ) {

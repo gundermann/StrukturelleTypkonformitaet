@@ -34,7 +34,7 @@ public final class ProxyCreatorFactories {
 
       @Override
       public <T> ProxyFactory<T> createProxyFactory( Class<T> targetType ) {
-        return new WrappedProxyFactory<>( delegateAttr );
+        return new WrappedProxyFactory<>( targetType, delegateAttr );
       }
     };
   }
