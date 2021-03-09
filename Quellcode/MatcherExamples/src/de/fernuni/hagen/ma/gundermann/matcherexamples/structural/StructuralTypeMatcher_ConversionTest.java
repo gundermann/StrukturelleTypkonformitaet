@@ -55,17 +55,9 @@ public class StructuralTypeMatcher_ConversionTest {
     SubReturnSubParamClass2 offeredComponent = new SubReturnSubParamClass2();
     Collection<ModuleMatchingInfo> matchingInfos = matcher.calculateTypeMatchingInfos( SubReturnSubParamClass1.class,
         SubReturnSubParamClass2.class );
-    // TODO Ueberarbeiten!!!
-    /*
-     * Kurzer Hinweis in Bezug auf die Verwendung bei der Exploration: Ueber den vorherigen Methodenaufruf wird, wie in
-     * den anderen Matchern auch, nur eine ModuleMatchingInfo erzeugt. Bei der Exploration einer passenden Komponente
-     * wird eine andere Methode verwendet, die ueberprueft, welche erwarteten Methoden zu welchen angebotenen Methoden
-     * passen. So entsteht bei der Exploration je erwarteter Methode eine Liste von passenden angebotenen Methoden. Auf
-     * der Basis dieser Listen werden dann mehrer Kombinationen erzeugt, sodass zu jeder erwarteten Methoden eine der in
-     * Frage kommenden angebotenen Methoden verwendent wird. Das ist dann dass, was ich in meinem Bericht als
-     * Methoden-Konvertierungsvarianten bezeichnet habe. Für die Darstellung der Methoden-Delegation sind die
-     * unterschiedlichen Methoden-Konvertierungsvarianten jedoch irrelevant.
-     */
+    // Hier wird ein Matching zwischen den einzelnen Methoden hergestellt. Da es zu einer erwarteten Methode mehrere
+    // Matchings geben kann, zur Laufzeit aber nur eine der matchenden Methoden in Frage kommt, wird für jede
+    // möglichen Kombinationen eine ModuleMatchingInfo generiert.
     for ( ModuleMatchingInfo moduleMatchingInfo : matchingInfos ) {
       ProxyFactory<SubReturnSubParamClass1> proxyFactory = moduleMatchingInfo.getConverterCreator()
           .createProxyFactory( SubReturnSubParamClass1.class );
