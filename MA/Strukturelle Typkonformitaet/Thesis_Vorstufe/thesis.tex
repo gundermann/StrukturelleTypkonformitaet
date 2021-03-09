@@ -4,30 +4,31 @@
 \begin{document}
 \frontmatter
 
-%\include{titlepage}
-\clearpage
+\include{titlepage}
+\newpage
 \pagenumbering{Roman}
 
-%\include{declarationofownwork}
-%\clearpage
+\include{declarationofownwork}
+\newpage
 
 \tableofcontents
-%\clearpage
+\newpage
 
-%\phantomsection
+\phantomsection
 \addcontentsline{toc}{chapter}{\listfigurename}
 \listoffigures
-%\clearpage
+\newpage
 
-%\phantomsection
+\phantomsection
 \addcontentsline{toc}{chapter}{\listtablename}
 \listoftables
-%\clearpage
+\newpage
 
-%\phantomsection
-%\addcontentsline{toc}{chapter}{Listings}
-%\lstlistoflistings
-%\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{Listings}
+\lstlistoflistings
+\newpage
+
 
 \mainmatter
 \include{introduction}
@@ -35,31 +36,25 @@
 \include{explorationcomponent}
 \include{heuristics}
 \include{evaluation}
-%\include{Framework}
-%\include{Grobkonzept}
-%\include{EntwerfenDSL}
-%\include{EntwicklungGen}
-%\include{Fazit}
 
 
+\backmatter
 
-\begin{appendix}
+%\begin{appendix}
 \pagenumbering{Roman}
 \setcounter{page}{13}
 %\include{AnhangA}
 %\include{AnhangB}
-\end{appendix}
-\backmatter
+%\end{appendix}
+
 
 %\include{cd}
 
-\clearpage
-\phantomsection
-%\addcontentsline{toc}{chapter}{Glossar}
-%\printglossary[title=Glossar,toctitle=Glossar]
 
-\clearpage
 \phantomsection
 \addcontentsline{toc}{chapter}{Literaturverzeichnis}
 \bibliography{thesisbib}{}
+
+\printglossary
+
 \end{document}

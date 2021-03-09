@@ -48,7 +48,7 @@ Die \tabsrefs{tmr_start_tei1}{tmr_start_tei6_2} zeigen die Vier-Felder-Tafeln, i
 \noindent
 Für die Interfaces TEI4 - TEI6 werden zwei Durchläufe benötigt, da die semantischen Test nur von einer benötigten Komponente bestanden werden, die aus einer Kombination zweier Typ-Konvertierungsvarianten erzeugt wurde.
 \subsubsection{Ergebnisse TMR\_Quant}
-Durch die Verwendung der Heuristik TMR\_Quant kann für die ersten 3 erwarteten Interfaces (TEI1 - TEI3) eine Verbesserung erzielt werden. Der Grund dafür ist, dass die benötigte Komponente, die letztendlich alle semantischen Tests besteht auf der Basis genau einer Typ-Konvertierungsvariante erzeugt wurde. Damit benötigt der Explorationsalgorithmus lediglich einen Durchlauf. TMR\_Quant sorgt dennoch dafür, dass die erzeugten Kombinationen von Typ-Konvertierungsvarianten im 2. Schritt reduziert werden, da solche, die ein quantitatives Type-Matcher Rating von < 100\% aufweisen nicht in die Ergebnismenge des 2. Schrittes einfließen. Die unten aufgeführten Tafeln zeigen die Auswirkung auf die ersten drei erwarteten Interfaces.
+Durch die Verwendung der Heuristik TMR\_Quant kann für die ersten 3 erwarteten Interfaces (TEI1 - TEI3) eine Verbesserung erzielt werden. Der Grund dafür ist, dass die benötigte Komponente, die letztendlich alle semantischen Tests besteht auf der Basis genau einer Typ-Konvertierungsvariante erzeugt wurde. Damit benötigt der Explorationsalgorithmus lediglich einen Durchlauf. TMR\_Quant sorgt dennoch dafür, dass die erzeugten Kombinationen von Typ-Konvertierungsvarianten im 2. Schritt reduziert werden, da solche, die ein quantitatives Type-Matcher Rating von < 100\% aufweisen nicht in die Ergebnismenge des 2. Schrittes einfließen. Die unten aufgeführten Tafeln zeigen die Auswirkung auf die ersten drei erwarteten Interfaces.\newpage
 \begin{multicols}{3}
 \vft{1}{$mk(29)$}{$mk(140)$}{1}{0}{TMR\_Quant Test-System TMR für TEI1}{tmr_quant_tei1}\columnbreak
 \vft{1}{$mk(22)$}{$mk(157)$}{1}{0}{TMR\_Quant Test-System TMR für TEI2}{tmr_quant_tei2}\columnbreak
@@ -128,7 +128,7 @@ An den Überschriften der folgenden Abschnitte ist abzulesen, welche Akkumulation
 \vft{1}{$mk(60)$}{0}{0}{0}{TMR\_Qual Test-System TMR für TEI5 mit 1-2 1. Durchlauf}{tmr_qual_2_2_tei5_1}\columnbreak
 \vft{1}{$mk(33)$}{0}{1}{0}{TMR\_Qual Test-System TMR für TEI6 mit 1-2 1. Durchlauf}{tmr_qual_2_2_tei6_1}
 \end{multicols}
-\newpage
+
 \begin{multicols}{3}
 \vft{2}{$mk(1)$}{$mk(1890)$}{1}{0}{TMR\_Qual Test-System TMR für TEI4 mit 1-2 2. Durchlauf}{tmr_qual_2_2_tei4_2}\columnbreak
 \vft{2}{$mk(1)$}{$mk(1769)$}{1}{0}{TMR\_Qual Test-System TMR für TEI5 mit 1-2 2. Durchlauf}{tmr_qual_2_2_tei5_2}\columnbreak
@@ -150,13 +150,12 @@ An den Überschriften der folgenden Abschnitte ist abzulesen, welche Akkumulation
 \vft{1}{$mk(33)$}{0}{1}{0}{TMR\_Qual Test-System TMR für TEI6 mit 3-2 1. Durchlauf}{tmr_qual_3_2_tei6_1}
 \end{multicols}
 
-\newpage
 \begin{multicols}{3}
 \vft{2}{$mk(1)$}{$mk(1890)$}{1}{0}{TMR\_Qual Test-System TMR für TEI4 mit 3-2 2. Durchlauf}{tmr_qual_3_2_tei4_2}\columnbreak
 \vft{2}{$mk(1)$}{$mk(1769)$}{1}{0}{TMR\_Qual Test-System TMR für TEI5 mit 3-2 2. Durchlauf}{tmr_qual_3_2_tei5_2}\columnbreak
 \vft{2}{$mk(1)$}{$mk(527)$}{1}{0}{TMR\_Qual Test-System TMR für TEI6 mit 3-2 2. Durchlauf}{tmr_qual_3_2_tei6_2}
 \end{multicols}
-
+\newpage
 \myparagraph{Typ: 4 Methoden: 3}\label{tmrquant_4-3}
 \begin{multicols}{3}
 \vft{1}{$mk(52)$}{$mk(117)$}{1}{0}{TMR\_Qual Test-System TMR für TEI1 mit 4-3}{tmr_qual_4_3_tei1}\columnbreak
@@ -169,7 +168,7 @@ An den Überschriften der folgenden Abschnitte ist abzulesen, welche Akkumulation
 \vft{1}{$mk(60)$}{0}{0}{0}{TMR\_Qual Test-System TMR für TEI5 mit 4-3 1. Durchlauf}{tmr_qual_4_3_tei5_1}\columnbreak
 \vft{1}{$mk(33)$}{0}{1}{0}{TMR\_Qual Test-System TMR für TEI6 mit 4-3 1. Durchlauf}{tmr_qual_4_3_tei6_1}
 \end{multicols}
-\newpage
+
 \begin{multicols}{3}
 \vft{2}{$mk(1891)$}{0}{1}{0}{TMR\_Qual Test-System TMR für TEI4 mit 4-3 2. Durchlauf}{tmr_qual_4_3_tei4_2}\columnbreak
 \vft{2}{$mk(1770)$}{0}{1}{0}{TMR\_Qual Test-System TMR für TEI5 mit 4-3 2. Durchlauf}{tmr_qual_4_3_tei5_2}\columnbreak
@@ -224,28 +223,26 @@ Dies ist jedoch darauf zurückzuführen, dass das Type-Matcher Rating je Methoden-
 \end{enumerate}
 Aufgrund der Ergebnisse stehen für die weitere Verwendung der Heuristik TMR\_Qual mehrere Kombinationen von Akkumulationsverfahren zur Auswahl. Die Entscheidung fällt aufgrund der etwas geringeren Komplexität auf die Kombination 1-2. 
 
-\myparagraph{TMR\_Quant und TMR\_Qual in Kombination}
-Bei der Kombination der beiden Heuristiken TMR\_Quant und TMR\_Qual ist vor allem für die erwarteten Interfaces TEI4-TEI6 zu erwarten, dass ein gegenseitiger positiver Einfluss der Heuristiken zu erkennen ist. Der Grund dafür ist, dass die Heuristik TMR\_Qual keinen Einfluss auf den ersten Durchlauf des Explorationsalgorithmus für diese erwarteten Interfaces hat, die Heuristik TMR\_Quant hingegen schon. Die \tabsrefs{tmr_quant+qual:tei1}{tmr_quant+qual:tei6_2} zeigen wiederum die bekannten Vier-Felder-Tafeln für den jeweiligen Durchlauf und dem jeweiligen erwarteten Interface.
+\subsubsection{TMR\_Quant und TMR\_Qual in Kombination}
+Bei der Kombination der beiden Heuristiken TMR\_Quant und TMR\_Qual ist vor allem für die erwarteten Interfaces TEI4-TEI6 zu erwarten, dass ein gegenseitiger positiver Einfluss der Heuristiken zu erkennen ist. Der Grund dafür ist, dass die Heuristik TMR\_Qual keinen Einfluss auf den ersten Durchlauf des Explorationsalgorithmus für diese erwarteten Interfaces hat, die Heuristik TMR\_Quant hingegen schon. Die \tabsrefs{tmr_quantqual_tei1}{tmr_quantqual_tei6_2} zeigen wiederum die bekannten Vier-Felder-Tafeln für den jeweiligen Durchlauf und dem jeweiligen erwarteten Interface.
 \begin{multicols}{3}
-\vft{1}{$mk(2)$}{$mk(167)$}{1}{0}{TMR\_Quant + TMR\_Qual Test-System TMR für TEI1}{tmr_quant+qual:tei1}\columnbreak
-\vft{1}{$mk(2)$}{$mk(177)$}{1}{0}{TMR\_Quant + TMR\_Qual Test-System TMR für TEI2}{tmr_quant+qual:tei2}\columnbreak
-\vft{1}{$mk(1)$}{$mk(186)$}{1}{0}{TMR\_Quant + TMR\_Qual Test-System TMR für TEI3}{tmr_quant+qual:tei3}
-\end{multicols}
-\newpage
-\begin{multicols}{3}
-\vft{1}{$mk(30)$}{$mk(32)$}{0}{0}{TMR\_Quant + TMR\_Qual Test-System TMR für TEI4 1. Durchlauf}{tmr_quant+qual:tei4_1}\columnbreak
-\vft{1}{$mk(60)$}{0}{0}{0}{TMR\_Quant + TMR\_Qual Test-System TMR für TEI5 1. Durchlauf}{tmr_quant+qual:te5_1}\columnbreak
-\vft{1}{$mk(31)$}{$mk(2)$}{0}{0}{TMR\_Quant + TMR\_Qual Test-System TMR für TEI6 1. Durchlauf}{tmr_quant+qual:tei6_1}
+\vft{1}{$mk(2)$}{$mk(167)$}{1}{0}{TMR\_Quant + TMR\_Qual Test-System TMR für TEI1}{tmr_quantqual_tei1}\columnbreak
+\vft{1}{$mk(2)$}{$mk(177)$}{1}{0}{TMR\_Quant + TMR\_Qual Test-System TMR für TEI2}{tmr_quantqual:tei2}\columnbreak
+\vft{1}{$mk(1)$}{$mk(186)$}{1}{0}{TMR\_Quant + TMR\_Qual Test-System TMR für TEI3}{tmr_quantqual:tei3}
 \end{multicols}
 
 \begin{multicols}{3}
-\vft{1}{$mk(1)$}{$mk(1890)$}{1}{0}{TMR\_Quant + TMR\_Qual Test-System TMR für TEI4 2. Durchlauf}{tmr_quant+qual:tei4_2}\columnbreak
-\vft{1}{$mk(1)$}{$mk(1769)$}{1}{0}{TMR\_Quant + TMR\_Qual Test-System TMR für TEI5 2. Durchlauf}{tmr_quant+qual:te5_2}\columnbreak
-\vft{1}{$mk(1)$}{$mk(527)$}{1}{0}{TMR\_Quant + TMR\_Qual Test-System TMR für TEI6 2. Durchlauf}{tmr_quant+qual:tei6_2}
+\vft{1}{$mk(30)$}{$mk(32)$}{0}{0}{TMR\_Quant + TMR\_Qual Test-System TMR für TEI4 1. Durchlauf}{tmr_quantqual:tei4_1}\columnbreak
+\vft{1}{$mk(60)$}{0}{0}{0}{TMR\_Quant + TMR\_Qual Test-System TMR für TEI5 1. Durchlauf}{tmr_quantqual:te5_1}\columnbreak
+\vft{1}{$mk(31)$}{$mk(2)$}{0}{0}{TMR\_Quant + TMR\_Qual Test-System TMR für TEI6 1. Durchlauf}{tmr_quantqual:tei6_1}
+\end{multicols}
+
+\begin{multicols}{3}
+\vft{1}{$mk(1)$}{$mk(1890)$}{1}{0}{TMR\_Quant + TMR\_Qual Test-System TMR für TEI4 2. Durchlauf}{tmr_quantqual:tei4_2}\columnbreak
+\vft{1}{$mk(1)$}{$mk(1769)$}{1}{0}{TMR\_Quant + TMR\_Qual Test-System TMR für TEI5 2. Durchlauf}{tmr_quantqual:te5_2}\columnbreak
+\vft{1}{$mk(1)$}{$mk(527)$}{1}{0}{TMR\_Quant + TMR\_Qual Test-System TMR für TEI6 2. Durchlauf}{tmr_quantqual_tei6_2}
 \end{multicols}
 \noindent
 Wie an diesen Ergebnissen zu erkennen ist, wird der Explorationsalgorithmus für eine Suche nach einer passenden benötigten Komponente für TEI1 und TEI2 lediglich für zwei angebotene Interfaces bzw. Typ-Konvertierungsvarianten durchlaufen. In Bezug auf TEI3 ist es sogar nur noch eine Typ-Konvertierungsvariante.\\\\
 Bei der Betrachtung der Ergebnisse für die erwarteten Interfaces TEI4-TEI6 zeigt sich gut, wie sich die beiden Heuristiken gegenseitig ergänzen. So wirkt die Heuritik TMR\_Quant grundsätzlich nur auf den ersten Durchlauf des Explorationsalgorithmus aus. Die Heuristik TMR\_Qual hingegen erweist ihre Stärke erst in dem Durchlauf, in dem auch eine passende benötigte Komponente gefunden wird.\\\\
 Im Allgemeinen kann festgehalten werden, dass die passenden benötigten Komponenten trotz der Kombination der beiden Heuristiken gefunden werden konnten. Die Reduktion der notwendigen Durchläufe des Explorationsalgorithmus ist jedoch hauptsächlich auf die Heuristik TMR\_Qual zurückzuführen. 
-
-
