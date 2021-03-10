@@ -1,0 +1,11 @@
+\section{Explorationsalgorithmus}
+Mit diesen Voraussetzungen kann eine Komponente entwickelt werden, welche die Erwartungen der nachfragenden Komponente mit den bestehenden Funktionalitäten der angebotenen Komponenten zusammenbringt. In \abbref{common_structure} ist dies als Explorationskomponente dargestellt. Die Abhängigkeiten zu der nachfragenden und den angebotenen Komponenten ist nicht direkt vorhanden, da sie lediglich durch reflexive Aufrufe zur Laufzeit zustande kommen.
+\myBigFigure{common_structure}{Allgemeiner Aufbau des System mit der Explorationskomponente}{common_structure}
+\noindent
+Um die Explorationskomponente anzusprechen, muss der Entwickler eine Instanz der Klasse DesiredComponentFinder, die von der Explorationskomponente bereitgestellt wird, erzeugen. Dabei müssen dem Konstruktor dieser Klasse zwei Parameter übergeben werden. Der erste Parameter ist eine Liste aller angebotenen Interfaces. Der zweite Parameter ist eine java.util.Function, über die die konkreten Implementierungen der angebotenen Interfaces ermittelt werden können. Die Suche wird mit dem Aufruf der Methode getDesiredComponent gestartet, welcher das erwartete Interface als Parameter übergeben werden muss. Somit kann ein Objekt der Klasse DesiredComponentFinder für mehrere Suchen mit unterschiedlichen erwarteten Interfaces verwendet werden.\\\\
+Zu erwähnen ist noch, dass die in der nachfragenden Komponente spezifizierten Erwartungen mitunter nur durch eine Kombination von angebotenen Komponenten erfüllt werden können. Aus diesem Grund wird innerhalb der Explorationskomponente eine so genannte benötigte Komponente erzeugt, in der das Zusammenspiel einer solchen Kombination von angebotenen Komponenten verwaltet wird. Ein solches Szenario ist \abbref{combinated_components} zu entnehmen.
+\myBigFigure{combinated_components}{Kombination von angebotenen Komponenten}{combinated_components}
+\noindent
+Die Suche nach einer benötigten Komponente innerhalb der Explorationskomponente erfolgt in zwei Schritten. Im ersten Schritt werden die angebotenen Interfaces hinsichtlich ihrer Struktur mit dem erwarteten Interface abgeglichen. Im zweiten Schritt werden die Ergebnisse aus dem ersten Schritt hinsichtlich der semantischen Tests überprüft. Dieser mehrstufige Ansatz baut auf der Arbeit von Hummel \cite{hummel08} auf.
+\input{struct_matching}
+\input{sem_eval}

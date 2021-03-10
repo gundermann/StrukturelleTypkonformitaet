@@ -1,0 +1,29 @@
+\section{Evaluierung}
+Die Evaluierung erfolgt innerhalb von Systemen, in denen mindestens 889 angebotene Interfaces existieren. Es wird zwischen einem Test-System und einem Heiß-System unterschieden.\\\\
+Das Test-System wurde vorrangig für die Evaluation der Type-Matcher Rating basierten Heuristiken verwendet, da für diese Heuristiken keine Implementierungen der angebotenen Interfaces vorliegen müssen.\\\\
+Das Heiß-System wurde vorrangig für die Evaluation der testergebnis basierten Heuristiken verwendet, da hier zu jedem der 889 angebotenen Interfaces eine Implementierung existiert. Die angebotenen Komponenten wurden  im Heiß-System als Java Enterprise Beans umgesetzt.
+
+\myparagraph{Darstellung der Evaluationsergebnisse}
+Die Evaluationsergebnisse werden in der Form von Vier-Felder-Tafeln dargestellt (Beispiel siehe \tabref{vft:beispiel}). Für jedes erwartete Interface wird eine Vier-Felder-Tafel für jeden Durchlauf des Explorationsalgorithmus aufgezeigt. Aus der jeweiligen Tafel geht hervor, wie viele Kombinationen von Methoden-Konvertierungsvarianten aus den Kombinationen der ermittelten Typ-Konvertierungsvarianten innerhalb des Durchlaufs erzeugt werden könnten. Die Nummer des Durchlaufs wird in der oberen rechten Ecke der Tafel abgebildet. In der Spalte positiv ist die Anzahl der Kombinationen von Methoden-Konvertierungsvarianten verzeichnet, die innerhalb des Durchlaufs tatsächlich erzeugt wurden. Die Zahl in der Spalte ``negativ'' drückt hingegen aus, wie viele der Kombinationen aufgrund bestimmter Kriterien (bzw. Heuristiken) gar nicht erst erzeugt wurden.  Die Zeile ``falsch'' beschreibt die Anzahl der relevanten Kombinationen, aus denen benötigte Komponenten erzeugt werden, welche die semantischen Tests nicht bestehen. Dementsprechend stellt die Zeile ``richtig'' die Anzahl der Kombinationen dar, aus denen sich benötigte Komponenten erzeugen lassen, welche die semantischen Test bestehen. Der Fall, in dem eine Kombination nicht erzeugt wurde, aber dennoch für die Erstellung einer benötigten Komponente genutzt wurde und die semantischen Tests besteht, (negativ und richtig) kann nicht auftreten.\\\\
+Für die Anzahl der zu kombinierenden Methoden-Konvertierungsvarianten $MK$ wird der höchste mögliche Wert angenommen. Dieser ist von der Anzahl der angebotenen Methoden $am$ sowie der Anzahl der erwarteten Methoden $em$ abhängig und wird wie folgt berechnet: 
+\begin{equation*}
+MK = \frac{am!}{(am-em)!*em!}
+\end{equation*}
+\noindent
+Die Anzahl der angebotenen Methoden $am$ ist wiederum abhängig von den angebotenen Interfaces deren Typ-Konvertierungsvarianten im jeweiligen Durchlauf miteinander kombiniert wurden. Die Anzahl der Kombinationen von Typ-Konvertierungsvarianten innerhalb des Durchlaufs sei mit $TK$ beschrieben. Der Wert für $TK$ berechnet sich in Abhängigkeit von der Nummer des Durchlaufs $d$ und der Anzahl der strukturell passenden angebotenen Interfaces $n$ (siehe auch Abschnitt Explorationskomponente, 2. Stufe, 2. Kombination von Typ-Konvertierungsvarianten).
+\begin{equation*}
+TK = \frac{n!}{(n-d)!*d!}
+\end{equation*}
+\noindent
+Da die Anzahl der angebotenen Methoden von System zu System schwanken kann, sei die Funktion $am(TK)$ eine näherungsweise Darstellung von $am$, in Abhängigkeit von der Anzahl der kombinierten Typ-Konvertierungsvarianten $TK$.\\\\
+Da durch die Heuristiken letztendlich Methoden-Konvertierungsvarianten aus der Suche herausfallen, wird die Anzahl der entsprechenden Methoden-Konvertierungsvarianten in dem jeweiligen Feld der Vier-Felder-Tafeln als Funktion $mk(TK)$ dargestellt, die wie folgt definiert wird:
+\begin{equation*}
+mk(TK) = \frac{am(TK)!}{(am(TK)-em)!*em!}
+\end{equation*}
+\noindent
+\tabref{vft:beispiel} zeigt ein Beispiel für eine solche Vier-Felder-Tafel, in der die Ergebnisse des 1. Durchlauf des Explorationsalgorithmus dargestellt sind. Dabei wurden Methoden-Konvertierungsvarianten aus 10 Kombinationen von Typ-Konvertierungsvarianten erzeugt. Den Methoden-Konvertierungsvarianten, die nicht beachtet wurden, lagen insgesamt 20 Typ-Konvertierungsvarianten  zugrunde. Weiterhin zeigt das Beispiel, dass es eine Kombination von Methoden-Konvertierungsvarianten gibt, aus der eine passende benötigte Komponente erzeugt werden konnte.
+\vft{1}{$mk(10)$}{$mk(20)$}{1}{0}{Beispiel: Vier-Felder-Tafel}{vft:beispiel}
+
+
+\input{testsystem}
+\input{mainsystem}

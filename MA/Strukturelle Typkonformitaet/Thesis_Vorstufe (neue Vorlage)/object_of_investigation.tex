@@ -1,0 +1,16 @@
+\subsection{Gegenstand dieser Arbeit}
+In dieser Arbeit soll jedoch nicht das gesamte Internet als Quelle oder Repository für die Codesuche dienen. Vielmehr wird der Suchbereich weiter eingeschränkt. \\\\
+Es wird von einem System ausgegangen, in dem ein EJB-Container zur Verfügung steht. Die Suche soll sich auf die Menge der angemeldeten Bean-Implementierungen beschränken. Die angemeldeten Bean-Implementierungen stellen damit die Menge der angebotenen Komponenten dar. Dabei wird eine angebotenen Komponente als Kombination eines Interfaces, welches die Schnittstelle für die Aufrufer definiert, und einer Implementierung dieses Interfaces beschrieben. Das Interfaces einer angebotenen Komponente wird im Folgenden auch als angebotenes Interfaces bezeichnet. Die Beans werden bspw. als Provider für Informationen oder im weitesten Sinne  auch als Services verwenden, die von unterschiedlichen Komponenten des Systems verwendet werden. Bei der Entwicklung bzw. Weiterentwicklung einer Komponente kann es zu folgendem Szenario kommen, welches durch die unten aufgeführten Annahmen charakterisiert wird:
+\begin{itemize}
+\item Es werden Informationen und Services benötigt, bei denen der Entwickler davon ausgehen kann, dass es innerhalb des Systems angebotene Komponenten gibt, die diese Informationen liefern können bzw. die Services erfüllen.
+\item Der Entwickler weiß nicht, über welche konkreten angebotenen Komponenten er die Informationen abfragen bzw. die Services in Anspruch nehmen kann.
+\end{itemize}
+\subsubsection{Funktionale Anforderungen}
+In dieser Arbeit soll ein Konzept entwickelt werden, welches dem Entwickler ermöglicht ,die Erwartungen an die angebotenen Komponenten zu spezifizieren. Darauf aufbauend soll ein Algorithmus vorgeschlagen werden, welcher die angebotenen Komponenten zur Laufzeit hinsichtlich der spezifizierten Erwartungen des Entwicklers evaluiert und eine Auswahl derer trifft, die diese Erwartungen erfüllen. Da die Evaluation zur Laufzeit durchgeführt wird, kann der Entwickler, anders als bei den oben genannten Arbeiten, nicht aus einer Liste von Vorschlägen auswählen, welche der evaluierten Komponenten letztendlich verwendet werden soll. Diese Entscheidung ist durch den Algorithmus zu treffen.
+\subsubsection{Nichtfunktionale Anforderungen}
+Aufgrund bestimmter Konfigurationen des Gesamtsystems gibt es folgende weitere nichtfunktionale Anforderungen:
+\begin{itemize}
+\item Die Suche muss innerhalb des Transaktionstimeouts zu einem Ergebnis führen. (Im verwendeten System ist dieses auf 5 Minuten festgesetzt.)
+\item Die Suche soll hinsichtlich der Besonderheiten des System, in dem sie verwendet wird, angepasst werden können. (Bspw. bei der Verwendung bestimmter Typen, deren Fachlogik bei der Suche nicht untergraben werden darf.)
+\item Bei einem Fehlschlag der Suche, sollen dem Entwickler Informationen zur Verfügung gestellt werden, die eine zielgerichtete Anpassung seiner spezifizierten Erwartungen erlauben.
+\end{itemize}

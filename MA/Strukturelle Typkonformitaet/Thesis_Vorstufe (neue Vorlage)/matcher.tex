@@ -1,0 +1,87 @@
+\subsubsection{Notation zur Beschreibung der Matcher}
+Die Übereinstimmung bzw. das Matching zweier Typen $ A $ und $ B $ über einen Matcher $ M $ wird in dieser Arbeit mit $\matchTyp{A}{M}{B}$ notiert. Weiterhin wird die Identität zweier Typen mit $ A = B $ beschrieben. Eine Vererbungshierarchie, in der $ A $ von $ B $ erbt, wird mit $\inhTyp{A}{B}$ beschrieben. Weiterhin ist die Adressierung von Attributen innerhalb eines Typs notwendig. Für die Adressierung der Attributs $ a $ im Typ $ A $ wird $\selTyp{A}{a}$ geschrieben.\\\\
+Die Konvertierung eines Typs $ A $ in einen Typ $ B $ wird, wie bereits erwähnt, auf technischer Ebene über Proxies umgesetzt. Von daher kann die Beschreibung des Konvertierungsverfahrens eines Matchers auf die Beschreibung der Delegation einzelner Methoden beschränkt werden. Hierfür wird folgende Notation verwendet:\\\\
+Eine Methode $m$ enthält einen Rückgabetyp $ rt $ und eine Menge von Parametertypen $ pt $. Die Menge der Parametertypen wird zur besseren Lesbarkeit auf einen Parametertyp beschränkt. Der Aufruf einer Methode $ m $ mit dem Rückgabetyp $ rt $ und dem Parametertyp $ pt $ eines Typs $ A $ wird mit $ A.m( pt ) : rt $ notiert. Sofern die Konvertierung keinen Einfluss auf den Rückgabetyp oder die Parametertypen hat, wird dies verkürzt mit $ A.m $ beschrieben.\\\\
+In der Notationen sind Typen, konkrete Objekte bestimmter Typen und Methoden syntaktisch austauschbar. Eine logische Verknüpfung der einzelnen Elemente der Sprache über die Quantoren und Junktoren der Prädikatenlogik 1. Stufe ist ebenfalls möglich.\\\\
+Die Delegation von Methodenaufrufen auf einem Objekt wird mit dem Operator $\Rightarrow$ beschrieben. Für eine Delegation des Aufrufs einer Methode $ m $ auf dem Objekt $ a $, welcher an ein Objekt $ b $ und dessen Methode $ n $ delegiert wird, schreibt man $\delegate{a.m}{b.n}$. Ferner ist hierbei zwischen einem Source- und einem Target-Objekt zu unterscheiden. Das Source-Objekt befindet sich links vom Operator ($\Rightarrow$). Auf diesem Objekt findet der Methodenaufruf statt. Das Target-Objekt befindet sich auf der rechten Seite des Operators ($\Rightarrow$). Dieses stellt das Ziel der Delegation dar. Da bei der Delegation mitunter weitere Matcher zur Anwendung kommen müssen, wird hierfür ebenfalls eine Notation benötigt. Daher soll die Konvertierung eines Objektes a über einen Matcher $ M $ wird mit $\applyMatcher{M}{a}$ beschrieben.\\\\
+Die folgenden Definitionen der Matcher bestehen jeweils aus zwei Teilen. Der erste Teil (Übereinstimmung) definiert, unter welchen Bedingungen über den entsprechenden Matcher zwei Typen als übereinstimmend gelten. Der zweite Teil (Konvertierung) beschreibt, wie die Methoden-Aufrufe auf einem Objekt eines der beiden übereinstimmenden Typen an das Objekt des anderen Typen delegiert werden.
+\subsubsection{ExactTypeMatcher}
+\begin{matcherEquivDef}{ExactTypeMatcher}
+\matchTyp{A}{exact}{B} \text{ wenn } A = B
+\end{matcherEquivDef}
+\begin{matcherConvDef}{ExactTypeMatcher}{
+Sei $ m $ eine Methode des Typs $ A $ (bzw. $ B $) und $ a $ (bzw. $b$) ein Objekt vom Typ $A$ (bzw. $B$).}
+\delegate{a.m}{b.m}
+\end{matcherConvDef}
+\subsubsection{GenSpecTypeMatcher}
+\begin{matcherEquivDef}{GenSpecTypeMatcher}
+\matchTyp{A}{genspec}{B} \text{ wenn } \inhTyp{A}{B}\vee\inhTyp{B}{A}
+\end{matcherEquivDef}
+\begin{matcherConvDef}{GenSpecTypeMatcher}{
+Sei $ m $ eine Methode des Typs $ A $ (bzw. $ B $) und $ a $ (bzw. $b$) ein Objekt vom Typ $A$ (bzw. $B$).}
+&\text{Wenn }\inhTyp{B}{A}\text{ dann }\delegate{a.m}{b.m}\\
+&\text{Wenn }\inhTyp{A}{B}\wedge\exists B.n : \inhTyp{A.m}{B.n} \text{ dann }\delegate{a.m}{b.n}
+\end{matcherConvDef}
+
+\noindent
+Der erste Fall stellt hierbei nichts anderes als einen Upcast des Typs $B$ auf den Typ $A$ dar. Der zweite Fall hingegen stellt einen Downcast des Typs $B$ auf den Typ $A$ dar. Hierbei ist zu beachten, dass ein Downcast eine gewisse Unsicherheit zur Laufzeit birgt. So können beim Aufruf einer Methode auf einem Objekt $a$ von Typ $A$ nur solche Methoden delegiert werden, die von $B$ an $A$ vererbt wurden. Ein Aufruf einer Methode auf $a$, die nicht von $B$ an $A$ vererbt wurde, führt zu einem Laufzeitfehler.
+\subsubsection{WrappedTypeMatcher}\label{wrappedTypeMatcher}
+Die bisherigen Type-Matcher sind in der Lage das Matching für zwei Typen festzustellen, ohne dafür Rücksicht auf deren innere Struktur nehmen zu müssen. Dies ist für identische oder hierarchisch organisierte Typen auch nicht notwendig. Es ist jedoch auch denkbar, dass sich beiden Typen auf anderem Wegen assoziieren lassen. Ein Beispiel dafür wäre Boxed- bzw. - noch allgemeiner gefasst - Wrapper-Typen. \abbref{wrapper} stellt ein einfaches Szenario für einen Typ A und einen dazu passenden Wrapper-Typen W dar. 
+
+
+\begin{figure}[H]
+\begin{minipage}[b]{.25\linewidth}
+  \centering
+  \includegraphics[width=\linewidth]{wrapper}
+  \caption{Beispiel Wrapper-Typ allgemein}
+  \label{abb:wrapper}
+
+\end{minipage}%
+\hspace{.04\linewidth}% Abstand zwischen Bilder
+\begin{minipage}[b]{.71\linewidth}
+
+
+  \centering
+  \includegraphics[width=\linewidth]{adressbook}
+  \caption{Beispiel Wrapper-Typ AdressBook}
+  \label{abb:adressbook}
+
+\end{minipage}
+\end{figure}
+\noindent
+Ein Anwendungsfall, in dem eine solche Konstellation der Typen auftreten könnte, ist \abbref{adressbook} zu entnehmen. Hier wurde in dem erwarteten Interface Directory eine Methode add deklariert, die einen Parameter vom Typ String erwartet, welcher in diesem Fall bspw. dem eindeutige Namen einer Person entspricht. Auf der Angebotsseite steht jedoch nur ein angebotenes Interface AdressBook zur Verfügung, welches den Typ Person erwartet. Der Typ Person enthält jedoch ein Attribut vom Typ String, welches letztendlich den für das betrachteten System eindeutigen Namen der Person darstellt. So kann es zielführend, dass die hier angebotene Komponente unter der Annahme, dass der Parameter aus dem erwarteten Interface das Attribut name aus dem Typ Person darstellt, weiter zu untersuchen. Vor der Delegation der Methode könnte hierbei durch die Explorationskomponente ein Proxy für den Typ Person (Person-Proxy) erzeugt werden, der sich genauso verhält wie der ursprüngliche Typ. Allerdings würde das Objekt, welches in der Methode des erwarteten Interfaces übergeben wurde, in das Attribut name des Person-Proxys injiziert werden.\\\\
+Aus diesem Grund wird ein WrappedTypeMatcher wie folgt beschrieben.
+\begin{matcherEquivDef}{WrappedTypeMatcher}
+\matchTyp{A}{wrapped}{B} \text{ wenn } \exists\selTyp{A}{attr} : \matchTyp{attr}{M}{B} \vee \exists \selTyp{B}{attr} : \matchTyp{attr}{M}{A}
+\end{matcherEquivDef}
+\noindent
+Wie an dieser Beschreibung zu erkennen ist, wird im WrappedTypeMatcher wiederum die Übereinstimmung von Typen gefordert.
+\begin{matcherConvDef}{WrappedTypeMatcher}{
+Sei $m$ eine Methode des Typs $A$ und $a$ ein Objekt vom Typ $A$.\\
+Weiterhin sei $n$ eine Methode des Typs $B$ und $b$ ein Objekt vom Typ $B$.
+}
+&\text{Wenn }\exists \selTyp{B}{attr} : \matchTyp{attr}{M}{A}\text{ dann }\delegate{a.m}{\applyMatcher{M}{\selTyp{B}{attr}} .m}\\
+&\text{Wenn }\exists \selTyp{A}{attr} : \matchTyp{attr}{M}{B}\text{ dann }\delegate{a.m}{a.m}
+\end{matcherConvDef}
+\noindent
+Hervorzuheben ist, dass bei einem Methodenaufruf auf dem Wrapper-Typ, keine Delegation vorgenommen wird.
+\subsubsection{StructuralTypeMatcher}
+Die bisher beschriebenen Type-Matcher ermöglichen, lediglich eine 1:1-Beziehung zwischen erwartetem und angebotenem Interface. Bei der Suche nach einer passenden Komponente muss jedoch in Betracht gezogen werden, dass diese aus einer Menge von angebotenen Komponenten besteht. \abbref{combinated_components} verdeutlicht dieses Szenario wobei bei der Ausführung der Methode A die Methode der angebotenen Komponente AngA und bei der Ausführung der Methode B die Methode der angebotenen Komponente AngB ausgeführt werden müsste.\\\\
+Die Möglichkeit eines solchen Szenarios bedingt, dass die erwarteten und angebotenen Interfaces je Methode bzgl. der strukturellen Übereinstimmung untersucht werden. Das erfordert einen weiteren Matcher, der die o.g. Matcher je erwartete Methode - sprich je Methode des erwarteten Interfaces - und angebotenen Methode - sprich je Methode der angebotenen Interfaces - untersucht. Zu diesem Zweck wird der StructuralTypeMatcher ergänzt.
+\begin{matcherEquivDef}{StructuralTypeMatcher}
+&\matchTyp{A}{struct}{B} \text{ wenn}\\
+&\exists(A.m(MP) : MR) : \exists (B.n(NP):NR):\matchTyp{MP}{P}{NP} \wedge \matchTyp{NR}{R}{MR}
+\end{matcherEquivDef}
+
+\noindent
+Da die Notation es nicht hergibt, ist zusätzlich zu erwähnen, dass die Reihenfolge der Parameter in $m$ und $n$ irrelevant ist.
+\begin{matcherConvDef}{StructuralTypeMatcher}{
+Sei $m$ eine Methode des Typs $A$ und $a$ ein Objekt vom Typ $A$.\\
+Der Rückgabetyp von $m$ sei $MR$ und $mr$ ein Objekt dessen.\\
+Zudem sei $MP$ der Parametertyp von $m$ und $mp$ ein Objekt von $MP$.\\
+Weiterhin sei $n$ eine Methode des Typs $B$ und $b$ ein Objekt vom Typ $B$.\\
+Der Rückgabetyp von $n$ sei $NR$ und $nr$ ein Objekt dessen.\\
+Zudem sei $NP$ der Parametertyp von $n$ und $np$ ein Objekt von $NP$.
+}
+\delegate{a.m(mp):mr}{b.n(\applyMatcher{P}{np}) : \applyMatcher{R}{nr}}
+\end{matcherConvDef}

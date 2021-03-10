@@ -1,0 +1,6 @@
+\subsection{1. Stufe - Strukturelle Übereinstimmung}
+Wie in \cite{hummel08} wird in der ersten Stufe der Suche versucht die angebotenen Interfaces herauszusuchen, die strukturell mit dem erwarteten Interface übereinstimmen. Zu diesem Zweck werden Type-Matcher verwendet, durch die festgestellt werden kann, ob sich ein Typ in einen anderen Typ konvertieren lässt. Die Konvertierung erfolgt auf Objekt-Ebene über Proxies, die ihre Methodenaufrufe delegieren.\\\\\
+So wird bspw. bei der Konvertierung eines Objektes von TypA (ObjA) in ein Objekt von TypB (ObjB) ein Proxy-Objekt für TypB erzeugt (ProxyB), welches die Methodenaufrufe an ObjA delegiert (vgl. \abbref{combinated_components}).\\\\
+Hummel hatte hierzu bereits auf einige Matcher von Zaremski und Wing \cite{moormann} zurückgegriffen, die in dieser Arbeit ebenfalls zum Einsatz kommen. Die Definitionen der Matcher beziehen sich vorrangig auf die Programmiersprache Java, weshalb grundlegend von einer nominalen Typkonformität auszugehen ist.
+\input{matcher}
+\input{type_conv_variant}
