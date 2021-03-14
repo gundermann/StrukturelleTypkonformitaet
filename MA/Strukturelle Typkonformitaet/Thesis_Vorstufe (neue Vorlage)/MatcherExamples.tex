@@ -1,0 +1,330 @@
+\section{Beispiel-Implementierungen für die Matcher}\label{matcherExamples}
+Um die Beispiel-Implementierungen der Matcher nachvollziehen zu können, ist es notwendig die Implementierung der darin verwendeten Klassen aufzuzeigen. Daher sind diese in \lstsrefs{LST_superclass_impl}{LST_SuperWrapperReturnSubWrapperParamClass_impl} aufgeführt. Dabei handelt es sich zum einen um die Implementierungen der Klassen, die in den Szenarien der Abschnitte \ref{exactTypeMatcher} - \ref{structTypeMatcher} beschrieben wurden. Zum anderen handelt es sich um Implementierung weiterer Klassen, die in Szenarien verwendet werden, welche in den folgenden Abschnitten aufgeführt werden. Um einen Überblick zu gewährleisten, zeigt \abbref{cd_alltypes} alle Typen auf, die in den Szenarien verwendet werden.
+
+\myBigFigure{cd_alltypes}{Alle Typen/Klassen, die in Matcher-Szenarien verwendet werden}{cd_alltypes}
+
+\begin{lstlisting}[{caption = Implemetierung: SuperClass
+},{label = LST_superclass_impl}]
+public class SuperClass {
+
+  private String string;
+
+  public SuperClass( String string ) {
+    this.string = string;
+  }
+
+  public String getString() {
+    return string;
+  }
+}
+\end{lstlisting}
+
+
+\begin{lstlisting}[{caption = Implemetierung: SubClass
+},{label = LST_subclass_impl}]
+public class SubClass extends SuperClass {
+
+  public SubClass( String string ) {
+    super( "Sub" + string );
+  }
+
+  public String getStringWithoutPrefix() {
+    return getString().substring( 3 );
+  }
+}
+\end{lstlisting}
+
+
+
+
+
+\begin{lstlisting}[{caption = Implemetierung: SuperWrapperReturnSubWrapperParamClass
+},{label = LST_SuperWrapperReturnSubWrapperParamClass_impl}]
+public class SuperWrapperReturnSubWrapperParamClass {
+
+  public SuperWrapper addHello( SubWrapper a ) {
+    return new SuperWrapper( a.toString() + "hello" );
+  }
+
+  public SuperWrapper add( SubWrapper a, SubWrapper b ) {
+    return new SuperWrapper( a.toString() + b.toString() );
+  }
+}
+\end{lstlisting}
+
+\subsection{Beispiel für den ExactTypeMatcher}\label{exactMatcherExample}
+In \lstref{LST_exactTypeMatcher_matching} ist die Implementierung eines JUnit-Tests aufgeführt, in dem das Matching über den ExactTypeMatcher für unterschiedliche Source- und Target-Typen nachgewiesen werden soll. Die Test-Methode match enthält dabei die Aufrufe, bei denen das Matching festgestellt werden kann. Dementsprechend enthält die Test-Methode noMatch die Aufrufe, bei denen das Matching fehlschlägt.\\\\
+\lstref{LST_exactTypeMatcher_conversion} enthält die Implementierung für einen JUnit-Test, in dem die Konvertierung, die durch den ExactTypeMatcher beschrieben wird, nachgewiesen wird. Hierbei wird von dem Szenario aus \ref{exactTypeMatcher} ausgegangen.
+\begin{lstlisting}[{caption = ExactTypeMatcher Matching Test
+},{label = LST_exactTypeMatcher_matching}]
+public class ExactTypeMatcher_MatcherTest {
+
+  @Test
+  public void match() {
+    ExactTypeMatcher matcher = new ExactTypeMatcher();
+    assertTrue( matcher.matchesType( String.class, String.class ) );
+    assertTrue( matcher.matchesType( int.class, int.class ) );
+    assertTrue( matcher.matchesType( Object.class, Object.class ) );
+    assertTrue( matcher.matchesType( SuperClass.class, SuperClass.class ) );
+  }
+
+  @Test
+  public void noMatch() {
+    ExactTypeMatcher matcher = new ExactTypeMatcher();
+    assertFalse( matcher.matchesType( String.class, int.class ) );
+    assertFalse( matcher.matchesType( int.class, Object.class ) );
+    assertFalse( matcher.matchesType( Object.class, String.class ) );
+    assertFalse( matcher.matchesType( SuperClass.class, SubClass.class ) );
+  }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[{caption = ExactTypeMatcher Konvertierung Test
+},{label = LST_exactTypeMatcher_conversion}]
+public class ExactTypeMatcher_ConversionTest {
+
+  @Test
+  public void convertString() {
+    SuperClass target = new SuperClass( "A" );
+    Collection<ModuleMatchingInfo> matchingInfos = new ExactTypeMatcher().calculateTypeMatchingInfos( SuperClass.class,
+        SuperClass.class );
+    
+    ModuleMatchingInfo moduleMatchingInfo = matchingInfos.iterator().next();
+
+    ProxyFactory<SuperClass> proxyFactory = moduleMatchingInfo.getConverterCreator()
+        .createProxyFactory( SuperClass.class );
+    Collection<MethodMatchingInfo> methodMatchingInfos = moduleMatchingInfo.getMethodMatchingInfos();
+
+    SuperClass source = proxyFactory.createProxy( target, methodMatchingInfos );
+
+    assertTrue( source.getString().equals( "A" ) );
+  }
+}
+\end{lstlisting}
+
+\subsection{Beispiel für den GenTypeMatcher}\label{genMatcherExample}
+Der GenTypeMatcher und der SpecTypeMatcher wurden gemeinsam implementiert. Daher wird in den folgenden Beispielen jeweils ein Matcher aus der Klasse GenSpecTypeMatcher erzeugt. Die weitere Verwendung den Matchers bezieht sich in diesen Beispielen aber auf die Definition des GenTypeMatchers aus \ref{genTypeMatcher}.\\\\
+In \lstref{LST_genTypeMatcher_matching} ist die Implementierung eines JUnit-Tests aufgeführt, in dem das Matching über den GenTypeMatcher für unterschiedliche Source- und Target-Typen nachgewiesen werden soll. Die Test-Methode match enthält dabei die Aufrufe, bei denen das Matching festgestellt werden kann. Dementsprechend enthält die Test-Methode noMatch die Aufrufe, bei denen das Matching fehlschlägt.\\\\
+\lstref{LST_genTypeMatcher_conversion} enthält die Implementierung für einen JUnit-Test, in dem die Konvertierung, die durch den GenTypeMatcher beschrieben wird, nachgewiesen wird. Hierbei wird von dem Szenario aus \ref{genTypeMatcher} ausgegangen.
+\begin{lstlisting}[{caption = GenTypeMatcher Matching Test
+},{label = LST_genTypeMatcher_matching}]
+public class GenSpecTypeMatcher_Gen_MatcherTest {
+
+  @Test
+  public void match() {
+    GenSpecTypeMatcher matcher = new GenSpecTypeMatcher();
+    assertTrue( matcher.matchesType( Object.class, String.class ) );
+    assertTrue( matcher.matchesType( SuperClass.class, SubClass.class ) );
+    assertTrue( matcher.matchesType( Number.class, Integer.class ) );
+  }
+
+  @Test
+  public void noMatch() {
+    GenSpecTypeMatcher matcher = new GenSpecTypeMatcher();
+    assertFalse( matcher.matchesType( int.class, String.class ) );
+  }
+}
+\end{lstlisting}
+\begin{lstlisting}[{caption = GenTypeMatcher Konvertierung Test
+},{label = LST_genTypeMatcher_conversion}]
+public class GenSpecTypeMatcher_Gen_ConversionTest {
+
+  @Test
+  public void convertSpec2Gen() {
+   SubClass target = new SubClass( "A" );
+    Collection<ModuleMatchingInfo> matchingInfos = new GenSpecTypeMatcher().calculateTypeMatchingInfos(
+        SuperClass.class, SubClass.class );
+    
+    ModuleMatchingInfo moduleMatchingInfo = matchingInfos.iterator().next();
+
+    ProxyFactory<SuperClass> proxyFactory = moduleMatchingInfo.getConverterCreator()
+        .createProxyFactory( SuperClass.class );
+    Collection<MethodMatchingInfo> methodMatchingInfos = moduleMatchingInfo.getMethodMatchingInfos();
+
+    SuperClass source = proxyFactory.createProxy( target, methodMatchingInfos );
+
+    assertTrue( source.getString().equals( "SubA" ) );
+  }
+}
+\end{lstlisting}
+
+
+\subsection{Beispiel für den SpecTypeMatcher}\label{specMatcherExample}
+Wie in \ref{genTypeMatcher} bereits erwähnt wurde der GenTypeMatcher gemeinsam mit dem SpecTypeMatcher implementiert. Daher wird in den folgenden Beispielen jeweils ein Matcher aus der Klasse GenSpecTypeMatcher erzeugt. Die weitere Verwendung den Matchers bezieht sich in diesen Beispielen aber auf die Definition des SpecTypeMatcher aus \ref{specTypeMatcher}.\\\\
+In \lstref{LST_specTypeMatcher_matching} ist die Implementierung eines JUnit-Tests aufgeführt, in dem das Matching über den GenTypeMatcher für unterschiedliche Source- und Target-Typen nachgewiesen werden soll. Die Test-Methode match enthält dabei die Aufrufe, bei denen das Matching festgestellt werden kann. Dementsprechend enthält die Test-Methode noMatch die Aufrufe, bei denen das Matching fehlschlägt.\\\\
+\lstref{LST_specTypeMatcher_conversion} enthält die Implementierung für einen JUnit-Test, in dem die Konvertierung, die durch den SpecTypeMatcher beschrieben wird, nachgewiesen wird. Hierbei wird von dem Szenario aus \ref{specTypeMatcher} ausgegangen. Die Test-Methode convertGen2Spec\_positivCall enthält den Aufruf der ersten Methoden aus dem Szenario (getString). Die Test-Methoden convertGen2Spec\_negativeCall beinhaltet den fehlschlagenden Aufruf der Methoden getStringWithoutPrefix.
+\begin{lstlisting}[{caption = SpecTypeMatcher Matching Test
+},{label = LST_specTypeMatcher_matching}]
+public class GenSpecTypeMatcher_Spec_MatcherTest {
+
+  @Test
+  public void match() {
+    GenSpecTypeMatcher matcher = new GenSpecTypeMatcher();
+    assertTrue( matcher.matchesType( String.class, Object.class ) );
+    assertTrue( matcher.matchesType( SubClass.class, SuperClass.class ) );
+    assertTrue( matcher.matchesType( Integer.class, Number.class ) );
+  }
+
+  @Test
+  public void noMatch() {
+    GenSpecTypeMatcher matcher = new GenSpecTypeMatcher();
+    assertFalse( matcher.matchesType( int.class, String.class ) );
+  }
+}
+\end{lstlisting}
+\begin{lstlisting}[{caption = SpecTypeMatcher Konvertierung Test
+},{label = LST_specTypeMatcher_conversion}]
+public class GenSpecTypeMatcher_Spec_ConversionTest {
+
+  @Test
+  public void convertGen2Spec_positivCall() {
+    SuperClass offeredComponent = new SuperClass( "A" );
+    Collection<ModuleMatchingInfo> matchingInfos = new GenSpecTypeMatcher().calculateTypeMatchingInfos(
+        SubClass.class, SuperClass.class );
+    
+    ModuleMatchingInfo moduleMatchingInfo = matchingInfos.iterator().next();
+
+    ProxyFactory<SubClass> proxyFactory = moduleMatchingInfo.getConverterCreator().createProxyFactory( SubClass.class );
+    Collection<MethodMatchingInfo> methodMatchingInfos = moduleMatchingInfo.getMethodMatchingInfos();
+
+    SubClass proxy = proxyFactory.createProxy( offeredComponent, methodMatchingInfos );
+
+    assertTrue( proxy.getString().equals( "A" ) );
+  }
+
+  @Test( expected = SigMaGlueException.class )
+  public void convertGen2Spec_negativeCall() {
+    SuperClass offeredComponent = new SuperClass( "A" );
+    Collection<ModuleMatchingInfo> matchingInfos = new GenSpecTypeMatcher().calculateTypeMatchingInfos(
+        SubClass.class, SuperClass.class );
+    
+    ModuleMatchingInfo moduleMatchingInfo = matchingInfos.iterator().next();
+
+    ProxyFactory<SubClass> proxyFactory = moduleMatchingInfo.getConverterCreator().createProxyFactory( SubClass.class );
+    Collection<MethodMatchingInfo> methodMatchingInfos = moduleMatchingInfo.getMethodMatchingInfos();
+
+    SubClass proxy = proxyFactory.createProxy( offeredComponent, methodMatchingInfos );
+
+    assertTrue( proxy.getString().equals( "A" ) );
+
+    proxy.getStringWithoutPrefix();
+  }
+}
+\end{lstlisting}
+
+
+
+\subsection{Beispiel für den WrappedTypeMatcher}\label{wrappedMatcherExample}
+Der WrappedTypeMatcher und der WrapperTypeMatcher wurden gemeinsam implementiert. Daher wird in den folgenden Beispielen jeweils ein Matcher aus der Klasse WrappedTypeMatcher erzeugt. Die weitere Verwendung den Matchers bezieht sich in diesen Beispielen aber auf die Definition des WrappedTypeMatcher aus \ref{wrappedTypeMatcher}.\\\\
+In \lstref{LST_wrappedTypeMatcher_matching} ist die Implementierung eines JUnit-Tests aufgeführt, in dem das Matching über den WrappedTypeMatcher für unterschiedliche Source- und Target-Typen nachgewiesen werden soll. Die Test-Methoden mit dem Präfix match enthalten dabei die Aufrufe, bei denen das Matching festgestellt werden kann. Dementsprechend enthält die Test-Methode noMatch die Aufrufe, bei denen das Matching fehlschlägt.\\\\
+\lstref{LST_wrappedTypeMatcher_conversion} enthält die Implementierung für einen JUnit-Test, in dem die Konvertierung, die durch den WrappedTypeMatcher beschrieben wird, nachgewiesen wird. In der Test-Methode convertSubWrapper2SubClass wird von dem Szenario aus \ref{wrappedTypeMatcher} ausgegangen. Die anderen Test-Methoden stellen weitere Szenarien dar, die in den folgenden Abschnitten beschrieben werden.
+\begin{lstlisting}[{caption = WrappedTypeMatcher Matching Test
+},{label = LST_wrappedTypeMatcher_matching}]
+public class WrappedTypeMatcher_Wrapped_MatcherTest {
+
+  private WrappedTypeMatcher matcher = new WrappedTypeMatcher(
+      MatcherCombiner.combine( new ExactTypeMatcher(), new GenSpecTypeMatcher() ) );
+
+  @Test
+  public void match() {
+    assertTrue( matcher.matchesType( boolean.class, Boolean.class ) );
+    assertTrue( matcher.matchesType( int.class, Integer.class ) );
+  }
+
+  @Test
+  public void match_wrapped_exact() {
+    assertTrue( matcher.matchesType( SubClass.class, SubWrapper.class ) );
+  }
+
+  @Test
+  public void match_wrapped_spec() {
+    assertTrue( matcher.matchesType( SubClass.class, SuperWrapper.class ) );
+  }
+
+  @Test
+  public void match_wrapped_gen() {
+    assertTrue( matcher.matchesType( SuperClass.class, SubWrapper.class ) );
+  }
+
+  @Test
+  public void noMatch() {
+    assertFalse( matcher.matchesType( String.class, String.class ) );
+  }
+}
+\end{lstlisting}
+\begin{lstlisting}[{caption = WrappedTypeMatcher Konvertierung Test
+},{label = LST_wrappedTypeMatcher_conversion}]
+public class WrappedTypeMatcher_Wrapped_ConversionTest {
+
+  private WrappedTypeMatcher matcher = new WrappedTypeMatcher(
+      MatcherCombiner.combine( new ExactTypeMatcher(), new GenSpecTypeMatcher() ) );
+
+  @Test
+  public void convertSubWrapper2SubClass() {
+    SubWrapper offeredComponent = new SubWrapper( "A" );
+    Collection<ModuleMatchingInfo> matchingInfos = matcher.calculateTypeMatchingInfos(
+        SubClass.class, SubWrapper.class );
+  
+    ModuleMatchingInfo moduleMatchingInfo = matchingInfos.iterator().next();
+
+    ProxyFactory<SubClass> proxyFactory = moduleMatchingInfo.getConverterCreator()
+        .createProxyFactory( SubClass.class );
+    Collection<MethodMatchingInfo> methodMatchingInfos = moduleMatchingInfo.getMethodMatchingInfos();
+
+    SubClass proxy = proxyFactory.createProxy( offeredComponent, methodMatchingInfos );
+
+    assertTrue( proxy.getString().equals( "SubA" ) );
+    assertTrue( proxy.getStringWithoutPrefix().equals( "A" ) );
+  }
+
+  @Test
+  public void convertSuperWrapper2SubClass_positiveCall() {
+    SuperWrapper offeredComponent = new SuperWrapper( "A" );
+    Collection<ModuleMatchingInfo> matchingInfos = matcher.calculateTypeMatchingInfos(
+        SubClass.class, SuperWrapper.class );
+  
+    ModuleMatchingInfo moduleMatchingInfo = matchingInfos.iterator().next();
+
+    ProxyFactory<SubClass> proxyFactory = moduleMatchingInfo.getConverterCreator()
+        .createProxyFactory( SubClass.class );
+    Collection<MethodMatchingInfo> methodMatchingInfos = moduleMatchingInfo.getMethodMatchingInfos();
+
+    SubClass proxy = proxyFactory.createProxy( offeredComponent, methodMatchingInfos );
+
+    assertTrue( proxy.getString().equals( "A" ) );
+  }
+
+  @Test( expected = SigMaGlueException.class )
+  public void convertSuperWrapper2SubClass_negativeCall() {
+    SuperWrapper offeredComponent = new SuperWrapper( "A" );
+    Collection<ModuleMatchingInfo> matchingInfos = matcher.calculateTypeMatchingInfos(
+        SubClass.class, SuperWrapper.class );
+  
+    ModuleMatchingInfo moduleMatchingInfo = matchingInfos.iterator().next();
+
+    ProxyFactory<SubClass> proxyFactory = moduleMatchingInfo.getConverterCreator()
+        .createProxyFactory( SubClass.class );
+    Collection<MethodMatchingInfo> methodMatchingInfos = moduleMatchingInfo.getMethodMatchingInfos();
+
+    SubClass proxy = proxyFactory.createProxy( offeredComponent, methodMatchingInfos );
+    proxy.getStringWithoutPrefix();
+  }
+
+  @Test
+  public void convertSubWrapper2SuperClass() {
+    SubWrapper offeredComponent = new SubWrapper( "A" );
+    Collection<ModuleMatchingInfo> matchingInfos = matcher.calculateTypeMatchingInfos(
+        SuperClass.class, SubWrapper.class );
+   
+    ModuleMatchingInfo moduleMatchingInfo = matchingInfos.iterator().next();
+
+    ProxyFactory<SuperClass> proxyFactory = moduleMatchingInfo.getConverterCreator()
+        .createProxyFactory( SuperClass.class );
+    Collection<MethodMatchingInfo> methodMatchingInfos = moduleMatchingInfo.getMethodMatchingInfos();
+
+    SuperClass proxy = proxyFactory.createProxy( offeredComponent, methodMatchingInfos );
+
+    assertTrue( proxy.getString().equals( "SubA" ) );
+  }
+}
+\end{lstlisting}

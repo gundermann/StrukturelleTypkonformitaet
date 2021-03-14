@@ -465,11 +465,24 @@
 
 
 %-----------------------------------------------------------------------
-% \listref		{ PIC REFERENCE }
+% \lstref		{ PIC REFERENCE }
 %
 %Verweis auf ein Listing
 \newcommand{\lstref}[1]{Listing \ref{#1}}
 
+
+%-----------------------------------------------------------------------
+% \lstsrefs		{ LST REFERENCE Begin }
+%				{ LST REFERENCE End }
+%
+%Verweis auf mehrere Listings
+\newcommand{\lstsrefs}[2]{Listings \ref{#1}-\ref{#2}}
+
+%-----------------------------------------------------------------------
+% \appref		{ APPENDIX REFERENCE }
+%
+%Verweis auf ein Anhang
+\newcommand{\appref}[1]{Anhang \ref{#1}}
 
 \newcommand{\gloss}[1]{\emph{\gls{#1}}}
 

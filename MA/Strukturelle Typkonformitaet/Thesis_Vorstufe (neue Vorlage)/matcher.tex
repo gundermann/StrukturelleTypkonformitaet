@@ -4,30 +4,153 @@ Die Konvertierung eines Typs $ A $ in einen Typ $ B $ wird, wie bereits erwähnt,
 Eine Methode $m$ enthält einen Rückgabetyp $ rt $ und eine Menge von Parametertypen $ pt $. Die Menge der Parametertypen wird zur besseren Lesbarkeit auf einen Parametertyp beschränkt. Der Aufruf einer Methode $ m $ mit dem Rückgabetyp $ rt $ und dem Parametertyp $ pt $ eines Typs $ A $ wird mit $ A.m( pt ) : rt $ notiert. Sofern die Konvertierung keinen Einfluss auf den Rückgabetyp oder die Parametertypen hat, wird dies verkürzt mit $ A.m $ beschrieben.\\\\
 In der Notationen sind Typen, konkrete Objekte bestimmter Typen und Methoden syntaktisch austauschbar. Eine logische Verknüpfung der einzelnen Elemente der Sprache über die Quantoren und Junktoren der Prädikatenlogik 1. Stufe ist ebenfalls möglich.\\\\
 Die Delegation von Methodenaufrufen auf einem Objekt wird mit dem Operator $\Rightarrow$ beschrieben. Für eine Delegation des Aufrufs einer Methode $ m $ auf dem Objekt $ a $, welcher an ein Objekt $ b $ und dessen Methode $ n $ delegiert wird, schreibt man $\delegate{a.m}{b.n}$. Ferner ist hierbei zwischen einem Source- und einem Target-Objekt zu unterscheiden. Das Source-Objekt befindet sich links vom Operator ($\Rightarrow$). Auf diesem Objekt findet der Methodenaufruf statt. Das Target-Objekt befindet sich auf der rechten Seite des Operators ($\Rightarrow$). Dieses stellt das Ziel der Delegation dar. Da bei der Delegation mitunter weitere Matcher zur Anwendung kommen müssen, wird hierfür ebenfalls eine Notation benötigt. Daher soll die Konvertierung eines Objektes a über einen Matcher $ M $ wird mit $\applyMatcher{M}{a}$ beschrieben.\\\\
-Die folgenden Definitionen der Matcher bestehen jeweils aus zwei Teilen. Der erste Teil (Übereinstimmung) definiert, unter welchen Bedingungen über den entsprechenden Matcher zwei Typen als übereinstimmend gelten. Der zweite Teil (Konvertierung) beschreibt, wie die Methoden-Aufrufe auf einem Objekt eines der beiden übereinstimmenden Typen an das Objekt des anderen Typen delegiert werden.
-\subsubsection{ExactTypeMatcher}
+Die folgenden Definitionen der Matcher bestehen jeweils aus zwei Teilen. Der erste Teil (Übereinstimmung) definiert, unter welchen Bedingungen über den entsprechenden Matcher zwei Typen als übereinstimmend gelten. Der zweite Teil (Konvertierung) beschreibt, wie die Methoden-Aufrufe auf einem Objekt eines der beiden übereinstimmenden Typen an das Objekt des anderen Typen delegiert werden.\\\\
+Jeder Matcher wird zusätzlich im Vorfeld durch ein Szenario motiviert, in dem der jeweilige Matcher zur Anwendung kommen kann. In den dazugehörigen Diagrammen ist das Sourc-Objekt jeweils mit \emph{source} und das Target-Objekt jeweils mit \emph{target} bezeichnet. Um die Verwendung der Implementierungen der einzelnen Matcher in Verbindung mit diesem Szenario nachvollziehen zu können, wird jeweils auf einen Abschnitt aus Anhang \ref{matcherExamples} verweisen. Dort sind Code-Beispiele für die Verwendung der Matcher in Bezug auf das jeweilige Szenario mit entsprechenden Nachbedingungen hinterlegt.
+\subsubsection{ExactTypeMatcher}\label{exactTypeMatcher}
+\myparagraph{Szenario}
+Dieser Matcher stellt das Matching zweier identischer Typen fest. In dem Szenario wird von zwei Objekten vom Typ SuperClass ausgegangen. Die Klasse SuperClass ist in \abbref{cd_superclass} dargestellt. Der Aufruf einer Methode auf dem Source-Objekt führt zu einer Delgation der Methode an das Target-Objekt (siehe \abbref{sd_exact_super}.
+\begin{figure}[H]
+\begin{minipage}[b]{.33\linewidth}
+  \centering
+  \includegraphics[width=\linewidth]{cd_superclass}
+  \caption{SuperClass}
+  \label{abb:cd_superclass}
+
+\end{minipage}%
+\hspace{.04\linewidth}% Abstand zwischen Bilder
+\begin{minipage}[b]{.63\linewidth}
+
+
+  \centering
+  \includegraphics[width=\linewidth]{sd_exact_super}
+  \caption{Szenario ExactTypeMatcher}
+  \label{abb:sd_exact_super}
+
+\end{minipage}
+\end{figure}
+
+\myparagraph{Definition}
 \begin{matcherEquivDef}{ExactTypeMatcher}
 \matchTyp{A}{exact}{B} \text{ wenn } A = B
 \end{matcherEquivDef}
 \begin{matcherConvDef}{ExactTypeMatcher}{
-Sei $ m $ eine Methode des Typs $ A $ (bzw. $ B $) und $ a $ (bzw. $b$) ein Objekt vom Typ $A$ (bzw. $B$).}
-\delegate{a.m}{b.m}
+Sei $ m $ eine Methode des Typen $ A $ und $ B $.}
+\delegate{A.m}{B.m}
 \end{matcherConvDef}
-\subsubsection{GenSpecTypeMatcher}
-\begin{matcherEquivDef}{GenSpecTypeMatcher}
-\matchTyp{A}{genspec}{B} \text{ wenn } \inhTyp{A}{B}\vee\inhTyp{B}{A}
+Ein Beispiel für die Verwendung des Matchers ist in \appref{exactMatcherExample} zu finden.
+\subsubsection{GenTypeMatcher}\label{genTypeMatcher}
+\myparagraph{Szenario}
+Dieser Matcher stellt das Matching zwischen zwei Typen her, die in einer Vererbungsbeziehung stehen. Speziell erlaubt dieser Matcher das Matching eines Supertyps als Source-Typen mit einem Subtypen als Target-Typen. In dem Szenario wird neben dem Typ SuperClass aus \abbref{cd_superclass} von einem weiteren Typen SubClass ausgegangen. Dabei stehen diese beiden Typen in einer Vererbungsbeziehnung, die in \abbref{cd_subclass_extends_superclass} dargestellt wird. Der Aufruf einer Methode auf dem Source-Objekt führt zu einer Delgation der Methode an das Target-Objekt (siehe \abbref{sd_gen_super2sub}.
+\begin{figure}[H]
+\begin{minipage}[b]{.33\linewidth}
+  \centering
+  \includegraphics[width=\linewidth]{cd_subclass_extends_superclass}
+  \caption{Beziehung zwischen SuperClass und SubClass}
+  \label{abb:cd_subclass_extends_superclass}
+
+\end{minipage}%
+\hspace{.04\linewidth}% Abstand zwischen Bilder
+\begin{minipage}[b]{.63\linewidth}
+
+
+  \centering
+  \includegraphics[width=\linewidth]{sd_gen_super2sub}
+  \caption{Szenario GenTypeMatcher}
+  \label{abb:sd_gen_super2sub}
+
+\end{minipage}
+\end{figure}
+
+
+
+
+\myparagraph{Definition}
+\begin{matcherEquivDef}{GenTypeMatcher}
+\matchTyp{A}{gen}{B} \text{ wenn } \inhTyp{B}{A}
 \end{matcherEquivDef}
-\begin{matcherConvDef}{GenSpecTypeMatcher}{
-Sei $ m $ eine Methode des Typs $ A $ (bzw. $ B $) und $ a $ (bzw. $b$) ein Objekt vom Typ $A$ (bzw. $B$).}
-&\text{Wenn }\inhTyp{B}{A}\text{ dann }\delegate{a.m}{b.m}\\
-&\text{Wenn }\inhTyp{A}{B}\wedge\exists B.n : \inhTyp{A.m}{B.n} \text{ dann }\delegate{a.m}{b.n}
+\begin{matcherConvDef}{GenTypeMatcher}{
+Sei $ m $ eine Methode des Typs $ A $, die aufgrund der Vererbung auch von Typ $ B $ bereitgestellt wird.}
+\delegate{A.m}{B.m}
 \end{matcherConvDef}
+Ein Beispiel für die Verwendung des Matchers ist in \appref{genMatcherExample} zu finden.
 
+\subsubsection{SpecTypeMatcher}\label{specTypeMatcher}
+\myparagraph{Szenario}
+Analog zum GenTypeMatcher stellt der SpecTypeMatcher ebenfalls das Matching zwischen Typen fest, die in einer Vererbungsbeziehung stehen. Allerdings ist der Source-Typ in diesem Matcher der Subtyp und der Target-Type der Supertyp. In dem Szenario wieder wiederum von den Klassen SuperClass und SubClass aus \abbref{cd_subclass_extends_superclass} ausgegangen. Der Methodenaufruf erfolgt hier aber auf dem Subtypen und wird an den Supertypen delegiert (siehe \abbref{sd_spec_sub2super}).
+\myScalableFigure[0.7\linewidth]{sd_spec_sub2super}{Szenario SpecTypeMatcher}{sd_spec_sub2super}
 \noindent
-Der erste Fall stellt hierbei nichts anderes als einen Upcast des Typs $B$ auf den Typ $A$ dar. Der zweite Fall hingegen stellt einen Downcast des Typs $B$ auf den Typ $A$ dar. Hierbei ist zu beachten, dass ein Downcast eine gewisse Unsicherheit zur Laufzeit birgt. So können beim Aufruf einer Methode auf einem Objekt $a$ von Typ $A$ nur solche Methoden delegiert werden, die von $B$ an $A$ vererbt wurden. Ein Aufruf einer Methode auf $a$, die nicht von $B$ an $A$ vererbt wurde, führt zu einem Laufzeitfehler.
+Dabei sind zwei Methodenaufrufe auf dem Subtyp beschrieben. Während der Aufruf der Methode getString erfolgreich delegiert werden kann, führt der Aufruf der Methode getStringWithoutPrefix zu einem Laufzeitfehler, da der Matcher keine passende Methode in dem Target-Typ ermitteln kann. Dieses Problem tritt bei allen Methoden auf, die nicht vom Supertyp an den Subtyp vererbt oder mitunter dort überschrieben wurden.\footnote{Anders gesagt, ermöglicht dieser Match einen Downcast, bei dem ein Objekt eines allgemeinen Typen auf einen spezielleren Typen gecastet wird. Das Problem bzgl. des fehlschlagenden Methodenaufrufs in der beschriebene Form ist bei einem Downcast allgegenwärtig.} Aus diesem Grund muss diese Bedingung in der Definition der Konvertierung dieses Matchers mit aufgenommen werden.
+\myparagraph{Definition}
+\begin{matcherEquivDef}{SpecTypeMatcher}
+\matchTyp{A}{genspec}{B} \text{ wenn } \inhTyp{A}{B}
+\end{matcherEquivDef}
+\begin{matcherConvDef}{SpecTypeMatcher}{
+Sei $ m $ eine Methode des Typs $ A $, die von $ B $ an $ A $ vererbt wurde.}
+\delegate{A.m}{B.m}
+\end{matcherConvDef}
+\noindent
+Ein Beispiel für die Verwendung des Matchers ist in \appref{specMatcherExample} zu finden.
 \subsubsection{WrappedTypeMatcher}\label{wrappedTypeMatcher}
-Die bisherigen Type-Matcher sind in der Lage das Matching für zwei Typen festzustellen, ohne dafür Rücksicht auf deren innere Struktur nehmen zu müssen. Dies ist für identische oder hierarchisch organisierte Typen auch nicht notwendig. Es ist jedoch auch denkbar, dass sich beiden Typen auf anderem Wegen assoziieren lassen. Ein Beispiel dafür wäre Boxed- bzw. - noch allgemeiner gefasst - Wrapper-Typen. \abbref{wrapper} stellt ein einfaches Szenario für einen Typ A und einen dazu passenden Wrapper-Typen W dar. 
+\myparagraph{Szenario}
+Die bisherigen Type-Matcher sind in der Lage das Matching für zwei Typen festzustellen, ohne dafür Rücksicht auf deren innere Struktur nehmen zu müssen. Dies ist für identische oder hierarchisch organisierte Typen auch nicht notwendig. Es ist jedoch auch denkbar, dass sich beiden Typen auf anderem Wegen assoziieren lassen. Ein Beispiel dafür wäre Boxed- bzw. - noch allgemeiner gefasst - Wrapper-Typen. \abbref{cd_subclass_subwrapper} zwei Klassen dar, die in einer solchen Beziehung zueinander stehen. Bezüglich des Matchings sind auch hier wiederum zwei Fälle zu unterscheiden. Der erste Fall, in demdas Matching des Source-Typen SubClass mit dem Typen eines Attributs wrapped des Traget-Typen SubWrapper festgestellt werden kann, ist in \abbref{sd_wrapped_sub2subwrapped} dargestellt.
+\begin{figure}[H]
+\begin{minipage}[b]{.33\linewidth}
+  \centering
+  \includegraphics[width=\linewidth]{cd_subclass_subwrapper}
+  \caption{Beziehung zwischen SubClass und SubWrapper}
+  \label{abb:cd_subclass_subwrapper}
 
+\end{minipage}%
+\hspace{.04\linewidth}% Abstand zwischen Bilder
+\begin{minipage}[b]{.63\linewidth}
+
+
+  \centering
+  \includegraphics[width=\linewidth]{sd_wrapped_sub2subwrapped}
+  \caption{Szenario WrappedTypeMatcher}
+  \label{abb:sd_wrapped_sub2subwrapped}
+
+\end{minipage}
+\end{figure}
+\noindent
+Der WrappedTypeMatcher stellt das Matching für ein solches Szenario fest. Das Matching der beiden Typen beruht letztendlich auf einem Matching zwischen dem Source-Type und dem Typen eines Attributs des Target-Typs. Der Matcher, über den dieses Matching innerhalb des WrappedTypeMatchers festgestellt wird, wird als interner Matcher bezeichnet. In dem Szenario aus \abbref{sd_wrapped_sub2subwrapped} wird als interner Matcher der bereits beschriebene ExactTypeMatcher verwendet, weil der Source-Type und der Typ des Attributs wrapped identisch sind.
+\myparagraph{Definition}
+\begin{matcherEquivDef}{WrappedTypeMatcher}
+\matchTyp{A}{wrapped}{B} \text{ wenn } \exists \selTyp{B}{attr} : \matchTyp{A}{M}{attr}
+\end{matcherEquivDef}
+\noindent
+Der zuvor genannte interne Matcher wird in der Definition mit $M$ beschrieben, was stellvertretend für eine Menge von Matchern steht. Als interne Matcher kommen hierbei der ExactTypeMatcher, der GenTypeMatcher und der SpecTypeMatcher in Frage.
+\begin{matcherConvDef}{WrappedTypeMatcher}{
+Sei $m$ eine Methode des Typs $A$. Sei weiterhin $B$ ein Typ, der ein Attribut vom Typ $attr$ enthält, für den gilt $\matchTyp{A}{M}{attr}$.
+}
+\delegate{A.m}{\applyMatcher{M}{attr}.m}
+\end{matcherConvDef}
+\noindent
+Ein Beispiel für die Verwendung des Matchers in Bezug auf das o.g. Szenario ist in \appref{wrappedMatcherExample} zu finden. Außerdem sind dort auch weitere Szenarien aufgefüht, in denen der GenTypeMatcher oder der SpecTypeMatcher als interner Matcher zur Anwendung kommen.
+
+
+\subsubsection{WrapperTypeMatcher}\label{wrapperTypeMatcher}
+\myparagraph{Szenario}
+Die bisherigen Type-Matcher sind in der Lage das Matching für zwei Typen festzustellen, ohne dafür Rücksicht auf deren innere Struktur nehmen zu müssen. Dies ist für identische oder hierarchisch organisierte Typen auch nicht notwendig. Es ist jedoch auch denkbar, dass sich beiden Typen auf anderem Wegen assoziieren lassen. Ein Beispiel dafür wäre Boxed- bzw. - noch allgemeiner gefasst - Wrapper-Typen. \abbref{wrapper} zwei Klassen dar, die in einer solchen Beziehnung zueinander stehen. Bezüglich des Matchings sind auch hier wieder zwei Fälle zu unterscheiden. Der erste Fall, in dem der Source-Typ ...., ist in \abbref{} dargestellt. Der WrappedTypeMatcher stellt das Matching für ein solches Szenario fest.
+\begin{figure}[H]
+\begin{minipage}[b]{.33\linewidth}
+  \centering
+  \includegraphics[width=\linewidth]{cd_subclass_extends_superclass}
+  \caption{Beziehung zwischen SuperClass und SubClass}
+  \label{abb:cd_subclass_extends_superclass}
+
+\end{minipage}%
+\hspace{.04\linewidth}% Abstand zwischen Bilder
+\begin{minipage}[b]{.63\linewidth}
+
+
+  \centering
+  \includegraphics[width=\linewidth]{sd_gen_super2sub}
+  \caption{Szenario GenTypeMatcher}
+  \label{abb:sd_gen_super2sub}
+
+\end{minipage}
+\end{figure}
 
 \begin{figure}[H]
 \begin{minipage}[b]{.25\linewidth}
@@ -48,9 +171,7 @@ Die bisherigen Type-Matcher sind in der Lage das Matching für zwei Typen festzus
 
 \end{minipage}
 \end{figure}
-\noindent
-Ein Anwendungsfall, in dem eine solche Konstellation der Typen auftreten könnte, ist \abbref{adressbook} zu entnehmen. Hier wurde in dem erwarteten Interface Directory eine Methode add deklariert, die einen Parameter vom Typ String erwartet, welcher in diesem Fall bspw. dem eindeutige Namen einer Person entspricht. Auf der Angebotsseite steht jedoch nur ein angebotenes Interface AdressBook zur Verfügung, welches den Typ Person erwartet. Der Typ Person enthält jedoch ein Attribut vom Typ String, welches letztendlich den für das betrachteten System eindeutigen Namen der Person darstellt. So kann es zielführend, dass die hier angebotene Komponente unter der Annahme, dass der Parameter aus dem erwarteten Interface das Attribut name aus dem Typ Person darstellt, weiter zu untersuchen. Vor der Delegation der Methode könnte hierbei durch die Explorationskomponente ein Proxy für den Typ Person (Person-Proxy) erzeugt werden, der sich genauso verhält wie der ursprüngliche Typ. Allerdings würde das Objekt, welches in der Methode des erwarteten Interfaces übergeben wurde, in das Attribut name des Person-Proxys injiziert werden.\\\\
-Aus diesem Grund wird ein WrappedTypeMatcher wie folgt beschrieben.
+\myparagraph{Definition}
 \begin{matcherEquivDef}{WrappedTypeMatcher}
 \matchTyp{A}{wrapped}{B} \text{ wenn } \exists\selTyp{A}{attr} : \matchTyp{attr}{M}{B} \vee \exists \selTyp{B}{attr} : \matchTyp{attr}{M}{A}
 \end{matcherEquivDef}
@@ -65,6 +186,7 @@ Weiterhin sei $n$ eine Methode des Typs $B$ und $b$ ein Objekt vom Typ $B$.
 \end{matcherConvDef}
 \noindent
 Hervorzuheben ist, dass bei einem Methodenaufruf auf dem Wrapper-Typ, keine Delegation vorgenommen wird.
+
 \subsubsection{StructuralTypeMatcher}
 Die bisher beschriebenen Type-Matcher ermöglichen, lediglich eine 1:1-Beziehung zwischen erwartetem und angebotenem Interface. Bei der Suche nach einer passenden Komponente muss jedoch in Betracht gezogen werden, dass diese aus einer Menge von angebotenen Komponenten besteht. \abbref{combinated_components} verdeutlicht dieses Szenario wobei bei der Ausführung der Methode A die Methode der angebotenen Komponente AngA und bei der Ausführung der Methode B die Methode der angebotenen Komponente AngB ausgeführt werden müsste.\\\\
 Die Möglichkeit eines solchen Szenarios bedingt, dass die erwarteten und angebotenen Interfaces je Methode bzgl. der strukturellen Übereinstimmung untersucht werden. Das erfordert einen weiteren Matcher, der die o.g. Matcher je erwartete Methode - sprich je Methode des erwarteten Interfaces - und angebotenen Methode - sprich je Methode der angebotenen Interfaces - untersucht. Zu diesem Zweck wird der StructuralTypeMatcher ergänzt.
