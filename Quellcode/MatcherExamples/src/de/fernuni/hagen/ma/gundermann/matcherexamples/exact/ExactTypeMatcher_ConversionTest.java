@@ -6,6 +6,7 @@ import java.util.Collection;
 
 import org.junit.Test;
 
+import de.fernuni.hagen.ma.gundermann.matcherexamples.types.SuperClass;
 import glue.ProxyFactory;
 import matching.methods.MethodMatchingInfo;
 import matching.modules.ExactTypeMatcher;
@@ -19,19 +20,20 @@ public class ExactTypeMatcher_ConversionTest {
 
   @Test
   public void convertString() {
-    String offeredComponent = "A";
-    Collection<ModuleMatchingInfo> matchingInfos = new ExactTypeMatcher().calculateTypeMatchingInfos( String.class,
-        String.class );
+    SuperClass target = new SuperClass( "A" );
+    Collection<ModuleMatchingInfo> matchingInfos = new ExactTypeMatcher().calculateTypeMatchingInfos( SuperClass.class,
+        SuperClass.class );
     // Der ExactTypeMatcher erzeugt nur eine ModuleMatchingInfo (kein rekursives Matching)
     ModuleMatchingInfo moduleMatchingInfo = matchingInfos.iterator().next();
 
-    ProxyFactory<String> proxyFactory = moduleMatchingInfo.getConverterCreator().createProxyFactory( String.class );
+    ProxyFactory<SuperClass> proxyFactory = moduleMatchingInfo.getConverterCreator()
+        .createProxyFactory( SuperClass.class );
     Collection<MethodMatchingInfo> methodMatchingInfos = moduleMatchingInfo.getMethodMatchingInfos();
 
     // Bei der Erzeugung dieses Proxies wird die offeredComponent einfach zurückgegeben
-    String proxy = proxyFactory.createProxy( offeredComponent, methodMatchingInfos );
+    SuperClass source = proxyFactory.createProxy( target, methodMatchingInfos );
 
-    assertTrue( proxy.equals( "A" ) );
+    assertTrue( source.getString().equals( "A" ) );
   }
 
 }

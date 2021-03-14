@@ -12,7 +12,9 @@ public interface TypeMatcher {
    * <b> checkType &equiv;<sub>M</sub> queryType</b>
    *
    * @param checkType
+   *          - source
    * @param queryType
+   *          - target
    * @return
    */
   boolean matchesType( Class<?> checkType, Class<?> queryType );

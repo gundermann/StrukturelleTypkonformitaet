@@ -21,7 +21,7 @@ public class GenSpecTypeMatcher_Gen_ConversionTest {
 
   @Test
   public void convertSpec2Gen() {
-    SubClass offeredComponent = new SubClass( "A" );
+    SubClass target = new SubClass( "A" );
     Collection<ModuleMatchingInfo> matchingInfos = new GenSpecTypeMatcher().calculateTypeMatchingInfos(
         SuperClass.class, SubClass.class );
     // Der GenSpecTypeMatcher erzeugt nur eine ModuleMatchingInfo (kein rekursives Matching)
@@ -33,9 +33,9 @@ public class GenSpecTypeMatcher_Gen_ConversionTest {
 
     // Bei der Erzeugung dieses Proxies wird auch hier, wie im ExactTypeMatcher, die offeredComponent einfach
     // zurückgegeben (Substitionsprinzip)
-    SuperClass proxy = proxyFactory.createProxy( offeredComponent, methodMatchingInfos );
+    SuperClass source = proxyFactory.createProxy( target, methodMatchingInfos );
 
-    assertTrue( proxy.getString().equals( "SubA" ) );
+    assertTrue( source.getString().equals( "SubA" ) );
   }
 
 }

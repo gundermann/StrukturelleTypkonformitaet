@@ -29,25 +29,26 @@ public class WrappedTypeMatcher_Wrapped_ConversionTest {
       MatcherCombiner.combine( new ExactTypeMatcher(), new GenSpecTypeMatcher() ) );
 
   /**
-   * {@link SuperClass} &equiv;<sub>Exact</sub> {@link SuperWrapper}
+   * {@link SubClass} &equiv;<sub>Exact</sub> {@link SubWrapper}
    */
   @Test
-  public void convertSuperWrapper2SuperClass() {
-    SuperWrapper offeredComponent = new SuperWrapper( "A" );
+  public void convertSubWrapper2SubClass() {
+    SubWrapper offeredComponent = new SubWrapper( "A" );
     Collection<ModuleMatchingInfo> matchingInfos = matcher.calculateTypeMatchingInfos(
-        SuperClass.class, SuperWrapper.class );
+        SubClass.class, SubWrapper.class );
     // Der WrappedTypeMatcher erzeugt nur eine ModuleMatchingInfo (kein rekursives Matching)
     ModuleMatchingInfo moduleMatchingInfo = matchingInfos.iterator().next();
 
     // Das Attribut an welches der Aufruf delegiert wird, wird vom TypeMatcher ermittelt und im ProxyFactoryCreator
     // innerhalb der ModuleMatchingInfo hinterlegt.
-    ProxyFactory<SuperClass> proxyFactory = moduleMatchingInfo.getConverterCreator()
-        .createProxyFactory( SuperClass.class );
+    ProxyFactory<SubClass> proxyFactory = moduleMatchingInfo.getConverterCreator()
+        .createProxyFactory( SubClass.class );
     Collection<MethodMatchingInfo> methodMatchingInfos = moduleMatchingInfo.getMethodMatchingInfos();
 
-    SuperClass proxy = proxyFactory.createProxy( offeredComponent, methodMatchingInfos );
+    SubClass proxy = proxyFactory.createProxy( offeredComponent, methodMatchingInfos );
 
-    assertTrue( proxy.getString().equals( "A" ) );
+    assertTrue( proxy.getString().equals( "SubA" ) );
+    assertTrue( proxy.getStringWithoutPrefix().equals( "A" ) );
   }
 
   /**

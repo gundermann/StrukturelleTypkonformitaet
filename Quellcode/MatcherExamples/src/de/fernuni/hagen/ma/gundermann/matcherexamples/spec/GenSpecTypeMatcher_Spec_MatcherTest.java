@@ -13,7 +13,7 @@ import matching.modules.GenSpecTypeMatcher;
  * Matcher Test fuer die Ubereinstimmung der Form:<br>
  * <b>checkType < queryType</b>
  */
-public class GenTypeMatcher_Spec_MatcherTest {
+public class GenSpecTypeMatcher_Spec_MatcherTest {
 
   @Test
   public void match() {
