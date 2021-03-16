@@ -132,23 +132,21 @@ public class StructuralTypeMatcher_ConversionTest {
    * &equiv;<sub>Gen</sub> m2Return
    */
   @Test
-  public void match_genReturn_specParam() {
-    SuperReturnSubParamClass offeredComponent = new SuperReturnSubParamClass();
-    Collection<ModuleMatchingInfo> matchingInfos = matcher.calculateTypeMatchingInfos( SubReturnSuperParamClass.class,
-        SuperReturnSubParamClass.class );
+  public void convert_genReturn_specParam() {
+    SubReturnSuperParamClass offeredComponent = new SubReturnSuperParamClass();
+    Collection<ModuleMatchingInfo> matchingInfos = matcher.calculateTypeMatchingInfos( SuperReturnSubParamClass.class,
+        SubReturnSuperParamClass.class );
     for ( ModuleMatchingInfo moduleMatchingInfo : matchingInfos ) {
-      ProxyFactory<SubReturnSuperParamClass> proxyFactory = moduleMatchingInfo.getConverterCreator()
-          .createProxyFactory( SubReturnSuperParamClass.class );
+      ProxyFactory<SuperReturnSubParamClass> proxyFactory = moduleMatchingInfo.getConverterCreator()
+          .createProxyFactory( SuperReturnSubParamClass.class );
       Collection<MethodMatchingInfo> methodMatchingInfos = moduleMatchingInfo.getMethodMatchingInfos();
 
-      SubReturnSuperParamClass proxy = proxyFactory.createProxy( offeredComponent, methodMatchingInfos );
+      SuperReturnSubParamClass proxy = proxyFactory.createProxy( offeredComponent, methodMatchingInfos );
 
       SubClass param1 = new SubClass( "A" );
       SubClass param2 = new SubClass( "B" );
-      assertTrue( proxy.addHello( param1 ).getString().equals( "SubSubAhello" ) );
-      assertTrue( proxy.addHello( param1 ).getStringWithoutPrefix().equals( "SubAhello" ) );
-      assertTrue( proxy.add( param1, param2 ).getString().equals( "SubSubASubB" ) );
-      assertTrue( proxy.add( param1, param2 ).getStringWithoutPrefix().equals( "SubASubB" ) );
+      assertTrue( proxy.helloAdd( param1 ).getString().equals( "helloSubA" ) );
+      assertTrue( proxy.addParams( param1, param2 ).getString().equals( "SubASubB" ) );
     }
   }
 
@@ -158,7 +156,7 @@ public class StructuralTypeMatcher_ConversionTest {
    * &equiv;<sub>Spec</sub> m2Return
    */
   @Test
-  public void match_specReturn_genParam() {
+  public void convert_specReturn_genParam() {
     SuperReturnSubParamClass offeredComponent = new SuperReturnSubParamClass();
     Collection<ModuleMatchingInfo> matchingInfos = matcher.calculateTypeMatchingInfos( SubReturnSuperParamClass.class,
         SuperReturnSubParamClass.class );
@@ -185,7 +183,7 @@ public class StructuralTypeMatcher_ConversionTest {
    * &and; m1Return &equiv;<sub>Spec</sub> m2Return
    */
   @Test
-  public void match_specReturn_wrapperGenParam() {
+  public void convert_specReturn_wrapperGenParam() {
     SuperReturnSubParamClass offeredComponent = new SuperReturnSubParamClass();
     Collection<ModuleMatchingInfo> matchingInfos = matcher.calculateTypeMatchingInfos(
         SubReturnSuperWrapperParamClass.class,
@@ -212,7 +210,7 @@ public class StructuralTypeMatcher_ConversionTest {
    * &equiv;<sub>Wrapper<sub>Gen</sub></sub> m2Return
    */
   @Test
-  public void match_wrapperGenReturn_specParam() {
+  public void convert_wrapperGenReturn_specParam() {
     SubReturnSuperParamClass offeredComponent = new SubReturnSuperParamClass();
     Collection<ModuleMatchingInfo> matchingInfos = matcher.calculateTypeMatchingInfos(
         SuperWrapperReturnSubParamClass.class,
@@ -238,7 +236,7 @@ public class StructuralTypeMatcher_ConversionTest {
    * m2Param &and; m1Return &equiv;<sub>Wrapper<sub>Gen</sub></sub> m2Return
    */
   @Test
-  public void match_wrapperGenReturn_wrapperSpecParam() {
+  public void convert_wrapperGenReturn_wrapperSpecParam() {
     SubReturnSuperParamClass offeredComponent = new SubReturnSuperParamClass();
     Collection<ModuleMatchingInfo> matchingInfos = matcher.calculateTypeMatchingInfos(
         SuperWrapperReturnSubWrapperParamClass.class,
@@ -264,7 +262,7 @@ public class StructuralTypeMatcher_ConversionTest {
    * m2Param &and; m1Return &equiv;<sub>Wrapper<sub>Spec</sub></sub> m2Return
    */
   @Test
-  public void match_wrapperSpecReturn_wrapperExactParam() {
+  public void convert_wrapperSpecReturn_wrapperExactParam() {
 
     SuperReturnSubParamClass offeredComponent = new SuperReturnSubParamClass();
     Collection<ModuleMatchingInfo> matchingInfos = matcher.calculateTypeMatchingInfos(

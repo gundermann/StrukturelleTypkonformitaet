@@ -30,28 +30,28 @@ public class WrappedTypeMatcher_Wrapper_ConversionTest {
       MatcherCombiner.combine( new ExactTypeMatcher(), new GenSpecTypeMatcher() ) );
 
   /**
-   * {@link SuperWrapper}#wrapped &equiv;<sub>Exact</sub> {@link SuperClass}
+   * {@link SubWrapper}#wrapped &equiv;<sub>Exact</sub> {@link SubClass}
    */
   @Test
-  public void convertSuperWrapper2SuperClass() {
-    SuperClass offeredComponent = new SuperClass( "A" );
+  public void convertSubClass2SubWrapper() {
+    SubClass offeredComponent = new SubClass( "A" );
     Collection<ModuleMatchingInfo> matchingInfos = matcher.calculateTypeMatchingInfos(
-        SuperWrapper.class, SuperClass.class );
+        SubWrapper.class, SubClass.class );
     // Der WrappedTypeMatcher erzeugt nur eine ModuleMatchingInfo (kein rekursives Matching)
     ModuleMatchingInfo moduleMatchingInfo = matchingInfos.iterator().next();
 
     // Das Attribut an welches der Aufruf delegiert wird, wird vom TypeMatcher ermittelt und im ProxyFactoryCreator
     // innerhalb der ModuleMatchingInfo hinterlegt.
-    ProxyFactory<SuperWrapper> proxyFactory = moduleMatchingInfo.getConverterCreator()
-        .createProxyFactory( SuperWrapper.class );
+    ProxyFactory<SubWrapper> proxyFactory = moduleMatchingInfo.getConverterCreator()
+        .createProxyFactory( SubWrapper.class );
     Collection<MethodMatchingInfo> methodMatchingInfos = moduleMatchingInfo.getMethodMatchingInfos();
 
-    SuperWrapper proxy = proxyFactory.createProxy( offeredComponent, methodMatchingInfos );
+    SubWrapper proxy = proxyFactory.createProxy( offeredComponent, methodMatchingInfos );
 
     // Das Wrapped-Objekt wird in das Attribut des Wrappers injiziert. Methodenaufrufe am Wrapper-Objekt werden nicht an
     // andere Objekte delegiert.
     assertTrue( proxy.toString().equals( "WRAPPED_A" ) );
-    assertFalse( proxy.hashCode() == offeredComponent.hashCode() );
+    assertTrue( proxy.toStringWithPrefix().equals( "WRAPPED_SubA" ) );
   }
 
   /**
