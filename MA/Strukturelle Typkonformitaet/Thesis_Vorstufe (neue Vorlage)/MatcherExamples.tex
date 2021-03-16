@@ -37,6 +37,30 @@ public class SubClass extends SuperClass {
 
 
 
+\begin{lstlisting}[{caption = Implemetierung: SubWrapper
+},{label = LST_subwrapper_impl}]
+public class SubWrapper {
+
+  private SubClass wrapped;
+
+  public SubWrapper( String string ) {
+    this.wrapped = new SubClass( string );
+  }
+
+  @Override
+  public String toString() {
+    return "WRAPPED_" + this.wrapped.getStringWithoutPrefix();
+  }
+
+  public String toStringWithPrefix() {
+    return "WRAPPED_" + this.wrapped.getString();
+  }
+}
+\end{lstlisting}
+
+
+
+
 
 \begin{lstlisting}[{caption = Implemetierung: SuperWrapperReturnSubWrapperParamClass
 },{label = LST_SuperWrapperReturnSubWrapperParamClass_impl}]
@@ -217,7 +241,7 @@ public class GenSpecTypeMatcher_Spec_ConversionTest {
 \subsection{Beispiel für den WrappedTypeMatcher}\label{wrappedMatcherExample}
 Der WrappedTypeMatcher und der WrapperTypeMatcher wurden gemeinsam implementiert. Daher wird in den folgenden Beispielen jeweils ein Matcher aus der Klasse WrappedTypeMatcher erzeugt. Die weitere Verwendung den Matchers bezieht sich in diesen Beispielen aber auf die Definition des WrappedTypeMatcher aus \ref{wrappedTypeMatcher}.\\\\
 In \lstref{LST_wrappedTypeMatcher_matching} ist die Implementierung eines JUnit-Tests aufgeführt, in dem das Matching über den WrappedTypeMatcher für unterschiedliche Source- und Target-Typen nachgewiesen werden soll. Die Test-Methoden mit dem Präfix match enthalten dabei die Aufrufe, bei denen das Matching festgestellt werden kann. Dementsprechend enthält die Test-Methode noMatch die Aufrufe, bei denen das Matching fehlschlägt.\\\\
-\lstref{LST_wrappedTypeMatcher_conversion} enthält die Implementierung für einen JUnit-Test, in dem die Konvertierung, die durch den WrappedTypeMatcher beschrieben wird, nachgewiesen wird. In der Test-Methode convertSubWrapper2SubClass wird von dem Szenario aus \ref{wrappedTypeMatcher} ausgegangen. Die anderen Test-Methoden stellen weitere Szenarien dar, die in den folgenden Abschnitten beschrieben werden.
+\lstref{LST_wrappedTypeMatcher_conversion} enthält die Implementierung für einen JUnit-Test, in dem die Konvertierung, die durch den WrappedTypeMatcher beschrieben wird, nachgewiesen wird. In der Test-Methode convertSubWrapper2SubClass wird von dem Szenario aus \ref{wrappedTypeMatcher} ausgegangen. Die anderen Test-Methoden stellen weitere Szenarien dar, die in den folgenden Unterabschnitten beschrieben werden.
 \begin{lstlisting}[{caption = WrappedTypeMatcher Matching Test
 },{label = LST_wrappedTypeMatcher_matching}]
 public class WrappedTypeMatcher_Wrapped_MatcherTest {
@@ -325,6 +349,390 @@ public class WrappedTypeMatcher_Wrapped_ConversionTest {
     SuperClass proxy = proxyFactory.createProxy( offeredComponent, methodMatchingInfos );
 
     assertTrue( proxy.getString().equals( "SubA" ) );
+  }
+}
+\end{lstlisting}
+
+
+
+
+
+\subsection{Beispiel für den WrapperTypeMatcher}\label{wrapperMatcherExample}
+Wie bereits im vorherigen Abschnitt erwähnt wurden der WrappedTypeMatcher und der WrapperTypeMatcher gemeinsam implementiert. Daher wird in den folgenden Beispielen jeweils ein Matcher aus der Klasse WrappedTypeMatcher erzeugt. Die weitere Verwendung den Matchers bezieht sich in diesen Beispielen aber auf die Definition des WrapperTypeMatcher aus \ref{wrapperTypeMatcher}.\\\\
+In \lstref{LST_wrapperTypeMatcher_matching} ist die Implementierung eines JUnit-Tests aufgeführt, in dem das Matching über den WrapperTypeMatcher für unterschiedliche Source- und Target-Typen nachgewiesen werden soll. Die Test-Methoden mit dem Präfix match enthalten dabei die Aufrufe, bei denen das Matching festgestellt werden kann. Dementsprechend enthält die Test-Methode noMatch die Aufrufe, bei denen das Matching fehlschlägt.\\\\
+\lstref{LST_wrapperTypeMatcher_conversion} enthält die Implementierung für einen JUnit-Test, in dem die Konvertierung, die durch den WrapperTypeMatcher beschrieben wird, nachgewiesen wird. In der Test-Methode convertSubClass2SubWrapper wird von dem Szenario aus \ref{wrapperTypeMatcher} ausgegangen. Die anderen Test-Methoden stellen weitere Szenarien dar, die in den folgenden Unterabschnitten beschrieben werden.
+\begin{lstlisting}[{caption = WrapperTypeMatcher Matching Test
+},{label = LST_wrapperTypeMatcher_matching}]
+public class WrappedTypeMatcher_Wrapper_MatcherTest {
+
+  private WrappedTypeMatcher matcher = new WrappedTypeMatcher(
+      MatcherCombiner.combine( new ExactTypeMatcher(), new GenSpecTypeMatcher() ) );
+
+  @Test
+  public void match() {
+    assertTrue( matcher.matchesType( Boolean.class, boolean.class ) );
+    assertTrue( matcher.matchesType( Integer.class, int.class ) );
+  }
+
+  @Test
+  public void match_wrapped_exact() {
+    assertTrue( matcher.matchesType( SubWrapper.class, SubClass.class ) );
+  }
+
+  @Test
+  public void match_wrapped_spec() {
+    assertTrue( matcher.matchesType( SuperWrapper.class, SubClass.class ) );
+  }
+
+  @Test
+  public void match_wrapped_gen() {
+    assertTrue( matcher.matchesType( SubWrapper.class, SuperClass.class ) );
+  }
+
+  @Test
+  public void noMatch() {
+    assertFalse( matcher.matchesType( String.class, String.class ) );
+  }
+}
+\end{lstlisting}
+\begin{lstlisting}[{caption = WrapperTypeMatcher Konvertierung Test
+},{label = LST_wrapperTypeMatcher_conversion}]
+public class WrappedTypeMatcher_Wrapper_ConversionTest {
+
+  private WrappedTypeMatcher matcher = new WrappedTypeMatcher(
+      MatcherCombiner.combine( new ExactTypeMatcher(), new GenSpecTypeMatcher() ) );
+
+  @Test
+  public void convertSubClass2SubWrapper() {
+    SubClass offeredComponent = new SubClass( "A" );
+    Collection<ModuleMatchingInfo> matchingInfos = matcher.calculateTypeMatchingInfos(
+        SubWrapper.class, SubClass.class );
+
+    ModuleMatchingInfo moduleMatchingInfo = matchingInfos.iterator().next();
+
+    ProxyFactory<SubWrapper> proxyFactory = moduleMatchingInfo.getConverterCreator()
+        .createProxyFactory( SubWrapper.class );
+    Collection<MethodMatchingInfo> methodMatchingInfos = moduleMatchingInfo.getMethodMatchingInfos();
+
+    SubWrapper proxy = proxyFactory.createProxy( offeredComponent, methodMatchingInfos );
+
+    assertTrue( proxy.toString().equals( "WRAPPED_A" ) );
+    assertTrue( proxy.toStringWithPrefix().equals( "WRAPPED_SubA" ) );
+  }
+
+  @Test
+  public void convertSuperWrapper2SubClass() {
+    SubClass offeredComponent = new SubClass( "A" );
+    Collection<ModuleMatchingInfo> matchingInfos = matcher.calculateTypeMatchingInfos(
+        SuperWrapper.class, SubClass.class );
+
+    ModuleMatchingInfo moduleMatchingInfo = matchingInfos.iterator().next();
+
+    ProxyFactory<SuperWrapper> proxyFactory = moduleMatchingInfo.getConverterCreator()
+        .createProxyFactory( SuperWrapper.class );
+    Collection<MethodMatchingInfo> methodMatchingInfos = moduleMatchingInfo.getMethodMatchingInfos();
+
+    SuperWrapper proxy = proxyFactory.createProxy( offeredComponent, methodMatchingInfos );
+
+    assertTrue( proxy.toString().equals( "WRAPPED_SubA" ) );
+    assertFalse( proxy.hashCode() == offeredComponent.hashCode() );
+  }
+
+  @Test
+  public void convertSubWrapper2SuperClass_positiveCall() {
+    SuperClass offeredComponent = new SuperClass( "A" );
+    Collection<ModuleMatchingInfo> matchingInfos = matcher.calculateTypeMatchingInfos(
+        SubWrapper.class, SuperClass.class );
+
+    ModuleMatchingInfo moduleMatchingInfo = matchingInfos.iterator().next();
+
+    ProxyFactory<SubWrapper> proxyFactory = moduleMatchingInfo.getConverterCreator()
+        .createProxyFactory( SubWrapper.class );
+    Collection<MethodMatchingInfo> methodMatchingInfos = moduleMatchingInfo.getMethodMatchingInfos();
+
+    SubWrapper proxy = proxyFactory.createProxy( offeredComponent, methodMatchingInfos );
+
+    assertTrue( proxy.toStringWithPrefix().equals( "WRAPPED_A" ) );
+    assertFalse( proxy.hashCode() == offeredComponent.hashCode() );
+  }
+
+  @Test( expected = SigMaGlueException.class )
+  public void convertSubWrapper2SuperClass_negativeCall() {
+    SuperClass offeredComponent = new SuperClass( "A" );
+    Collection<ModuleMatchingInfo> matchingInfos = matcher.calculateTypeMatchingInfos(
+        SubWrapper.class, SuperClass.class );
+    // Der WrappedTypeMatcher erzeugt nur eine ModuleMatchingInfo (kein rekursives Matching)
+    ModuleMatchingInfo moduleMatchingInfo = matchingInfos.iterator().next();
+
+    ProxyFactory<SubWrapper> proxyFactory = moduleMatchingInfo.getConverterCreator()
+        .createProxyFactory( SubWrapper.class );
+    Collection<MethodMatchingInfo> methodMatchingInfos = moduleMatchingInfo.getMethodMatchingInfos();
+
+    SubWrapper proxy = proxyFactory.createProxy( offeredComponent, methodMatchingInfos );
+
+    proxy.toString().equals( "WRAPPED_A" );
+  }
+}
+
+\end{lstlisting}
+
+
+
+\subsection{Beispiel für den StructuralTypeMatcher}\label{structMatcherExample}
+In \lstref{LST_structTypeMatcher_matching} ist die Implementierung eines JUnit-Tests aufgeführt, in dem das Matching über den StructuralTypeMatcher für unterschiedliche Source- und Target-Typen nachgewiesen werden soll. Alle Test-Methoden enthalten Aufrufe, bei denen das Matching festgestellt werden kann. Die Test-Methode match\_genReturn\_specParam bezieht sich auf das Szenario aus \ref{wrapperTypeMatcher}.   Da es für jedes Paar von Source- und Target-Typ mehrere Möglichkeiten zur Feststellung der strukturellen Gleichheit gibt, wird die Evaluation der Testfälle in einer Schleife über diese Möglichkeiten durchgeführt.\\\\
+\lstref{LST_structTypeMatcher_conversion} enthält die Implementierung für einen JUnit-Test, in dem die Konvertierung, die durch den StructTypeMatcher beschrieben wird, nachgewiesen wird. Die Test-Methode convert\_genReturn\_specParam bezieht sich dabei auf das Szenario aus \ref{structTypeMatcher}. Die anderen Test-Methoden stellen weitere Szenarien dar, die in den folgenden Unterabschnitten beschrieben werden.\\\\
+In beiden Fällen wurde von einem StructuralTypeMatcher ausgegangen, der als internen Type-Matcher eine Kombination aus den zuvor genannten Matchern verwendet.
+\begin{lstlisting}[{caption = StructTypeMatcher Matching Test
+},{label = LST_structTypeMatcher_matching}]
+public class StructuralTypeMatcher_MatcherTest {
+
+  private StructuralTypeMatcher matcher = new StructuralTypeMatcher(
+      MatcherCombiner.combine( new ExactTypeMatcher(), new GenSpecTypeMatcher(),
+          new WrappedTypeMatcher( MatcherCombiner.combine( new ExactTypeMatcher(), new GenSpecTypeMatcher() ) ) ) );
+
+  @Test
+  public void match_exactReturn_exactParam() {
+    assertTrue( matcher.matchesType( SubReturnSubParamClass1.class, SubReturnSubParamClass2.class ) );
+  }
+
+  @Test
+  public void match_exactReturn_genParam() {
+    assertTrue( matcher.matchesType( SubReturnSuperParamClass.class, SubReturnSubParamClass1.class ) );
+  }
+
+  @Test
+  public void match_exactReturn_specParam() {
+    assertTrue( matcher.matchesType( SubReturnSubParamClass1.class, SubReturnSuperParamClass.class ) );
+  }
+
+  @Test
+  public void match_genReturn_specParam() {
+    assertTrue( matcher.matchesType( SuperReturnSubParamClass.class, SubReturnSuperParamClass.class ) );
+  }
+
+  @Test
+  public void match_specReturn_genParam() {
+    assertTrue( matcher.matchesType( SubReturnSuperParamClass.class, SuperReturnSubParamClass.class ) );
+  }
+
+  @Test
+  public void match_specReturn_wrapperGenParam() {
+    assertTrue( matcher.matchesType( SubReturnSuperWrapperParamClass.class, SuperReturnSubParamClass.class ) );
+  }
+
+  @Test
+  public void match_wrapperGenReturn_specParam() {
+    assertTrue( matcher.matchesType( SuperWrapperReturnSubParamClass.class, SubReturnSuperParamClass.class ) );
+  }
+
+  @Test
+  public void match_wrapperGenReturn_wrapperSpecParam() {
+    assertTrue( matcher.matchesType( SuperWrapperReturnSubWrapperParamClass.class, SubReturnSuperParamClass.class ) );
+  }
+
+  @Test
+  public void match_wrapperSpecReturn_wrapperExactParam() {
+    assertTrue( matcher.matchesType( SubWrapperReturnSubParamClass.class, SuperReturnSubParamClass.class ) );
+  }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[{caption = StructuralTypeMatcher Konvertierung Test
+},{label = LST_structTypeMatcher_conversion}]
+public class StructuralTypeMatcher_ConversionTest {
+
+  private StructuralTypeMatcher matcher = new StructuralTypeMatcher(
+      MatcherCombiner.combine( new ExactTypeMatcher(), new GenSpecTypeMatcher(),
+          new WrappedTypeMatcher( MatcherCombiner.combine( new ExactTypeMatcher(), new GenSpecTypeMatcher() ) ) ) );
+
+  @Test
+  public void convert_exactReturn_exactParam() {
+    SubReturnSubParamClass2 offeredComponent = new SubReturnSubParamClass2();
+    Collection<ModuleMatchingInfo> matchingInfos = matcher.calculateTypeMatchingInfos( SubReturnSubParamClass1.class,
+        SubReturnSubParamClass2.class );
+
+    for ( ModuleMatchingInfo moduleMatchingInfo : matchingInfos ) {
+      ProxyFactory<SubReturnSubParamClass1> proxyFactory = moduleMatchingInfo.getConverterCreator()
+          .createProxyFactory( SubReturnSubParamClass1.class );
+      Collection<MethodMatchingInfo> methodMatchingInfos = moduleMatchingInfo.getMethodMatchingInfos();
+
+      SubReturnSubParamClass1 proxy = proxyFactory.createProxy( offeredComponent, methodMatchingInfos );
+
+      SubClass param1 = new SubClass( "A" );
+      SubClass param2 = new SubClass( "B" );
+      assertTrue( proxy.addHello( param1 ).getString().equals( "SubSubAhello" ) );
+      assertTrue( proxy.addHello( param1 ).getStringWithoutPrefix().equals( "SubAhello" ) );
+      assertTrue( proxy.add( param1, param2 ).getString().equals( "SubSubASubB" ) );
+      assertTrue( proxy.add( param1, param2 ).getStringWithoutPrefix().equals( "SubASubB" ) );
+    }
+  }
+
+  @Test
+  public void convert_exactReturn_genParam() {
+    SubReturnSubParamClass1 offeredComponent = new SubReturnSubParamClass1();
+    Collection<ModuleMatchingInfo> matchingInfos = matcher.calculateTypeMatchingInfos( SubReturnSuperParamClass.class,
+        SubReturnSubParamClass1.class );
+    for ( ModuleMatchingInfo moduleMatchingInfo : matchingInfos ) {
+      ProxyFactory<SubReturnSuperParamClass> proxyFactory = moduleMatchingInfo.getConverterCreator()
+          .createProxyFactory( SubReturnSuperParamClass.class );
+      Collection<MethodMatchingInfo> methodMatchingInfos = moduleMatchingInfo.getMethodMatchingInfos();
+
+      SubReturnSuperParamClass proxy = proxyFactory.createProxy( offeredComponent, methodMatchingInfos );
+
+      SuperClass param1 = new SuperClass( "A" );
+      SuperClass param2 = new SuperClass( "B" );
+      assertTrue( proxy.addHello( param1 ).getString().equals( "SubAhello" ) );
+      assertTrue( proxy.addHello( param1 ).getStringWithoutPrefix().equals( "Ahello" ) );
+      assertTrue( proxy.add( param1, param2 ).getString().equals( "SubAB" ) );
+      assertTrue( proxy.add( param1, param2 ).getStringWithoutPrefix().equals( "AB" ) );
+    }
+  }
+
+  @Test
+  public void convert_exactReturn_specParam() {
+    SubReturnSuperParamClass offeredComponent = new SubReturnSuperParamClass();
+    Collection<ModuleMatchingInfo> matchingInfos = matcher.calculateTypeMatchingInfos( SubReturnSubParamClass1.class,
+        SubReturnSuperParamClass.class );
+    for ( ModuleMatchingInfo moduleMatchingInfo : matchingInfos ) {
+      ProxyFactory<SubReturnSubParamClass1> proxyFactory = moduleMatchingInfo.getConverterCreator()
+          .createProxyFactory( SubReturnSubParamClass1.class );
+      Collection<MethodMatchingInfo> methodMatchingInfos = moduleMatchingInfo.getMethodMatchingInfos();
+
+      SubReturnSubParamClass1 proxy = proxyFactory.createProxy( offeredComponent, methodMatchingInfos );
+
+      SubClass param1 = new SubClass( "A" );
+      SubClass param2 = new SubClass( "B" );
+      assertTrue( proxy.addHello( param1 ).getString().equals( "SubSubAhello" ) );
+      assertTrue( proxy.addHello( param1 ).getStringWithoutPrefix().equals( "SubAhello" ) );
+      assertTrue( proxy.add( param1, param2 ).getString().equals( "SubSubASubB" ) );
+      assertTrue( proxy.add( param1, param2 ).getStringWithoutPrefix().equals( "SubASubB" ) );
+    }
+  }
+
+  @Test
+  public void convert_genReturn_specParam() {
+    SubReturnSuperParamClass offeredComponent = new SubReturnSuperParamClass();
+    Collection<ModuleMatchingInfo> matchingInfos = matcher.calculateTypeMatchingInfos( SuperReturnSubParamClass.class,
+        SubReturnSuperParamClass.class );
+    for ( ModuleMatchingInfo moduleMatchingInfo : matchingInfos ) {
+      ProxyFactory<SuperReturnSubParamClass> proxyFactory = moduleMatchingInfo.getConverterCreator()
+          .createProxyFactory( SuperReturnSubParamClass.class );
+      Collection<MethodMatchingInfo> methodMatchingInfos = moduleMatchingInfo.getMethodMatchingInfos();
+
+      SuperReturnSubParamClass proxy = proxyFactory.createProxy( offeredComponent, methodMatchingInfos );
+
+      SubClass param1 = new SubClass( "A" );
+      SubClass param2 = new SubClass( "B" );
+      assertTrue( proxy.helloAdd( param1 ).getString().equals( "helloSubA" ) );
+      assertTrue( proxy.addParams( param1, param2 ).getString().equals( "SubASubB" ) );
+    }
+  }
+
+  @Test
+  public void convert_specReturn_genParam() {
+    SuperReturnSubParamClass offeredComponent = new SuperReturnSubParamClass();
+    Collection<ModuleMatchingInfo> matchingInfos = matcher.calculateTypeMatchingInfos( SubReturnSuperParamClass.class,
+        SuperReturnSubParamClass.class );
+    for ( ModuleMatchingInfo moduleMatchingInfo : matchingInfos ) {
+      ProxyFactory<SubReturnSuperParamClass> proxyFactory = moduleMatchingInfo.getConverterCreator()
+          .createProxyFactory( SubReturnSuperParamClass.class );
+      Collection<MethodMatchingInfo> methodMatchingInfos = moduleMatchingInfo.getMethodMatchingInfos();
+
+      SubReturnSuperParamClass proxy = proxyFactory.createProxy( offeredComponent, methodMatchingInfos );
+
+      SuperClass param1 = new SuperClass( "A" );
+      SuperClass param2 = new SuperClass( "B" );
+      assertTrue( proxy.addHello( param1 ).getString().equals( "SubAhello" ) );
+      assertTrue( proxy.addHello( param1 ).getStringWithoutPrefix().equals( "Ahello" ) );
+      assertTrue( proxy.add( param1, param2 ).getString().equals( "SubAB" ) );
+      assertTrue( proxy.add( param1, param2 ).getStringWithoutPrefix().equals( "AB" ) );
+    }
+
+  }
+
+  @Test
+  public void convert_specReturn_wrapperGenParam() {
+    SuperReturnSubParamClass offeredComponent = new SuperReturnSubParamClass();
+    Collection<ModuleMatchingInfo> matchingInfos = matcher.calculateTypeMatchingInfos(
+        SubReturnSuperWrapperParamClass.class,
+        SuperReturnSubParamClass.class );
+    for ( ModuleMatchingInfo moduleMatchingInfo : matchingInfos ) {
+      ProxyFactory<SubReturnSuperWrapperParamClass> proxyFactory = moduleMatchingInfo.getConverterCreator()
+          .createProxyFactory( SubReturnSuperWrapperParamClass.class );
+      Collection<MethodMatchingInfo> methodMatchingInfos = moduleMatchingInfo.getMethodMatchingInfos();
+
+      SubReturnSuperWrapperParamClass proxy = proxyFactory.createProxy( offeredComponent, methodMatchingInfos );
+
+      SuperWrapper param1 = new SuperWrapper( "A" );
+      SuperWrapper param2 = new SuperWrapper( "B" );
+      assertTrue( proxy.addHello( param1 ).getString().equals( "SubWRAPPED_Ahello" ) );
+      assertTrue( proxy.addHello( param1 ).getStringWithoutPrefix().equals( "WRAPPED_Ahello" ) );
+      assertTrue( proxy.add( param1, param2 ).getString().equals( "SubWRAPPED_AWRAPPED_B" ) );
+      assertTrue( proxy.add( param1, param2 ).getStringWithoutPrefix().equals( "WRAPPED_AWRAPPED_B" ) );
+    }
+  }
+
+  @Test
+  public void convert_wrapperGenReturn_specParam() {
+    SubReturnSuperParamClass offeredComponent = new SubReturnSuperParamClass();
+    Collection<ModuleMatchingInfo> matchingInfos = matcher.calculateTypeMatchingInfos(
+        SuperWrapperReturnSubParamClass.class,
+        SubReturnSuperParamClass.class );
+    for ( ModuleMatchingInfo moduleMatchingInfo : matchingInfos ) {
+      ProxyFactory<SuperWrapperReturnSubParamClass> proxyFactory = moduleMatchingInfo.getConverterCreator()
+          .createProxyFactory( SuperWrapperReturnSubParamClass.class );
+      Collection<MethodMatchingInfo> methodMatchingInfos = moduleMatchingInfo.getMethodMatchingInfos();
+
+      SuperWrapperReturnSubParamClass proxy = proxyFactory.createProxy( offeredComponent, methodMatchingInfos );
+
+      SubClass param1 = new SubClass( "A" );
+      SubClass param2 = new SubClass( "B" );
+      assertTrue( proxy.addHello( param1 ).toString().equals( "WRAPPED_SubAhello" ) );
+      assertTrue( proxy.add( param1, param2 ).toString().equals( "WRAPPED_SubASubB" ) );
+    }
+  }
+
+  @Test
+  public void convert_wrapperGenReturn_wrapperSpecParam() {
+    SubReturnSuperParamClass offeredComponent = new SubReturnSuperParamClass();
+    Collection<ModuleMatchingInfo> matchingInfos = matcher.calculateTypeMatchingInfos(
+        SuperWrapperReturnSubWrapperParamClass.class,
+        SubReturnSuperParamClass.class );
+    for ( ModuleMatchingInfo moduleMatchingInfo : matchingInfos ) {
+      ProxyFactory<SuperWrapperReturnSubWrapperParamClass> proxyFactory = moduleMatchingInfo.getConverterCreator()
+          .createProxyFactory( SuperWrapperReturnSubWrapperParamClass.class );
+      Collection<MethodMatchingInfo> methodMatchingInfos = moduleMatchingInfo.getMethodMatchingInfos();
+
+      SuperWrapperReturnSubWrapperParamClass proxy = proxyFactory.createProxy( offeredComponent, methodMatchingInfos );
+
+      SubWrapper param1 = new SubWrapper( "A" );
+      SubWrapper param2 = new SubWrapper( "B" );
+      assertTrue( proxy.addHello( param1 ).toString().equals( "WRAPPED_WRAPPED_Ahello" ) );
+      assertTrue( proxy.add( param1, param2 ).toString().equals( "WRAPPED_WRAPPED_AWRAPPED_B" ) );
+    }
+  }
+
+  @Test
+  public void convert_wrapperSpecReturn_wrapperExactParam() {
+
+    SuperReturnSubParamClass offeredComponent = new SuperReturnSubParamClass();
+    Collection<ModuleMatchingInfo> matchingInfos = matcher.calculateTypeMatchingInfos(
+        SubWrapperReturnSubParamClass.class,
+        SuperReturnSubParamClass.class );
+    for ( ModuleMatchingInfo moduleMatchingInfo : matchingInfos ) {
+      ProxyFactory<SubWrapperReturnSubParamClass> proxyFactory = moduleMatchingInfo.getConverterCreator()
+          .createProxyFactory( SubWrapperReturnSubParamClass.class );
+      Collection<MethodMatchingInfo> methodMatchingInfos = moduleMatchingInfo.getMethodMatchingInfos();
+
+      SubWrapperReturnSubParamClass proxy = proxyFactory.createProxy( offeredComponent, methodMatchingInfos );
+
+      SubClass param1 = new SubClass( "A" );
+      SubClass param2 = new SubClass( "B" );
+      assertTrue( proxy.addHello( param1 ).toString().equals( "WRAPPED_SubAhello" ) );
+      assertTrue( proxy.addHello( param1 ).toStringWithPrefix().equals( "WRAPPED_SubSubAhello" ) );
+      assertTrue( proxy.add( param1, param2 ).toString().equals( "WRAPPED_SubASubB" ) );
+      assertTrue( proxy.add( param1, param2 ).toStringWithPrefix().equals( "WRAPPED_SubSubASubB" ) );
+    }
   }
 }
 \end{lstlisting}

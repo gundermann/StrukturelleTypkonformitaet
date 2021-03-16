@@ -1,14 +1,14 @@
 \subsubsection{Notation zur Beschreibung der Matcher}
-Die Übereinstimmung bzw. das Matching zweier Typen $ A $ und $ B $ über einen Matcher $ M $ wird in dieser Arbeit mit $\matchTyp{A}{M}{B}$ notiert. Weiterhin wird die Identität zweier Typen mit $ A = B $ beschrieben. Eine Vererbungshierarchie, in der $ A $ von $ B $ erbt, wird mit $\inhTyp{A}{B}$ beschrieben. Weiterhin ist die Adressierung von Attributen innerhalb eines Typs notwendig. Für die Adressierung der Attributs $ a $ im Typ $ A $ wird $\selTyp{A}{a}$ geschrieben.\\\\
+Die Übereinstimmung bzw. das Matching zweier Typen $ A $ und $ B $ über einen Matcher $ M $ wird in dieser Arbeit mit $\matchTyp{A}{M}{B}$ notiert. Weiterhin wird die Identität zweier Typen mit $ A = B $ beschrieben. Eine Vererbungshierarchie, in der $ A $ von $ B $ erbt, wird mit $\inhTyp{A}{B}$ beschrieben. Außerdem ist die Adressierung der Typen von Attributen, die innerhalb eines Typs verwendet werden, notwendig. Für die Adressierung des Typs eines Attributs $ a $ im Typ $ A $ wird $\selTyp{A}{a}$ geschrieben. Die logische Verknüpfung der einzelnen Elemente der Sprache über die Quantoren und Junktoren der Prädikatenlogik 1. Stufe ist ebenfalls möglich.\\\\
 Die Konvertierung eines Typs $ A $ in einen Typ $ B $ wird, wie bereits erwähnt, auf technischer Ebene über Proxies umgesetzt. Von daher kann die Beschreibung des Konvertierungsverfahrens eines Matchers auf die Beschreibung der Delegation einzelner Methoden beschränkt werden. Hierfür wird folgende Notation verwendet:\\\\
-Eine Methode $m$ enthält einen Rückgabetyp $ rt $ und eine Menge von Parametertypen $ pt $. Die Menge der Parametertypen wird zur besseren Lesbarkeit auf einen Parametertyp beschränkt. Der Aufruf einer Methode $ m $ mit dem Rückgabetyp $ rt $ und dem Parametertyp $ pt $ eines Typs $ A $ wird mit $ A.m( pt ) : rt $ notiert. Sofern die Konvertierung keinen Einfluss auf den Rückgabetyp oder die Parametertypen hat, wird dies verkürzt mit $ A.m $ beschrieben.\\\\
-In der Notationen sind Typen, konkrete Objekte bestimmter Typen und Methoden syntaktisch austauschbar. Eine logische Verknüpfung der einzelnen Elemente der Sprache über die Quantoren und Junktoren der Prädikatenlogik 1. Stufe ist ebenfalls möglich.\\\\
-Die Delegation von Methodenaufrufen auf einem Objekt wird mit dem Operator $\Rightarrow$ beschrieben. Für eine Delegation des Aufrufs einer Methode $ m $ auf dem Objekt $ a $, welcher an ein Objekt $ b $ und dessen Methode $ n $ delegiert wird, schreibt man $\delegate{a.m}{b.n}$. Ferner ist hierbei zwischen einem Source- und einem Target-Objekt zu unterscheiden. Das Source-Objekt befindet sich links vom Operator ($\Rightarrow$). Auf diesem Objekt findet der Methodenaufruf statt. Das Target-Objekt befindet sich auf der rechten Seite des Operators ($\Rightarrow$). Dieses stellt das Ziel der Delegation dar. Da bei der Delegation mitunter weitere Matcher zur Anwendung kommen müssen, wird hierfür ebenfalls eine Notation benötigt. Daher soll die Konvertierung eines Objektes a über einen Matcher $ M $ wird mit $\applyMatcher{M}{a}$ beschrieben.\\\\
-Die folgenden Definitionen der Matcher bestehen jeweils aus zwei Teilen. Der erste Teil (Übereinstimmung) definiert, unter welchen Bedingungen über den entsprechenden Matcher zwei Typen als übereinstimmend gelten. Der zweite Teil (Konvertierung) beschreibt, wie die Methoden-Aufrufe auf einem Objekt eines der beiden übereinstimmenden Typen an das Objekt des anderen Typen delegiert werden.\\\\
-Jeder Matcher wird zusätzlich im Vorfeld durch ein Szenario motiviert, in dem der jeweilige Matcher zur Anwendung kommen kann. In den dazugehörigen Diagrammen ist das Sourc-Objekt jeweils mit \emph{source} und das Target-Objekt jeweils mit \emph{target} bezeichnet. Um die Verwendung der Implementierungen der einzelnen Matcher in Verbindung mit diesem Szenario nachvollziehen zu können, wird jeweils auf einen Abschnitt aus Anhang \ref{matcherExamples} verweisen. Dort sind Code-Beispiele für die Verwendung der Matcher in Bezug auf das jeweilige Szenario mit entsprechenden Nachbedingungen hinterlegt.
+Eine Methode $m$ enthält einen Rückgabetyp $ RT $ und eine Menge von Parametertypen $ PT $. Die Menge der Parametertypen wird zur besseren Lesbarkeit auf einen Parametertyp beschränkt. Der Aufruf einer Methode $ m $ eines Typs $ A $ mit dem Rückgabetyp $ RT $ und dem Parametertyp $ PT $ wird mit $ A.m( PT ) : RT $ notiert. Sofern die Konvertierung keinen Einfluss auf den Rückgabetyp oder die Parametertypen hat, wird dies verkürzt mit $ A.m $ beschrieben.\\\\
+Die Delegation von Methodenaufrufen eines Typs wird mit dem Operator $\Rightarrow$ beschrieben. Für eine Delegation des Aufrufs einer Methode $ m $ des Typs $ A $, welcher an einen Typ $ B $ und dessen Methode $ n $ delegiert wird, schreibt man $\delegate{A.m}{B.n}$. Ferner ist hierbei zwischen einem Source- und einem Target-Typ zu unterscheiden. Der Source-Typ befindet sich links vom Operator ($\Rightarrow$). Auf diesem Typ findet der Methodenaufruf statt. Der Target-Typ befindet sich auf der rechten Seite des Operators ($\Rightarrow$). Dieser stellt das Ziel der Delegation dar. Da bei der Delegation mitunter weitere (interne) Matcher zur Anwendung kommen müssen, wird hierfür ebenfalls eine Notation benötigt. Daher soll die Konvertierung eines Typs $ A $ in einen Typ $B$ wird mit $\applyMatcher{B}{A}$ beschrieben. Als Voraussetzung für diese Konvertierung muss $\matchTyp{A}{M}{B}$ gelten.\\\\
+Die folgenden Matcher werden jeweils durch ein Szenario motiviert. In den dazugehörigen Diagrammen ist das Object des Source-Typs (Source-Objekt) jeweils mit \emph{source} und das Objekt des Target-Typs (Target-Objekt) jeweils mit \emph{target} bezeichnet. Um die Verwendung der Implementierungen der einzelnen Matcher in Verbindung mit diesem Szenario nachvollziehen zu können, wird jeweils auf einen Abschnitt aus Anhang \ref{matcherExamples} verweisen. Dort sind Code-Beispiele für die Verwendung der Matcher in Bezug auf das jeweilige Szenario mit entsprechenden Nachbedingungen hinterlegt.\\\\
+Die Definitionen der Matcher bestehen jeweils aus zwei Teilen. Der erste Teil (Übereinstimmung) definiert, unter welchen Bedingungen über den entsprechenden Matcher zwei Typen als übereinstimmend gelten. Der zweite Teil (Konvertierung) beschreibt, wie die Delegation der Aufrufe von Methoden, die vom Source-Typ spezifiziert werden, an die Methoden, die vom Target-Typ spezifiziert werden.
+
 \subsubsection{ExactTypeMatcher}\label{exactTypeMatcher}
 \myparagraph{Szenario}
-Dieser Matcher stellt das Matching zweier identischer Typen fest. In dem Szenario wird von zwei Objekten vom Typ SuperClass ausgegangen. Die Klasse SuperClass ist in \abbref{cd_superclass} dargestellt. Der Aufruf einer Methode auf dem Source-Objekt führt zu einer Delgation der Methode an das Target-Objekt (siehe \abbref{sd_exact_super}.
+Dieser Matcher stellt das Matching zweier identischer Typen fest. In dem Szenario wird von zwei Objekten vom Typ SuperClass ausgegangen. Die Klasse SuperClass ist in \abbref{cd_superclass} dargestellt. Der Aufruf einer Methode auf dem Source-Objekt führt zu einer Delgation der Methode an das Target-Objekt (siehe \abbref{sd_exact_super}).
 \begin{figure}[H]
 \begin{minipage}[b]{.33\linewidth}
   \centering
@@ -131,65 +131,29 @@ Ein Beispiel für die Verwendung des Matchers in Bezug auf das o.g. Szenario ist 
 
 \subsubsection{WrapperTypeMatcher}\label{wrapperTypeMatcher}
 \myparagraph{Szenario}
-Die bisherigen Type-Matcher sind in der Lage das Matching für zwei Typen festzustellen, ohne dafür Rücksicht auf deren innere Struktur nehmen zu müssen. Dies ist für identische oder hierarchisch organisierte Typen auch nicht notwendig. Es ist jedoch auch denkbar, dass sich beiden Typen auf anderem Wegen assoziieren lassen. Ein Beispiel dafür wäre Boxed- bzw. - noch allgemeiner gefasst - Wrapper-Typen. \abbref{wrapper} zwei Klassen dar, die in einer solchen Beziehnung zueinander stehen. Bezüglich des Matchings sind auch hier wieder zwei Fälle zu unterscheiden. Der erste Fall, in dem der Source-Typ ...., ist in \abbref{} dargestellt. Der WrappedTypeMatcher stellt das Matching für ein solches Szenario fest.
-\begin{figure}[H]
-\begin{minipage}[b]{.33\linewidth}
-  \centering
-  \includegraphics[width=\linewidth]{cd_subclass_extends_superclass}
-  \caption{Beziehung zwischen SuperClass und SubClass}
-  \label{abb:cd_subclass_extends_superclass}
-
-\end{minipage}%
-\hspace{.04\linewidth}% Abstand zwischen Bilder
-\begin{minipage}[b]{.63\linewidth}
-
-
-  \centering
-  \includegraphics[width=\linewidth]{sd_gen_super2sub}
-  \caption{Szenario GenTypeMatcher}
-  \label{abb:sd_gen_super2sub}
-
-\end{minipage}
-\end{figure}
-
-\begin{figure}[H]
-\begin{minipage}[b]{.25\linewidth}
-  \centering
-  \includegraphics[width=\linewidth]{wrapper}
-  \caption{Beispiel Wrapper-Typ allgemein}
-  \label{abb:wrapper}
-
-\end{minipage}%
-\hspace{.04\linewidth}% Abstand zwischen Bilder
-\begin{minipage}[b]{.71\linewidth}
-
-
-  \centering
-  \includegraphics[width=\linewidth]{adressbook}
-  \caption{Beispiel Wrapper-Typ AdressBook}
-  \label{abb:adressbook}
-
-\end{minipage}
-\end{figure}
+Dieser Matcher stellt das Pendant zum WrappedTypeMatcher dar. Der Unterschied bzgl. des Szenarios besteht darin, dass nun der Source-Typ derjenige ist, der ein Attribut enthält, für dessen Typ ein Matching zum Target-Typen über den ExactTypeMatcher, den GenTypeMatcher oder den SpecTypeMatcher festgestellt werden kann. Für das Szenario ist wiederum von den Typen aus \abbref{cd_subclass_subwrapper} auszugehen. Die Delegation der möglichen Methodenaufrufe am Source-Typen, sind in \abbref{sd_wrapper_subwrapped2sub} abgebildet. Hierbei ist hervorzuheben, dass zur Laufzeit das Objekt vom Target-Typen in das Attribut des Objektes vom Source-Typen injiziert wird. Dies soll in \abbref{sd_wrapper_subwrapped2sub} durch die Bezeichnung des Targets mit wrapped (dem Namen des Attributs) und target dargestellt werden. Eine Methoden-Delegation findet nur dann statt, wenn sie auch im Wrapper-Typen (Source-Typen) implementiert wurde\footnote{Implementierung von SubWrapper: siehe \appref{matcherExamples} \lstref{LST_subwrapper_impl}}.
+\myScalableFigure[0.8\linewidth]{sd_wrapper_subwrapped2sub}{Szenario WrapperTypeMatcher}{sd_wrapper_subwrapped2sub}
 \myparagraph{Definition}
-\begin{matcherEquivDef}{WrappedTypeMatcher}
-\matchTyp{A}{wrapped}{B} \text{ wenn } \exists\selTyp{A}{attr} : \matchTyp{attr}{M}{B} \vee \exists \selTyp{B}{attr} : \matchTyp{attr}{M}{A}
+\begin{matcherEquivDef}{WrapperTypeMatcher}
+\matchTyp{A}{wrapper}{B} \text{ wenn } \exists\selTyp{A}{attr} : \matchTyp{attr}{M}{B} 
 \end{matcherEquivDef}
 \noindent
-Wie an dieser Beschreibung zu erkennen ist, wird im WrappedTypeMatcher wiederum die Übereinstimmung von Typen gefordert.
+Wie an dieser Beschreibung zu erkennen ist, werden auch hier wieder ein interner Matcher $M$ verwendet. Analog zum WrappedTypeMatcher kommen auch hier der ExactTypeMatcher, der GenTypeMatcher und der SpecTypeMatcher in Frage.
 \begin{matcherConvDef}{WrappedTypeMatcher}{
-Sei $m$ eine Methode des Typs $A$ und $a$ ein Objekt vom Typ $A$.\\
-Weiterhin sei $n$ eine Methode des Typs $B$ und $b$ ein Objekt vom Typ $B$.
+Sei $m$ eine Methode des Typs $A$.
 }
-&\text{Wenn }\exists \selTyp{B}{attr} : \matchTyp{attr}{M}{A}\text{ dann }\delegate{a.m}{\applyMatcher{M}{\selTyp{B}{attr}} .m}\\
-&\text{Wenn }\exists \selTyp{A}{attr} : \matchTyp{attr}{M}{B}\text{ dann }\delegate{a.m}{a.m}
+\delegate{A.m}{A.m}
 \end{matcherConvDef}
-\noindent
-Hervorzuheben ist, dass bei einem Methodenaufruf auf dem Wrapper-Typ, keine Delegation vorgenommen wird.
+Ein Beispiel für die Verwendung des Matchers in Bezug auf das o.g. Szenario ist in \appref{wrapperMatcherExample} zu finden. Außerdem sind dort auch weitere Szenarien aufgefüht, in denen der GenTypeMatcher oder der SpecTypeMatcher als interner Matcher zur Anwendung kommen.
 
 \subsubsection{StructuralTypeMatcher}
-Die bisher beschriebenen Type-Matcher ermöglichen, lediglich eine 1:1-Beziehung zwischen erwartetem und angebotenem Interface. Bei der Suche nach einer passenden Komponente muss jedoch in Betracht gezogen werden, dass diese aus einer Menge von angebotenen Komponenten besteht. \abbref{combinated_components} verdeutlicht dieses Szenario wobei bei der Ausführung der Methode A die Methode der angebotenen Komponente AngA und bei der Ausführung der Methode B die Methode der angebotenen Komponente AngB ausgeführt werden müsste.\\\\
-Die Möglichkeit eines solchen Szenarios bedingt, dass die erwarteten und angebotenen Interfaces je Methode bzgl. der strukturellen Übereinstimmung untersucht werden. Das erfordert einen weiteren Matcher, der die o.g. Matcher je erwartete Methode - sprich je Methode des erwarteten Interfaces - und angebotenen Methode - sprich je Methode der angebotenen Interfaces - untersucht. Zu diesem Zweck wird der StructuralTypeMatcher ergänzt.
+Die bisher beschriebene Type-Matcher erlauben lediglich ein Matching zwischen Typen, die syntaktisch miteinander in einer direkten Beziehung stehen. Ein Ziel dieser Arbeit ist es jedoch Typen, die voneinander syntaktisch unabhängig sind, miteinander zu matchen, um darauf aufbauend, deren Semantik zu überprüfen. Hierfür soll wie auch in \cite{hummel08} auf die strukturelle Übereinstimmung der beiden Typen ermittelt und verwendet werden. Diesem Zweck dient der StructuralTypeMatcher.
+\myparagraph{Szenario}
+Um die grundlegenden Eigenschaften des StructuralTypeMatchers darzustellen, wird von einem Szenario ausgegangen, in dem der Target-Typ (angebotene Komponente) zu jeder Methode des Sources-Typs (nachfragende Komponente) eine passende Methode anbietet. Eine Kombination von angebotenen Komponenten ist somit nicht notwendig.\\\\
+\abbref{cd_superrsubp_subrsuperp} zeigt die Typen, von denen in dem folgenden Szenario ausgegangen wird. Hierbei sind zwei Klassen aufgeführt, die jeweils zwei Methoden anbieten. Die Parameter- und Rückgabetypen der Methoden sind aus den Szenarien zu den anderen Matchern bekannt. Die Klasse SuperReturnSubParamClass wird in dem folgenden Szenario als Source-Typ und die Klasse SubReturnSuperWrapperParamClass wird als Target-Typ verwendet. Um die strukturelle Übereinstimmung der beiden Typen festzustellen, muss der StructuralTypeMatcher ein Matching zwischen den Parameter- und Rückgabetypen der einzelnen Methoden herstellen. Dies erfolgt wiederum über interne Type-Matcher. An dieser Stelle können alle zuvor genannten Type-Matcher als interner Type-Matcher verwendet werden. Die Delegation der Methode-Aufrufe erfolgt dann an die Methode des Target-Objekts, die als übereinstimmende bzw. passende Methode ermittelt wurde (siehe \abbref{sd_struct}). Da beide Methoden eine unterschiedliche Anzahl von Parametern haben, ist in diesem Beispiel leicht nachzuvollziehen, welche Methoden zusammenpassen. Als interner Type-Matcher wurde in diesem Szenario der GenTypeMatcher verwendet. 
+\myBigFigure{cd_superrsubp_subrsuperp}{SuperReturnSubParamClass und SubReturnSuperParamClass}{cd_superrsubp_subrsuperp}
+\myBigFigure{sd_struct}{Szenario StructTypeMatcher}{sd_struct}
+\myparagraph{Definition}
 \begin{matcherEquivDef}{StructuralTypeMatcher}
 &\matchTyp{A}{struct}{B} \text{ wenn}\\
 &\exists(A.m(MP) : MR) : \exists (B.n(NP):NR):\matchTyp{MP}{P}{NP} \wedge \matchTyp{NR}{R}{MR}
@@ -198,12 +162,11 @@ Die Möglichkeit eines solchen Szenarios bedingt, dass die erwarteten und angebot
 \noindent
 Da die Notation es nicht hergibt, ist zusätzlich zu erwähnen, dass die Reihenfolge der Parameter in $m$ und $n$ irrelevant ist.
 \begin{matcherConvDef}{StructuralTypeMatcher}{
-Sei $m$ eine Methode des Typs $A$ und $a$ ein Objekt vom Typ $A$.\\
-Der Rückgabetyp von $m$ sei $MR$ und $mr$ ein Objekt dessen.\\
-Zudem sei $MP$ der Parametertyp von $m$ und $mp$ ein Objekt von $MP$.\\
-Weiterhin sei $n$ eine Methode des Typs $B$ und $b$ ein Objekt vom Typ $B$.\\
-Der Rückgabetyp von $n$ sei $NR$ und $nr$ ein Objekt dessen.\\
-Zudem sei $NP$ der Parametertyp von $n$ und $np$ ein Objekt von $NP$.
+Sei $m$ eine Methode des Typs $A$.\\
+Der Rückgabetyp von $m$ sei $MR$ und $MP$ der Parametertyp von $m$.\\
+Weiterhin sei $n$ eine Methode des Typs $B$.\\
+Der Rückgabetyp von $n$ sei $NR$ und $NP$ der Parametertyp von $n$.
 }
-\delegate{a.m(mp):mr}{b.n(\applyMatcher{P}{np}) : \applyMatcher{R}{nr}}
+\delegate{A.m(MP):MR}{B.n(\applyMatcher{NP}{MP}) : \applyMatcher{MR}{NR}}
 \end{matcherConvDef}
+Ein Beispiel für die Verwendung des Matchers in Bezug auf das o.g. Szenario ist in \appref{structMatcherExample} zu finden. Außerdem sind dort auch weitere Szenarien aufgefüht, in denen andere Matcher als interner Matcher zur Anwendung kommen.
