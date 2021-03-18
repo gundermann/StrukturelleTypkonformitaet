@@ -36,11 +36,11 @@ Dieser Matcher stellt das Matching zweier identischer Typen fest. In dem Szenari
 \begin{matcherConvDef}{ExactTypeMatcher}{
 Sei $ m $ eine Methode des Typen $ A $ und $ B $.}
 \delegate{A.m}{B.m}
-\end{matcherConvDef}
+\end{matcherConvDef}\\
 Ein Beispiel für die Verwendung des Matchers ist in \appref{exactMatcherExample} zu finden.
 \subsubsection{GenTypeMatcher}\label{genTypeMatcher}
 \myparagraph{Szenario}
-Dieser Matcher stellt das Matching zwischen zwei Typen her, die in einer Vererbungsbeziehung stehen. Speziell erlaubt dieser Matcher das Matching eines Supertyps als Source-Typen mit einem Subtypen als Target-Typen. In dem Szenario wird neben dem Typ SuperClass aus \abbref{cd_superclass} von einem weiteren Typen SubClass ausgegangen. Dabei stehen diese beiden Typen in einer Vererbungsbeziehnung, die in \abbref{cd_subclass_extends_superclass} dargestellt wird. Der Aufruf einer Methode auf dem Source-Objekt führt zu einer Delgation der Methode an das Target-Objekt (siehe \abbref{sd_gen_super2sub}.
+Dieser Matcher stellt das Matching zwischen zwei Typen her, die in einer Vererbungsbeziehung stehen. Speziell erlaubt dieser Matcher das Matching eines Supertyps als Source-Typen mit einem Subtypen als Target-Typen. In dem Szenario wird neben dem Typ SuperClass aus \abbref{cd_superclass} von einem weiteren Typen SubClass ausgegangen. Dabei stehen diese beiden Typen in einer Vererbungsbeziehnung, die in \abbref{cd_subclass_extends_superclass} dargestellt wird. Der Aufruf einer Methode auf dem Source-Objekt führt zu einer Delgation der Methode an das Target-Objekt (siehe \abbref{sd_gen_super2sub}).
 \begin{figure}[H]
 \begin{minipage}[b]{.33\linewidth}
   \centering
@@ -71,15 +71,15 @@ Dieser Matcher stellt das Matching zwischen zwei Typen her, die in einer Vererbu
 \begin{matcherConvDef}{GenTypeMatcher}{
 Sei $ m $ eine Methode des Typs $ A $, die aufgrund der Vererbung auch von Typ $ B $ bereitgestellt wird.}
 \delegate{A.m}{B.m}
-\end{matcherConvDef}
+\end{matcherConvDef}\\
 Ein Beispiel für die Verwendung des Matchers ist in \appref{genMatcherExample} zu finden.
 
 \subsubsection{SpecTypeMatcher}\label{specTypeMatcher}
 \myparagraph{Szenario}
-Analog zum GenTypeMatcher stellt der SpecTypeMatcher ebenfalls das Matching zwischen Typen fest, die in einer Vererbungsbeziehung stehen. Allerdings ist der Source-Typ in diesem Matcher der Subtyp und der Target-Type der Supertyp. In dem Szenario wieder wiederum von den Klassen SuperClass und SubClass aus \abbref{cd_subclass_extends_superclass} ausgegangen. Der Methodenaufruf erfolgt hier aber auf dem Subtypen und wird an den Supertypen delegiert (siehe \abbref{sd_spec_sub2super}).
+Analog zum GenTypeMatcher stellt der SpecTypeMatcher ebenfalls das Matching zwischen Typen fest, die in einer Vererbungsbeziehung stehen. Allerdings ist der Source-Typ in diesem Matcher der Subtyp und der Target-Typ der Supertyp. In dem Szenario wird wiederum von den Klassen SuperClass und SubClass aus \abbref{cd_subclass_extends_superclass} ausgegangen. Der Methodenaufruf erfolgt hier aber auf dem Subtypen und wird an den Supertypen delegiert (siehe \abbref{sd_spec_sub2super}).
 \myScalableFigure[0.7\linewidth]{sd_spec_sub2super}{Szenario SpecTypeMatcher}{sd_spec_sub2super}
 \noindent
-Dabei sind zwei Methodenaufrufe auf dem Subtyp beschrieben. Während der Aufruf der Methode getString erfolgreich delegiert werden kann, führt der Aufruf der Methode getStringWithoutPrefix zu einem Laufzeitfehler, da der Matcher keine passende Methode in dem Target-Typ ermitteln kann. Dieses Problem tritt bei allen Methoden auf, die nicht vom Supertyp an den Subtyp vererbt oder mitunter dort überschrieben wurden.\footnote{Anders gesagt, ermöglicht dieser Match einen Downcast, bei dem ein Objekt eines allgemeinen Typen auf einen spezielleren Typen gecastet wird. Das Problem bzgl. des fehlschlagenden Methodenaufrufs in der beschriebene Form ist bei einem Downcast allgegenwärtig.} Aus diesem Grund muss diese Bedingung in der Definition der Konvertierung dieses Matchers mit aufgenommen werden.
+Dabei sind zwei Methodenaufrufe auf dem Subtyp beschrieben. Während der Aufruf der Methode getString erfolgreich delegiert werden kann, führt der Aufruf der Methode getStringWithoutPrefix zu einem Laufzeitfehler, da der Matcher keine passende Methode in dem Target-Typ ermitteln kann. Dieses Problem tritt bei allen Methoden auf, die nicht vom Supertyp an den Subtyp vererbt oder überschrieben wurden.\footnote{Anders gesagt, ermöglicht dieser Matcher einen Downcast, bei dem ein Objekt eines allgemeinen Typen auf einen spezielleren Typen gecastet wird. Das Problem bzgl. des fehlschlagenden Methodenaufrufs in der beschriebene Form ist bei einem Downcast allgegenwärtig.} Aus diesem Grund muss diese Bedingung in der Definition der Konvertierung dieses Matchers mit aufgenommen werden.
 \myparagraph{Definition}
 \begin{matcherEquivDef}{SpecTypeMatcher}
 \matchTyp{A}{genspec}{B} \text{ wenn } \inhTyp{A}{B}
@@ -87,12 +87,11 @@ Dabei sind zwei Methodenaufrufe auf dem Subtyp beschrieben. Während der Aufruf d
 \begin{matcherConvDef}{SpecTypeMatcher}{
 Sei $ m $ eine Methode des Typs $ A $, die von $ B $ an $ A $ vererbt wurde.}
 \delegate{A.m}{B.m}
-\end{matcherConvDef}
-\noindent
+\end{matcherConvDef}\\
 Ein Beispiel für die Verwendung des Matchers ist in \appref{specMatcherExample} zu finden.
 \subsubsection{WrappedTypeMatcher}\label{wrappedTypeMatcher}
 \myparagraph{Szenario}
-Die bisherigen Type-Matcher sind in der Lage das Matching für zwei Typen festzustellen, ohne dafür Rücksicht auf deren innere Struktur nehmen zu müssen. Dies ist für identische oder hierarchisch organisierte Typen auch nicht notwendig. Es ist jedoch auch denkbar, dass sich beiden Typen auf anderem Wegen assoziieren lassen. Ein Beispiel dafür wäre Boxed- bzw. - noch allgemeiner gefasst - Wrapper-Typen. \abbref{cd_subclass_subwrapper} zwei Klassen dar, die in einer solchen Beziehung zueinander stehen. Bezüglich des Matchings sind auch hier wiederum zwei Fälle zu unterscheiden. Der erste Fall, in demdas Matching des Source-Typen SubClass mit dem Typen eines Attributs wrapped des Traget-Typen SubWrapper festgestellt werden kann, ist in \abbref{sd_wrapped_sub2subwrapped} dargestellt.
+Die bisherigen Type-Matcher sind in der Lage das Matching für zwei Typen festzustellen, ohne dafür Rücksicht auf deren innere Struktur nehmen zu müssen. Dies ist für identische oder hierarchisch organisierte Typen auch nicht notwendig. Es ist jedoch auch denkbar, dass sich beiden Typen auf anderem Wegen assoziieren lassen. Ein Beispiel dafür wäre Boxed- bzw. - noch allgemeiner gefasst - Wrapper-Typen. In \abbref{cd_subclass_subwrapper} sind zwei Klassen dargestellt, die in einer solchen Beziehung zueinander stehen. Bezüglich des Matchings sind auch hier wiederum zwei Fälle zu unterscheiden. Der erste Fall, in dem das Matching des Source-Typen SubClass mit dem Typen eines Attributs wrapped des Traget-Typen SubWrapper festgestellt werden kann, ist in \abbref{sd_wrapped_sub2subwrapped} dargestellt.
 \begin{figure}[H]
 \begin{minipage}[b]{.33\linewidth}
   \centering
@@ -117,15 +116,13 @@ Der WrappedTypeMatcher stellt das Matching für ein solches Szenario fest. Das Ma
 \myparagraph{Definition}
 \begin{matcherEquivDef}{WrappedTypeMatcher}
 \matchTyp{A}{wrapped}{B} \text{ wenn } \exists \selTyp{B}{attr} : \matchTyp{A}{M}{attr}
-\end{matcherEquivDef}
-\noindent
-Der zuvor genannte interne Matcher wird in der Definition mit $M$ beschrieben, was stellvertretend für eine Menge von Matchern steht. Als interne Matcher kommen hierbei der ExactTypeMatcher, der GenTypeMatcher und der SpecTypeMatcher in Frage.
+\end{matcherEquivDef}\\
+Der zuvor genannte interne Matcher wird in der Definition mit $M$ beschrieben, was stellvertretend für eine Menge von Matchern steht. Als interne Matcher kommen hierbei der ExactTypeMatcher, der GenTypeMatcher und der SpecTypeMatcher in Frage.\\
 \begin{matcherConvDef}{WrappedTypeMatcher}{
 Sei $m$ eine Methode des Typs $A$. Sei weiterhin $B$ ein Typ, der ein Attribut vom Typ $attr$ enthält, für den gilt $\matchTyp{A}{M}{attr}$.
 }
-\delegate{A.m}{\applyMatcher{M}{attr}.m}
-\end{matcherConvDef}
-\noindent
+\delegate{A.m}{(\applyMatcher{A}{attr}).m}
+\end{matcherConvDef}\\
 Ein Beispiel für die Verwendung des Matchers in Bezug auf das o.g. Szenario ist in \appref{wrappedMatcherExample} zu finden. Außerdem sind dort auch weitere Szenarien aufgefüht, in denen der GenTypeMatcher oder der SpecTypeMatcher als interner Matcher zur Anwendung kommen.
 
 
@@ -135,21 +132,20 @@ Dieser Matcher stellt das Pendant zum WrappedTypeMatcher dar. Der Unterschied bz
 \myScalableFigure[0.8\linewidth]{sd_wrapper_subwrapped2sub}{Szenario WrapperTypeMatcher}{sd_wrapper_subwrapped2sub}
 \myparagraph{Definition}
 \begin{matcherEquivDef}{WrapperTypeMatcher}
-\matchTyp{A}{wrapper}{B} \text{ wenn } \exists\selTyp{A}{attr} : \matchTyp{attr}{M}{B} 
-\end{matcherEquivDef}
-\noindent
-Wie an dieser Beschreibung zu erkennen ist, werden auch hier wieder ein interner Matcher $M$ verwendet. Analog zum WrappedTypeMatcher kommen auch hier der ExactTypeMatcher, der GenTypeMatcher und der SpecTypeMatcher in Frage.
+\matchTyp{A}{wrapper}{B} \text{ wenn } \exists\selTyp{A}{attr} : \matchTyp{B}{M}{attr} 
+\end{matcherEquivDef}\\
+Wie an dieser Beschreibung zu erkennen ist, werden auch hier wieder ein interner Matcher $M$ verwendet. Analog zum WrappedTypeMatcher kommen auch hier der ExactTypeMatcher, der GenTypeMatcher und der SpecTypeMatcher in Frage.\\
 \begin{matcherConvDef}{WrappedTypeMatcher}{
 Sei $m$ eine Methode des Typs $A$.
 }
 \delegate{A.m}{A.m}
-\end{matcherConvDef}
+\end{matcherConvDef}\\
 Ein Beispiel für die Verwendung des Matchers in Bezug auf das o.g. Szenario ist in \appref{wrapperMatcherExample} zu finden. Außerdem sind dort auch weitere Szenarien aufgefüht, in denen der GenTypeMatcher oder der SpecTypeMatcher als interner Matcher zur Anwendung kommen.
 
-\subsubsection{StructuralTypeMatcher}
-Die bisher beschriebene Type-Matcher erlauben lediglich ein Matching zwischen Typen, die syntaktisch miteinander in einer direkten Beziehung stehen. Ein Ziel dieser Arbeit ist es jedoch Typen, die voneinander syntaktisch unabhängig sind, miteinander zu matchen, um darauf aufbauend, deren Semantik zu überprüfen. Hierfür soll wie auch in \cite{hummel08} auf die strukturelle Übereinstimmung der beiden Typen ermittelt und verwendet werden. Diesem Zweck dient der StructuralTypeMatcher.
+\subsubsection{StructuralTypeMatcher}\label{structTypeMatcher}
+Die bisher beschriebene Type-Matcher erlauben lediglich ein Matching zwischen Typen, die syntaktisch miteinander in einer direkten Beziehung stehen. Ein Ziel dieser Arbeit ist es jedoch Typen, die voneinander syntaktisch unabhängig sind, miteinander zu matchen, um darauf aufbauend, deren Semantik zu überprüfen. Hierfür soll wie auch in \cite{hummel08} die strukturelle Übereinstimmung der beiden Typen ermittelt und verwendet werden. Diesem Zweck dient der StructuralTypeMatcher.
 \myparagraph{Szenario}
-Um die grundlegenden Eigenschaften des StructuralTypeMatchers darzustellen, wird von einem Szenario ausgegangen, in dem der Target-Typ (angebotene Komponente) zu jeder Methode des Sources-Typs (nachfragende Komponente) eine passende Methode anbietet. Eine Kombination von angebotenen Komponenten ist somit nicht notwendig.\\\\
+Um die grundlegenden Eigenschaften des StructuralTypeMatchers darzustellen, wird von einem Szenario ausgegangen, in dem der Target-Typ (angebotenes Interface) zu jeder Methode des Sources-Typs (benötigtes Interface) eine passende Methode anbietet. Eine Kombination von angebotenen Interfaces ist somit in diesem Szenario nicht notwendig.\\\\
 \abbref{cd_superrsubp_subrsuperp} zeigt die Typen, von denen in dem folgenden Szenario ausgegangen wird. Hierbei sind zwei Klassen aufgeführt, die jeweils zwei Methoden anbieten. Die Parameter- und Rückgabetypen der Methoden sind aus den Szenarien zu den anderen Matchern bekannt. Die Klasse SuperReturnSubParamClass wird in dem folgenden Szenario als Source-Typ und die Klasse SubReturnSuperWrapperParamClass wird als Target-Typ verwendet. Um die strukturelle Übereinstimmung der beiden Typen festzustellen, muss der StructuralTypeMatcher ein Matching zwischen den Parameter- und Rückgabetypen der einzelnen Methoden herstellen. Dies erfolgt wiederum über interne Type-Matcher. An dieser Stelle können alle zuvor genannten Type-Matcher als interner Type-Matcher verwendet werden. Die Delegation der Methode-Aufrufe erfolgt dann an die Methode des Target-Objekts, die als übereinstimmende bzw. passende Methode ermittelt wurde (siehe \abbref{sd_struct}). Da beide Methoden eine unterschiedliche Anzahl von Parametern haben, ist in diesem Beispiel leicht nachzuvollziehen, welche Methoden zusammenpassen. Als interner Type-Matcher wurde in diesem Szenario der GenTypeMatcher verwendet. 
 \myBigFigure{cd_superrsubp_subrsuperp}{SuperReturnSubParamClass und SubReturnSuperParamClass}{cd_superrsubp_subrsuperp}
 \myBigFigure{sd_struct}{Szenario StructTypeMatcher}{sd_struct}
@@ -157,10 +153,10 @@ Um die grundlegenden Eigenschaften des StructuralTypeMatchers darzustellen, wird
 \begin{matcherEquivDef}{StructuralTypeMatcher}
 &\matchTyp{A}{struct}{B} \text{ wenn}\\
 &\exists(A.m(MP) : MR) : \exists (B.n(NP):NR):\matchTyp{MP}{P}{NP} \wedge \matchTyp{NR}{R}{MR}
-\end{matcherEquivDef}
-
-\noindent
-Da die Notation es nicht hergibt, ist zusätzlich zu erwähnen, dass die Reihenfolge der Parameter in $m$ und $n$ irrelevant ist.
+\end{matcherEquivDef}\\
+Da die Notation es nicht hergibt, ist zusätzlich zu erwähnen, dass die Reihenfolge der Parameter in $m$ und $n$ irrelevant ist.\\
+%fuer Formatierung
+\\
 \begin{matcherConvDef}{StructuralTypeMatcher}{
 Sei $m$ eine Methode des Typs $A$.\\
 Der Rückgabetyp von $m$ sei $MR$ und $MP$ der Parametertyp von $m$.\\
@@ -168,5 +164,5 @@ Weiterhin sei $n$ eine Methode des Typs $B$.\\
 Der Rückgabetyp von $n$ sei $NR$ und $NP$ der Parametertyp von $n$.
 }
 \delegate{A.m(MP):MR}{B.n(\applyMatcher{NP}{MP}) : \applyMatcher{MR}{NR}}
-\end{matcherConvDef}
+\end{matcherConvDef}\\
 Ein Beispiel für die Verwendung des Matchers in Bezug auf das o.g. Szenario ist in \appref{structMatcherExample} zu finden. Außerdem sind dort auch weitere Szenarien aufgefüht, in denen andere Matcher als interner Matcher zur Anwendung kommen.

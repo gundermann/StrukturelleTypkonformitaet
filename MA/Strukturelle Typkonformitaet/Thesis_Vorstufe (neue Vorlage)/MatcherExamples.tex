@@ -1,7 +1,8 @@
-\section{Beispiel-Implementierungen für die Matcher}\label{matcherExamples}
+\section{Beispiel-Implementierungen für die Type-Matcher}\label{matcherExamples}
+\subsection{Implementierungen der verwendeten Source- und Target-Typen}
 Um die Beispiel-Implementierungen der Matcher nachvollziehen zu können, ist es notwendig die Implementierung der darin verwendeten Klassen aufzuzeigen. Daher sind diese in \lstsrefs{LST_superclass_impl}{LST_SuperWrapperReturnSubWrapperParamClass_impl} aufgeführt. Dabei handelt es sich zum einen um die Implementierungen der Klassen, die in den Szenarien der Abschnitte \ref{exactTypeMatcher} - \ref{structTypeMatcher} beschrieben wurden. Zum anderen handelt es sich um Implementierung weiterer Klassen, die in Szenarien verwendet werden, welche in den folgenden Abschnitten aufgeführt werden. Um einen Überblick zu gewährleisten, zeigt \abbref{cd_alltypes} alle Typen auf, die in den Szenarien verwendet werden.
 
-\myBigFigure{cd_alltypes}{Alle Typen/Klassen, die in Matcher-Szenarien verwendet werden}{cd_alltypes}
+\myScalableFigure[0.9\linewidth]{cd_alltypes}{Alle Typen/Klassen, die in Matcher-Szenarien verwendet werden}{cd_alltypes}
 
 \begin{lstlisting}[{caption = Implemetierung: SuperClass
 },{label = LST_superclass_impl}]
@@ -75,6 +76,15 @@ public class SuperWrapperReturnSubWrapperParamClass {
   }
 }
 \end{lstlisting}
+\subsection{Deklaration des Interfaces für die Type-Matcher}
+Die verwendeten Matcher implementieren alle dasselbe Interface, welches in \abbref{cd_typeMatcher} dargestellt ist. Dieses Interface enthält drei Methoden. Alle Methoden erwarten sowohl den Source-Typen als auch den Target-Typen als Parameter.
+\myBigFigure{cd_typeMatcher}{Interface TypeMatcher}{cd_typeMatcher}
+\noindent
+Die Methoden matchesType und matchesWithRating setzen die Definition bzgl. der Übereinstimmung des jeweiligen Matchers um. Dabei ist zu erwähnen, dass über den Rückgabewert der Methode matchesType lediglich geschlussfolgert werden kann, ob die Übereinstimmung der beiden Typen festgestellt werden konnte\footnote{Die Rückgabe von true bedeutet, dass die Typen hinsichtlich des Type-Matchers übereinstimmen.}. Der Rückgabewert der Methode matchesWithRating liefert darüber hinaus auch weitere Informationen über das qualitative Type-Matcher Rating (siehe Abschnitt \ref{tmr_heuristics}). Da dieses in den folgenden Beispielen irrelevant ist, wird diese Methode auch nicht verwendet.\\\\
+Die dritte Methode calculateTypeMatchingInfos liefert eine Collection von so genannten ModuleMatchingInfos. Diese ModuleMatchingInfos enthalten die Informationen, die für die Konvertierung bzw. Methodendelegation notwendig sind. In Bezug auf Abschnitt \ref{type_meth_conv} handelt es sich bei diesen Objekten um die Typ-Konvertierungsvarianten.
+
+
+%Der StructuralTypeMatcher bildet bzgl. der Implementierung insofern eine Ausnahme, dass er ein weiteres Interface implementiert. Dieses ist \abbref{cd_partlyTypeMatcher} zu entnehmen. Die Methoden des Interfaces PartlyTypeMatcher stellen den Einstiegspunkt für die Exploration einer passenden Komponente dar.
 
 \subsection{Beispiel für den ExactTypeMatcher}\label{exactMatcherExample}
 In \lstref{LST_exactTypeMatcher_matching} ist die Implementierung eines JUnit-Tests aufgeführt, in dem das Matching über den ExactTypeMatcher für unterschiedliche Source- und Target-Typen nachgewiesen werden soll. Die Test-Methode match enthält dabei die Aufrufe, bei denen das Matching festgestellt werden kann. Dementsprechend enthält die Test-Methode noMatch die Aufrufe, bei denen das Matching fehlschlägt.\\\\
@@ -175,8 +185,8 @@ public class GenSpecTypeMatcher_Gen_ConversionTest {
 
 \subsection{Beispiel für den SpecTypeMatcher}\label{specMatcherExample}
 Wie in \ref{genTypeMatcher} bereits erwähnt wurde der GenTypeMatcher gemeinsam mit dem SpecTypeMatcher implementiert. Daher wird in den folgenden Beispielen jeweils ein Matcher aus der Klasse GenSpecTypeMatcher erzeugt. Die weitere Verwendung den Matchers bezieht sich in diesen Beispielen aber auf die Definition des SpecTypeMatcher aus \ref{specTypeMatcher}.\\\\
-In \lstref{LST_specTypeMatcher_matching} ist die Implementierung eines JUnit-Tests aufgeführt, in dem das Matching über den GenTypeMatcher für unterschiedliche Source- und Target-Typen nachgewiesen werden soll. Die Test-Methode match enthält dabei die Aufrufe, bei denen das Matching festgestellt werden kann. Dementsprechend enthält die Test-Methode noMatch die Aufrufe, bei denen das Matching fehlschlägt.\\\\
-\lstref{LST_specTypeMatcher_conversion} enthält die Implementierung für einen JUnit-Test, in dem die Konvertierung, die durch den SpecTypeMatcher beschrieben wird, nachgewiesen wird. Hierbei wird von dem Szenario aus \ref{specTypeMatcher} ausgegangen. Die Test-Methode convertGen2Spec\_positivCall enthält den Aufruf der ersten Methoden aus dem Szenario (getString). Die Test-Methoden convertGen2Spec\_negativeCall beinhaltet den fehlschlagenden Aufruf der Methoden getStringWithoutPrefix.
+In \lstref{LST_specTypeMatcher_matching} ist die Implementierung eines JUnit-Tests aufgeführt, in dem das Matching über den SpecTypeMatcher für unterschiedliche Source- und Target-Typen nachgewiesen werden soll. Die Test-Methode match enthält dabei die Aufrufe, bei denen das Matching festgestellt werden kann. Dementsprechend enthält die Test-Methode noMatch die Aufrufe, bei denen das Matching fehlschlägt.\\\\
+\lstref{LST_specTypeMatcher_conversion} enthält die Implementierung für einen JUnit-Test, in dem die Konvertierung, die durch den SpecTypeMatcher beschrieben wird, nachgewiesen wird. Hierbei wird von dem Szenario aus \ref{specTypeMatcher} ausgegangen. Die Test-Methode convertGen2Spec\_positivCall enthält den Aufruf der ersten Methoden aus dem Szenario (getString). Die Test-Methoden convertGen2Spec\_negativeCall beinhaltet den fehlschlagenden Aufruf der Methode getStringWithoutPrefix.
 \begin{lstlisting}[{caption = SpecTypeMatcher Matching Test
 },{label = LST_specTypeMatcher_matching}]
 public class GenSpecTypeMatcher_Spec_MatcherTest {
@@ -205,12 +215,10 @@ public class GenSpecTypeMatcher_Spec_ConversionTest {
     SuperClass offeredComponent = new SuperClass( "A" );
     Collection<ModuleMatchingInfo> matchingInfos = new GenSpecTypeMatcher().calculateTypeMatchingInfos(
         SubClass.class, SuperClass.class );
-    
     ModuleMatchingInfo moduleMatchingInfo = matchingInfos.iterator().next();
 
     ProxyFactory<SubClass> proxyFactory = moduleMatchingInfo.getConverterCreator().createProxyFactory( SubClass.class );
     Collection<MethodMatchingInfo> methodMatchingInfos = moduleMatchingInfo.getMethodMatchingInfos();
-
     SubClass proxy = proxyFactory.createProxy( offeredComponent, methodMatchingInfos );
 
     assertTrue( proxy.getString().equals( "A" ) );
@@ -221,16 +229,13 @@ public class GenSpecTypeMatcher_Spec_ConversionTest {
     SuperClass offeredComponent = new SuperClass( "A" );
     Collection<ModuleMatchingInfo> matchingInfos = new GenSpecTypeMatcher().calculateTypeMatchingInfos(
         SubClass.class, SuperClass.class );
-    
     ModuleMatchingInfo moduleMatchingInfo = matchingInfos.iterator().next();
 
     ProxyFactory<SubClass> proxyFactory = moduleMatchingInfo.getConverterCreator().createProxyFactory( SubClass.class );
     Collection<MethodMatchingInfo> methodMatchingInfos = moduleMatchingInfo.getMethodMatchingInfos();
-
     SubClass proxy = proxyFactory.createProxy( offeredComponent, methodMatchingInfos );
 
     assertTrue( proxy.getString().equals( "A" ) );
-
     proxy.getStringWithoutPrefix();
   }
 }
@@ -241,7 +246,7 @@ public class GenSpecTypeMatcher_Spec_ConversionTest {
 \subsection{Beispiel für den WrappedTypeMatcher}\label{wrappedMatcherExample}
 Der WrappedTypeMatcher und der WrapperTypeMatcher wurden gemeinsam implementiert. Daher wird in den folgenden Beispielen jeweils ein Matcher aus der Klasse WrappedTypeMatcher erzeugt. Die weitere Verwendung den Matchers bezieht sich in diesen Beispielen aber auf die Definition des WrappedTypeMatcher aus \ref{wrappedTypeMatcher}.\\\\
 In \lstref{LST_wrappedTypeMatcher_matching} ist die Implementierung eines JUnit-Tests aufgeführt, in dem das Matching über den WrappedTypeMatcher für unterschiedliche Source- und Target-Typen nachgewiesen werden soll. Die Test-Methoden mit dem Präfix match enthalten dabei die Aufrufe, bei denen das Matching festgestellt werden kann. Dementsprechend enthält die Test-Methode noMatch die Aufrufe, bei denen das Matching fehlschlägt.\\\\
-\lstref{LST_wrappedTypeMatcher_conversion} enthält die Implementierung für einen JUnit-Test, in dem die Konvertierung, die durch den WrappedTypeMatcher beschrieben wird, nachgewiesen wird. In der Test-Methode convertSubWrapper2SubClass wird von dem Szenario aus \ref{wrappedTypeMatcher} ausgegangen. Die anderen Test-Methoden stellen weitere Szenarien dar, die in den folgenden Unterabschnitten beschrieben werden.
+\lstref{LST_wrappedTypeMatcher_conversion} enthält die Implementierung für einen JUnit-Test, in dem die Konvertierung, die durch den WrappedTypeMatcher beschrieben wird, nachgewiesen werden soll. In der Test-Methode convertSubWrapper2SubClass wird von dem Szenario aus \ref{wrappedTypeMatcher} ausgegangen. Die anderen Test-Methoden stellen weitere Szenarien dar, die in den folgenden Unterabschnitten beschrieben werden.\newpage
 \begin{lstlisting}[{caption = WrappedTypeMatcher Matching Test
 },{label = LST_wrappedTypeMatcher_matching}]
 public class WrappedTypeMatcher_Wrapped_MatcherTest {
@@ -275,7 +280,7 @@ public class WrappedTypeMatcher_Wrapped_MatcherTest {
     assertFalse( matcher.matchesType( String.class, String.class ) );
   }
 }
-\end{lstlisting}
+\end{lstlisting}\newpage
 \begin{lstlisting}[{caption = WrappedTypeMatcher Konvertierung Test
 },{label = LST_wrappedTypeMatcher_conversion}]
 public class WrappedTypeMatcher_Wrapped_ConversionTest {
@@ -360,7 +365,7 @@ public class WrappedTypeMatcher_Wrapped_ConversionTest {
 \subsection{Beispiel für den WrapperTypeMatcher}\label{wrapperMatcherExample}
 Wie bereits im vorherigen Abschnitt erwähnt wurden der WrappedTypeMatcher und der WrapperTypeMatcher gemeinsam implementiert. Daher wird in den folgenden Beispielen jeweils ein Matcher aus der Klasse WrappedTypeMatcher erzeugt. Die weitere Verwendung den Matchers bezieht sich in diesen Beispielen aber auf die Definition des WrapperTypeMatcher aus \ref{wrapperTypeMatcher}.\\\\
 In \lstref{LST_wrapperTypeMatcher_matching} ist die Implementierung eines JUnit-Tests aufgeführt, in dem das Matching über den WrapperTypeMatcher für unterschiedliche Source- und Target-Typen nachgewiesen werden soll. Die Test-Methoden mit dem Präfix match enthalten dabei die Aufrufe, bei denen das Matching festgestellt werden kann. Dementsprechend enthält die Test-Methode noMatch die Aufrufe, bei denen das Matching fehlschlägt.\\\\
-\lstref{LST_wrapperTypeMatcher_conversion} enthält die Implementierung für einen JUnit-Test, in dem die Konvertierung, die durch den WrapperTypeMatcher beschrieben wird, nachgewiesen wird. In der Test-Methode convertSubClass2SubWrapper wird von dem Szenario aus \ref{wrapperTypeMatcher} ausgegangen. Die anderen Test-Methoden stellen weitere Szenarien dar, die in den folgenden Unterabschnitten beschrieben werden.
+\lstref{LST_wrapperTypeMatcher_conversion} enthält die Implementierung für einen JUnit-Test, in dem die Konvertierung, die durch den WrapperTypeMatcher beschrieben wird, nachgewiesen wird. In der Test-Methode convertSubClass2SubWrapper wird von dem Szenario aus \ref{wrapperTypeMatcher} ausgegangen. Die anderen Test-Methoden stellen weitere Szenarien dar, die in den folgenden Unterabschnitten beschrieben werden.\newpage
 \begin{lstlisting}[{caption = WrapperTypeMatcher Matching Test
 },{label = LST_wrapperTypeMatcher_matching}]
 public class WrappedTypeMatcher_Wrapper_MatcherTest {
@@ -394,7 +399,7 @@ public class WrappedTypeMatcher_Wrapper_MatcherTest {
     assertFalse( matcher.matchesType( String.class, String.class ) );
   }
 }
-\end{lstlisting}
+\end{lstlisting}\newpage
 \begin{lstlisting}[{caption = WrapperTypeMatcher Konvertierung Test
 },{label = LST_wrapperTypeMatcher_conversion}]
 public class WrappedTypeMatcher_Wrapper_ConversionTest {
@@ -461,7 +466,6 @@ public class WrappedTypeMatcher_Wrapper_ConversionTest {
     SuperClass offeredComponent = new SuperClass( "A" );
     Collection<ModuleMatchingInfo> matchingInfos = matcher.calculateTypeMatchingInfos(
         SubWrapper.class, SuperClass.class );
-    // Der WrappedTypeMatcher erzeugt nur eine ModuleMatchingInfo (kein rekursives Matching)
     ModuleMatchingInfo moduleMatchingInfo = matchingInfos.iterator().next();
 
     ProxyFactory<SubWrapper> proxyFactory = moduleMatchingInfo.getConverterCreator()
@@ -481,7 +485,7 @@ public class WrappedTypeMatcher_Wrapper_ConversionTest {
 \subsection{Beispiel für den StructuralTypeMatcher}\label{structMatcherExample}
 In \lstref{LST_structTypeMatcher_matching} ist die Implementierung eines JUnit-Tests aufgeführt, in dem das Matching über den StructuralTypeMatcher für unterschiedliche Source- und Target-Typen nachgewiesen werden soll. Alle Test-Methoden enthalten Aufrufe, bei denen das Matching festgestellt werden kann. Die Test-Methode match\_genReturn\_specParam bezieht sich auf das Szenario aus \ref{wrapperTypeMatcher}.   Da es für jedes Paar von Source- und Target-Typ mehrere Möglichkeiten zur Feststellung der strukturellen Gleichheit gibt, wird die Evaluation der Testfälle in einer Schleife über diese Möglichkeiten durchgeführt.\\\\
 \lstref{LST_structTypeMatcher_conversion} enthält die Implementierung für einen JUnit-Test, in dem die Konvertierung, die durch den StructTypeMatcher beschrieben wird, nachgewiesen wird. Die Test-Methode convert\_genReturn\_specParam bezieht sich dabei auf das Szenario aus \ref{structTypeMatcher}. Die anderen Test-Methoden stellen weitere Szenarien dar, die in den folgenden Unterabschnitten beschrieben werden.\\\\
-In beiden Fällen wurde von einem StructuralTypeMatcher ausgegangen, der als internen Type-Matcher eine Kombination aus den zuvor genannten Matchern verwendet.
+In beiden Fällen wurde von einem StructuralTypeMatcher ausgegangen, der als internen Type-Matcher eine Kombination aus den zuvor genannten Matchern verwendet.\newpage
 \begin{lstlisting}[{caption = StructTypeMatcher Matching Test
 },{label = LST_structTypeMatcher_matching}]
 public class StructuralTypeMatcher_MatcherTest {
@@ -535,7 +539,7 @@ public class StructuralTypeMatcher_MatcherTest {
     assertTrue( matcher.matchesType( SubWrapperReturnSubParamClass.class, SuperReturnSubParamClass.class ) );
   }
 }
-\end{lstlisting}
+\end{lstlisting}\newpage
 
 \begin{lstlisting}[{caption = StructuralTypeMatcher Konvertierung Test
 },{label = LST_structTypeMatcher_conversion}]
