@@ -97,7 +97,7 @@
 %			{ CAPTION }
 %			{ LABEL }
 %
-% Gleichung, die ein Matching darstellt
+% Vier-Felder-Tafel
 \newcommand{\vft}[7]{
 \begin{table}[H]
 \centering
@@ -127,7 +127,7 @@
 % Gleichung, die ein Matching darstellt
 \newcommand{\matchTyp}[3]
 {
-#1 \equiv_{#2} #3
+match_{#2}(#1,#3)
 }
 
 %----------------------------------------------------------------------------------
@@ -177,7 +177,7 @@
 % Umgebung für die Definition der Übereinstimmung eines Matchers
 \newenvironment{matcherEquivDef}[1]{
 \begin{adjustwidth}{2cm}{0cm}
-\underline{Übereinstimmung (#1)}
+\underline{Matching (#1)}
 \end{adjustwidth}
 \begin{eqnarray*}
 }
