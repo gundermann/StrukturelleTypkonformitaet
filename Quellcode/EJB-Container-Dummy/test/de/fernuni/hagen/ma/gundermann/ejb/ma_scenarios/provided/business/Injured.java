@@ -3,11 +3,11 @@ package de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class AccidentParticipant {
+public class Injured {
 
   private final Collection<Suffer> suffers;
 
-  public AccidentParticipant( Collection<Suffer> suffers ) {
+  public Injured( Collection<Suffer> suffers ) {
     this.suffers = new ArrayList<>( suffers );
   }
 

@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.desired.FirstAidProvidingFireFighter;
-import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.AccidentParticipant;
+import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Injured;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Fire;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Suffer;
 import tester.annotation.QueryTypeInstanceSetter;
@@ -32,7 +32,7 @@ public class FirstAidProvidingFireFighterTest {
   @QueryTypeTest
   public void provideFirstAid() {
     Collection<Suffer> suffer = Arrays.asList( Suffer.LOCKED, Suffer.BREATH_PROBLEMS, Suffer.OPEN_WOUND );
-    AccidentParticipant patient = new AccidentParticipant( suffer );
+    Injured patient = new Injured( suffer );
     firstAidProvidingFireFighter.provideFirstAid( patient );
     assertTrue( patient.isStabilized() );
   }

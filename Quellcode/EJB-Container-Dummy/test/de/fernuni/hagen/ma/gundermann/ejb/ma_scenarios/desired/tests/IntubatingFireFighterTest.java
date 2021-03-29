@@ -9,7 +9,7 @@ import java.util.Collection;
 import org.junit.Before;
 
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.desired.IntubatingFireFighter;
-import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.AccidentParticipant;
+import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Injured;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Fire;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Suffer;
 import spi.PivotMethodTestInfo;
@@ -43,7 +43,7 @@ public class IntubatingFireFighterTest implements PivotMethodTestInfo {
   @QueryTypeTest( testedSingleMethod = "intubate" )
   public void intubate() {
     Collection<Suffer> suffer = Arrays.asList( Suffer.BREATH_PROBLEMS );
-    AccidentParticipant patient = new AccidentParticipant( suffer );
+    Injured patient = new Injured( suffer );
     intubatingFireFighter.intubate( patient );
     markPivotMethodCallExecuted();
     assertTrue( patient.isStabilized() );
