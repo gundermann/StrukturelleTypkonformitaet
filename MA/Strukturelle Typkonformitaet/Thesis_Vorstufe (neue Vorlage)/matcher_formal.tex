@@ -45,13 +45,13 @@ vererbteMethoden(T,T') := \left\{
                 \begin{array}{l|l}
                 	  		&	T<T' \wedge m(P):R\in methoden(T) \wedge \\
 					m(P):R 	& 	\exists m(P'):R'\in methoden(T').\\
-							&	(P<P' \vee P=P') \wedge (R>R' \vee R=R') 
+							&	(P<=P') \wedge (R>=R') 
                 \end{array}
               \right\}
 \end{gather*}
 \noindent
-Das Matching eines Typs $A$ zu einem Typ $B$ wird durch die Funktion $match(A,B)$ beschrieben. Dabei wird $A$ auch als \emph{Source-Typ} und $B$ als \emph{Target-Typ} bezeichnet.\\\\
-Ein Proxy beschreibt die Konvertierung einer Menge von Target-Typen $P = \{T_1, ..., T_n\}$ in einen Proxy-Typen $S$. Die Definition eines Proxies hat dabei folgende Form:
+Das Matching eines Typs $A$ zu einem Typ $B$ wird durch die asymmetrische Relation $\matchTyp{A}{}{B}$ beschrieben. Dabei wird $A$ auch als \emph{Source-Typ} und $B$ als \emph{Target-Typ} bezeichnet.\\\\
+Ein Proxy beschreibt die Konvertierung einer Menge von Target-Typen $P = \{T_1, ..., T_n\}$ in einen Proxy-Typen $X$. Die Definition eines Proxies hat dabei folgende Form:
 \begin{table}[H]
 \centering
 \begin{tabular}{|p{6cm}|p{8cm}|}
@@ -60,9 +60,9 @@ Ein Proxy beschreibt die Konvertierung einer Menge von Target-Typen $P = \{T_1, 
 \centering\textbf{Regel} & \textbf{Erläuterung} \\
 \hline
 \hline
-$PROXY ::=$\newline proxy P extends T $\{TARGET\text{*}\}$ & Eine Proxy-Definition besteht aus dem Namen des Proxy-Typs \emph{P}, dem Namen des Super-Typs \emph{T} des Proxies sowie einer Mengen von Targets, die die Basis für den Proxy bilden. \\
+$PROXY ::=$\newline proxy X for PR $\{TARGET\text{*}\}$ & Eine Proxy-Definition besteht aus dem Namen des Proxy-Typs \emph{X}, dem Namen des Typs \emph{PR} für den der Proxy erzeugt wird. \emph{PR} kann dabei der Name eines \emph{required Interfaces} oder der eines \emph{provides Interfaces sein}. Weiterhin besteht ein Proxy aus einer Mengen von Targets, die die Basis für den Proxy bilden. \\
 \hline
-$TDEL ::=$\newline T target $\{MDEL\text{*} AZ\text{*}\}$ & Die Definition einer Targets besteht aus dem Namen des Target-Typs \emph{T}, dem Namen einer Variablen \emph{target} zur Referenzierung des Target-Objektes, sowie einer Menge aus Methodendelegationen und Attributzuweisungen.\\
+$TARGET ::=$\newline T target $\{MDEL\text{*} AZ\text{*}\}$ & Die Definition einer Targets besteht aus dem Namen des Target-Typs \emph{T}, dem Namen einer Variablen \emph{target} zur Referenzierung des Target-Objektes, sowie einer Menge aus Methodendelegationen und Attributzuweisungen.\\
 \hline
 $AZ ::=$ f = $TR$& Eine Attributzuweisung besteht aus dem Namen des Attributfeldes des Proxies \emph{f} und einer Targetreferenz.\\
 \hline
@@ -104,93 +104,105 @@ zuweisungen(X,T) := \left\{
 				\end{array}
               \right\}
 \end{gather*}
-\noindent
-
-%---------------------------------------------------\\\\
-%\abbref{} stellt den Ablauf einer Delegation der Methode mit dem Namen \emph{s} innerhalb eines Proxies an eine Methode \emph{t} des Target-Objektes dar. Dabei wird der Parameter \emph{ps} der Methode \emph{s} in ein Objekt vom Typ \emph{TP} konvertiert. Nachdem durch die Methode \emph{t} das Objekt \emph{tr} zurückgegeben wurde, wird dieses wiederum in ein Objekt vom Typ \emph{SR} konvertiert.
-
-%Unter der Annahme, dass die Funktion $Proxy(S,P)$ einen Proxy $X$ in der o.g. Form mit $S$ als Proxy-Typ und $targets(X)=P$ beschreibt, sieht die dazugehörige Methodendelegation sieht wie folgt aus:
-%\begin{gather*}
-%	source.s(sp):sr \rightarrow target.t(Proxy(TP,\{type(sp)\})):Proxy(SR,\{type(tr)\})
-%\end{gather*}
-
-%Darüber hinaus gelten für die Methodendelegationen folgende Regeln:
-
-%---------------------------------------------------\\\\
-
 \subsubsection{StructuralTypeMatcher}\label{structTypeMatcher}
 Ein Ziel dieser Arbeit ist es Typen, die keinerlei Assoziationen zueinander habe, miteinander zu matchen und so zu konvertieren, dass darauf aufbauend die erwartete Semantik überprüfen werden kann. Hierfür soll wie auch in \cite{hummel08} die strukturelle Übereinstimmung der beiden Typen genutzt werden. Diesem Zweck dient der StructuralTypeMatcher.
 \myparagraph{Szenario}
 Um die grundlegenden Eigenschaften des StructuralTypeMatchers darzustellen, wird von einem Szenario ausgegangen, in dem zwei \emph{provided Interfaces} in Kombination ein \emph{required Interface} erfüllen. Dabei wird von einer Bibliothek $L$ ausgegangen, die zum einen eine Erweiterung der Typen aus dem JDK um die in \lstref{struct_scerantio_bib} definierten Typen darstellt.
 \begin{figure}[H]
-\begin{minipage}[b]{.45\linewidth}
-  \begin{lstlisting}
+
+\begin{minipage}[b]{.4\linewidth}
+
+\begin{lstlisting}
+provided Fire extends Object{}
+\end{lstlisting}
+
+\begin{lstlisting}
+provided FireState extends Object{
+	isActive : boolean
+}
+\end{lstlisting}
+
+ \begin{lstlisting}
+provided Medicine extends Object{
+	String getDescription()
+}
+\end{lstlisting}
+
+\begin{lstlisting}
 provided Injured extends Object{
-	void heal()	
+	void heal(Medicine med)	
 }
 \end{lstlisting}
 
 
-\begin{lstlisting}
-provided Fire extends Object{
-	void extinguish()
-}
-\end{lstlisting}
-
-
-\begin{lstlisting}
-provided FireFighter extends Object{}
-\end{lstlisting}
 
 \end{minipage}%
 \hspace{.04\linewidth}% Abstand zwischen Bilder
-\begin{minipage}[b]{.51\linewidth}
-
+\begin{minipage}[b]{.56\linewidth}
+\begin{lstlisting}
+provided Patient extends Injured{}
+\end{lstlisting}
+\begin{lstlisting}
+provided FireFighter extends Object{
+	FireState extinguishFire(Fire fire)
+}
+\end{lstlisting}
 
 \begin{lstlisting}
 provided Doctor extends Object{	
-	void intubate( Patient patient )
+	void heal( Patient pat, Medicine med )
 }
 \end{lstlisting}
 
-\begin{lstlisting}
-provided Patient extends Injured{
-	boolean isStable()
-}
-\end{lstlisting}
+
 
 \begin{lstlisting}
-required IntubatingFireFither {
-	void intubate( Injured injured )
-	void extinguishFire( Fire fire )	
+provided MedCabinet extends Object{
+	med : Medicine
 }
 \end{lstlisting}
 \end{minipage}
+\begin{center}
+\begin{lstlisting}[caption={Bibliothek von Typen},captionpos=b]
+required MedicalFireFigther {
+	void heal( Injured injured, MedCabinet med )
+	boolean extinguishFire( Fire fire )	
+}
+\end{lstlisting}
+\end{center}
 \end{figure}
 \noindent
 Durch den StructuralTypeMatcher soll zum einen ein Matching der Form $\matchTyp{IntubatingFireFighter}{}{FireFighter}$ und $\matchTyp{IntubatingFireFighter}{}{Doctor}$ ermittelt werden. Darüber hinaus soll die Kombination aus $FireFighter$ und $Doctor$ in den Typ $IntubatingFireFither$ konvertiert werden. Ein Proxy $PTF$ der aus der Konvertierung der Typen $FireFighter$ und $Doctor$ in den Typ $IntubatingFireFighter$ ist in \lstref{struct_proxy} beschrieben.
 \begin{lstlisting}
-proxy PTF extends IntubationFireFighter{
+proxy PTF for MedicalFireFither{
 	FireFighter fireFighter {
-		extinguishFire(Fire):void --> fireFighter.extinguishFire(Fire):void		
+		extinguishFire(Fire):proxy PFireState for FireState{
+			boolean target{
+				isActive = target		
+			}
+		} --> fireFighter.extinguishFire(Fire):boolean
 	}
 		
 	Doctor doctor {
-		intubate(Injured):void --> doctor.intubate(
-			proxy PPatient extends Patient{
+		heal(Injured, MedCabinet):void--> doctor.heal(
+			proxy PPatient for Patient{
 				Injured injured{
 					heal():void --> injured.heal():void			
 				}		
+			}, proxy PMedicine for Medicine{
+				MedCabinet cab{
+					getDescription():String --> cab.med.getDescription():String			
+				}			
 			}):void		
 	}
 }
 \end{lstlisting}
-\abbref{methodDelegation_IntubatingFireFighter} zeigt, wie die Delegation der Aufrufe der Methoden des Typs $IntubatingFireFighter$ durch die o.g. Proxy-Definition erfolgen.\\\\
+%\abbref{methodDelegation_IntubatingFireFighter} zeigt, wie die Delegation der Aufrufe der Methoden des Typs $IntubatingFireFighter$ durch die o.g. Proxy-Definition erfolgen.\\\\
 Dabei wird beim Aufruf der Methoden \emph{extinguishFire(Fire)} an die Methoden \emph{extinguishFire(Fire)} des Typs $FireFighter$ delegiert. Dabei wird der Parameter vom Typ $Fire$ einfach weitergereicht, ohne dass eine Konvertierung des Parameters ist in diesem Fall nicht notwendig, da der Parameter-Typ der aufgerufenen Methode und der Methode, an die der Aufruf delegiert wird, identisch sind. Dasselbe gilt für die Rückgabewerte der beiden Methoden.\\\\
 Der Aufruf der Methode \emph{intubate(Injured)} wird an die Methode \emph{intubate(Patient)} des Typs $Doctor$ delegiert. Dabei erfolgt eine weitere Konvertierung des Typs $Injured$ in den Typ $Patient$.
 
 \myparagraph{Definition}
-Das strukturelle Matching zwischen einem \emph{required Interface} $R$ und einem \emph{provided Interface} $P$ ist gegeben, sofern eine Methode aus $R$ zu einer Methode aus $P$ gematcht werden kann. Die Menge der gematchten Methoden aus $R$ und $P$ wird wie folgt beschrieben:
+Das strukturelle Matching zwischen einem \emph{required Interface} $R$ und einem \emph{provided Interface} $P$ ist gegeben, sofern eine Methode aus $R$ zu einer Methode aus $P$ gematcht werden kann. Die Menge der aus $R$ in $P$ gematchten Methoden wird wie folgt beschrieben:
 \begin{gather*}
 structM(R,P) := \left\{ 
 				\begin{array}{l|l}
@@ -199,7 +211,7 @@ structM(R,P) := \left\{
               \right\}
 \end{gather*}
 Da die Notation es nicht hergibt, ist zusätzlich zu erwähnen, dass die Reihenfolge der Parameter in $m$ und $n$ irrelevant ist.\\\\
-Die Funktion $\matchTyp{A}{egsc}{B}$ wird durch die übrigen Matcher in folgender Form beschrieben:
+Die Relation $\Rrightarrow_{egsc}$ wird durch die übrigen Matcher in folgender Form beschrieben:
 \begin{gather*}
 \frac{\splitfrac{\matchTyp{A}{exact}{B} \wedge \matchTyp{A}{spec}{B} 
 \wedge \matchTyp{A}{gen}{B}}{\wedge \matchTyp{A}{container}{B} \wedge \matchTyp{A}{content}{B}}}{\matchTyp{A}{egsc}{B}}
@@ -299,54 +311,63 @@ X & \forall m(P):R \in vererbteMethoden(A,B).\\						  & \exists m(P):R \rightar
 \myparagraph{Szenario}
 In \ref{Hum8}
 
-Die bisherigen Type-Matcher sind in der Lage das Matching für zwei Typen festzustellen, ohne dafür Rücksicht auf deren innere Struktur nehmen zu müssen. Dies ist für identische oder hierarchisch organisierte Typen auch nicht notwendig. Es ist jedoch auch denkbar, dass sich beiden Typen auf anderem Wegen assoziieren lassen. Ein Beispiel dafür wäre Boxed- bzw. - noch allgemeiner gefasst - Wrapper-Typen. In \abbref{cd_subclass_subwrapper} sind zwei Klassen dargestellt, die in einer solchen Beziehung zueinander stehen. Bezüglich des Matchings sind auch hier wiederum zwei Fälle zu unterscheiden. Der erste Fall, in dem das Matching des Source-Typen SubClass mit dem Typen eines Attributs wrapped des Traget-Typen SubWrapper festgestellt werden kann, ist in \abbref{sd_wrapped_sub2subwrapped} dargestellt.
-\begin{figure}[H]
-\begin{minipage}[b]{.33\linewidth}
-  \centering
-  \includegraphics[width=\linewidth]{cd_subclass_subwrapper}
-  \caption{Beziehung zwischen SubClass und SubWrapper}
-  \label{abb:cd_subclass_subwrapper}
+%Die bisherigen Type-Matcher sind in der Lage das Matching für zwei Typen festzustellen, ohne dafür Rücksicht auf deren innere Struktur nehmen zu müssen. Dies ist für identische oder hierarchisch organisierte Typen auch nicht notwendig. Es ist jedoch auch denkbar, dass sich beiden Typen auf anderem Wegen assoziieren lassen. Ein Beispiel dafür wäre Boxed- bzw. - noch allgemeiner gefasst - Wrapper-Typen. In \abbref{cd_subclass_subwrapper} sind zwei Klassen dargestellt, die in einer solchen Beziehung zueinander stehen. Bezüglich des Matchings sind auch hier wiederum zwei Fälle zu unterscheiden. Der erste Fall, in dem das Matching des Source-Typen SubClass mit dem Typen eines Attributs wrapped des Traget-Typen SubWrapper festgestellt werden kann, ist in \abbref{sd_wrapped_sub2subwrapped} dargestellt.
+%\begin{figure}[H]
+%\begin{minipage}[b]{.33\linewidth}
+%  \centering
+%  \includegraphics[width=\linewidth]{cd_subclass_subwrapper}
+%  \caption{Beziehung zwischen SubClass und SubWrapper}
+%  \label{abb:cd_subclass_subwrapper}
 
-\end{minipage}%
-\hspace{.04\linewidth}% Abstand zwischen Bilder
-\begin{minipage}[b]{.63\linewidth}
+%\end{minipage}%
+%\hspace{.04\linewidth}% Abstand zwischen Bilder
+%\begin{minipage}[b]{.63\linewidth}
 
 
-  \centering
-  \includegraphics[width=\linewidth]{sd_wrapped_sub2subwrapped}
-  \caption{Szenario WrappedTypeMatcher}
-  \label{abb:sd_wrapped_sub2subwrapped}
+%  \centering
+%  \includegraphics[width=\linewidth]{sd_wrapped_sub2subwrapped}
+%  \caption{Szenario WrappedTypeMatcher}
+%  \label{abb:sd_wrapped_sub2subwrapped}
 
-\end{minipage}
-\end{figure}
-\noindent
-Der WrappedTypeMatcher stellt das Matching für ein solches Szenario fest. Das Matching der beiden Typen beruht letztendlich auf einem Matching zwischen dem Source-Type und dem Typen eines Attributs des Target-Typs. Der Matcher, über den dieses Matching innerhalb des WrappedTypeMatchers festgestellt wird, wird als interner Matcher bezeichnet. In dem Szenario aus \abbref{sd_wrapped_sub2subwrapped} wird als interner Matcher der bereits beschriebene ExactTypeMatcher verwendet, weil der Source-Type und der Typ des Attributs wrapped identisch sind.
+%\end{minipage}
+%\end{figure}
+%\noindent
+%Der WrappedTypeMatcher stellt das Matching für ein solches Szenario fest. Das Matching der beiden Typen beruht letztendlich auf einem Matching zwischen dem Source-Type und dem Typen eines Attributs des Target-Typs. Der Matcher, über den dieses Matching innerhalb des WrappedTypeMatchers festgestellt wird, wird als interner Matcher bezeichnet. In dem Szenario aus \abbref{sd_wrapped_sub2subwrapped} wird als interner Matcher der bereits beschriebene ExactTypeMatcher verwendet, weil der Source-Type und der Typ des Attributs wrapped identisch sind.
 \myparagraph{Definition}
-\begin{matcherEquivDef}{WrappedTypeMatcher}
-\matchTyp{A}{wrapped}{B} \text{ wenn } \exists \selTyp{B}{attr} : \matchTyp{A}{M}{attr}
+\begin{matcherEquivDef}{ContentTypeMatcher}
+\frac{\exists f:T' \in felder(B).\matchTyp{A}{esg}{B}}{\matchTyp{A}{content}{B}}
 \end{matcherEquivDef}\\
-Der zuvor genannte interne Matcher wird in der Definition mit $M$ beschrieben, was stellvertretend für eine Menge von Matchern steht. Als interne Matcher kommen hierbei der ExactTypeMatcher, der GenTypeMatcher und der SpecTypeMatcher in Frage.\\
+Die Relation $\Rrightarrow_{esg}$ wird durch die drei zuvor definierten Matcher beschrieben:
+\begin{gather*}
+\frac{\matchTyp{A}{exact}{B} \vee \matchTyp{A}{spec}{B} \vee \matchTyp{A}{gen}{B}}{\matchTyp{A}{esg}{B}}
+\end{gather*}
 \begin{matcherConvDef}{WrappedTypeMatcher}{
-Sei $m$ eine Methode des Typs $A$. Sei weiterhin $B$ ein Typ, der ein Attribut vom Typ $attr$ enthält, für den gilt $\matchTyp{A}{M}{attr}$.
-}
-\delegate{A.m}{(\applyMatcher{A}{attr}).m}
-\end{matcherConvDef}\\
-Ein Beispiel für die Verwendung des Matchers in Bezug auf das o.g. Szenario ist in \appref{wrappedMatcherExample} zu finden. Außerdem sind dort auch weitere Szenarien aufgefüht, in denen der GenTypeMatcher oder der SpecTypeMatcher als interner Matcher zur Anwendung kommen.
+Für zwei Typen $A$ und $B$ für die $\matchTyp{A}{content}{B}$ ist die Menge an möglichen Proxytypen wie folgt definiert:}
+Proxy_{content}(A,B) := \left\{ 
+				\begin{array}{l|l}
+  & targets(X) = \{B\} \wedge zuweisung(X,B) = \emptyset \wedge \\
+X & \forall m(SP):SR \rightarrow target.f.n(TP):TR \in delegationen(X,B).\\				
+  &	f \in felder(B) \wedge SR \in Proxy_{esg}(SR,TR) \wedge TP \in Proxy_{esg}(TP,SP)\\		\end{array}
+              \right\}
+\end{matcherConvDef}
 
-
-\subsubsection{WrapperTypeMatcher}\label{wrapperTypeMatcher}
+\subsubsection{ContainerTypeMatcher}\label{containerTypeMatcher}
 \myparagraph{Szenario}
-Dieser Matcher stellt das Pendant zum WrappedTypeMatcher dar. Der Unterschied bzgl. des Szenarios besteht darin, dass nun der Source-Typ derjenige ist, der ein Attribut enthält, für dessen Typ ein Matching zum Target-Typen über den ExactTypeMatcher, den GenTypeMatcher oder den SpecTypeMatcher festgestellt werden kann. Für das Szenario ist wiederum von den Typen aus \abbref{cd_subclass_subwrapper} auszugehen. Die Delegation der möglichen Methodenaufrufe am Source-Typen, sind in \abbref{sd_wrapper_subwrapped2sub} abgebildet. Hierbei ist hervorzuheben, dass zur Laufzeit das Objekt vom Target-Typen in das Attribut des Objektes vom Source-Typen injiziert wird. Dies soll in \abbref{sd_wrapper_subwrapped2sub} durch die Bezeichnung des Targets mit wrapped (dem Namen des Attributs) und target dargestellt werden. Eine Methoden-Delegation findet nur dann statt, wenn sie auch im Wrapper-Typen (Source-Typen) implementiert wurde\footnote{Implementierung von SubWrapper: siehe \appref{matcherExamples} \lstref{LST_subwrapper_impl}}.
-\myScalableFigure[0.8\linewidth]{sd_wrapper_subwrapped2sub}{Szenario WrapperTypeMatcher}{sd_wrapper_subwrapped2sub}
-\myparagraph{Definition}
+%Dieser Matcher stellt das Pendant zum WrappedTypeMatcher dar. Der Unterschied bzgl. des Szenarios besteht darin, dass nun der Source-Typ derjenige ist, der ein Attribut enthält, für dessen Typ ein Matching zum Target-Typen über den ExactTypeMatcher, den GenTypeMatcher oder den SpecTypeMatcher festgestellt werden kann. Für das Szenario ist wiederum von den Typen aus \abbref{cd_subclass_subwrapper} auszugehen. Die Delegation der möglichen Methodenaufrufe am Source-Typen, sind in \abbref{sd_wrapper_subwrapped2sub} abgebildet. Hierbei ist hervorzuheben, dass zur Laufzeit das Objekt vom Target-Typen in das Attribut des Objektes vom Source-Typen injiziert wird. Dies soll in \abbref{sd_wrapper_subwrapped2sub} durch die Bezeichnung des Targets mit wrapped (dem Namen des Attributs) und target dargestellt werden. Eine Methoden-Delegation findet nur dann statt, wenn sie auch im Wrapper-Typen (Source-Typen) implementiert wurde\footnote{Implementierung von SubWrapper: siehe \appref{matcherExamples} \lstref{LST_subwrapper_impl}}.
+%\myScalableFigure[0.8\linewidth]{sd_wrapper_subwrapped2sub}{Szenario WrapperTypeMatcher}{sd_wrapper_subwrapped2sub}
+%\myparagraph{Definition}
 \begin{matcherEquivDef}{WrapperTypeMatcher}
-\matchTyp{A}{wrapper}{B} \text{ wenn } \exists\selTyp{A}{attr} : \matchTyp{B}{M}{attr} 
+\frac{\exists f:T' \in felder(A).\matchTyp{T'}{esg}{B}}{\matchTyp{A}{container}{B}}
 \end{matcherEquivDef}\\
-Wie an dieser Beschreibung zu erkennen ist, werden auch hier wieder ein interner Matcher $M$ verwendet. Analog zum WrappedTypeMatcher kommen auch hier der ExactTypeMatcher, der GenTypeMatcher und der SpecTypeMatcher in Frage.\\
 \begin{matcherConvDef}{WrappedTypeMatcher}{
-Sei $m$ eine Methode des Typs $A$.
-}
-\delegate{A.m}{A.m}
+Für zwei Typen $A$ und $B$ für die $\matchTyp{A}{container}{B}$ ist die Menge an möglichen Proxytypen wie folgt definiert:}
+Proxy_{content}(A,B) := \left\{ 
+				\begin{array}{l|l}
+  & targets(X) = \{B\} \wedge delegationen(X,B) = \emptyset \wedge\\
+X &   \forall f=T \in zuweisung(X,B). \\
+  & \exists f:T' \in felder(A). T \in Proxy_{esg}(T',B)					
+				\end{array}
+              \right\}
 \end{matcherConvDef}\\
 Ein Beispiel für die Verwendung des Matchers in Bezug auf das o.g. Szenario ist in \appref{wrapperMatcherExample} zu finden. Außerdem sind dort auch weitere Szenarien aufgefüht, in denen der GenTypeMatcher oder der SpecTypeMatcher als interner Matcher zur Anwendung kommen.
 

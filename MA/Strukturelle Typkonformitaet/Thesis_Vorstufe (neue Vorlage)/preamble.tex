@@ -1,7 +1,7 @@
 \usepackage[latin1]{inputenc}
 \usepackage[pdftex]{color,graphicx}
 \usepackage[hypertexnames=false]{hyperref}
-\usepackage[german,ngerman]{babel}
+\usepackage[ngerman]{babel}
 \usepackage{fancyhdr}
 \usepackage{amssymb}
 \usepackage[some]{background} % Draft Wasserzeichen mit Option pages=all sonst pages=some
@@ -131,7 +131,9 @@
 % Gleichung, die ein Matching darstellt
 \newcommand{\matchTyp}[3]
 {
-match_{#2}(#1,#3)
+#1  
+\Rrightarrow_{#2}
+ #3
 }
 
 %----------------------------------------------------------------------------------
