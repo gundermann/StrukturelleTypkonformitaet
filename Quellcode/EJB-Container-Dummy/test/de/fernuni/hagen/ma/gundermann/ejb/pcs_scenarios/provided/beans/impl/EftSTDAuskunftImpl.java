@@ -31,6 +31,7 @@ import DE.data_experts.profi.profilcs.antrag2015.eler.ft.stammdaten.query.ElerFT
 import DE.data_experts.profi.profilcs.antrag2015.eler.ft.stammdaten.query.FeststellungsCodeVerpflichtung2FPQuery;
 import DE.data_experts.profi.profilcs.antrag2015.eler.ft.stammdaten.query.FeststellungscodeVerpflichtungImplQuery;
 import DE.data_experts.profi.profilcs.antrag2015.eler.ft.stammdaten.query.VerpflichtungsGegenstandImplQuery;
+import DE.data_experts.profi.profilcs.antrag2015.stammdaten.business.impl.Finanzierungsschluessel;
 import DE.data_experts.profi.profilcs.antrag2015.stammdaten.business.impl.Foerdergegenstand;
 import DE.data_experts.profi.profilcs.antrag2015.stammdaten.business.impl.Landesmassnahme;
 import DE.data_experts.profi.profilcs.elerft.vp.schnittstellen.api.kontrollen.FeststellungsCodeVerpflichtung;
@@ -98,12 +99,6 @@ public class EftSTDAuskunftImpl implements ElerFTStammdatenAuskunftService {
   @Override
   public <T extends Foerdergegenstand, Q extends AbstractElerFTFoerdergegenstandQuery<T, Q>> Collection<T> getFoerdergegenstaende(
       Q query ) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public Collection<ElerFTKzFpFoerdergegenstand> getElerFTKzFpFoerdergegenstaende( DvFoerderprogramm fp ) {
     // TODO Auto-generated method stub
     return null;
   }
@@ -282,6 +277,20 @@ public class EftSTDAuskunftImpl implements ElerFTStammdatenAuskunftService {
 
   @Override
   public Collection<DvFoerdergegenstand> getAlleFg2OekoFgGruppe( DvEftOekoFoerdergegenstandGruppe oekoFgGruppe ) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Collection<ElerFTKzFpFoerdergegenstand> getElerFTKzFpFoerdergegenstaende( DvFoerderprogramm fp,
+      Finanzierungsschluessel fisch, DvAntragsJahr jahr ) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Collection<ElerFTTierFoerdergegenstand> getElerFTTierFoerdergegenstaende( DvFoerderprogramm fp,
+      DvUntermassnahme dvUm, DvAntragsJahr fuerAJ ) {
     // TODO Auto-generated method stub
     return null;
   }
