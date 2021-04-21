@@ -24,7 +24,7 @@ public class TypeConverter<T> {
     }
   }
 
-  TypeConverter( Class<T> targetStructure, ProxyFactoryCreator factoryCreator ) {
+  public TypeConverter( Class<T> targetStructure, ProxyFactoryCreator factoryCreator ) {
     this.proxyFactory = factoryCreator.createProxyFactory( targetStructure );
   }
 
