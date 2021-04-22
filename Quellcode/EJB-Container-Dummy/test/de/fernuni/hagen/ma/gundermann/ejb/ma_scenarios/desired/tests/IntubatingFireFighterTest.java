@@ -5,10 +5,12 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Objects;
 
 import org.junit.Before;
 
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.desired.IntubatingFireFighter;
+import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.beans.FireState;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Fire;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Injured;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Suffer;
@@ -38,8 +40,9 @@ public class IntubatingFireFighterTest implements PivotMethodTestInfo {
   @QueryTypeTest( testedSingleMethod = "extinguishFire" )
   public void free() {
     Fire fire = new Fire();
-    intubatingFireFighter.extinguishFire( fire );
+    FireState fireState = intubatingFireFighter.extinguishFire( fire );
     markPivotMethodCallExecuted();
+    assertTrue( Objects.equals( fireState.isActive(), fire.isActive() ) );
     assertFalse( fire.isActive() );
   }
 

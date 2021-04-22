@@ -1,16 +1,18 @@
 package de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.beans.impl;
 
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.beans.FireFighter;
+import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.beans.FireState;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.beans.ParaMedic;
-import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Injured;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Fire;
+import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Injured;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Suffer;
 
 public class ProfessionalFireFighter implements ParaMedic, FireFighter {
 
   @Override
-  public void extinguishFire( Fire fire ) {
+  public FireState extinguishFire( Fire fire ) {
     fire.extinguish();
+    return new FireState( fire.isActive() );
   }
 
   @Override

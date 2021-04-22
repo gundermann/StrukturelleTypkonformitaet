@@ -1,9 +1,12 @@
 package de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.beans.impl;
 
+import java.util.Collection;
+
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.beans.Doctor;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.beans.Intubator;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Injured;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.IntubationPartient;
+import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Medicine;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Suffer;
 
 public class EmergencyDoctor implements Doctor, Intubator {
@@ -45,6 +48,14 @@ public class EmergencyDoctor implements Doctor, Intubator {
   @Override
   public void intubate( IntubationPartient patient ) {
     patient.setIntubated( true );
+  }
+
+  @Override
+  public void healWithMed( Injured injured, Medicine med ) {
+    Collection<Suffer> suffers = injured.getSuffers();
+    for ( Suffer suffer : suffers ) {
+      injured.healSuffer( suffer );
+    }
   }
 
 }

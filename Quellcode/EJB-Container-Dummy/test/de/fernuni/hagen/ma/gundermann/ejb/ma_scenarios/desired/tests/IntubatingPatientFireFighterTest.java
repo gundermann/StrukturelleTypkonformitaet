@@ -3,9 +3,12 @@ package de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.desired.tests;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Objects;
+
 import org.junit.Before;
 
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.desired.IntubatingPatientFireFighter;
+import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.beans.FireState;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Fire;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.IntubationPartient;
 import spi.PivotMethodInfoContainer;
@@ -32,8 +35,9 @@ public class IntubatingPatientFireFighterTest implements PivotMethodTestInfo {
   @QueryTypeTest( testedSingleMethod = "free" )
   public void free() {
     Fire fire = new Fire();
-    intubatingPatientFireFighter.extinguishFire( fire );
+    FireState fireState = intubatingPatientFireFighter.extinguishFire( fire );
     markPivotMethodCallExecuted();
+    assertTrue( Objects.equals( fireState.isActive(), fire.isActive() ) );
     assertFalse( fire.isActive() );
   }
 
