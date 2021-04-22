@@ -9,6 +9,7 @@ import org.junit.Before;
 
 import DE.data_experts.profi.profilcs.antrag2015.eler.ft.stammdaten.business.ElerFTFoerderprogramm;
 import de.fernuni.hagen.ma.gundermann.ejb.pcs_scenarios.desired.ElerFTFoerderprogrammeProvider;
+import spi.PivotMethodInfoContainer;
 import spi.PivotMethodTestInfo;
 import tester.annotation.QueryTypeInstanceSetter;
 import tester.annotation.QueryTypeTest;
@@ -17,7 +18,7 @@ public class ElerFTFoerderprogrammProviderTest implements PivotMethodTestInfo {
 
   private ElerFTFoerderprogrammeProvider provider;
 
-  private boolean pivotMethodCallExecuted;
+  private PivotMethodInfoContainer pmiContainer = new PivotMethodInfoContainer();
 
   @Before
   public void before() {
@@ -52,17 +53,7 @@ public class ElerFTFoerderprogrammProviderTest implements PivotMethodTestInfo {
   // }
 
   @Override
-  public void reset() {
-    pivotMethodCallExecuted = false;
-  }
-
-  @Override
-  public void markPivotMethodCallExecuted() {
-    pivotMethodCallExecuted = true;
-  }
-
-  @Override
-  public boolean pivotMethodCallExecuted() {
-    return pivotMethodCallExecuted;
+  public PivotMethodInfoContainer getPivotMethodInfoContainer() {
+    return pmiContainer;
   }
 }

@@ -2,9 +2,17 @@ package spi;
 
 public interface PivotMethodTestInfo {
 
-  void reset();
+  PivotMethodInfoContainer getPivotMethodInfoContainer();
 
-  void markPivotMethodCallExecuted();
+  default void reset() {
+    getPivotMethodInfoContainer().setPivotMethodExecuted( false );
+  }
 
-  boolean pivotMethodCallExecuted();
+  default void markPivotMethodCallExecuted() {
+    getPivotMethodInfoContainer().setPivotMethodExecuted( true );
+  }
+
+  default boolean pivotMethodCallExecuted() {
+    return getPivotMethodInfoContainer().isPivotMethodExecuted();
+  }
 }

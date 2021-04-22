@@ -10,6 +10,7 @@ import org.junit.Before;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.desired.IntubatingFreeing;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Injured;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Suffer;
+import spi.PivotMethodInfoContainer;
 import spi.PivotMethodTestInfo;
 import tester.annotation.QueryTypeInstanceSetter;
 import tester.annotation.QueryTypeTest;
@@ -18,7 +19,7 @@ public class IntubatingFreeingTest implements PivotMethodTestInfo {
 
   private IntubatingFreeing intubatingFreeing;
 
-  private boolean pivotMethodCallExecuted;
+  private PivotMethodInfoContainer pmiContainer = new PivotMethodInfoContainer();
 
   @Before
   public void before() {
@@ -49,17 +50,7 @@ public class IntubatingFreeingTest implements PivotMethodTestInfo {
   }
 
   @Override
-  public void reset() {
-    pivotMethodCallExecuted = false;
-  }
-
-  @Override
-  public void markPivotMethodCallExecuted() {
-    pivotMethodCallExecuted = true;
-  }
-
-  @Override
-  public boolean pivotMethodCallExecuted() {
-    return pivotMethodCallExecuted;
+  public PivotMethodInfoContainer getPivotMethodInfoContainer() {
+    return pmiContainer;
   }
 }

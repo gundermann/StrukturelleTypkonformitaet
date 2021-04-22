@@ -8,6 +8,7 @@ import org.junit.Before;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.desired.IntubatingPatientFireFighter;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Fire;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.IntubationPartient;
+import spi.PivotMethodInfoContainer;
 import spi.PivotMethodTestInfo;
 import tester.annotation.QueryTypeInstanceSetter;
 import tester.annotation.QueryTypeTest;
@@ -16,7 +17,7 @@ public class IntubatingPatientFireFighterTest implements PivotMethodTestInfo {
 
   private IntubatingPatientFireFighter intubatingPatientFireFighter;
 
-  private boolean pivotMethodCallExecuted;
+  private PivotMethodInfoContainer pmiContainer = new PivotMethodInfoContainer();
 
   @QueryTypeInstanceSetter
   public void setProvider( IntubatingPatientFireFighter intubatingFireFighter ) {
@@ -45,18 +46,8 @@ public class IntubatingPatientFireFighterTest implements PivotMethodTestInfo {
   }
 
   @Override
-  public void reset() {
-    pivotMethodCallExecuted = false;
-  }
-
-  @Override
-  public void markPivotMethodCallExecuted() {
-    pivotMethodCallExecuted = true;
-  }
-
-  @Override
-  public boolean pivotMethodCallExecuted() {
-    return pivotMethodCallExecuted;
+  public PivotMethodInfoContainer getPivotMethodInfoContainer() {
+    return pmiContainer;
   }
 
 }

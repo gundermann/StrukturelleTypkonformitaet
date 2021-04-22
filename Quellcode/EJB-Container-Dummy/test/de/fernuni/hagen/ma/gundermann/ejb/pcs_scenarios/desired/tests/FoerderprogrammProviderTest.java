@@ -9,6 +9,7 @@ import org.junit.Before;
 
 import DE.data_experts.profi.profilcs.antrag2015.stammdaten.business.impl.Foerderprogramm;
 import de.fernuni.hagen.ma.gundermann.ejb.pcs_scenarios.desired.FoerderprogrammeProvider;
+import spi.PivotMethodInfoContainer;
 import spi.PivotMethodTestInfo;
 import tester.annotation.QueryTypeInstanceSetter;
 import tester.annotation.QueryTypeTest;
@@ -17,7 +18,7 @@ public class FoerderprogrammProviderTest implements PivotMethodTestInfo {
 
   private FoerderprogrammeProvider provider;
 
-  private boolean pivotMethodCallExecuted;
+  private PivotMethodInfoContainer pmiContainer = new PivotMethodInfoContainer();
 
   @Before
   public void before() {
@@ -37,17 +38,7 @@ public class FoerderprogrammProviderTest implements PivotMethodTestInfo {
   }
 
   @Override
-  public void reset() {
-    pivotMethodCallExecuted = false;
-  }
-
-  @Override
-  public void markPivotMethodCallExecuted() {
-    pivotMethodCallExecuted = true;
-  }
-
-  @Override
-  public boolean pivotMethodCallExecuted() {
-    return pivotMethodCallExecuted;
+  public PivotMethodInfoContainer getPivotMethodInfoContainer() {
+    return pmiContainer;
   }
 }
