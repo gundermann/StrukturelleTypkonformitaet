@@ -1,0 +1,575 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{pblue}{rgb}{0.13,0.13,1}
+\definecolor{pgreen}{rgb}{0,0.5,0}
+\definecolor{pred}{rgb}{0.9,0,0}
+\definecolor{pgrey}{rgb}{0.46,0.45,0.48}
+
+\lstdefinestyle{dsl}{
+	 morekeywords={with, subproxy, structproxy, for, simpleproxy, contentproxy, containerproxy, nominalproxy, provided, required, interface, extends},
+  showspaces=false,
+  showtabs=false,
+  breaklines=true,
+   literate=
+               {-->}{$\rightarrow{}$}{1}
+               ,
+  showstringspaces=false,
+  breakatwhitespace=true,
+  commentstyle=\color{pgreen},
+  keywordstyle=\color{pblue},
+  stringstyle=\color{pred},
+  basicstyle=\fontsize{9}{10}\selectfont\ttfamily,
+  moredelim=[il][\textcolor{pgrey}]{$ $},
+  moredelim=[is][\textcolor{pgrey}]{\%\%}{\%\%}
+}
+
+
+
+
+\newcommand{\matchTyp}[3]
+{
+#1  
+\Rightarrow_{#2}
+ #3
+}
+
+\begin{document}
+
+\section{Struktur für die Definition von Typen}
+Die Typen seien in einer Bibliothek $\text{L}$ in folgender Form zusammengefasst:
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{6cm}|p{8cm}|}
+\hline
+\hline
+\centering\textbf{Regel} & \textbf{Erläuterung} \\
+\hline
+\hline
+$L ::= TD\text{*}$ & Eine Bibliothek \emph{L} besteht aus einer Menge von Typdefinitionen.\\
+\hline
+$TD ::= PD | RD$ & Eine Typdefinition kann entweder die Definition eines provided Typen (PD) oder eines required Typen (RD) sein.\\
+\hline
+$PD ::=$ provided T extends T' $\{ FD\text{*} MD\text{*}\}$& Die Definition eines provided Typen besteht aus dem Namen des Typen \emph{T}, dem Namen des Super-Typs \emph{T'} von \emph{T} sowie mehreren Feld- und Methodendeklarationen.\\
+\hline
+$RD ::=$ required T $\{MD\text{*}\}$ & Die Definition eines required Typen besteht aus dem Namen des Typen \emph{T} sowie mehreren Methodendeklarationen.\\
+\hline
+$FD ::=$ f : T & Eine Felddeklaration besteht aus dem Namen des Feldes \emph{f} und dem Namen seines Typs \emph{T}.\\
+\hline
+$MD ::=$ m(T):T' & Eine Methodendeklaration besteht aus dem Namen der Methode \emph{m}, dem Namen des Parameter-Typs \emph{T} und dem Namen des Rückgabe-Typs \emph{T'}.\\
+\hline
+\hline
+\end{tabular}
+\caption{Struktur für die Definition einer Bibliothek von Typen}
+ \label{tab:eIShort}
+\end{table}
+\noindent
+Weiterhin sei die Relation $<$ auf Typen durch folgenden Regel definiert:
+\begin{eqnarray*}
+T < T' := \text{provided \emph{T} extends \emph{T'}} \in L \vee (\text{provided \emph{T} extends \emph{T''}} \in L \wedge T'' < T') 
+\end{eqnarray*}
+Darüber hinaus seien folgende Funktionen definiert:
+\begin{gather*}
+felder(T) :=  \left\{ 
+				\begin{array}{l|l}
+					f : T' & \text{ \emph{f : T'} ist Felddeklaration von \emph{T}}
+				\end{array}
+              \right\}\\
+methoden(T) := \left\{ 
+				\begin{array}{l|l}
+					m(T'):T'' & \text{ \emph{m(T'):T''} ist Methodendeklaration von 										\emph{T}}
+				\end{array}
+              \right\}\}
+\end{gather*}
+\noindent
+Das Matching eines Typs $A$ zu einem Typ $B$ wird durch die asymmetrische Relation $\matchTyp{A}{}{B}$ beschrieben. Dabei wird $A$ auch als \emph{Source-Typ} und $B$ als \emph{Target-Typ} bezeichnet.
+
+\section{Struktur für die Definition von Proxies}
+Ein Proxy wird auf der Basis einer Matchingrelation erzeugt. In Abhängigkeit von der zugrundeliegenden Matchingrelation zwischen dem \emph{Source-} und dem \emph{Target-Typen} werden unterschiedliche Arten von Proxies erzeugt:
+\begin{itemize}
+\item \emph{Struktureller Proxy}
+\item \emph{Simple-Proxy}
+\item \emph{Sub-Proxy}
+\item \emph{Container-Proxy}
+\item \emph{Content-Proxy}
+\end{itemize}
+Der Typ des Proxies entspricht immer dem \emph{Source-Typ} der zugrundeliegenden Matchingrelation. Die unterschiedlichen Proxies werden dabei durch folgende Struktur beschrieben :
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{6cm}|p{8cm}|}
+\hline
+\hline
+\centering\textbf{Regel} & \textbf{Erläuterung} \\
+\hline
+\hline
+$\mathit{STRUCTPROXY} ::=$\newline $\texttt{structproxy } \texttt{for } R$\newline$ \texttt{\{}TARGET\texttt{*\}}$ & Ein \emph{struktureller Proxy} wird für ein \emph{required Interface R} mit einer Mengen von Targets erzeugt.  \\
+\hline
+$\mathit{TARGET} ::=$\newline $P \texttt{ \{}MDEL\texttt{*\}}$ & Ein Target besteht aus dem Typ \emph{P} des Targets (ein \emph{provided Typ}) und einer Mengen von Methodendelegationen.\\
+\hline
+$\mathit{MDEL} ::= CALLM \rightarrow DELM $  & Eine Methodendelegation besteht aus einer aufgerufenen Methode und aus einem Delegationsziel.\\
+\hline
+$\mathit{CALLM} ::=$\newline $m(SP):STPROXY $  & Eine aufgerufene Methode besteht aus dem Namen der Methode \emph{m}, dem Parametertyp \emph{SP} und einem Single-Target-Proxy zur Konvertierung des Rückgabetyps des Delegationsziels.\\
+\hline
+$\mathit{DELM} ::=$\newline $n(STPROXY):R $  & Ein Delegationsziel besteht aus demdem Namen der Methode \emph{n}, dem Rückgabetyp \emph{TR} und einem Single-Target-Proxy zur Konvertierung des Parametertyps der aufgerufenen Methode.\\
+\hline
+$\mathit{STPROXY} ::= NPX$ & Ein Nominal-Proxy ist ein Single-Target-Proxy.\\
+
+
+\hline
+\end{tabular}
+\caption{Struktur für die Definition eines Proxies}
+ \label{tab:eIShort}
+\end{table}
+\newpage
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{6cm}|p{8cm}|}
+\hline
+\centering\textbf{Regel} & \textbf{Erläuterung} \\
+\hline
+\hline
+$\mathit{STPROXY} ::=$\newline $\texttt{contentproxy }  \texttt{for } P$\newline $\texttt{with } P' \texttt{ \{}CEMDEL\texttt{*\}}$ & Ein \emph{Content-Proxy} ist ein Single-Target-Proxy, der für ein \emph{provided Typ P} mit einem \emph{provided Typ P'} als Target-Typ sowie einer Mengen von Content-Proxy-Methodendelegationen erzeugt wird.\\
+\hline
+$\mathit{STPROXY} ::=$\newline $\texttt{containerproxy} \texttt{ for } P$\newline
+$ \texttt{with } P' \texttt{ \{} f = \mathit{NPX} \texttt{\}}$ &  Ein \emph{Container-Proxy} ist ein Single-Target-Proxy, der für ein \emph{provided Typ P} mit einem \emph{provided Typ P'} als Target-Typ sowie der Zuweisung eines Nominal-Proxies für den Target-Typ zu einem Feld \emph{f} erzeugt wird.\\
+\hline
+$\mathit{NPX} ::=$ \newline $\texttt{subproxy } \texttt{for } P$\newline $\texttt{with } P' \texttt{ \{}\mathit{NOMMDEL}\texttt{*\}}$ & Ein Sub-Proxy ist ein Nominal-Proxy, derfür ein \emph{provided Typ P} mit einem \emph{provided Typ P'} als Target-Typ sowie einer Mengen von Nominal-Proxy-Methodendelegationen erzeugt wird. Dabei gilt $P < P'$.\\
+\hline
+$\mathit{NPX} ::=$ \newline $\texttt{simpleproxy } \texttt{for } P$ & Ein \emph{Simple-Proxy} ist ein Nominal-Proxy, der aus einem Typen \emph{P}, für den der Proxy erzeugt wird, besteht. Der Target-Typ ist in diesem Fall ebenfalls \emph{P}. Alle Methoden werden in diesem Fall an den Target-Typ delegiert.\\
+\hline
+$\mathit{NOMMDEL} ::=$\newline
+$\mathit{m(SP):SR} \rightarrow \mathit{m(TP):TR} $  & Eine Nominal-Proxy-Methodendelegation besteht aus zwei Methoden mit demselben Namen \emph{m} und den jeweiligen Parameter- und Rückgabetypen \emph{SP} und \emph{SR} bzw. \emph{TP} und \emph{TR}. \\
+\hline
+$\mathit{CEMDEL} ::= \mathit{m(SP):NPX} \rightarrow$\newline
+$\mathit{f.m(NPX):TR} $  & Eine Content-Proxy-Methodendelegation besteht aus zwei Methoden mit demselben Namen \emph{m}, wobei die delegierte Methode (rechte Seite) auf einem Feld \emph{f} des Target-Typs aufgerufen wird. Dabei besteht die aufgerufene Methode aus dem Parametertyp \emph{SP} und einem Nominal-Proxy für den Rückgabetyp. Ferner besteht die delegierte Methode aus dem jeweiligen Rückgabetyp \emph{TR} und einem Nominal-Proxy für den Parametertyp.\\
+\hline
+\hline
+\end{tabular}
+\caption{Struktur für die Definition eines Proxies (Fortsetzung)}
+ \label{tab:eIShort}
+\end{table}
+
+\newpage
+\section{Beispiel-Bibliothek}
+
+\begin{lstlisting}[style = dsl]
+provided Fire extends Object{}
+\end{lstlisting}
+
+\begin{lstlisting}[style = dsl]
+provided FireState extends Object{
+	isActive : boolean
+}
+\end{lstlisting}
+
+ \begin{lstlisting}[style = dsl]
+provided Medicine extends Object{
+	String getDescription()
+}
+\end{lstlisting}
+
+\begin{lstlisting}[style = dsl]
+provided Injured extends Object{
+	void heal(Medicine med)	
+}
+\end{lstlisting}
+
+
+\begin{lstlisting}[style = dsl]
+provided Patient extends Injured{}
+\end{lstlisting}
+\begin{lstlisting}[style = dsl]
+provided FireFighter extends Object{
+	FireState extinguishFire(Fire fire)
+}
+\end{lstlisting}
+
+\begin{lstlisting}[style = dsl]
+provided Doctor extends Object{	
+	void heal( Patient pat, Medicine med )
+}
+\end{lstlisting}
+
+
+
+\begin{lstlisting}[style = dsl]
+provided MedCabinet extends Object{
+	med : Medicine
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Bibliothek von Typen},captionpos=b, style = dsl]
+required MedicalFireFighter {
+	void heal( Injured injured, MedCabinet med )
+	boolean extinguishFire( Fire fire )	
+}
+\end{lstlisting}
+
+\newpage
+\section{Beispiel-Proxy für MedicalFireFighter}\label{xmpl_prxy}
+\begin{lstlisting}[caption={Proxy für MedicalFireFighter},captionpos=b,style = dsl]
+structproxy for MedicalFireFither{
+	FireFighter {
+	 extinguishFire(Fire): 
+	 	containerproxy for FireState with boolean {
+		 isActive = simpleproxy for boolean		
+		} 
+		--> extinguishFire(simpleproxy for Fire):boolean
+	}
+		
+	Doctor {
+	 heal(Injured, MedCabinet):simpleproxy for void
+		--> heal(subproxy for Patient with Injured{
+			heal(Medicine):	void
+				--> heal(Medicine):void					
+		   }, contentproxy for Medicine with MedCabinet{
+			getDescription(): simpleproxy for String
+				--> med.getDescription():String			
+		      }):void		
+	}
+}
+\end{lstlisting}
+
+\newpage
+\section{Matcher}
+Die Matcher beinhalten zum Einen die Definition der jeweiligen Matchingrelation ($\Rightarrow$) sowie die Regeln zur Erzeugung eines Proxies, der auf jener Matchingrelation basiert. Alle Arten von Proxies, die durch die folgenden Matcher erzeugt werden, können am Beispiel aus Abschnitt \ref{xmpl_prxy} nachvollzogen werden.
+\subsection{StructuralTypeMatcher}
+Das strukturelle Matching zwischen einem \emph{required Interface} $R$ und einem \emph{provided Typ} $P$ ist gegeben, sofern eine Methode aus $R$ zu einer Methode aus $P$ gematcht werden kann. Die Menge der aus $R$ in $P$ gematchten Methoden wird wie folgt beschrieben:
+\begin{gather*}
+structM(R,P) := \left\{ 
+				\begin{array}{l|l}
+						& \exists n(S):S' \in methoden(P) .\\													m(T):T' \in methoden(R) &  S\Rightarrow_{internStruct} \wedge \\
+										& T' \Rightarrow_{internStruct}S'
+				\end{array}
+              \right\}
+\end{gather*}
+Da die Notation es nicht hergibt, ist zusätzlich zu erwähnen, dass die Reihenfolge der Parameter in $m$ und $n$ irrelevant ist.\\\\
+Die Relation $\Rightarrow_{egsc}$ wird durch die übrigen Matcher in folgender Form beschrieben:
+\begin{gather*}
+\frac{\splitfrac{A \Rightarrow_{exact}B \vee A \Rightarrow_{spec}B 
+\vee A \Rightarrow_{gen}B}{\vee A \Rightarrow_{container} B \vee A \Rightarrow_{content} B}}{A \Rightarrow_{internStruct}B}
+\end{gather*}
+Das strukturelle Matching von $R$ und $P$ wird dann durch folgende Regel beschrieben.
+
+\begin{gather*}
+\frac{structM(R,P) \neq \emptyset}{R \Rightarrow_{struct}P}
+\end{gather*}
+\noindent
+Für die Verwendung von $R$ muss jedoch sichergestellt werden, dass alle darin enthaltenen
+Methoden durch ein oder mehrere \emph{required Typen} innerhalb der gesamten Bibliothek $L$ gematcht werden. Folgende Funktion beschreibt daher eine Menge von Mengen von\emph{provided Typen}, die für die Erzeugung eines \emph{strukturellen Proxies} für $R$ verwendet werden können.
+\begin{gather*}
+cover(R,L) := 
+\left\{\begin{array}{l|l}
+					& P_1 \in L \wedge \text{...} \wedge P_n \in L \wedge \\
+					& methoden(R) = structM(R,P_1) \cup \\
+	\{P_1,...,P_n\}	& \texttt{...} \cup structM(R, P_n) \wedge \\
+					& \mathit{structM(R,P_1)} \neq \emptyset \wedge \\
+					& \texttt{...}\wedge \mathit{structM(R,P_n)} \neq \emptyset 
+\end{array}\right\}
+\end{gather*}
+Für $R$ kann die Exploration abgebrochen werden, wenn $cover(R,L) = \emptyset$ gilt.\\\\
+Ein struktureller Proxy für ein \emph{required Interface} $R$ aus einer Menge von  \emph{provided Typen} $P$ wird durch folgende Regeln und Nebenbedingungen beschrieben:
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{4cm}|p{10cm}|}
+\hline
+\hline
+\centering\textbf{Regel} & \textbf{Nebenbedingungen} \\
+\hline
+\hline
+$\mathit{STRUCTPROXY} ::=$\newline $\texttt{structproxy } \texttt{for } R$\newline$ \texttt{\{}TARGET_1 \texttt{ ... }$ \newline
+$ TARGET_n\texttt{\}}$ & $typ(\mathit{STRUCTPROXY})=R$\newline
+$methoden(\mathit{STRUCTPROXY}) = $\newline
+ $\mathit{cmethoden(TARGET_1)} \cup \texttt{...} \cup \mathit{cmethoden(TARGET_n)} $\newline
+$methoden(R) = methoden(\mathit{STRUCTPROXY})$\\
+\hline
+$\mathit{TARGET} ::=$\newline $P \texttt{ \{}MDEL_1 \texttt{ ...}$\newline
+$ MDEL_n\texttt{\}}$ &
+$\mathit{typ(TARGET)} = P$ \newline
+$\mathit{cmethoden(TARGET)} = $\newline
+ $\mathit{cmethode(MDEL_1)} \cup \texttt{...} \cup \mathit{cmethode(MDEL_n)}$ \newline
+$\mathit{dmethoden(TARGET)} =  $\newline 
+ $\mathit{dmethode(MDEL_1)} \cup \texttt{...} \cup \mathit{dmethode(MDEL_n)}$ \newline
+ $\mathit{dmethoden(TARGET)} \subseteq \mathit{methoden(P)} $ \\
+\hline
+$\mathit{MDEL} ::= $\newline
+$ CALLM \rightarrow DELM $  & 
+$\mathit{cmethode(MDEL}) = \mathit{methode(CALLM)}$\newline
+$\mathit{dmethode(MDEL}) = \mathit{methode(DELM)}$\newline
+$\mathit{paramTargetTyp(DELM)} = \mathit{paramTyp(CALLM)}$\newline
+$\mathit{returnTargetTyp(CALLM)} = \mathit{returnTyp(DELM)}$
+\\
+\hline
+$\mathit{CALLM} ::=$\newline $m(SP):STPROXY $  &
+$SR = \mathit{typ(STPROXY)} $\newline
+$\mathit{methode(CALLM)} = \mathit{m(SP):SR} $\newline
+$\mathit{paramTyp(CALLM) = SP}$\newline
+$\mathit{targetTyp(STPROXY) = returnTargetTyp(CALLM)}$ \\
+\hline
+$\mathit{DELM} ::=$\newline $n(STPROXY):R $  & 
+$DP = \mathit{typ(STPROXY)} $\newline
+$\mathit{methode(DELM)} = \mathit{n(DP):R} $\newline
+$\mathit{returnTyp(DELM) = R}$\newline
+$\mathit{targetTyp(STPROXY) = paramTargetTyp(DELM)}$ \\
+\hline
+\hline
+\end{tabular}
+\caption{Grammatik für die Definition eines Proxies}
+ \label{tab:eIShort}
+\end{table}
+\noindent
+Regeln für das Nonterminal \emph{STPROXY} unterliegen Nebenbedingungen, die teilweise erst unter Zuhilfenahme der folgenden Matcher erfüllt werden können.
+\subsection{ExactTypeMatcher}
+Die Matchingrelation für diesen Matcher wird durch folgende Regel beschrieben:
+
+\begin{gather*}
+\frac{}{T \Rightarrow_{exact} T}
+\end{gather*}
+Ein Proxy für einen Typ $T$, der mit demselben Typ als Target-Typ erzeugt werden soll, ist ein \emph{Simple-Proxy}. Die Regeln für den \emph{Simple-Proxy}, sind im folgenden Abschnitt zum \emph{GenTypeMatcher} beschrieben.
+
+
+\subsection{GenTypeMatcher}
+Die Matchingrelation für diesen Matcher wird durch folgende Regel beschrieben:
+\begin{gather*}
+\frac{T > T'}{T \Rightarrow_{gen} T'}
+\end{gather*}
+Ein Proxy für einen Typ $T$, der mit einem Typen-Typ $T'$ mit $T \Rightarrow_{gen} T'$ erzeugt werden soll, ist ein \emph{Simple-Proxy} und wird über die folgenden Regeln und Nebenbedingungen beschrieben:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{4cm}|p{10cm}|}
+\hline
+\hline
+\centering\textbf{Regel} & \textbf{Nebenbedingungen} \\
+\hline
+\hline
+$\mathit{STPROXY} ::= NPX$ &
+$\mathit{typ(STPROXY)}=\mathit{typ(NPX)}$\newline
+$\mathit{targetTyp(STPROXY)} = \mathit{targetTyp(NPX)}$\\
+\hline
+$\mathit{NPX} ::=$ \newline $\texttt{simpleproxy } \texttt{for } P$ & 
+$\mathit{targetTyp(NPX)} \Rightarrow_{gen} P $\newline
+$\mathit{typ(NPX)}=P$\newline
+$\mathit{methoden(NPX)} = \mathit{methoden(P)}$
+\\
+\hline
+\hline
+\end{tabular}
+\caption{Regeln und Nebenbedingungen für Simple-Proxies}
+ \label{tab:simpAttr}
+\end{table}
+
+\subsection{SpecTypeMatcher}
+Die Matchingrelation für diesen Matcher wird durch folgende Regel beschrieben:
+\begin{gather*}
+\frac{T < T'}{T \Rightarrow_{spec} T'}
+\end{gather*}
+Ein Proxy für einen Typ $T$, der mit einem Target-Typ $T'$ mit $T \Rightarrow_{spec} T'$ erzeugt werden soll, ist ein \emph{Sub-Proxy} und wird durch die folgenden Regeln und Nebenbedingungen beschrieben: 
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{5cm}|p{9cm}|}
+\hline
+\hline
+\centering\textbf{Regel} & \textbf{Nebenbedingungen} \\
+\hline
+\hline
+$\mathit{NPX} ::=$ \newline $\texttt{subproxy } \texttt{for } P$\newline $\texttt{with } P' \texttt{ \{}\mathit{NOMMDEL_1}$\newline
+$ \texttt{... }\mathit{NOMMDEL_n}\texttt{\}}$ & 
+$\mathit{targetTyp(NPX)} = P'$\newline
+$\mathit{typ(NPX)} = P$\newline
+$P \Rightarrow_{spec} P'$\newline
+$\mathit{methoden(NPX)} = \mathit{cmethode(NOMMDEL_1)} \cup $\newline
+$\texttt{...} \cup \mathit{cmethode(NOMMDEL_n)}$ \newline
+$\mathit{methoden(NPX)} \subseteq \mathit{methoden(P)}  $\newline 
+$\mathit{methoden(P')} \supseteq \mathit{dmethode(NOMMDEL_1)} \cup  $\newline 
+$\texttt{...} \cup \mathit{dmethode(NOMMDEL_n)}$ 
+\\
+\hline
+$\mathit{NOMMDEL} ::=$\newline
+$\mathit{m(SP):SR} \rightarrow$\newline
+$ \mathit{m(TP):TR} $  &
+$SP >= TP$\newline
+$SR <= TR$\newline
+$\mathit{cmethode(MOMMDEL)} = \mathit{m(SP):SR}$\newline
+$\mathit{dmethode(MOMMDEL)} = \mathit{m(TP):TR}$ \\
+\hline
+\hline
+\end{tabular}
+\caption{Regeln und Nebenbedingungen für Sub-Proxies}
+ \label{tab:subAttr}
+\end{table}
+\subsection{ContentTypeMatcher}
+Die Matchingrelation für diesen Matcher wird durch folgende Regel beschrieben:
+\begin{gather*}
+\frac{\exists f:T''\in felder(T'). T \Rightarrow_{internCont} T''}{T \Rightarrow_{content} T'}
+\end{gather*}
+Für die Relation $\Rightarrow_{internCont}$ gilt dabei:
+\begin{gather*}
+\frac{T \Rightarrow_{exact} T' \vee T \Rightarrow_{gen} T' \vee
+T \Rightarrow_{spec} T'  }{T \Rightarrow_{internCont} T'}
+\end{gather*}
+Ein Proxy für einen Typ $P$, der mit einem Target-Typ $P'$ mit $P \Rightarrow_{content} P'$ erzeugt werden soll, ist ein \emph{Content-Proxy} und wird durch die folgenden Regeln und Nebenbedingungen beschrieben:
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{4cm}|p{10cm}|}
+\hline
+\hline
+\centering\textbf{Regel} & \textbf{Nebenbedingungen} \\
+\hline
+\hline
+$\mathit{STPROXY} ::=$\newline $\texttt{contentproxy }  \texttt{for } P$\newline $\texttt{with } P' \texttt{ \{}CEMDEL_1$\newline
+$\texttt{... } CEMDEL_n\texttt{\}}$ &
+$\mathit{typ(STPROXY)}= P$\newline
+$\mathit{targetTyp(STPROXY)}= P'$\newline
+$P \Rightarrow_{content} P'$\newline
+$\mathit{methoden(STPROXY)} = \mathit{cmethode(CEMDEL_1)} \cup $\newline
+$\texttt{...} \cup \mathit{cmethode(CEMDEL_n)}$ \newline
+$\mathit{methoden(STPROXY)} \subseteq \mathit{methoden(P)}  $\newline
+$\mathit{containerType(CEMDEL_1)} = P'$ \newline
+$ \texttt{... } \mathit{containerType(CEMDEL_n)} = P' $ \\
+\hline
+$\mathit{CEMDEL} ::=$\newline
+$\mathit{CECALLM} \rightarrow$\newline
+$\mathit{f.CEDELM} $  &
+$\mathit{f:FT} \in \mathit{felder(containerType(CEMDEL))}$ \newline
+$\mathit{methode(CEDELM)} \in \mathit{methoden(FT)} $\newline
+$\mathit{paramTargetTyp(CEDELM)} = \mathit{paramTyp(CECALLM)}$\newline
+$\mathit{returnTargetTyp(CECALLM)} = \mathit{returnTyp(CEDELM)}$\\
+\hline
+$\mathit{CECALLM} ::=$\newline
+$\mathit{m(SP):NPX} $  &
+$\mathit{paramTyp(CECALLM)} = \mathit{SP}$\newline
+$SR = \mathit{typ(NPX)}$\newline
+$\mathit{targetTyp(NPX)} = \mathit{returnTargetTyp(CECALLM)}$\newline
+$\mathit{methode(CECALLM)} = \mathit{m(SP):SR}$\\
+\hline
+$\mathit{CEDELM} ::=$\newline
+$\mathit{m(NPX):TR} $  &
+$\mathit{returnTyp(CEDELM)} = \mathit{TR} $\newline
+$\mathit{TP} = \mathit{typ(NPX)} $\newline
+$\mathit{targetTyp(NPX)} = \mathit{paramTargetTyp(CEDELM)} $\newline
+$\mathit{methode(CEDELM)} =\mathit{m(TP):TR} $\\
+\hline
+\hline
+\end{tabular}
+\caption{Regeln und Nebenbedingungen für Contentproxies}
+ \label{tab:contentAttr}
+\end{table}
+
+\subsection{ContainerTypeMatcher}
+Die Matchingrelation für diesen Matcher wird durch folgende Regel beschrieben:
+\begin{gather*}
+\frac{\exists f:T''\in felder(T). T'' \Rightarrow_{internCont} T'}{T \Rightarrow_{container} T'}
+\end{gather*}
+Ein Proxy für einen Typ $P$, der mit einem Target-Typ $P'$ mit $P \Rightarrow_{container} P'$ erzeugt werden soll, ist ein \emph{Container-Proxy} und wird durch die folgenden Regeln und Nebenbedingungen beschrieben:
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{6cm}|p{8cm}|}
+\hline
+\hline
+\centering\textbf{Regel} & \textbf{Nebenbedingungen} \\
+\hline
+\hline
+$\mathit{STPROXY} ::=$\newline $\texttt{containerproxy} \texttt{ for } P$\newline
+$ \texttt{with } P' \texttt{ \{} f = \mathit{NPX} \texttt{\}}$ & 
+$\mathit{targetTyp(STPROXY)} = P'$\newline
+$\mathit{typ(STPROXY)} = P$\newline
+$P \Rightarrow_{container} P'$\newline
+$\mathit{f:FT} \in \mathit{felder(P)}$\newline
+$\mathit{targetTyp(NPX)} = P'$\newline
+$\mathit{typ(NPX)} = FT$\\
+\hline
+\hline
+\end{tabular}
+\caption{Regeln und Nebenbedingungen für Container-Proxies}
+ \label{tab:containerAttr}
+\end{table}
+\section{Erweiterung um einen DVMatcher}
+Die o.g. Struktur für die Definition von Typen wird die Definition von \emph{provided Typen} erweitert.
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{6cm}|p{8cm}|}
+\hline
+\hline
+\centering\textbf{Regel} & \textbf{Erläuterung} \\
+\hline
+\hline
+$PD ::= \newline \texttt{provided } T \texttt{ extends }T' \newline \texttt{\{}FD\text{*} MD\text{*} FCD\text{?\}}$& Die Definition eines provided Typen besteht aus dem Namen des Typen \emph{T}, dem Namen des Super-Typs \emph{T'} von \emph{T} sowie mehreren Feld- und Methodendeklarationen und einer optionalen Definition eines Factory-Typen.\\
+\hline
+$FCD ::= \texttt{factory }T \texttt{ \{}\newline \mathit{FD}\texttt{*} \mathit{MD}\texttt{*} \texttt{\}} $& Die Definition eines factory Typen besteht aus dem Namen des Typen \emph{T} sowie mehreren Feld- und Methodendeklarationen.\\
+\hline
+\hline
+\end{tabular}
+\caption{Erweiterte Struktur für die Definition einer Bibliothek von Typen}
+ \label{tab:extTDv}
+\end{table}
+\noindent
+Darüber hinaus wird folgende Funktion definiert:
+\begin{gather*}
+fabriken(T) :=  \left\{ 
+				\begin{array}{l|l}
+					F & F \text{ ist ein Factory-Typ, der in \emph{T} definiert wurde}
+				\end{array}
+              \right\}
+\end{gather*}
+Weiterhin muss die Struktur für die Definition von Proxies um eine weitere Definition für einen \emph{Single-Target-Proxy} erweitert werden.
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{6cm}|p{8cm}|}
+\hline
+\centering\textbf{Regel} & \textbf{Erläuterung} \\
+\hline
+\hline
+$\mathit{STPROXY} ::=$\newline 
+$\texttt{dvproxy }  \texttt{for } P$\newline
+$\texttt{with } F \texttt{ on } \texttt{m(}\mathit{P'}\texttt{):}\mathit{P}$ & Ein \emph{DV-Proxy} ist ein Single-Target-Proxy, der für ein \emph{provided Typ P} erzeugt wird. Die Methodenaufrufe auf diesem Proxy werden an das Objekt delegiert, welches über die Methode \emph{m} des Factory-Typen \emph{F} aus dem Target-Typen \emph{P'} erzeugt wird.\\
+\hline
+\hline
+\end{tabular}
+\caption{Erweiterung der Struktur für die Definition eines Proxies}
+ \label{tab:extPDv}
+\end{table}
+\noindent
+Die Matchingrelation $\Rightarrow_{dv}$ wird über folgende Regel beschrieben:
+\begin{gather*}
+\frac{\exists F \in fabriken(T). \exists m(T'):T}{T \Rightarrow_{dv} T'}
+\end{gather*}
+Darüber hinaus müssen einige der oben beschriebenen Regeln angepasst werden, damit der \emph{ContainerTypeMatcher}, der \emph{ContentTypeMatcher} und der \emph{StructuralTypeMatcher} mit dem \emph{DVMatcher} arbeiten. Somit sind folgende Anpassungen von Nöten:
+\begin{gather*}
+\frac{T \Rightarrow_{exact} T' \vee T \Rightarrow_{gen} T' \vee
+T \Rightarrow_{spec} T' \vee T \Rightarrow_{dv} T'  }{T \Rightarrow_{internCont} T'}
+\end{gather*}
+\begin{gather*}
+\frac{T \Rightarrow_{internCont} T' \vee T \Rightarrow_{content} T' \vee
+T \Rightarrow_{container} T'  }{T \Rightarrow_{internStruct} T'}
+\end{gather*}
+Ein Proxy für einen Typ $P$, der mit einem Target-Typ $P'$ mit $P \Rightarrow_{dv} P'$ erzeugt werden soll, ist ein DV-Proxy und wird durch die folgenden Regeln und Nebenbedingungen beschrieben:
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{6cm}|p{8cm}|}
+\hline
+\centering\textbf{Regel} & \textbf{Nebenbedingungen} \\
+\hline
+\hline
+$\mathit{STPROXY} ::=$\newline 
+$\texttt{dvproxy }  \texttt{for } P$\newline
+$\texttt{with } F \texttt{ on } \texttt{m(}\mathit{P'}\texttt{):}\mathit{P}$ 
+& 
+$\mathit{targetTyp(STPROXY) = P'}$\newline
+$\mathit{typ(STPROXY) = P}$\newline
+$\mathit{P} \Rightarrow_{dv} \mathit{P'}$\newline
+$\mathit{F} \in \mathit{fabriken(P)}$\\
+\hline
+\hline
+\end{tabular}
+\caption{Regeln und Nebenbedingungen für DV-Proxies}
+ \label{tab:dvAttr}
+\end{table}
+
+\end{document}

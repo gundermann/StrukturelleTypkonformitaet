@@ -38,6 +38,7 @@ public class SingleSelector implements Selector {
     this.infos = infos.stream()
         .filter( CombinationFinderUtils::isFullMatchingComponent )
         .map( i -> Collections.singletonList( i ) )
+        // H: respect to Matching Rate
         .sorted( new AccumulatedMatchingRateComparator() )
         .collect( Collectors.toList() );
   }

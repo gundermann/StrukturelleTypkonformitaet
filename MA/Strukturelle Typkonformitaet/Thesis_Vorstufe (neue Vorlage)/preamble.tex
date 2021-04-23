@@ -71,6 +71,26 @@
   moredelim=[is][\textcolor{pgrey}]{\%\%}{\%\%}
 }
 
+
+\lstdefinestyle{dsl}{
+	 morekeywords={with, subproxy, structproxy, for, simpleproxy, contentproxy, containerproxy, nominalproxy, provided, required, interface, extends},
+  showspaces=false,
+  showtabs=false,
+  breaklines=true,
+   literate=
+               {-->}{$\rightarrow{}$}{1}
+               ,
+  showstringspaces=false,
+  breakatwhitespace=true,
+  commentstyle=\color{pgreen},
+  keywordstyle=\color{pblue},
+  stringstyle=\color{pred},
+  basicstyle=\fontsize{9}{10}\selectfont\ttfamily,
+  moredelim=[il][\textcolor{pgrey}]{$ $},
+  moredelim=[is][\textcolor{pgrey}]{\%\%}{\%\%}
+}
+
+
 \usepackage{varwidth}
 \newcommand\tabrotate[1]{\begin{turn}{90}\rlap{#1}\end{turn}}
 \newcommand\tabvarwidth[2][3cm]{\begin{varwidth}[b]{#1}\centering #2\end{varwidth}}
