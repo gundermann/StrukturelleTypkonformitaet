@@ -1,5 +1,5 @@
 \documentclass[a4paper,12pt]{article}
-\usepackage{inputenc}
+\usepackage[utf8]{inputenc}
 \usepackage[ngerman]{babel}
 \usepackage{amsmath}
 \usepackage{mathtools}
@@ -46,23 +46,23 @@
 Die Typen seien in einer Bibliothek $\text{L}$ in folgender Form zusammengefasst:
 \begin{table}[H]
 \centering
-\begin{tabular}{|p{6cm}|p{8cm}|}
+\begin{tabular}{|p{5.5cm}|p{8.5cm}|}
 \hline
 \hline
 \centering\textbf{Regel} & \textbf{Erläuterung} \\
 \hline
 \hline
-$L ::= TD\text{*}$ & Eine Bibliothek \emph{L} besteht aus einer Menge von Typdefinitionen.\\
+$\mathit{L} ::= \mathit{TD}\text{*}$ & Eine Bibliothek \emph{L} besteht aus einer Menge von Typdefinitionen.\\
 \hline
-$TD ::= PD | RD$ & Eine Typdefinition kann entweder die Definition eines provided Typen (PD) oder eines required Typen (RD) sein.\\
+$\mathit{TD} ::= \mathit{PD} | \mathit{RD}$ & Eine Typdefinition kann entweder die Definition eines provided Typen (PD) oder eines required Typen (RD) sein.\\
 \hline
-$PD ::=$ provided T extends T' $\{ FD\text{*} MD\text{*}\}$& Die Definition eines provided Typen besteht aus dem Namen des Typen \emph{T}, dem Namen des Super-Typs \emph{T'} von \emph{T} sowie mehreren Feld- und Methodendeklarationen.\\
+$\mathit{PD} ::= \newline\texttt{provided }T \texttt{ extends } T' \newline  \texttt{\{} \mathit{FD}\text{*} \mathit{MD}\text{*}\texttt{\}}$& Die Definition eines provided Typen besteht aus dem Namen des Typen \emph{T}, dem Namen des Super-Typs \emph{T'} von \emph{T} sowie mehreren Feld- und Methodendeklarationen.\\
 \hline
-$RD ::=$ required T $\{MD\text{*}\}$ & Die Definition eines required Typen besteht aus dem Namen des Typen \emph{T} sowie mehreren Methodendeklarationen.\\
+$\mathit{RD} ::= \texttt{required } T \texttt{\{}\mathit{MD}\text{*}\texttt{\}}$ & Die Definition eines required Typen besteht aus dem Namen des Typen \emph{T} sowie mehreren Methodendeklarationen.\\
 \hline
-$FD ::=$ f : T & Eine Felddeklaration besteht aus dem Namen des Feldes \emph{f} und dem Namen seines Typs \emph{T}.\\
+$\mathit{FD} ::= \mathit{f} \texttt{:} T$ & Eine Felddeklaration besteht aus dem Namen des Feldes \emph{f} und dem Namen seines Typs \emph{T}.\\
 \hline
-$MD ::=$ m(T):T' & Eine Methodendeklaration besteht aus dem Namen der Methode \emph{m}, dem Namen des Parameter-Typs \emph{T} und dem Namen des Rückgabe-Typs \emph{T'}.\\
+$\mathit{MD} ::= \mathit{m(T)}\texttt{:}\mathit{T}$' & Eine Methodendeklaration besteht aus dem Namen der Methode \emph{m}, dem Namen des Parameter-Typs \emph{T} und dem Namen des Rückgabe-Typs \emph{T'}.\\
 \hline
 \hline
 \end{tabular}
@@ -71,9 +71,13 @@ $MD ::=$ m(T):T' & Eine Methodendeklaration besteht aus dem Namen der Methode \e
 \end{table}
 \noindent
 Weiterhin sei die Relation $<$ auf Typen durch folgenden Regel definiert:
-\begin{eqnarray*}
-T < T' := \text{provided \emph{T} extends \emph{T'}} \in L \vee (\text{provided \emph{T} extends \emph{T''}} \in L \wedge T'' < T') 
-\end{eqnarray*}
+\begin{gather*}
+T < T' := \begin{array}{l}
+	\texttt{provided }T \texttt{ extends } T' \in L \vee\\
+	(\texttt{provided } T \texttt{ extends } T'' \in L \wedge T'' < T')
+		\end{array}
+\end{gather*}
+
 Darüber hinaus seien folgende Funktionen definiert:
 \begin{gather*}
 felder(T) :=  \left\{ 
@@ -108,9 +112,9 @@ Der Typ des Proxies entspricht immer dem \emph{Source-Typ} der zugrundeliegenden
 \centering\textbf{Regel} & \textbf{Erläuterung} \\
 \hline
 \hline
-$\mathit{STRUCTPROXY} ::=$\newline $\texttt{structproxy } \texttt{for } R$\newline$ \texttt{\{}TARGET\texttt{*\}}$ & Ein \emph{struktureller Proxy} wird für ein \emph{required Interface R} mit einer Mengen von Targets erzeugt.  \\
+$\mathit{STRUCTPROXY} ::=$\newline $\texttt{structproxy } \texttt{for } R$\newline$ \texttt{\{}TARGET\text{*}\texttt{\}}$ & Ein \emph{struktureller Proxy} wird für ein \emph{required Interface R} mit einer Mengen von Targets erzeugt.  \\
 \hline
-$\mathit{TARGET} ::=$\newline $P \texttt{ \{}MDEL\texttt{*\}}$ & Ein Target besteht aus dem Typ \emph{P} des Targets (ein \emph{provided Typ}) und einer Mengen von Methodendelegationen.\\
+$\mathit{TARGET} ::=$\newline $P \texttt{ \{}MDEL\text{*}\texttt{\}}$ & Ein Target besteht aus dem Typ \emph{P} des Targets (ein \emph{provided Typ}) und einer Mengen von Methodendelegationen.\\
 \hline
 $\mathit{MDEL} ::= CALLM \rightarrow DELM $  & Eine Methodendelegation besteht aus einer aufgerufenen Methode und aus einem Delegationsziel.\\
 \hline
@@ -134,12 +138,12 @@ $\mathit{STPROXY} ::= NPX$ & Ein Nominal-Proxy ist ein Single-Target-Proxy.\\
 \centering\textbf{Regel} & \textbf{Erläuterung} \\
 \hline
 \hline
-$\mathit{STPROXY} ::=$\newline $\texttt{contentproxy }  \texttt{for } P$\newline $\texttt{with } P' \texttt{ \{}CEMDEL\texttt{*\}}$ & Ein \emph{Content-Proxy} ist ein Single-Target-Proxy, der für ein \emph{provided Typ P} mit einem \emph{provided Typ P'} als Target-Typ sowie einer Mengen von Content-Proxy-Methodendelegationen erzeugt wird.\\
+$\mathit{STPROXY} ::=$\newline $\texttt{contentproxy }  \texttt{for } P$\newline $\texttt{with } P' \texttt{ \{}CEMDEL\text{*}\texttt{\}}$ & Ein \emph{Content-Proxy} ist ein Single-Target-Proxy, der für ein \emph{provided Typ P} mit einem \emph{provided Typ P'} als Target-Typ sowie einer Mengen von Content-Proxy-Methodendelegationen erzeugt wird.\\
 \hline
 $\mathit{STPROXY} ::=$\newline $\texttt{containerproxy} \texttt{ for } P$\newline
 $ \texttt{with } P' \texttt{ \{} f = \mathit{NPX} \texttt{\}}$ &  Ein \emph{Container-Proxy} ist ein Single-Target-Proxy, der für ein \emph{provided Typ P} mit einem \emph{provided Typ P'} als Target-Typ sowie der Zuweisung eines Nominal-Proxies für den Target-Typ zu einem Feld \emph{f} erzeugt wird.\\
 \hline
-$\mathit{NPX} ::=$ \newline $\texttt{subproxy } \texttt{for } P$\newline $\texttt{with } P' \texttt{ \{}\mathit{NOMMDEL}\texttt{*\}}$ & Ein Sub-Proxy ist ein Nominal-Proxy, derfür ein \emph{provided Typ P} mit einem \emph{provided Typ P'} als Target-Typ sowie einer Mengen von Nominal-Proxy-Methodendelegationen erzeugt wird. Dabei gilt $P < P'$.\\
+$\mathit{NPX} ::=$ \newline $\texttt{subproxy } \texttt{for } P$\newline $\texttt{with } P' \texttt{ \{}\mathit{NOMMDEL}\text{*\}}$ & Ein Sub-Proxy ist ein Nominal-Proxy, derfür ein \emph{provided Typ P} mit einem \emph{provided Typ P'} als Target-Typ sowie einer Mengen von Nominal-Proxy-Methodendelegationen erzeugt wird. Dabei gilt $P < P'$.\\
 \hline
 $\mathit{NPX} ::=$ \newline $\texttt{simpleproxy } \texttt{for } P$ & Ein \emph{Simple-Proxy} ist ein Nominal-Proxy, der aus einem Typen \emph{P}, für den der Proxy erzeugt wird, besteht. Der Target-Typ ist in diesem Fall ebenfalls \emph{P}. Alle Methoden werden in diesem Fall an den Target-Typ delegiert.\\
 \hline
@@ -494,15 +498,15 @@ $\mathit{typ(NPX)} = FT$\\
 Die o.g. Struktur für die Definition von Typen wird die Definition von \emph{provided Typen} erweitert.
 \begin{table}[H]
 \centering
-\begin{tabular}{|p{6cm}|p{8cm}|}
+\begin{tabular}{|p{5cm}|p{9cm}|}
 \hline
 \hline
 \centering\textbf{Regel} & \textbf{Erläuterung} \\
 \hline
 \hline
-$PD ::= \newline \texttt{provided } T \texttt{ extends }T' \newline \texttt{\{}FD\text{*} MD\text{*} FCD\text{?\}}$& Die Definition eines provided Typen besteht aus dem Namen des Typen \emph{T}, dem Namen des Super-Typs \emph{T'} von \emph{T} sowie mehreren Feld- und Methodendeklarationen und einer optionalen Definition eines Factory-Typen.\\
+$\mathit{PD} ::= \newline \texttt{provided } T \texttt{ extends }T' \newline \texttt{\{} \mathit{FD}\text{*} \mathit{MD}\text{*} \mathit{FCD}\text{?}\texttt{\}}$& Die Definition eines provided Typen besteht aus dem Namen des Typen \emph{T}, dem Namen des Super-Typs \emph{T'} von \emph{T} sowie mehreren Feld- und Methodendeklarationen und einer optionalen Definition eines factory Typen.\\
 \hline
-$FCD ::= \texttt{factory }T \texttt{ \{}\newline \mathit{FD}\texttt{*} \mathit{MD}\texttt{*} \texttt{\}} $& Die Definition eines factory Typen besteht aus dem Namen des Typen \emph{T} sowie mehreren Feld- und Methodendeklarationen.\\
+$\mathit{FCD} ::= \texttt{factory }T \texttt{ \{}\newline \mathit{FD}\text{*} \mathit{MD}\text{*} \texttt{\}} $& Die Definition eines factory Typen besteht aus dem Namen des Typen \emph{T} sowie mehreren Feld- und Methodendeklarationen.\\
 \hline
 \hline
 \end{tabular}
@@ -514,14 +518,14 @@ Darüber hinaus wird folgende Funktion definiert:
 \begin{gather*}
 fabriken(T) :=  \left\{ 
 				\begin{array}{l|l}
-					F & F \text{ ist ein Factory-Typ, der in \emph{T} definiert wurde}
+					F & F \text{ ist ein \emph{factory Typ}, der in \emph{T} definiert wurde}
 				\end{array}
               \right\}
 \end{gather*}
 Weiterhin muss die Struktur für die Definition von Proxies um eine weitere Definition für einen \emph{Single-Target-Proxy} erweitert werden.
 \begin{table}[H]
 \centering
-\begin{tabular}{|p{6cm}|p{8cm}|}
+\begin{tabular}{|p{4.5cm}|p{9.5cm}|}
 \hline
 \centering\textbf{Regel} & \textbf{Erläuterung} \\
 \hline
@@ -540,7 +544,7 @@ Die Matchingrelation $\Rightarrow_{dv}$ wird über folgende Regel beschrieben:
 \begin{gather*}
 \frac{\exists F \in fabriken(T). \exists m(T'):T}{T \Rightarrow_{dv} T'}
 \end{gather*}
-Darüber hinaus müssen einige der oben beschriebenen Regeln angepasst werden, damit der \emph{ContainerTypeMatcher}, der \emph{ContentTypeMatcher} und der \emph{StructuralTypeMatcher} mit dem \emph{DVMatcher} arbeiten. Somit sind folgende Anpassungen von Nöten:
+Darüber hinaus müssen einige der oben beschriebenen Regeln angepasst werden, damit der \emph{ContainerTypeMatcher}, der \emph{ContentTypeMatcher} und der \emph{StructuralTypeMatcher} den \emph{DVMatcher} verwenden:
 \begin{gather*}
 \frac{T \Rightarrow_{exact} T' \vee T \Rightarrow_{gen} T' \vee
 T \Rightarrow_{spec} T' \vee T \Rightarrow_{dv} T'  }{T \Rightarrow_{internCont} T'}
@@ -549,7 +553,7 @@ T \Rightarrow_{spec} T' \vee T \Rightarrow_{dv} T'  }{T \Rightarrow_{internCont}
 \frac{T \Rightarrow_{internCont} T' \vee T \Rightarrow_{content} T' \vee
 T \Rightarrow_{container} T'  }{T \Rightarrow_{internStruct} T'}
 \end{gather*}
-Ein Proxy für einen Typ $P$, der mit einem Target-Typ $P'$ mit $P \Rightarrow_{dv} P'$ erzeugt werden soll, ist ein DV-Proxy und wird durch die folgenden Regeln und Nebenbedingungen beschrieben:
+Ein Proxy für einen Typ $P$, der mit einem \emph{Target-Typ} $P'$ mit $P \Rightarrow_{dv} P'$ erzeugt werden soll, ist ein DV-Proxy und wird durch die folgenden Regeln und Nebenbedingungen beschrieben:
 \begin{table}[H]
 \centering
 \begin{tabular}{|p{6cm}|p{8cm}|}
