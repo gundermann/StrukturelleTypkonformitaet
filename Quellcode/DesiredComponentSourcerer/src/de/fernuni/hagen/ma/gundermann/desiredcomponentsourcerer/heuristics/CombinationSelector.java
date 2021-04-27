@@ -82,7 +82,9 @@ public class CombinationSelector implements Selector {
 
     // H: combinate low matcher rating first
     // sort by matcher rate
-    Collections.sort( cachedMatchingInfoCombinations, new AccumulatedMatchingRateComparator() );
+    if ( HeuristicSetting.COMBINE_LOW_MATCHER_RATING_FIRST ) {
+      Collections.sort( cachedMatchingInfoCombinations, new AccumulatedMatchingRateComparator() );
+    }
 
     // H: combinate passed tests components first
     // re-organize cache with respect to search optimization

@@ -109,8 +109,9 @@ public class SingleMethodTestEvaluator {
         else {
           handleError( e, testInstance, testResult );
         }
-        // Setting _ALLSMT
-        // continue;
+        if ( Setting.TEST_ALL_SINGLE_METHOD_TESTS ) {
+          continue;
+        }
         return;
       }
       testResult.incrementPassedTests();

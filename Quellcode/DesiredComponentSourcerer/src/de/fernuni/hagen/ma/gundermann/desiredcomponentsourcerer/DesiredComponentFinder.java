@@ -12,6 +12,7 @@ import java.util.stream.Stream;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.BestMatchingComponentCombinationFinder;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.CombinationInfo;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.DefaultTypeMatcherHeuristic;
+import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.HeuristicSetting;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.Logger;
 import glue.TypeConverter;
 import matching.methods.MethodMatchingInfo;
@@ -118,7 +119,7 @@ public class DesiredComponentFinder {
           if ( testedComponent.allTestsPassed() ) {
             return testedComponent.getComponent();
           }
-          if ( testedComponent.anyTestPassed() ) {
+          if ( HeuristicSetting.COMBINE_COMPOMENTS_WITH_PASSED_TESTS_FIRST && testedComponent.anyTestPassed() ) {
             // H: combinate passed tests components first
             combinationFinder.optimizeForCurrentCombination();
           }
@@ -130,8 +131,10 @@ public class DesiredComponentFinder {
         }
       }
       catch ( NoComponentImplementationFoundException e ) {
-        // H: blacklist if no implementation available
-        combinationFinder.optimizeCheckTypeBlacklist( e.getComponentInterface() );
+        if ( HeuristicSetting.BLACKLIST_NO_IMPLEMENTATION_AVAILABLE ) {
+          // H: blacklist if no implementation available
+          combinationFinder.optimizeCheckTypeBlacklist( e.getComponentInterface() );
+        }
       }
     }
     return null;
@@ -167,25 +170,29 @@ public class DesiredComponentFinder {
     TestedComponent<DesiredInterface> testedComponent = new TestedComponent<>( convertedComponent, testResult );
 
     // H: blacklist by pivot test calls
-    Collection<Method> pivotMethodCalls = testResult.getPivotMethodCalls();
-    if ( pivotMethodCalls != null && !pivotMethodCalls.isEmpty() ) {
-      Logger.infoF( "outsource by pivot method: %s",
-          pivotMethodCalls.stream().map( Method::getName ).collect( Collectors.joining( ", " ) ) );
-      components2MatchingInfo.values().stream()
-          .flatMap( Collection::stream )
-          .filter( mmi -> pivotMethodCalls.contains( mmi.getSource() ) )
-          .forEach( testedComponent::addOutsortedMatchingInfo );
+    if ( HeuristicSetting.BLACKLIST_PIVOT_METHOD_CALL ) {
+      Collection<Method> pivotMethodCalls = testResult.getPivotMethodCalls();
+      if ( pivotMethodCalls != null && !pivotMethodCalls.isEmpty() ) {
+        Logger.infoF( "outsource by pivot method: %s",
+            pivotMethodCalls.stream().map( Method::getName ).collect( Collectors.joining( ", " ) ) );
+        components2MatchingInfo.values().stream()
+            .flatMap( Collection::stream )
+            .filter( mmi -> pivotMethodCalls.contains( mmi.getSource() ) )
+            .forEach( testedComponent::addOutsortedMatchingInfo );
+      }
     }
 
     // H: blacklist failed single methods tested
-    Collection<String> failedSingleMethods = testResult.getFailedSingleMethods();
-    if ( failedSingleMethods != null && !failedSingleMethods.isEmpty() ) {
-      Logger.infoF( "outsource by failed single method: %s",
-          failedSingleMethods.stream().collect( Collectors.joining( ", " ) ) );
-      components2MatchingInfo.values().stream()
-          .flatMap( Collection::stream )
-          .filter( mmi -> failedSingleMethods.contains( mmi.getSource().getName() ) )
-          .forEach( testedComponent::addOutsortedMatchingInfo );
+    if ( HeuristicSetting.BLACKLIST_SINGLE_METHOD_TEST_FAILED ) {
+      Collection<String> failedSingleMethods = testResult.getFailedSingleMethods();
+      if ( failedSingleMethods != null && !failedSingleMethods.isEmpty() ) {
+        Logger.infoF( "outsource by failed single method: %s",
+            failedSingleMethods.stream().collect( Collectors.joining( ", " ) ) );
+        components2MatchingInfo.values().stream()
+            .flatMap( Collection::stream )
+            .filter( mmi -> failedSingleMethods.contains( mmi.getSource().getName() ) )
+            .forEach( testedComponent::addOutsortedMatchingInfo );
+      }
     }
     return testedComponent;
   }

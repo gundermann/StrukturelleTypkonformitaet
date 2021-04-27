@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.Selector;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.CombinationFinderUtils;
@@ -35,12 +36,14 @@ public class SingleSelector implements Selector {
   private final Collection<Integer> methodMatchingInfoHCBlacklist = new ArrayList<>();
 
   public SingleSelector( List<PartlyTypeMatchingInfo> infos ) {
-    this.infos = infos.stream()
+    Stream<List<PartlyTypeMatchingInfo>> stream = infos.stream()
         .filter( CombinationFinderUtils::isFullMatchingComponent )
-        .map( i -> Collections.singletonList( i ) )
-        // H: respect to Matching Rate
-        .sorted( new AccumulatedMatchingRateComparator() )
-        .collect( Collectors.toList() );
+        .map( i -> Collections.singletonList( i ) );
+    if ( HeuristicSetting.COMBINE_LOW_MATCHER_RATING_FIRST ) {
+      // H: respect to Matching Rate
+      stream = stream.sorted( new AccumulatedMatchingRateComparator() );
+    }
+    this.infos = stream.collect( Collectors.toList() );
   }
 
   @Override

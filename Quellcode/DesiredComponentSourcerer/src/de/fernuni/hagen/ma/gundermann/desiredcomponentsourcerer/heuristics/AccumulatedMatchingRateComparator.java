@@ -7,6 +7,10 @@ import java.util.Optional;
 import matching.MatcherRate;
 import matching.modules.PartlyTypeMatchingInfo;
 
+/**
+ * This Comparator is responsable of the following heuristic:</br>
+ * H: combinate low matcher rating first
+ */
 public class AccumulatedMatchingRateComparator implements Comparator<Collection<PartlyTypeMatchingInfo>> {
 
   @Override
