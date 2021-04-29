@@ -70,7 +70,7 @@ $\mathit{MD} ::= \mathit{m(T)}\texttt{:}\mathit{T}$' & Eine Methodendeklaration 
  \label{tab:eIShort}
 \end{table}
 \noindent
-Weiterhin sei die Relation $<$ auf Typen durch folgenden Regel definiert:
+Weiterhin sei die Relation $<$ auf Typen durch folgende Regel definiert:
 \begin{gather*}
 T < T' := \begin{array}{l}
 	\texttt{provided }T \texttt{ extends } T' \in L \vee\\
@@ -103,7 +103,7 @@ Ein Proxy wird auf der Basis einer Matchingrelation erzeugt. In Abhängigkeit vo
 \item \emph{Container-Proxy}
 \item \emph{Content-Proxy}
 \end{itemize}
-Der Typ des Proxies entspricht immer dem \emph{Source-Typ} der zugrundeliegenden Matchingrelation. Die unterschiedlichen Proxies werden dabei durch folgende Struktur beschrieben :
+Der Typ des Proxies entspricht immer dem \emph{Source-Typ} der zugrundeliegenden Matchingrelation. Die unterschiedlichen Proxies werden dabei durch die Regeln der Tabellen \ref{tab:grProxies1} und \ref{tab:grProxies2} beschrieben:
 \begin{table}[H]
 \centering
 \begin{tabular}{|p{6cm}|p{8cm}|}
@@ -127,8 +127,8 @@ $\mathit{STPROXY} ::= NPX$ & Ein Nominal-Proxy ist ein Single-Target-Proxy.\\
 
 \hline
 \end{tabular}
-\caption{Struktur für die Definition eines Proxies}
- \label{tab:eIShort}
+\caption{Grammatikregeln für die Definition eines Proxies}
+ \label{tab:grProxies1}
 \end{table}
 \newpage
 \begin{table}[H]
@@ -155,8 +155,8 @@ $\mathit{f.m(NPX):TR} $  & Eine Content-Proxy-Methodendelegation besteht aus zwe
 \hline
 \hline
 \end{tabular}
-\caption{Struktur für die Definition eines Proxies (Fortsetzung)}
- \label{tab:eIShort}
+\caption{Grammatikregeln für die Definition eines Proxies (Fortsetzung)}
+ \label{tab:grProxies2}
 \end{table}
 
 \newpage
@@ -213,7 +213,7 @@ required MedicalFireFighter {
 	void heal( Injured injured, MedCabinet med )
 	boolean extinguishFire( Fire fire )	
 }
-\end{lstlisting}
+\end{lstlisting}\label{lst:libEx}
 
 \newpage
 \section{Beispiel-Proxy für MedicalFireFighter}\label{xmpl_prxy}
@@ -241,20 +241,89 @@ structproxy for MedicalFireFither{
 \end{lstlisting}
 
 \newpage
-\section{Matcher}
-Die Matcher beinhalten zum Einen die Definition der jeweiligen Matchingrelation ($\Rightarrow$) sowie die Regeln zur Erzeugung eines Proxies, der auf jener Matchingrelation basiert. Alle Arten von Proxies, die durch die folgenden Matcher erzeugt werden, können am Beispiel aus Abschnitt \ref{xmpl_prxy} nachvollzogen werden.
+\section{Generierung der Proxies auf Basis von Matchern}
+Die Matcher beinhalten zum Einen die Definition der jeweiligen Matchingrelation ($\Rightarrow$) sowie die Regeln zur Erzeugung eines Proxies, die auf jener Matchingrelation basieren. Alle Arten von Proxies, die durch die folgenden Matcher erzeugt werden, können am Beispiel aus Abschnitt \ref{xmpl_prxy} nachvollzogen werden.
+\subsection{Matcher}
+\subsubsection{ExactTypeMatcher}
+Der \emph{ExactTypeMatcher} stellt ein Matching von einem Typ $T$ zu demselben Typ $T$ her. Die dazugehörige Matchingrelation $\Rightarrow_{exact}$ wird durch folgende Regel beschrieben:
+\begin{gather*}
+\frac{}{T \Rightarrow_{exact} T}
+\end{gather*}
+\subsubsection{GenTypeMatcher}
+Der \emph{GenTypeMatcher} stellt ein Matching von einem Typ $T$ zu einem Typ $T'$ mit $T > T'$ her. Die dazugehörige Matchingrelation $\Rightarrow_{gen}$ wird durch folgende Regel beschrieben:
+\begin{gather*}
+\frac{T > T'}{T \Rightarrow_{gen} T'}
+\end{gather*}
+\subsubsection{SpecTypeMatcher}
+Der \emph{SpecTypeMatcher} stellt im Verhältnis zum \emph{GenTypeMatcher} das Matching in der entgegengesetzten Richtung dar. Die dazugehörige Matchingrelation $\Rightarrow_{spec}$ wird durch folgende Regel beschrieben: 
+\begin{gather*}
+\frac{T < T'}{T \Rightarrow_{spec} T'}
+\end{gather*}
+\\\\
+Die oben genannten Matchingrelationen werden für die Definition weiterer Matcher zusammengefasst, wodurch sich die Matchingrelation $\Rightarrow_{internCont}$ ergibt:
+\begin{gather*}
+\frac{T \Rightarrow_{exact} T' \vee T \Rightarrow_{gen} T' \vee
+T \Rightarrow_{spec} T'  }{T \Rightarrow_{internCont} T'}
+\end{gather*}
+\subsubsection{ContentTypeMatcher}
+Der \emph{ContentTypeMatcher} matcht einen Typ $T$ auf einen Typ $T'$, wobei $T'$ ein Feld enthält, auf dessen Typ $T''$ der Typ $T$ über die Matchingrelation $\Rightarrow_{internCont}$ gematcht werden kann. So kann bspw. der Typ $\texttt{FireState}$ aus Listing \ref{lst:libEx} auf den Typ $\texttt{boolean}$ gematcht werden.
+\\\\
+Die dazugehörige Matchingrelation $\Rightarrow_{content}$ wird durch folgende Regel beschrieben:
+\begin{gather*}
+\frac{\exists f:T''\in felder(T'). T \Rightarrow_{internCont} T''}{T \Rightarrow_{content} T'}
+\end{gather*}
+\subsubsection{ContainerTypeMatcher}
+Der \emph{ContainerTypeMatcher} stellt im Verhältnis zum \emph{ContentTypeMatcher} das Matching in der entgegengesetzten Richtung dar. So kann bspw. auch der Typ $\texttt{boolean}$ auf den Typ $\texttt{FireState}$ aus Listing \ref{lst:libEx} gematcht werden.
+\\\\
+Die dazugehörige Matchingrelation $\Rightarrow_{container}$ wird durch folgende Regel beschrieben:
+\begin{gather*}
+\frac{\exists f:T''\in felder(T). T'' \Rightarrow_{internCont} T'}{T \Rightarrow_{container} T'}
+\end{gather*}
+\\\\
+Zur Definition des letzten Matchers werden die Matchingrelationen der oben genannten Matcher noch einmal zusammengefasst. Dabei entsteht die Matchingrelation $\Rightarrow_{internStruct}$, welche durch folgende Regel beschrieben wird:
+\begin{gather*}
+\frac{\splitfrac{T \Rightarrow_{exact}T' \vee T \Rightarrow_{spec}T' 
+\vee T \Rightarrow_{gen}T'}{\vee T \Rightarrow_{container} T' \vee T \Rightarrow_{content} T'}}{T \Rightarrow_{internStruct}T'}
+\end{gather*}
+\subsubsection{StructuralTypeMatcher} 
+Der \emph{StructuralTypeMatcher} matcht einen \emph{required Typ} $R$ auf einen \emph{provided Typ} $P$ auf der Basis struktureller Eigenschaften der Methoden, die in den Typen deklariert sind. 
+\\\\
+Somit soll bspw. der Typ $\texttt{MedicalFireFighter}$ auf den Typ $\texttt{FireFighter}$ (siehe Listing \ref{lst:libEx}) gematcht werden. Ein weiteres Beispiel bezogen auf die Typen aus Listing \ref{lst:libEx} ist das Matching des Typs $\texttt{MedicalFireFighter}$ auf den Typ $\texttt{Doctor}$ angebracht werden.
+\\\\
+Damit ein Typ $R$ auf einen Typ $P$ über den \emph{StrukturalTypeMatcher} gematcht werden kann, muss mindestens eine Methode aus $R$ zu einer Methode aus $P$ gematcht werden. Die Menge der gematchten Methoden aus $R$ in $P$ wird wie folgt beschrieben:
+\begin{gather*}
+structM(R,P) := \left\{ 
+				\begin{array}{l|l}
+						& \exists n(S):S' \in methoden(P) .\\													m(T):T' \in methoden(R) &  S\Rightarrow_{internStruct}T \wedge \\
+										& T' \Rightarrow_{internStruct}S'
+				\end{array}
+              \right\}
+\end{gather*}
+Da die Notation es nicht hergibt, ist zusätzlich zu erwähnen, dass, sofern in $m$ und $n$ mehrere Parameter verwendet werden, deren Reihenfolge irrelevant ist.\\\\
+Die Matchingrelation für die \emph{StructuralTypeMatcher} wird durch folgende Regel beschrieben:
+\begin{gather*}
+\frac{structM(R,P) \neq \emptyset}{R \Rightarrow_{struct}P}
+\end{gather*}
+\subsection{Generierung der Proxies}
+\subsubsection{Simple-Proxy}
+\subsubsection{Sub-Proxy}
+\subsubsection{Content-Proxy}
+\subsubsection{Container-Proxy}
+\subsubsection{Struktureller Proxy}
+
+\section{alter kram}
 \subsection{StructuralTypeMatcher}
 Das strukturelle Matching zwischen einem \emph{required Interface} $R$ und einem \emph{provided Typ} $P$ ist gegeben, sofern eine Methode aus $R$ zu einer Methode aus $P$ gematcht werden kann. Die Menge der aus $R$ in $P$ gematchten Methoden wird wie folgt beschrieben:
 \begin{gather*}
 structM(R,P) := \left\{ 
 				\begin{array}{l|l}
-						& \exists n(S):S' \in methoden(P) .\\													m(T):T' \in methoden(R) &  S\Rightarrow_{internStruct} \wedge \\
+						& \exists n(S):S' \in methoden(P) .\\													m(T):T' \in methoden(R) &  S\Rightarrow_{internStruct}T \wedge \\
 										& T' \Rightarrow_{internStruct}S'
 				\end{array}
               \right\}
 \end{gather*}
 Da die Notation es nicht hergibt, ist zusätzlich zu erwähnen, dass die Reihenfolge der Parameter in $m$ und $n$ irrelevant ist.\\\\
-Die Relation $\Rightarrow_{egsc}$ wird durch die übrigen Matcher in folgender Form beschrieben:
+Die Relation $\Rightarrow_{internStruct}$ wird durch die übrigen Matcher in folgender Form beschrieben:
 \begin{gather*}
 \frac{\splitfrac{A \Rightarrow_{exact}B \vee A \Rightarrow_{spec}B 
 \vee A \Rightarrow_{gen}B}{\vee A \Rightarrow_{container} B \vee A \Rightarrow_{content} B}}{A \Rightarrow_{internStruct}B}
@@ -516,7 +585,7 @@ $\mathit{FCD} ::= \texttt{factory }T \texttt{ \{}\newline \mathit{FD}\text{*} \m
 \noindent
 Darüber hinaus wird folgende Funktion definiert:
 \begin{gather*}
-fabriken(T) :=  \left\{ 
+\mathit{fabriken(T)} :=  \left\{ 
 				\begin{array}{l|l}
 					F & F \text{ ist ein \emph{factory Typ}, der in \emph{T} definiert wurde}
 				\end{array}
