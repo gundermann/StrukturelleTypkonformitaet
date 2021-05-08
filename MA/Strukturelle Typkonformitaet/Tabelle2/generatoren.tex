@@ -1,0 +1,518 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{pblue}{rgb}{0.13,0.13,1}
+\definecolor{pgreen}{rgb}{0,0.5,0}
+\definecolor{pred}{rgb}{0.9,0,0}
+\definecolor{pgrey}{rgb}{0.46,0.45,0.48}
+
+\lstdefinestyle{generator}{
+  showspaces=false,
+  showtabs=false,
+  breaklines=true,    
+   literate=
+               {<--}{=}{1}
+               {-->}{$\rightarrow{}$}{1}
+               {M<}{${}\Rightarrow_{spec}{}$}{1}
+               {MC}{${}\Rightarrow_{internCont}{}$}{1}
+               {MContent}{${}\Rightarrow_{content}{}$}{1}
+               {MContainer}{${}\Rightarrow_{container}{}$}{1}
+               {MIS}{${}\Rightarrow_{internStruct}{}$}{1}
+               ,
+  language=Java,
+  morekeywords={function, return, for},
+  showstringspaces=false,
+  breakatwhitespace=true,
+  commentstyle=\color{pgreen},
+  keywordstyle=\color{pred},
+  stringstyle=\color{pblue},
+  %identifierstyle=\color{pblue},
+  basicstyle=\fontsize{9}{10}\selectfont\ttfamily,
+  moredelim=[il][\textcolor{pgrey}]{$ $},
+  moredelim=[is][\textcolor{pgrey}]{\%\%}{\%\%}
+}
+
+\lstdefinestyle{dsl}{
+	 morekeywords={with, subproxy, structproxy, for, simpleproxy, contentproxy, containerproxy, nominalproxy, provided, required, interface, extends, proxy, targets, modiPos, delegations, inject, in},
+  showspaces=false,
+  showtabs=false,
+  breaklines=true,
+   literate=
+               {-->}{$\rightarrow{}$}{1}
+               ,
+  showstringspaces=false,
+  breakatwhitespace=true,
+  commentstyle=\color{pgreen},
+  keywordstyle=\color{pblue},
+  stringstyle=\color{pred},
+  basicstyle=\fontsize{9}{10}\selectfont\ttfamily,
+  moredelim=[il][\textcolor{pgreen}]{$ $},
+  moredelim=[is][\textcolor{pgrey}]{\%\%}{\%\%}
+}
+
+
+\begin{document}
+\section{Generatoren für Proxy-Arten}
+\subsection{Simple-Proxy-Generator}
+
+\textbf{Benötigt: }$sourceTyp$ und $targetTyp$ mit $sourceTyp \Rightarrow_{exact} targetTyp \vee sourceTyp \Rightarrow_{gen} targetTyp$
+\begin{lstlisting}[style = generator]
+function genSimpleProxy(sourceTyp, targetTyp){
+	// Name des targetTyps ermitteln
+	targetTypeName <-- nameOfTyp(targetTyp)
+	return "simpleproxy for " + targetTypeName
+}
+\end{lstlisting}
+
+
+\paragraph{Beispiel 1:} Sei $sourceTyp = \texttt{ExtFire}$ und $targetTyp = \texttt{Fire}$.\\\\
+Es gilt: $\texttt{ExtFire} \Rightarrow_{gen} \texttt{Fire}$.\\
+Die Funktion $\texttt{genSimpleProxy(Fire, Fire)}$ erzeugt folgenden Proxy:
+\begin{lstlisting}[style = dsl]
+	simpleproxy for Fire
+\end{lstlisting}
+
+\paragraph{Beispiel 2:} Sei $sourceTyp = \texttt{String}$ und $targetTyp = \texttt{String}$.\\\\
+Es gilt: $\texttt{String} \Rightarrow_{exact} \texttt{String}$.\\
+Die Funktion $\texttt{genSimpleProxy(String, String)}$ erzeugt folgenden Proxy:
+\begin{lstlisting}[style = dsl]
+	simpleproxy for String
+\end{lstlisting}
+
+\paragraph{Beispiel 3:} Sei $sourceTyp = \texttt{boolean}$ und $targetTyp = \texttt{boolean}$.\\\\
+Es gilt: $\texttt{boolean} \Rightarrow_{exact} \texttt{boolean}$.\\
+Die Funktion $\texttt{genSimpleProxy(boolean, boolean)}$ erzeugt folgenden Proxy:
+\begin{lstlisting}[style = dsl]
+	simpleproxy for boolean
+\end{lstlisting}
+
+\paragraph{Beispiel 4:} Sei $sourceTyp = \texttt{void}$ und $targetTyp = \texttt{void}$.\\\\
+Es gilt: $\texttt{void} \Rightarrow_{exact} \texttt{void}$.\\
+Die Funktion $\texttt{genSimpleProxy(void, void)}$ erzeugt folgenden Proxy:
+\begin{lstlisting}[style = dsl]
+	simpleproxy for void
+\end{lstlisting}
+
+\pagebreak
+\subsection{Sub-Proxy-Generator}
+
+\textbf{Benötigt: }$sourceTyp$ und $targetTyp$ mit $sourceTyp \Rightarrow_{spec} targetTyp$
+\begin{lstlisting}[style = generator]
+function genSubProxy(sourceTyp, targetTyp){
+	head <-- genSubProxyHead(sourceTyp, targetTyp)
+	body <-- genSubProxyBody(sourceTyp, targetTyp)
+	return head + body
+}
+
+function genSubProxyHead(sourceTyp, targetTyp){
+	sourceTypeName <-- nameOfTyp(sourceTyp)
+	targetTypeName <-- nameOfTyp(targetTyp)
+	return "subproxy for " + sourceTypeName + " with " + targetTypeName
+}
+
+function genSubProxyBody(sourceType, targetTyp){
+	mDels <-- []
+	for{pair : findMethodPairsNominal(sourceType, targetTyp){
+	// erstes Element ist die Methode aus dem sourceType
+	// zweites Element ist die Methode aus dem targetTyp	
+		mDel <-- pair[0] + " --> " + pair[1]
+		mDels.add(mDel)
+	}
+	// alle Elemente aus mDels mit Zeilenumbruch konkatenieren
+	mDelsString <-- mDels.joining("\n")	
+	return "{\n" + mDelsString + "\n}"
+}
+
+function findMethodPairsNominal(sourceTyp, targetTyp){
+	pairs = []
+	for(sMethod : methodsOfType(sourceTyp)){
+		sMethodName = nameOfMethod(sMethod)
+		for(tMethod : methodsOfType(targetTyp){
+			tMethodName= nameOfMethod(tMethod)
+	// wenn die Methodennamen gleich sind, dann werden die Methoden als Liste an die bestehende pairs-Liste gehaengt
+			if( sMethodName == tMethodName ){
+				pair = [sMethod, tMethod]
+				pairs.add(pair)
+			}
+		}
+	}
+	return pairs
+}
+\end{lstlisting}
+
+
+\paragraph{Beispiel:} Sei $sourceTyp = \texttt{Partient}$ und $targetTyp = \texttt{Injured}$.\\\\
+Es gilt: $\texttt{Partien} \Rightarrow_{spec} \texttt{Injured}$.\\
+Die Funktion $\texttt{generateSimpleProxy(Fire, Fire)}$ erzeugt folgenden Proxy:
+\begin{lstlisting}[style = dsl]
+	subproxy for Patient with Injured {
+		heal(Medicine):void --> heal(Medicine):void
+	}
+\end{lstlisting}
+
+\subsection{Nominal-Proxy-Generator}
+Der Generator für den Nominal-Proxy dient der Fallunterscheidung zwischen dem Simple- und dem Sub-Proxy.\\\\
+\textbf{Benötigt: }$sourceTyp$ und $targetTyp$ mit $sourceTyp \Rightarrow_{internCont} targetTyp$
+\begin{lstlisting}[style = generator]
+function genNominalProxy(sourceTyp, targetTyp){
+	if(sourceTyp   M<  targetTyp){
+		return genSubProxy(sourceTyp, targetTyp)
+	}
+	return genSimpleProxy(sourceTyp, targetTyp)
+}
+\end{lstlisting}
+
+\subsection{Container-Proxy-Generator}
+Der Generator für den Container-Proxy liefert eine Liste von Proxies.\\\\
+\textbf{Benötigt: }$sourceTyp$ und $targetTyp$ mit $sourceTyp \Rightarrow_{container} targetTyp$
+\begin{lstlisting}[style = generator]
+function genContainerProxies(sourceTyp, targetTyp){
+	proxies <-- []
+	matchingFields <-- findMatchingFields(sourceTyp, targetTyp)
+	// fuer jedes Feld, dessen Typ auf den targetTyp matcht, wird ein Proxy erzeugt
+	for(field : matchingFields){
+		proxy <-- genContProxy(sourceType, targetType, field)
+		proxies.add(proxy)
+	}
+	return proxies
+}
+
+function findMatchingFields(typWithField, matchingTyp){
+	matchingFields <-- []
+	// alle Felddeklarationen des typWithField durchlaufen 	
+	for(field : fieldsOfType(typWithField)){
+		// den Typ aus der Felddeklaraion ermitteln
+		fieldTyp <-- typOfField(field)
+		if(fieldTyp     MC    matchingTyp){
+			matchingFields.add(field)
+		}
+	}	
+	return matchingFields
+}
+
+function genContainerProxy(sourceTyp, targetTyp, field){
+	head <-- genContProxyHead(sourceTyp, targetTyp)
+	body <-- genContProxyBody(field, targetTyp)
+	return head + body
+}
+
+function genContainerProxyHead(sourceTyp, targetTyp){
+	sourceTypeName <-- nameOfTyp(sourceTyp)
+	targetTypeName <-- nameOfTyp(targetTyp)
+	return "containerproxy for " sourceTypeName + " with " + targetTypeName
+}
+
+function genContainerProxyBody(field, targetTyp){
+	// den Namen des Feldes ermitteln	
+	fieldName <-- nameOfField(field)
+	// den Typ des Feldes ermitteln
+	fieldTyp <-- typOfField(field)
+	// Nominal-Proxy fuer den fieldTyp und den targetTyp erzeugen
+	fieldProxy <-- genNominalProxy(fieldTyp, targetTyp)
+	return "{\n"+ field + "=" + fieldProxy  +"\n}"
+}
+\end{lstlisting}
+
+
+\paragraph{Beispiel: }Sei $sourceTyp = \texttt{FireState}$ und $targetTyp = \texttt{boolean}$.\\\\
+Es gilt: $\texttt{FireState} \Rightarrow_{container} \texttt{boolean}$.\\
+Da $\texttt{FireState}$ nur eine Felddeklaration enthält, kann die Funktion $\texttt{genContainerProxies(FireState, boolean)}$ eine Liste mit maximal einem Proxy erzeugen. Da der Typ der Felddeklaration in $\texttt{FireState}$ gleich dem $targetTyp$ ist, wird in der Funktion $\texttt{genContainerProxyBody}$ die Funktion $\texttt{genNominalProxy(boolean, boolean)}$ aufgerufen. Welches Ergebnis dieser Aufruf zufolgen hat, wurde bereits in Abschnitt zum Simple-Proxy-Generator (Beispiel 3) gezeigt. Im Folgenden ist das Element aus der Ergebnisliste des Funktionsaufrufes $\texttt{genContainerProxies(FireState, boolean)}$ aufgeführt.
+\begin{lstlisting}[style = dsl]
+	containerproxy for FireState with boolean {
+		isActive = simpleproxy for boolean
+	}
+\end{lstlisting}
+
+\subsection{Content-Proxy-Generator}
+\textbf{Benötigt: }$sourceTyp$ und $targetTyp$ mit $sourceTyp \Rightarrow_{content} targetTyp$
+\begin{lstlisting}[style = generator]
+function genContentProxies(sourceTyp, targetTyp){
+	proxies <-- []
+	matchingFields <-- findMatchingFields(targetTyp, sourceTyp)
+	// fuer jedes Feld des targetTyps, dessen Typ auf den sourceTyp matcht, wird ein Proxy erzeugt
+	for(field : matchingFields){
+		proxy <-- genContentProxy(sourceType, targetType, field)
+		proxies.add(proxy)
+	}
+	return proxies
+}
+
+function genContentProxy(sourceTyp, targetTyp, field){
+	head <-- genContentProxyHead(sourceTyp, targetTyp)
+	body <-- genContentProxyBody(sourceTyp, field)
+	return head + body
+}
+
+function genContentProxyHead(sourceTyp, targetTyp){
+	sourceTypeName <-- nameOfTyp(sourceTyp)
+	targetTypeName <-- nameOfTyp(targetTyp)
+	return "contentproxy for " sourceTypeName + " with " + targetTypeName
+}
+
+function genContentProxyBody(sourceTyp, field){
+	mDels <-- []
+	// den Namen des Feldes ermitteln	
+	fieldName <-- nameOfField(field)
+	// den Typ des Feldes ermitteln
+	fieldTyp <-- typOfField(field)
+	for(pair : findMethodPairsNominal(sourceTyp, fieldTyp)){
+		sMethod <-- pair[0]
+		tMethod <-- pair[1]
+		modSMethod <-- genContentSourceMethod(sMethod, tMethod)
+		modTMethod <-- genContentTargetMethod(sMethod, tMethod)		
+		mDel <-- modSMethod + " --> " + fieldName + "." + modTMethod
+		mDels.add(mDel)
+	}
+	return "{\n" + mDels.joining("\n") + "\n}"
+}
+
+function genContentSourceMethod(sMethod, tMethod){
+	sMethodName <-- nameOfMethod(sMethod)
+	sMethodReturnTyp <-- returnTypOfMethod(sMethod)
+	// Parameterttypen der Methoden ermitteln
+	sMethodParamTypes <-- paramTypesOfMethod(sMethod)
+	tMethodParamTypes <-- paramTypesOfMethod(tMethod)	
+	// Proxies fuer Parametertypen erzeugen
+	modParamTypen <-- genNominalParamProxies(sMethodParamTypes, tMethodParamTypes)
+	return genMethodDecl(sMethodName, modParamTypen, sMethodReturnTyp)
+}
+
+function genContentTargetMethod(sMethod, tMethod){
+	tMethodName <-- nameOfMethod(tMethod)
+	tMethodParamTypes <-- paramTypesOfMethod(tMethod)
+	// Rueckgabetypen der Methoden ermitteln
+	sMethodReturnTyp <-- returnTypOfMethod(sMethod)
+	tMethodReturnTyp <-- returnTypOfMethod(tMethod)
+	// Nominalproxy fuer den Rueckgabetyp generieren	
+	modReturnType <--  genNomialProxy(tMethodReturnTyp, sMethodReturnTyp)
+	return genMethodDecl(tMethodName, tMethodParamTypes, modReturnType)
+}
+
+function genMethodDecl(name, paramTypes, retrunTyp){
+	return name + "(" + paramTypes.joining(",") + "):" + retrunTyp
+}
+
+function genNominalParamProxies(sourceParams, targetParams){
+	proxies = []	
+	for(i = 0; i < length(sourceProxies); i++){
+		targetParam = targetParams[i]
+		sourceParam = sourceParams[i]
+		proxy = genNominalProxy(targetParam, sourceParam)
+		proxies.add(proxy)
+	}
+	return proxies
+}
+\end{lstlisting}
+
+\paragraph{Beispiel: }Sei $sourceTyp = \texttt{Medicine}$ und $targetTyp = \texttt{MedCabinet}$.\\\\
+Es gilt: $\texttt{Medicine} \Rightarrow_{content} \texttt{MedCabinet}$.\\
+Da $\texttt{MedCabinet}$ nur eine Felddeklaration enthält, kann die Funktion $\texttt{genContentProxies(Medicine, MedCabinet)}$ eine Liste mit maximal einem Proxy erzeugen. Dieser Proxy ist so geartet, dass er alle Aufrufe der Methoden, die in $\texttt{Medicine}$ deklariert sind, an das Feld $\texttt{med}$ aus $\texttt{MedCabinet}$ delegiert.\\\\
+Da die Methode $\texttt{getDescription}$ aus $Medicine$ keine Parameter verlangt, wird die Schleife in der Methode $\texttt{genParamProxies}$ nicht durchlaufen. Demnach wird innerhalb des Content-Proxies nur ein Proxy für den Rückgabetyp der Methode $\texttt{getDescription}$ erzeugt. Da der $sourceTyp$ mit dem Typ des Feldes $\texttt{med}$ in $\texttt{MedCabinet}$ übereinstimmt, sind auch die Rückgabetypen der Methoden identisch ($\texttt{String}$). Daher wird für die Generierung des Proxies für den Rückgabetyp die Funktion $\texttt{genNominalProxy(String, String)}$ aufgerufen, deren Ergebnis im Abschnitt zum Simple-Proxy (Beispiel 2) aufgezeigt wurde.\\\\
+Im Folgenden ist das Element aus der Ergebnisliste des Funktionsaufrufes $\texttt{genContainerProxies(Medicine, MedCabinet)}$ aufgeführt.
+\begin{lstlisting}[style = dsl]
+	contentproxy for Medicine with MedCabinet {
+		getDescription(): simpleproxy for String --> med.getDescription():String
+	}
+\end{lstlisting}
+
+
+\subsection{Single-Target-Proxy-Generator}
+Der Generator für den Single-Target-Proxy dient der Fallunterscheidung zwischen der Generierung eines Content-, eines Container- oder eines Nominal-Proxy.\\\\
+\textbf{Benötigt: }$sourceTyp$ und $targetTyp$ mit $sourceTyp \Rightarrow_{internStruct} targetTyp$
+\begin{lstlisting}[style = generator]
+function genSingleTargetProxies(sourceTyp, targetTyp){
+	proxies = []				
+	if(sourceTyp     MC    targetTyp){
+		proxy = genNominalProxy(sourceTyp, targetTyp)
+		proxies.add(proxy)
+	}
+	else if(sourceTyp    MContent   targetTyp){
+		proxies = genContentProxy(sourceTyp, targetTyp)
+	}
+	else if(sourceTyp     MContainer    targetTyp){
+		proxies = genContainerProxy(sourceTyp, targetTyp)
+	}
+	return proxies
+}
+\end{lstlisting}
+
+\subsection{Struktureller Proxy}
+\textbf{Benötigt: }$sourceTyp$ und eine Menge von \emph{targetTypen} $P$ aus einer Bibliothek $L$ mit $P \in \mathit{cover(sourceTyp, L)}$.\\
+Der Generator für die strukturellen Proxies liefert eine Liste von Proxies.
+\begin{lstlisting}[style = generator]
+function genStructProxies(sourceTyp, targetTypen){
+	proxies = []
+	combis = combineMethodStructures(sourceTyp, targetTypen)
+	for(combi : combis){
+		proxiesByCombi = genStructProxiesByCombi(sourceTyp, combi)
+		proxies.addAll(proxiesByComni)
+	}
+	return proxies
+}
+
+function combineMethodStructures(sourceTyp, targetTypen){
+	combis = []
+	// eine Kombinationen ist eine Liste von Elementen mit folgender Struktur:
+	// Index 0: targetTyp
+	// Index 1: Liste von Elementen mit folgender Struktur:
+		// Index 0: Methode aus sourceTyp
+		// Index 1: Liste von Methoden aus targetTyp
+	
+	return combis
+}
+
+function genStructProxiesByCombi(sourceTyp, combi){
+	proxies = []
+	body = genStructProxyBody(sourceTyp, combi)
+	return proxies
+}
+
+function genStructProxyBody(sourceTyp, combi){
+	targets = []
+	for(methodCombi : combi){
+		targetHead = genTargetHead(methodCombi)
+
+		sMethod = methodCombi[0]
+		tMethod = methodcombi[2]
+		
+		modSMethods = genStructSourceMethods(sMethod, tMethod)
+		modTMethods = genStructTargetMethods(sMethod, tMethod)
+		
+		combiMDels = genCombinedMethodDelegations(modSMethods, modTMethods)
+		
+		
+	}
+	return targetCombis
+}
+
+function genStructSourceMethods(sMethod, tMethod){
+	souceMethods = []
+	sMethodName = nameOfMethod(sMethod)
+	sMethodReturnTyp = returnTypOfMethod(sMethod)
+	// Parameterttypen der Methoden ermitteln
+	sMethodParamTypes = paramTypesOfMethod(sMethod)
+	tMethodParamTypes = paramTypesOfMethod(tMethod)	
+	// Proxies fuer Parametertypen erzeugen
+	paramProxiesCombis = genParamProxiesWithPermutation(sMethodParamTypes, tMethodParamTypes)
+	for(paramProxies : paramProxiesCombis){
+		modSMethod = genMethodDecl(sMethodName, paramProxies, sMethodReturnTyp)	
+		sourceMethods.add(modSMethod)	
+	}
+	return sourceMethods;
+}
+
+function genParamProxiesWithPermutation(sMethodParamTypes, tMethodParamTypes){
+	paramProxiesCombis = []
+	// Es wird die Permutation der Parametertertypen der Methode des targetTypen erzeugt 
+	permTParamTypes = permute(tMethodParamTypes)
+	for(i = 0; i < length(permTParamTypes); i++){
+		tParamTypes = permTParamTypes[i]
+		// Pruefen, ob die Parametertypen in dieser Reihenfolge matchen
+		if(!typesMatchesInternStruct(tParamTypes, sMethodParamTypes)){
+			continue
+		}
+		paramTypesProxies = genSingleTargetParamProxies(sMethodParamTypes, tParamTypes)
+		combinedParamTypeProxies = flatCombine(paramTypesProxies)
+		paramProxiesCombis.addAll(combinedParamTypeProxies)
+	}
+	return paramProxiesCombis
+}
+
+function genSingleTargetParamProxies(sParamTypes, tParamTypes){
+	singleTargetProxies = []
+	for(i = 0; i < length(sParamTypes); i++){
+		paramTypProxies = genSingleTargetProxies(tParamTypes[i], sParamTypes[i])
+		singleTargetProxies.add(paramTypProxies)
+	}
+	return singleTargetProxies
+}
+
+function typesMatchesInternStruct(sourceTypes, targetTypes){
+	for( i = 0; i < length(sourceTypes); i++){
+		if( sourceTypes[i]      MIS     targetTypes[i]){
+			continue
+		}
+		return false
+	}
+	return true
+}
+
+function flatCombine(listOfLists){
+	result = []
+	for(headL : listOfLists){
+		// urspruengliche Liste Kopieren
+		tempList = copy(listOfLists)
+		// das aktuelle Element in der Kopie entfernen
+		tempList.remove(headL)
+		// rekursiver Aufruf mit der Restliste
+		tailCombis = flatCombine(tempList)		
+		for(head : headL){	
+			if(length(tailCombis) == 0){
+				result.add([head])
+				continue
+			}
+			for(tail : tailCombis){
+				resultElem = [head]
+				resultElem.addAll(tail)
+				result.add(resultElem)
+			}			
+		}
+	}
+	return result
+}
+
+
+function genStructTargetMethods(sMethod, tMethod){
+	targetMethods = []
+	tMethodName <-- nameOfMethod(tMethod)
+	tMethodParamTypes <-- paramTypesOfMethod(tMethod)
+	// Rueckgabetypen der Methoden ermitteln
+	sMethodReturnTyp <-- returnTypOfMethod(sMethod)
+	tMethodReturnTyp <-- returnTypOfMethod(tMethod)
+	// SingleTargetProxies fuer den Rueckgabetyp generieren	
+	returnTypProxies = genSingleTargetProxies(sMethodReturnTyp, tMethodReturnTyp)
+	for(returnTypProxy : returnTypeProxies){
+		 modTMethod = genMethodDecl(tMethodName, tMethodParamTypes, returnTypProxy)
+		 targetMethods.add(mTMethod)
+	}
+	return targetMethods
+}
+
+function genCombinedMethodDelegations(modSMethods, modTMethods){
+	mDels = []
+	for(sMethod : modSMethods){
+		for(tMethod : modTMethods){
+			mDel = sMethod + " --> " + tMethod
+			mDels.add(mDel)
+		}
+	}	
+	return mDels
+}
+\end{lstlisting}
+
+
+
+\section{Idee für neue Struktur}
+\begin{lstlisting}[style = dsl]
+proxy for FireState with [boolean]{
+	inject boolean in state
+}
+
+proxy for MedicalFireFighter with [FireFighter, Doctor]{
+	extinguishFire(Fire):FireState --> FireFighter.extinguishFire(Fire):boolean
+	heal(Injured, MedCabinet):void --> modiPos(1,0) Doctor.heal(Medicine, Patient):void 
+}
+
+proxy for Medicine with [MedCabinet]{
+	getDescription():String --> MedCabinet.med.getDescription():String 
+}
+
+\end{lstlisting}
+
+\end{document}

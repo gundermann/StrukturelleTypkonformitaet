@@ -70,31 +70,35 @@ $\mathit{MD} ::= \mathit{m(T)}\texttt{:}\mathit{T}$' & Eine Methodendeklaration 
  \label{tab:eIShort}
 \end{table}
 \noindent
-Weiterhin sei die Relation $<$ auf Typen durch folgende Regel definiert:
+Weiterhin sei die Relation $<$ auf Typen durch folgende Regeln definiert:
 \begin{gather*}
-T < T' := \begin{array}{l}
-	\texttt{provided }T \texttt{ extends } T' \in L \vee\\
-	(\texttt{provided } T \texttt{ extends } T'' \in L \wedge T'' < T')
-		\end{array}
+\frac{\texttt{provided }T \texttt{ extends } T' \in L}{T < T'}
+\end{gather*}
+\begin{gather*}
+\frac{\texttt{provided } T \texttt{ extends } T'' \in L \wedge T'' < T'}{T < T'}
 \end{gather*}
 
 Darüber hinaus seien folgende Funktionen definiert:
 \begin{gather*}
-felder(T) :=  \left\{ 
+\mathit{felder(T)} :=  \left\{ 
 				\begin{array}{l|l}
 					f : T' & \text{ \emph{f : T'} ist Felddeklaration von \emph{T}}
 				\end{array}
               \right\}\\
-methoden(T) := \left\{ 
+\mathit{methoden(T)} := \left\{ 
 				\begin{array}{l|l}
 					m(T'):T'' & \text{ \emph{m(T'):T''} ist Methodendeklaration von 										\emph{T}}
 				\end{array}
-              \right\}\}
+              \right\}\\
+\mathit{feldTyp(f,T)} := 
+				\begin{array}{l|l}
+					T' & \text{ \emph{f:T'} ist Felddeklatation von 										\emph{T}}
+				\end{array}              
 \end{gather*}
 \noindent
 Das Matching eines Typs $A$ zu einem Typ $B$ wird durch die asymmetrische Relation $\matchTyp{A}{}{B}$ beschrieben. Dabei wird $A$ auch als \emph{Source-Typ} und $B$ als \emph{Target-Typ} bezeichnet.
 
-\section{Struktur für die Definition von Proxies}
+\section{Struktur für die Definition von Proxies}\label{sec:proxygram}
 Ein Proxy wird auf der Basis einer Matchingrelation erzeugt. In Abhängigkeit von der zugrundeliegenden Matchingrelation zwischen dem \emph{Source-} und dem \emph{Target-Typen} werden unterschiedliche Arten von Proxies erzeugt:
 \begin{itemize}
 \item \emph{Struktureller Proxy}
@@ -162,9 +166,16 @@ $\mathit{f.m(NPX):TR} $  & Eine Content-Proxy-Methodendelegation besteht aus zwe
 \newpage
 \section{Beispiel-Bibliothek}
 
+
+
 \begin{lstlisting}[style = dsl]
 provided Fire extends Object{}
 \end{lstlisting}
+
+\begin{lstlisting}[style = dsl]
+provided ExtFire extends Fire{}
+\end{lstlisting}
+
 
 \begin{lstlisting}[style = dsl]
 provided FireState extends Object{
@@ -172,7 +183,7 @@ provided FireState extends Object{
 }
 \end{lstlisting}
 
- \begin{lstlisting}[style = dsl]
+\begin{lstlisting}[style = dsl]
 provided Medicine extends Object{
 	String getDescription()
 }
@@ -208,10 +219,10 @@ provided MedCabinet extends Object{
 }
 \end{lstlisting}
 
-\begin{lstlisting}[caption={Bibliothek von Typen},captionpos=b, style = dsl]
+\begin{lstlisting}[caption={Bibliothek \emph{ExampLe} von Typen},captionpos=b, style = dsl]
 required MedicalFireFighter {
 	void heal( Injured injured, MedCabinet med )
-	boolean extinguishFire( Fire fire )	
+	boolean extinguishFire( ExtFire fire )	
 }
 \end{lstlisting}\label{lst:libEx}
 
@@ -220,7 +231,7 @@ required MedicalFireFighter {
 \begin{lstlisting}[caption={Proxy für MedicalFireFighter},captionpos=b,style = dsl]
 structproxy for MedicalFireFither{
 	FireFighter {
-	 extinguishFire(Fire): 
+	 extinguishFire(ExtFire): 
 	 	containerproxy for FireState with boolean {
 		 isActive = simpleproxy for boolean		
 		} 
@@ -244,12 +255,12 @@ structproxy for MedicalFireFither{
 \section{Generierung der Proxies auf Basis von Matchern}
 Die Matcher beinhalten zum Einen die Definition der jeweiligen Matchingrelation ($\Rightarrow$) sowie die Regeln zur Erzeugung eines Proxies, die auf jener Matchingrelation basieren. Alle Arten von Proxies, die durch die folgenden Matcher erzeugt werden, können am Beispiel aus Abschnitt \ref{xmpl_prxy} nachvollzogen werden.
 \subsection{Matcher}
-\subsubsection{ExactTypeMatcher}
+\subsubsection{ExactTypeMatcher}\label{sec:exacttypematcher}
 Der \emph{ExactTypeMatcher} stellt ein Matching von einem Typ $T$ zu demselben Typ $T$ her. Die dazugehörige Matchingrelation $\Rightarrow_{exact}$ wird durch folgende Regel beschrieben:
 \begin{gather*}
 \frac{}{T \Rightarrow_{exact} T}
 \end{gather*}
-\subsubsection{GenTypeMatcher}
+\subsubsection{GenTypeMatcher}\label{sec:gentypematcher}
 Der \emph{GenTypeMatcher} stellt ein Matching von einem Typ $T$ zu einem Typ $T'$ mit $T > T'$ her. Die dazugehörige Matchingrelation $\Rightarrow_{gen}$ wird durch folgende Regel beschrieben:
 \begin{gather*}
 \frac{T > T'}{T \Rightarrow_{gen} T'}
@@ -305,37 +316,13 @@ Die Matchingrelation für die \emph{StructuralTypeMatcher} wird durch folgende R
 \frac{structM(R,P) \neq \emptyset}{R \Rightarrow_{struct}P}
 \end{gather*}
 \subsection{Generierung der Proxies}
-\subsubsection{Simple-Proxy}
-\subsubsection{Sub-Proxy}
-\subsubsection{Content-Proxy}
-\subsubsection{Container-Proxy}
+Zum besseren Verständnis werden die Regeln zur Generierung der Proxies auf das Beispiel aus Abschnitt \ref{xmpl_prxy} angewendet. Da die Proxies verschachtelt sind, erfolgt die beispielhafte Generierung in den folgenden Abschnitten schrittweise parallel zur Beschreibung der Generatoren.
+
 \subsubsection{Struktureller Proxy}
-
-\section{alter kram}
-\subsection{StructuralTypeMatcher}
-Das strukturelle Matching zwischen einem \emph{required Interface} $R$ und einem \emph{provided Typ} $P$ ist gegeben, sofern eine Methode aus $R$ zu einer Methode aus $P$ gematcht werden kann. Die Menge der aus $R$ in $P$ gematchten Methoden wird wie folgt beschrieben:
-\begin{gather*}
-structM(R,P) := \left\{ 
-				\begin{array}{l|l}
-						& \exists n(S):S' \in methoden(P) .\\													m(T):T' \in methoden(R) &  S\Rightarrow_{internStruct}T \wedge \\
-										& T' \Rightarrow_{internStruct}S'
-				\end{array}
-              \right\}
-\end{gather*}
-Da die Notation es nicht hergibt, ist zusätzlich zu erwähnen, dass die Reihenfolge der Parameter in $m$ und $n$ irrelevant ist.\\\\
-Die Relation $\Rightarrow_{internStruct}$ wird durch die übrigen Matcher in folgender Form beschrieben:
-\begin{gather*}
-\frac{\splitfrac{A \Rightarrow_{exact}B \vee A \Rightarrow_{spec}B 
-\vee A \Rightarrow_{gen}B}{\vee A \Rightarrow_{container} B \vee A \Rightarrow_{content} B}}{A \Rightarrow_{internStruct}B}
-\end{gather*}
-Das strukturelle Matching von $R$ und $P$ wird dann durch folgende Regel beschrieben.
-
-\begin{gather*}
-\frac{structM(R,P) \neq \emptyset}{R \Rightarrow_{struct}P}
-\end{gather*}
-\noindent
-Für die Verwendung von $R$ muss jedoch sichergestellt werden, dass alle darin enthaltenen
-Methoden durch ein oder mehrere \emph{required Typen} innerhalb der gesamten Bibliothek $L$ gematcht werden. Folgende Funktion beschreibt daher eine Menge von Mengen von\emph{provided Typen}, die für die Erzeugung eines \emph{strukturellen Proxies} für $R$ verwendet werden können.
+Der \emph{strukturelle Proxy} bildet immer den Einstiegspunkt für die Generierung eines Proxies für einen \emph{required Typ} über das Nichterminal $\mathit{STRUCTPROXY}$ aus der Grammatik für die Definition von Proxies (Abschnitt \ref{sec:proxygram}). Als Basis des Generators für einen \emph{strukturellen Proxy} fungiert der \emph{StructuralTypeMatcher}.
+Daher wird durch diesen Generator ein \emph{struktureller Proxy} für einen \emph{required Typ} $R$ generiert.\\\\
+Für die Generierung eines solchen Proxies vom Typ $R$ muss sichergestellt werden, dass alle in $R$ enthaltenen
+Methoden durch ein oder mehrere \emph{provided Typen} innerhalb der gesamten Bibliothek $L$ gematcht werden. Die folgende Funktion $\mathit{cover}$ beschreibt daher eine Menge von Mengen von \emph{provided Typen}, die für die Erzeugung eines \emph{strukturellen Proxies} für $R$ verwendet werden können.
 \begin{gather*}
 cover(R,L) := 
 \left\{\begin{array}{l|l}
@@ -346,7 +333,142 @@ cover(R,L) :=
 					& \texttt{...}\wedge \mathit{structM(R,P_n)} \neq \emptyset 
 \end{array}\right\}
 \end{gather*}
-Für $R$ kann die Exploration abgebrochen werden, wenn $cover(R,L) = \emptyset$ gilt.\\\\
+Ausgehend von einer Bibliothek $L$ kann ein \emph{strukureller Proxy} zum \emph{require Typ} $R$ aus einer Menge von \emph{provided Typen} $P$ mit $P \in \mathit{cover(R,L)}$ generiert werden. Dazu werden die Grammatikregeln aus Abschnitt \ref{sec:proxygram}, die für den \emph{strukturellen Proxy} relevant sind, um Nebenbedingungen erweitert, die Tabelle \ref{tab:structproxy} zu entnehmen sind.
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{4cm}|p{10cm}|}
+\hline
+\hline
+\centering\textbf{Regel} & \textbf{Nebenbedingungen} \\
+\hline
+\hline
+$\mathit{STRUCTPROXY} ::=$\newline $\texttt{structproxy } \texttt{for } R$\newline$ \texttt{\{}TARGET_1 \texttt{ ... }$ \newline
+$ TARGET_n\texttt{\}}$ & $typ(\mathit{STRUCTPROXY})=R$\newline
+$methoden(\mathit{STRUCTPROXY}) = $\newline
+ $\mathit{cmethoden(TARGET_1)} \cup \texttt{...} \cup \mathit{cmethoden(TARGET_n)} $\newline
+$methoden(R) = methoden(\mathit{STRUCTPROXY})$\\
+\hline
+$\mathit{TARGET} ::=$\newline $P \texttt{ \{}MDEL_1 \texttt{ ...}$\newline
+$ MDEL_n\texttt{\}}$ &
+$\mathit{typ(TARGET)} = P$ \newline
+$\mathit{cmethoden(TARGET)} = $\newline
+ $\mathit{cmethode(MDEL_1)} \cup \texttt{...} \cup \mathit{cmethode(MDEL_n)}$ \newline
+$\mathit{dmethoden(TARGET)} =  $\newline 
+ $\mathit{dmethode(MDEL_1)} \cup \texttt{...} \cup \mathit{dmethode(MDEL_n)}$ \newline
+ $\mathit{dmethoden(TARGET)} \subseteq \mathit{methoden(P)} $ \\
+\hline
+$\mathit{MDEL} ::= $\newline
+$ CALLM \rightarrow DELM $  & 
+$\mathit{cmethode(MDEL}) = \mathit{methode(CALLM)}$\newline
+$\mathit{dmethode(MDEL}) = \mathit{methode(DELM)}$\newline
+$\mathit{paramTargetTyp(DELM)} = \mathit{paramTyp(CALLM)}$\newline
+$\mathit{returnTargetTyp(CALLM)} = \mathit{returnTyp(DELM)}$
+\\
+\hline
+$\mathit{CALLM} ::=$\newline $m(SP):STPROXY $  &
+$SR = \mathit{typ(STPROXY)} $\newline
+$\mathit{methode(CALLM)} = \mathit{m(SP):SR} $\newline
+$\mathit{paramTyp(CALLM) = SP}$\newline
+$\mathit{targetTyp(STPROXY) = returnTargetTyp(CALLM)}$ \\
+\hline
+$\mathit{DELM} ::=$\newline $n(STPROXY):R $  & 
+$DP = \mathit{typ(STPROXY)} $\newline
+$\mathit{methode(DELM)} = \mathit{n(DP):R} $\newline
+$\mathit{returnTyp(DELM) = R}$\newline
+$\mathit{targetTyp(STPROXY) = paramTargetTyp(DELM)}$ \\
+\hline
+\hline
+\end{tabular}
+\caption{Grammatikregeln und Nebenbedingungen für die Definition eines strukturellen Proxies}
+ \label{tab:structproxy}
+\end{table}
+
+\paragraph{Beispiel:}
+Bezogen auf das Beispiel aus Abschnitt \ref{xmpl_prxy} soll ein \emph{struktureller Proxy} für den \emph{required Typ} $\texttt{MedicalFireFighter}$ aus den \emph{provided Typen} $\texttt{FireFighter}$ und $\texttt{Doctor}$ generiert werden. Dazu gelte folgende Bedingung:
+\begin{gather*}
+	\text{\{}\texttt{FireFighter},\texttt{Doctor} \text{\}} \in \mathit{cover(\texttt{MedicalFireFighter}, ExampLe)}
+\end{gather*}
+Die Generierung der \emph{strukturellen Proxies} erfolgt dann in folgenden Schritten, beginnend mit dem Nichtterminal $\mathit{STRUCTPROXY}$. Bei jedem Schritt werden ein oder mehrere Nichtterminal ersetzt und die Attribute aus den Nebenbedingungen soweit wie möglich zugewiesen.
+\begin{gather*}
+\begin{array}{l|l}
+	\mathit{STRUCTPROXY} & \mathit{typ(STRUCTPROXY)} = \texttt{MedicalFireFighter}
+\end{array}
+\end{gather*}
+\begin{gather*}
+\begin{array}{l|l}
+	\texttt{structproxy for MedicalFireFighter} & \mathit{typ(TARGET_1)} = \texttt{FireFighter}\\
+	\texttt{\{} \mathit{TARGET_1} & \mathit{typ(TARGET_2)} = \texttt{Doctor} \\
+	 \mathit{TARGET_2} \text{\}} &
+\end{array}
+\end{gather*}
+
+\begin{gather*}
+\begin{array}{l|l}
+\texttt{structproxy for MedicalFireFighter} & \\
+\texttt{\{} \texttt{FireFighter} \texttt{\{} & \\
+\mathit{MDEL_1}\texttt{\}} & \\
+\texttt{Doctor} \texttt{\{} & \\
+\mathit{MDEL_2}\texttt{\}} \text{\}} &
+\end{array}
+\end{gather*}
+\begin{gather*}
+\begin{array}{l|l}
+\texttt{structproxy for MedicalFireFighter} & \\
+\texttt{\{} \texttt{FireFighter} \texttt{\{} & \\
+\mathit{CALLM_1} \rightarrow \mathit{DELM_1}\texttt{\}} & \\
+\texttt{Doctor} \texttt{\{} & \\
+\mathit{CALLM_2} \rightarrow \mathit{DELM_2}\texttt{\}} \text{\}} &
+\end{array}
+\end{gather*}
+
+\subsubsection{Container-Proxy}
+\subsubsection{Content-Proxy}
+\subsubsection{Sub-Proxy}
+\subsubsection{Simple-Proxy}
+Ein \emph{Simple-Proxy} kann sowohl auf der Basis des \emph{ExactTypeMatchers} als auch auf Basis des \emph{GenTypMatchers} generiert werden. Die für den \emph{Simple-Proxy} relevanten Grammatikregeln aus Abschnitt \ref{sec:proxygram} werden für die Generierung noch um Nebenbedingungen erweitert. Die vollständige Liste der Regeln und Nebenbedingungen für den \emph{Simple-Proxy} ist Tabelle \ref{tab:simpleproxy} zu entnehmen.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{4cm}|p{10cm}|}
+\hline
+\hline
+\centering\textbf{Regel} & \textbf{Nebenbedingungen} \\
+\hline
+\hline
+$\mathit{STPROXY} ::= NPX$ &
+$\mathit{typ(STPROXY)}=\mathit{typ(NPX)}$\newline
+$\mathit{targetTyp(STPROXY)} = \mathit{targetTyp(NPX)}$\\
+\hline
+$\mathit{NPX} ::=$ \newline $\texttt{simpleproxy } \texttt{for } P$ & 
+$\mathit{targetTyp(NPX)} \Rightarrow_{exact} P $\newline
+$\mathit{typ(NPX)}=P$\newline
+$\mathit{methoden(NPX)} = \mathit{methoden(P)}$\\
+\hline
+$\mathit{NPX} ::=$ \newline $\texttt{simpleproxy } \texttt{for } P$ & 
+$\mathit{targetTyp(NPX)} \Rightarrow_{gen} P $\newline
+$\mathit{typ(NPX)}=P$\newline
+$\mathit{methoden(NPX)} = \mathit{methoden(P)}$
+\\
+\hline
+\hline
+\end{tabular}
+\caption{Regeln und Nebenbedingungen für Simple-Proxies}
+ \label{tab:simpleproxy}
+\end{table}
+
+
+Als Beispiel wird von dem Matching ausgegangen, welches auch bei der Beschreibung des \emph{ExactTypeMatchers} (Abschnitt \ref{sec:exacttypematcher}) angeführt wurde:
+\begin{gather*}
+\texttt{Fire} \Rightarrow_{exact} \texttt{Fire}
+\end{gather*}
+
+ 
+Der \emph{Simple-Proxy} basiert auf zwei Matchern, von denen 
+Die Basis für den \emph{Simple-Proxy} sind sowohl der \emph{•}
+
+\section{alter kram}
+\subsection{StructuralTypeMatcher}
+
 Ein struktureller Proxy für ein \emph{required Interface} $R$ aus einer Menge von  \emph{provided Typen} $P$ wird durch folgende Regeln und Nebenbedingungen beschrieben:
 \begin{table}[H]
 \centering
@@ -398,51 +520,9 @@ $\mathit{targetTyp(STPROXY) = paramTargetTyp(DELM)}$ \\
 \end{table}
 \noindent
 Regeln für das Nonterminal \emph{STPROXY} unterliegen Nebenbedingungen, die teilweise erst unter Zuhilfenahme der folgenden Matcher erfüllt werden können.
-\subsection{ExactTypeMatcher}
-Die Matchingrelation für diesen Matcher wird durch folgende Regel beschrieben:
 
-\begin{gather*}
-\frac{}{T \Rightarrow_{exact} T}
-\end{gather*}
-Ein Proxy für einen Typ $T$, der mit demselben Typ als Target-Typ erzeugt werden soll, ist ein \emph{Simple-Proxy}. Die Regeln für den \emph{Simple-Proxy}, sind im folgenden Abschnitt zum \emph{GenTypeMatcher} beschrieben.
-
-
-\subsection{GenTypeMatcher}
-Die Matchingrelation für diesen Matcher wird durch folgende Regel beschrieben:
-\begin{gather*}
-\frac{T > T'}{T \Rightarrow_{gen} T'}
-\end{gather*}
-Ein Proxy für einen Typ $T$, der mit einem Typen-Typ $T'$ mit $T \Rightarrow_{gen} T'$ erzeugt werden soll, ist ein \emph{Simple-Proxy} und wird über die folgenden Regeln und Nebenbedingungen beschrieben:
-
-\begin{table}[H]
-\centering
-\begin{tabular}{|p{4cm}|p{10cm}|}
-\hline
-\hline
-\centering\textbf{Regel} & \textbf{Nebenbedingungen} \\
-\hline
-\hline
-$\mathit{STPROXY} ::= NPX$ &
-$\mathit{typ(STPROXY)}=\mathit{typ(NPX)}$\newline
-$\mathit{targetTyp(STPROXY)} = \mathit{targetTyp(NPX)}$\\
-\hline
-$\mathit{NPX} ::=$ \newline $\texttt{simpleproxy } \texttt{for } P$ & 
-$\mathit{targetTyp(NPX)} \Rightarrow_{gen} P $\newline
-$\mathit{typ(NPX)}=P$\newline
-$\mathit{methoden(NPX)} = \mathit{methoden(P)}$
-\\
-\hline
-\hline
-\end{tabular}
-\caption{Regeln und Nebenbedingungen für Simple-Proxies}
- \label{tab:simpAttr}
-\end{table}
 
 \subsection{SpecTypeMatcher}
-Die Matchingrelation für diesen Matcher wird durch folgende Regel beschrieben:
-\begin{gather*}
-\frac{T < T'}{T \Rightarrow_{spec} T'}
-\end{gather*}
 Ein Proxy für einen Typ $T$, der mit einem Target-Typ $T'$ mit $T \Rightarrow_{spec} T'$ erzeugt werden soll, ist ein \emph{Sub-Proxy} und wird durch die folgenden Regeln und Nebenbedingungen beschrieben: 
 \begin{table}[H]
 \centering

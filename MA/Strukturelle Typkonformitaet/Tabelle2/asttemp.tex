@@ -1,0 +1,183 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{float}
+\usepackage{color}
+\usepackage{colortbl} 
+
+\definecolor{yellow}{rgb}{1,1,0.5}
+\definecolor{blue}{rgb}{0,0,1}
+
+
+\begin{document}
+$\mathit{STRUCTPROXY} ::= \newline \texttt{structproxy for MedicalFireFighter \{}TARGET_1 \texttt{ } TARGET_2\texttt{\}}$
+\begin{table}[H]
+\begin{tabular}{|l|}
+\hline
+\cellcolor{yellow}$\mathit{STRUCTPROXY}$\\
+\hline
+$\texttt{typ} = \texttt{MedicalFireFighter}$\\
+$\texttt{targetTypen} = ?$\\
+\hline
+$\mathit{methoden(\texttt{MedicalFireFighter} )} = \mathit{TARGET_1}.\texttt{cms} \cup \mathit{TARGET_2}.\texttt{cms}$\\
+\hline
+\end{tabular}
+\end{table}
+$\mathit{TARGET_1} ::= \texttt{FireFighter \{}MDEL_1\texttt{\}}$
+
+\begin{table}[H]
+\begin{tabular}{|l|}
+\hline
+\cellcolor{yellow}$\mathit{TARGET_1}$\\
+\hline
+$\texttt{typ} = \texttt{FireFighter}$\\
+$\texttt{cms} = ?$\\
+$\texttt{dms} = ?$\\
+\hline
+$\texttt{dms} \subseteq \mathit{methoden(\texttt{FireFighter})}$\\
+\hline
+\end{tabular}
+\end{table}
+$\mathit{MDEL_1} ::= \mathit{CALLM_1}\rightarrow\mathit{DELM_1}$
+
+\begin{table}[H]
+\begin{tabular}{|l|}
+\hline
+\cellcolor{yellow}$\mathit{MDEL_1}$\\
+\hline
+$\texttt{cm} = ?$\\
+$\texttt{dm} = ?$\\
+\hline
+\end{tabular}
+\end{table}
+$\mathit{CALLM_1} ::= \texttt{extinguishFire(Fire):}\mathit{STPROXY_1}$
+
+
+\begin{table}[H]
+\begin{tabular}{|l|}
+\hline
+\cellcolor{yellow}$\mathit{CALLM_1}$\\
+\hline
+$\texttt{paramTypen} = \text{\{}\texttt{Fire}\text{\}}$\\
+$\texttt{returnTargetTyp} = ?$\\
+$\texttt{methode} = ?$\\
+\hline
+\end{tabular}
+\end{table}
+$\mathit{STPROXY_1} ::= \texttt{containerproxy for FireState with boolean \{ isActive = }\mathit{NPX_1}\texttt{\{}$
+\\\\
+$\mathit{NPX_1} ::= \texttt{simpleproxy for boolean}$
+\\\\
+$\mathit{DELM_1} ::= \texttt{extinguishFire(}\mathit{STPROXY_2}\texttt{):boolean}$
+\\\\
+$\mathit{STPROXY_2} ::= \mathit{NPX_2}$
+\\\\
+$\mathit{NPX_2} ::= \texttt{simpleproxy for Fire}$
+\\\\
+$\mathit{NPX_2} ::= \texttt{simpleproxy for Fire}$
+
+
+
+
+
+\begin{table}[H]
+\begin{tabular}{|l|}
+\hline
+\cellcolor{yellow}$\mathit{DELM_1}$\\
+\hline
+$\texttt{returnTyp} = \texttt{boolean}$\\
+$\texttt{paramTargetTypen} = ?$\\
+$\texttt{methode} = ?$\\
+\hline
+\end{tabular}
+\end{table}
+
+
+
+
+
+\begin{table}[H]
+\begin{tabular}{|l|}
+\hline
+\cellcolor{yellow}$\mathit{TARGET_2}$\\
+\hline
+$\texttt{typ} = \texttt{Doctor}$\\
+$\texttt{cms} = ?$\\
+$\texttt{dms} = ?$\\
+\hline
+$\texttt{dms} \subseteq \mathit{methoden(\texttt{Doctor})}$\\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\begin{tabular}{|l|}
+\hline
+\cellcolor{yellow}$\mathit{MDEL_2}$\\
+\hline
+$\texttt{cm} = ?$\\
+$\texttt{dm} = ?$\\
+\hline
+\end{tabular}
+\end{table}
+
+
+\begin{table}[H]
+\begin{tabular}{|l|}
+\hline
+\cellcolor{yellow}$\mathit{CALLM_2}$\\
+\hline
+$\texttt{paramTypen} = \text{\{}\texttt{Injured, MedCabinet}\text{\}}$\\
+$\texttt{returnTargetTyp} = ?$\\
+$\texttt{methode} = ?$\\
+\hline
+\end{tabular}
+\end{table}
+
+
+\begin{table}[H]
+\begin{tabular}{|l|}
+\hline
+\cellcolor{yellow}$\mathit{DELM_2}$\\
+\hline
+$\texttt{returnTyp} = \texttt{void}$\\
+$\texttt{paramTargetTypen} = ?$\\
+$\texttt{methode} = ?$\\
+\hline
+\end{tabular}
+\end{table}
+
+An dieser Stelle ist Schluss mit dem strukturellen Proxy.
+\\\\
+Andere Reihenfolge
+
+Token: $\texttt{simpleproxy for boolean}$
+
+\begin{table}[H]
+\begin{tabular}{|l|}
+\hline
+\cellcolor{yellow}$\mathit{NPX_1}$\\
+\hline
+$\texttt{returnTyp} = \texttt{void}$\\
+$\texttt{paramTargetTypen} = ?$\\
+$\texttt{methode} = ?$\\
+\hline
+\hline
+\end{tabular}
+\end{table}
+
+
+
+Token: $\texttt{simpleproxy for Fire}$
+
+
+Token: $\texttt{simpleproxy for void}$
+
+
+Token: $\texttt{simpleproxy for String}$
+
+
+
+\end{document}
