@@ -125,7 +125,7 @@ required MedicalFireFighter {
 \newpage
 
 \section{Struktur für die Definition von Proxies}\label{sec:proxygram}
-Die Konvertierung eines Typs $T$ aus einer Menge von \emph{provided Typen} $P$ wird durch Proxies beschrieben. Die Grammatikregeln für einen Proxies sind Tabelle \ref{tab:grProxies} zu entnehmen.
+Die Konvertierung eines Typs $T$ aus einer Menge von provided Typen $P$ wird durch \emph{Proxies} beschrieben. Die Grammatikregeln für einen Proxies sind Tabelle \ref{tab:grProxies} zu entnehmen.
 \begin{table}[H]
 \centering
 \begin{tabular}{|p{5cm}|p{9cm}|}
@@ -138,25 +138,25 @@ $\mathit{PROXY} ::=$\newline
 $\texttt{proxy } \texttt{for } T$\newline
 $ \texttt{with [}\mathit{P_1},...,\mathit{P_n}\texttt{]}$ \newline
 $\texttt{\{}\mathit{MDEL_1},...,\mathit{MDEL_k} \texttt{\}}$
- & Ein Proxy wird für ein Typ $T$ mit einer Mengen von \emph{provided Typen} $P = \{P_1,...,P_n\}$, einer Menge von Methoden-Delegationen erzeugt.\\
+ & Ein Proxy wird für ein Typ $T$ als Source-Typ mit einer Mengen von provided Typen $P = \{P_1,...,P_n\}$ als Target-Typen, einer Menge von Methoden-Delegationen erzeugt.\\
 \hline
 $\mathit{MDEL} ::=$\newline
-$CALLM \rightarrow DELM $  & Eine Methodendelegation besteht aus einer aufgerufenen Methode und aus einem Delegationsziel.\\
+$CALLM \rightarrow DELM $  & Eine \emph{Methodendelegation} besteht aus einer \emph{aufgerufenen Methode} und aus einem \emph{Delegationsziel}.\\
 \hline
 $\mathit{CALLM} ::=$\newline 
-$\mathit{REF}.\mathit{m(\mathit{CP_1},...,\mathit{CP_n}):CR} $  & Eine aufgerufene Methode besteht aus dem Namen der Methode \emph{m}, dem Rückgabetyp \emph{CR} und einer Menge von Parametertypen $\{\mathit{CP_1},...,\mathit{CP_n}\}$.\\
+$\mathit{REF}.\mathit{m(\mathit{CP_1},...,\mathit{CP_n}):CR} $  & Eine aufgerufene Methode besteht aus dem Namen der Methode $m$, dem Rückgabetyp $\mathit{CR}$ und einer Menge von Parametertypen $\{\mathit{CP_1},...,\mathit{CP_n}\}$.\\
 \hline
 $\mathit{DELM} ::=$\newline 
 $\mathit{REF}.\mathit{n(\mathit{DP_1},...,\mathit{DP_n}):DR} $  
-& Die erste Variante eines Delegationsziels besteht aus  dem Namen der Methode \emph{n}, dem Rückgabetyp \emph{DR} und einer Menge von Parametertypen $\{\mathit{DP_1},...,\mathit{DP_n}\}$.\\
+& Die erste Variante eines Delegationsziels besteht aus  dem Namen der \emph{Delegationsmethode} $n$, dem Rückgabetyp $\mathit{DR}$ und einer Menge von Parametertypen $\{\mathit{DP_1},...,\mathit{DP_n}\}$.\\
 \hline
 $\mathit{DELM} ::=$\newline
 $\texttt{posModi(} \mathit{I_1},...,\mathit{I_n} \texttt{)}$\newline
 $\mathit{REF}.\mathit{n(\mathit{DP_1},...,\mathit{DP_n}):DR} $  
-& Die zweite Variante eines Delegationsziels besteht aus einer Menge von Indizies $\{\mathit{I_1},...,\mathit{I_n}\}$, einer Target-Referenz, dem Namen der Methode \emph{n}, dem Rückgabetyp \emph{DR} und einer Menge von Parametertypen $\{\mathit{DP_1},...,\mathit{DP_n}\}$.\\
+& Die zweite Variante eines Delegationsziels besteht aus einer Menge von Indizies $\{\mathit{I_1},...,\mathit{I_n}\}$, einer \emph{Referenz}, dem Namen der Delegationsmethode $n$, dem Rückgabetyp $\mathit{DR}$ und einer Menge von Parametertypen $\{\mathit{DP_1},...,\mathit{DP_n}\}$.\\
 \hline
 $\mathit{DELM} ::= \texttt{err} $  
-& Die dritte Variante eines Delegationsziels besteht führt zu einem Fehler, da die Delegation innerhalb des Proxies nicht möglich ist.\\
+& Die dritte Variante eines Delegationsziels enthält keine weiteren Bestandteile. Das Terminal $\texttt{err}$ weist darauf hin, dass die Delegation innerhalb des Proxies nicht möglich ist und zu einem Fehler führt.\\
 \hline
 $\mathit{REF} ::= \mathit{P_i}$
 & Die erste Variante einer Referenz besteht aus einem Typ $P_i$ .\\
@@ -169,7 +169,7 @@ $\mathit{REF} ::= \mathit{P_i}\texttt{.}\mathit{f}$
  \label{tab:grProxies}
 \end{table}
 \noindent
-Es handelt sich dabei um Produktionsregeln einer Attributgrammatik. Die dazugehörigen Attribute sind der Tabelle \ref{tab:attrGrProxies} zu entnehmen. Dazu sei zusätzlich festgelegt, dass die Notation $\mathit{NT}\texttt{.}\text{*}$ in der Spalte \emph{Attribute} eine Key-Value-Liste aller Attribute des Nonterminals $\mathit{NT}$ beschreibt, wobei der Attributname als Key und dessen Wert als Value innerhalb der List verwendet wird. Weiterhin sei ein Attribut, dass in der Spalte \emph{Attribute} zu einem Nonterminal nicht aufgeführt ist, wird mit dem Wert \emph{none} belegt.
+Es handelt sich dabei um Produktionsregeln einer Attributgrammatik. Die dazugehörigen Attribute sind der Tabelle \ref{tab:attrGrProxies} zu entnehmen. Dazu sei zusätzlich festgelegt, dass die Notation $\mathit{NT}\texttt{.}\text{*}$ in der Spalte \emph{Attribute} eine Key-Value-Liste aller Attribute des Nonterminals $\mathit{NT}$ beschreibt, wobei der Attributname als Key und dessen Wert als Value innerhalb der Liste verwendet wird. Weiterhin sei ein Attribut, dass in der Spalte \emph{Attribute} zu einem Nonterminal nicht aufgeführt ist, wird mit dem Wert \emph{none} belegt.
 \begin{table}[H]
 \centering
 \begin{tabular}{|p{6cm}|p{8cm}|}
@@ -254,58 +254,58 @@ $\texttt{delType} = \mathit{feldTyp(f,P)}$
  \label{tab:attrGrProxies}
 \end{table}
 \noindent
-Ein Proxy bietet alle Methoden des \emph{Source-Typen} an. Einige dieser Methoden werden an eine Methode delegiert, die von einem der \emph{Target-Typen} des Proxies angeboten wird delegiert. Eine solche Delegation wird durch eine Methoden-Delegation (siehe Nontermial $\mathit{MDEL}$) definiert.
-\paragraph{Beispiel} So definiert die folgende Methoden-Delegation, dass die Methode $\texttt{extinguishFire}$, die vom \emph{Source-Typ} $\texttt{Patient}$ - und damit auch vom Proxy - angeboten wird, an die Methoden $\texttt{heal}$, die vom \emph{Target-Typ} $\texttt{Injured}$ angeboten wird, delegiert wird.
+Ein Proxy bietet alle Methoden des Source-Typen an. Einige dieser Methoden werden an eine Methode delegiert, die von einem der Target-Typ des Proxies angeboten wird. Eine solche Delegation wird durch eine Methoden-Delegation (siehe Nontermial $\mathit{MDEL}$) definiert.
+\paragraph{Beispiel} So beschreibt die folgende Methoden-Delegation, dass die Methode $\texttt{extinguishFire}$, die vom Source-Typ $\texttt{Patient}$ - und damit auch vom Proxy - angeboten wird, an die Methoden $\texttt{heal}$, die der Target-Typ $\texttt{Injured}$ anbietet, delegiert wird.
 \begin{lstlisting}[style = dsl]
 	Patient.heal(Medicine):void --> Injured.heal(Medicine):void
 \end{lstlisting}
 \noindent\\
-Die Delegation einer aufgerufenen Methode an eine Delegationsmethode, kann in drei Schritte unterteilt werden.
+Die Delegation einer aufgerufenen Methode an ein Delegationsziel, erfolgt in drei Schritten.
 \begin{enumerate}
 \item Parameterübergabe\\
-Dabei werden die Parameter, mit denen die vom Proxy angebotene Methode, aufgerufen wird, an die Delegationsmethode übergeben. Dabei sind zwei Dinge zu beachten. Zum Einen müssen die Typen der übergebenen Parameter zu den Typen der von der Delegationsmethode erwarteten Parameter passen. Und zum Anderen muss die Reihenfolge, in der die Parameter übergeben wurden, an die erwartete Reihenfolge der Delegationsmethode angepasst werden.
+Dabei werden die Parameter, mit denen die vom Proxy angebotene Methode, aufgerufen wird, an die Delegationsmethode des Delegationsziels übergeben. Dabei sind zwei Dinge zu beachten. Zum Einen müssen die Typen der übergebenen Parameter zu den Typen der von der Delegationsmethode erwarteten Parameter passen. Zum Anderen muss die Reihenfolge, in der die Parameter übergeben wurden, an die erwartete Reihenfolge der Delegationsmethode angepasst werden.
 \item Ausführung\\
-Dieser Schritt meint die Durchführung der Delegationsmethoden mit den übergeben Parametern. Dies schließt auch die Ermittlung des Rückgabewertes der Delegationsmethode ein.
+Dieser Schritt meint die Durchführung der Delegationsmethode mit den übergeben Parametern aus Schritt 1. Dies schließt auch die Ermittlung des Rückgabewertes der Delegationsmethode ein.
 \item Übergabe des Rückgabewertes\\
-Ähnlich wie bei der Parameterübergabe, muss auch der Rückgabewert, der bei der Ausführung ermittelt wurde, an die aufgerufenen Methode, die vom Proxy angeboten wird, übergeben werden. Hier muss ebenfalls sichergestellt werden, dass die beiden Rückgabetypen der beiden Methoden zueinander passen.
+Ähnlich wie bei der Parameterübergabe, muss auch der Rückgabewert, der bei der Ausführung in Schritt 2 ermittelt wurde, an die aufgerufenen Methode, die vom Proxy angeboten wird, übergeben werden. Hier muss ebenfalls sichergestellt werden, dass die beiden Rückgabetypen der beiden Methoden zueinander passen.
 \end{enumerate}
-Die Delegation aus dem oben genannten Beispiel kann schematisch wie in Abbildung \ref{fig:DEL_heal} dargestellt werden. Die Übergabe der Parameter- und Rückgabewerte, die in der Proxy-Definition mit ihren Typen angegeben werden, wird durch die gestrichelten Pfeile symbolisiert.
+Die Delegation aus dem oben genannten Beispiel kann schematisch wie in Abbildung \ref{fig:DEL_heal} dargestellt werden. Die Übergabe der Parameter- und Rückgabewerte wird durch die gestrichelten Pfeile symbolisiert.
 \begin{figure}[H]
 \includegraphics[width=\linewidth]{MDEL_heal}
 \caption{Delegation der Methode $\texttt{heal}$}
 \label{fig:DEL_heal}
 \end{figure}
 \noindent
-An diesem Beispiel ist leicht zu erkennen, dass die Parameter- und Rückgabe-Typen zueinander passen, da sie jeweils identisch sind. Weiterhin spielt die Reihenfolge der Parameter in diesem Beispiel keine Rolle, da es nur einen Parameter gibt.\\\\
-Folgendes Beispiel soll zeigen, wie mit unterschiedlichen Parameter-Reihenfolgen umzugehen ist.
-\paragraph{Beispiel} Die Methoden-Delegation aus Listing \ref{lst:methdel2} ist ein Beispiel für einen solchen Fall. Hier wird die angebotenen Methode $\texttt{heal}$ mit den Parametern $\texttt{Patient}$ und $\texttt{MedCabinet}$ aus dem Typ $\texttt{PatientMedicalFireFighter}$ an die gleichnamige Methode aus dem Typ $\texttt{InverseDoctor}$ delegiert. Die Delegationsmethoden verwendet zwar identische Parameter-Typen, aber die Reihenfolge, in der die Parameter übergeben werden, ist unterschiedlich. 
-\begin{lstlisting}[style = dsl]
+An diesem Beispiel sind sowohl die Parameter- als auch die Rückgabe-Typen der aufgerufenen Methode und der Delegationsmethode identisch sind. Weiterhin spielt die Reihenfolge der Parameter in diesem Beispiel keine Rolle, da es nur einen Parameter gibt. Daher stellt die Übergabe der Parameter- und Rückgabewerte kein Problem dar.\\\\
+Folgendes Beispiel soll zeigen, wie mit unterschiedlichen Reihenfolgen bzgl. der Parameter bei einer Methoden-Delegation umzugehen ist.
+\paragraph{Beispiel} Die Methoden-Delegation aus Listing \ref{lst:methdel2} ist ein Beispiel für einen solchen Fall. Hier wird die aufgerufene Methode $\texttt{heal}$ mit den Parametern $\texttt{Patient}$ und $\texttt{MedCabinet}$ aus dem Typ $\texttt{PatientMedicalFireFighter}$ an die gleichnamige Methode aus dem Typ $\texttt{InverseDoctor}$ delegiert. Die Delegationsmethoden verwendet zwar identische Parameter-Typen, aber die Reihenfolge, in der die Parameter übergeben werden, ist unterschiedlich.
+\begin{lstlisting}[style = dsl, caption = "Methoden-Delegation mit Parametern in unterschiedlicher Reihenfolge", captionpos = b]
 	PatientMedicalFireFighter.heal(Patient, MedCabinet):void --> posModi(1,0)  InverseDoctor.heal(MedCabinet,Patient):void
 \end{lstlisting}\label{lst:methdel2}
 \noindent
-Um die Reihenfolge der Parameter aus dem ursprünglichen Aufruf zu variieren, wird das Schlüsselwort $\texttt{posModi}$ verwendet. Dort werden eine Reihe von Indizes angegeben. Die Anzahl der angegebenen Indizes muss mit der Anzahl der Parameter übereinstimmen. Ein solcher Index beschreibt die Position des in der aufgerufenen Methode angegebenen Parameter. Weiterhin spielt die Reihenfolge der Indizes eine wichtige Rolle. Diese ist mit der Reihenfolge der Parameter der Delegationsmethoden gleichzusetzen.\\\\
-So wird in dem o.g. Beispiel der erste Parameter der aufgerufenen Methoden (Index = 0) der Delegationsmethode als zweiter Parameter übergeben. Dementsprechende wird er zweite Parameter der aufgerufenen Methoden (Index = 1) der Delegationsmethode als erste Parameter übergeben (siehe auch Abbildung \ref{fig:DEL_healInverse}). 
+Um die Reihenfolge der Parameter aus dem ursprünglichen Aufruf zu variieren, wird das Schlüsselwort $\texttt{posModi}$ verwendet. Dort werden eine Reihe von Indizes angegeben. Die Anzahl der angegebenen Indizes muss mit der Anzahl der Parameter übereinstimmen. Ein Index beschreibt die Position des in der aufgerufenen Methode angegebenen Parameter. Weiterhin spielt die Reihenfolge der Indizes eine wichtige Rolle. Diese ist mit der Reihenfolge der Parameter der Delegationsmethoden gleichzusetzen.\\\\
+So wird in dem o.g. Beispiel der erste Parameter der aufgerufenen Methoden (Index = 0) der Delegationsmethode als zweiter Parameter übergeben. Dementsprechende wird er zweite Parameter der aufgerufenen Methoden (Index = 1) der Delegationsmethode als erster Parameter übergeben (siehe Abbildung \ref{fig:DEL_healInverse}). 
 \begin{figure}[H]
 \includegraphics[width=\linewidth]{MDEL_healInverse}
-\caption{Delegation der Methode $\texttt{heal}$ mit unterschiedlicher Reihenfolge}
+\caption{Delegation der Methode $\texttt{heal}$ mit Parametern in unterschiedlicher Reihenfolge}
 \label{fig:DEL_healInverse}
 \end{figure}
 \noindent
-Ein weiteres Beispiel soll zeigen, wie mit übergebenen Typen umzugehen ist, die nicht zueinander passen. Dafür ist jedoch vorab zu klären, wann dies der Fall ist.\\\\
-Dass identische Typen keine Probleme bei der Übergabe zwischen aufgerufener Methoden und Delegationsmethode darstellen, wurde in den oberen Beispielen gezeigt.\\\\
-Darüber hinaus können aber auch Typen ohne Probleme übergeben werden, wenn sie sich aufgrund des Substitutionsprinzips austauschen lassen. Unter Verwendung der o.g Matcher kann ein Typ $T$ anstelle eines Typs $T'$ verwendet werden, sofern folgende Regel gilt.
+Ein weiteres Beispiel soll zeigen, wie mit übergebenen Typen umzugehen ist, die nicht ohne Probleme übergeben werden können. Dafür ist jedoch vorab zu klären, wann dies der Fall ist.\\\\
+Dass identische Typen keine Probleme bei der Übergabe zwischen aufgerufener Methode und Delegationsmethode darstellen, wurde in den oben genannten Beispielen gezeigt.\\\\
+Darüber hinaus können Typen aber auch dann ohne Probleme übergeben werden, wenn sie sich aufgrund des Substitutionsprinzips austauschen lassen. Unter Verwendung der in Abschnitt \ref{sec:matcher} beschriebenen Matcher sei dafür folgende Regeln definiert:
 \begin{gather*}
 \frac{T' \Rightarrow_{exact} T \vee T' \Rightarrow_{gen} T}{T' \Rightarrow_{exactGen} T }
 \end{gather*}
 \noindent
-In folgenden Beispiel ist dies jedoch nicht der Fall.
-\paragraph{Beispiel} In Listing \ref{lst:methdel3} ist eine Methoden-Delegation aufgerührt, bei der sowohl die Parameter- als auch die Rückgabe-Typen der aufgerufenen Methode und der Delegationsmethoden nicht übereinstimmen.
-\begin{lstlisting}[style = dsl]
+Bezogen auf das Substitutionsprinzip kann ein Typ $T$ anstelle eines Typs $T'$ verwendet werden, sofern $T' \Rightarrow_{exactGen} T$ gilt.
+\paragraph{Beispiel} In Listing \ref{lst:methdel3} ist eine Methoden-Delegation aufgerührt, bei der sowohl die Parameter- als auch die Rückgabe-Typen der aufgerufenen Methode und der Delegationsmethode nicht auf Basis des Substitionsprinzips übergeben werden können.
+\begin{lstlisting}[style = dsl, caption = "Methoden-Delegation mit Typkonvertierung", captionpos = b]
 	MedicalFireFighter.extinguishFire(ExtFire):boolean --> FireFigher.extinguishFire(Fire):FireState
 \end{lstlisting}\label{lst:methdel3}
 \noindent
 In einem solchen Fall müssen die Parameter-Typen der aufgerufenen Methoden in die Parameter-Typen der Delegationsmethode konvertiert werden. Analog dazu muss der Rückgabetyp der Delegationsmethode in den Rückgabetyp der aufgerufenen Methoden konvertiert werden.\\\\
-Angenommen, die Funktion $\mathit{proxies(S,T)}$ beschreibt eine Menge von Proxies, mit $S$ als Source-Typ und $T$ als Menge der Target-Typen. Dann müssten bezogen auf das oben genannte Beispiel für die Parameter-Typen einer der Proxies aus der Menge $\mathit{proxies(\texttt{Fire}, \{\texttt{ExtFire}\})}$ an die Delegationsmethode übergeben werden. Nach der Ausführung der Delegationsmethode müsste Proxy aus der Menge $\mathit{proxies(\texttt{boolean},\{\texttt{FireState}\})}$ an die aufgerufenen Methode als Rückgabetyp übergeben werden. Der Sachverhalt wird in Abbildung \ref{fig:DEL_extinguishFire} schematisch dargestellt.
+Angenommen, die Funktion $\mathit{proxies(S,T)}$ beschreibt eine Menge von Proxies, mit $S$ als Source-Typ und $T$ als Menge der Target-Typen. Dann müssten bezogen auf die Methoden-Delegation aus Listing \ref{lst:methdel3} für die Parameter-Typen einer der Proxies aus der Menge $\mathit{proxies(\texttt{Fire}, \{\texttt{ExtFire}\})}$ an die Delegationsmethode übergeben werden. Nach der Ausführung der Delegationsmethode müsste ein Proxy aus der Menge $\mathit{proxies(\texttt{boolean},\{\texttt{FireState}\})}$ an die aufgerufenen Methode als Rückgabetyp übergeben werden. Der Sachverhalt wird in Abbildung \ref{fig:DEL_extinguishFire} schematisch dargestellt.
 \begin{figure}[H]
 \includegraphics[width=\linewidth]{MDEL_extinguishFire}
 \caption{Delegation der Methode $\texttt{extinguishFire}$ mit Typkonvertierungen}
