@@ -462,7 +462,7 @@ Im Hinblick darauf, dass eine Konvertierung von einem Super-Typ und einen Sub-Ty
 \paragraph{Formalisierung}
 Formal wird ein \emph{Sub-Proxy} durch die Regeln beschrieben, die im Folgenden vorgestellt werden. Ein \emph{Sub-Proxy} enthält genau einen Target-Typ. Für einen Proxy $P$ wird dieser Sachverhalt durch die folgende Regel dargestellt.
 \begin{gather*}
-\frac{|P.targets| = 1 \wedge \forall T' \in P.targets: T = T'}{\mathit{singleTarget(P,T)}}
+\frac{|\mathit{P.targets}| = 1 \wedge \forall \mathit{T'} \in \mathit{P.targets}: T = T'}{\mathit{targets_{single}(P,T)}}
 \end{gather*}
 Darüber hinaus enthält ein \emph{Sub-Proxy} $P$ eine bestimmte Menge von Methoden-Delegationen. Dabei muss in allen Methodendelegationen das Attribut $\texttt{field}$ der aufgerufenen Methoden mit dem der Delegationsmethoden übereinstimmen. Folgende Regel stellt diesen Sachverhalt für eine Menge von Methoden-Delegationen $\mathit{MDList}$ dar.
 \begin{gather*}
@@ -679,7 +679,7 @@ Ein \emph{struktureller Proxy} wird formal durch die folgenden Regeln beschriebe
 Ein \emph{struktureller Proxy} kann, wie bereits erwähnt, mehrere Target-Typen enthalten.
 Für jeden Target-Typ $T$ muss dabei jedoch wenigstens eine Delegationsmethode im Proxy mit einem Attribut $\texttt{target} = T$ existiert. Dadurch gilt die für einen \emph{strukturellen Proxy} Proxy $P$:
 \begin{gather*}
-\frac{\forall \mathit{T} \in \mathit{P.targets}:\exists \mathit{M} \in \mathtt{P.dels}:\mathit{M.del.target} = T}{\mathit{targets_{struct}(P, T)}}
+\frac{\forall \mathit{T} \in \mathit{P.targets}:\exists \mathit{MD} \in \mathtt{P.dels}:\mathit{MD.del.target} = T}{\mathit{targets_{struct}(P, T)}}
 \end{gather*}
 Für die aufgerufene Methode und die Delegationsmethode einer einzelnen Methoden-Delegation $\mathit{M}$ gelten im \emph{strukturellen Proxy} dieselben Regeln wie für den \emph{Sub-Proxy}. Die Namen der aufgerufenen Methode und der Delegationsmethode müssen dabei jedoch nicht übereinstimmen. Dafür müssen diese beiden Methode jedoch ein strukturelles Matching aufweisen. Bezogen auf die Rückgabe-Typen einer aufgerufenen Methode $\mathit{C}$ und der Delegationsmethode $\mathit{D}$ aus einer Methoden-Delegation muss daher Folgendes gelten.
 \begin{gather*}
