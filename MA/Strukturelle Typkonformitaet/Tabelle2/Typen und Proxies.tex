@@ -62,9 +62,9 @@ $\mathit{PD} ::= \newline\texttt{provided }T \texttt{ extends } T' \newline  \te
 \hline
 $\mathit{RD} ::= \texttt{required } T \texttt{ \{}\mathit{MD}\text{*}\texttt{\}}$ & Die Definition eines required Typen besteht aus dem Namen des Typen \emph{T} sowie mehreren Methodendeklarationen.\\
 \hline
-$\mathit{FD} ::= \mathit{f} \texttt{:} T$ & Eine Felddeklaration besteht aus dem Namen des Feldes \emph{f} und dem Namen seines Typs \emph{T}.\\
+$\mathit{FD} ::= T \texttt{ }\mathit{f}$ & Eine Felddeklaration besteht aus dem Namen des Feldes \emph{f} und dem Namen seines Typs \emph{T}.\\
 \hline
-$\mathit{MD} ::= \mathit{m(T)}\texttt{:}\mathit{T}$' & Eine Methodendeklaration besteht aus dem Namen der Methode \emph{m}, dem Namen des Parameter-Typs \emph{T} und dem Namen des Rückgabe-Typs \emph{T'}.\\
+$\mathit{MD} ::= \mathit{T'}\texttt{ }\mathit{m(T)}$ & Eine Methodendeklaration besteht aus dem Namen der Methode \emph{m}, dem Namen des Parameter-Typs \emph{T} und dem Namen des Rückgabe-Typs \emph{T'}.\\
 \hline
 \hline
 \end{tabular}
@@ -84,17 +84,17 @@ Darüber hinaus seien folgende Funktionen definiert:
 \begin{gather*}
 \mathit{felder(T)} :=  \left\{ 
 				\begin{array}{l|l}
-					f : T' & \text{ \emph{f : T'} ist Felddeklaration von \emph{T}}
+					T \texttt{ }\mathit{f} & T \texttt{ }\mathit{f}\text{ ist Felddeklaration von }T
 				\end{array}
               \right\}\\
 \mathit{methoden(T)} := \left\{ 
 				\begin{array}{l|l}
-					m(T'):T'' & \text{ \emph{m(T'):T''} ist Methodendeklaration von 										\emph{T}}
+					T'' \text{ }m(T') & T'' \text{ }m(T') \text{ ist Methodendeklaration von }T
 				\end{array}
               \right\}\\
 \mathit{feldTyp(f,T)} := 
 				\begin{array}{l|l}
-					T' & \text{ \emph{f:T'} ist Felddeklatation von 										\emph{T}}
+					T' & T' \texttt{ }\mathit{f}\text{ ist Felddeklatation von }T
 				\end{array}              
 \end{gather*}
 
@@ -113,7 +113,7 @@ provided ExtFire extends Fire{}
 
 \begin{lstlisting}[style = dsl]
 provided FireState extends Object{
-	isActive : boolean
+	boolean isActive
 }
 \end{lstlisting}
 
@@ -156,7 +156,7 @@ provided InverseDoctor extends Object{
 
 \begin{lstlisting}[style = dsl]
 provided MedCabinet extends Object{
-	med : Medicine
+	Medicine med
 }
 \end{lstlisting}
 
@@ -308,7 +308,7 @@ $\texttt{delType} = \mathit{feldTyp(f,P)}$
 \noindent
 Ein Proxy bietet alle Methoden des Source-Typen an. Einige dieser Methoden werden an eine Methode delegiert, die von einem der Target-Typ des Proxies angeboten wird. Eine solche Delegation wird durch eine Methoden-Delegation (siehe Nontermial $\mathit{MDEL}$) definiert.
 \paragraph{Beispiel} So beschreibt die folgende Methoden-Delegation, dass die Methode $\texttt{extinguishFire}$, die vom Source-Typ $\texttt{Patient}$ - und damit auch vom Proxy - angeboten wird, an die Methoden $\texttt{heal}$, die der Target-Typ $\texttt{Injured}$ anbietet, delegiert wird.
-\begin{lstlisting}[style = dsl]
+\begin{lstlisting}[style = dsl, caption = Einfache Methoden-Delegation, captionpos = b]
 	Patient.heal(Medicine):void --> Injured.heal(Medicine):void
 \end{lstlisting}
 \noindent\\
@@ -331,7 +331,7 @@ Die Delegation aus dem oben genannten Beispiel kann schematisch wie in Abbildung
 An diesem Beispiel sind sowohl die Parameter- als auch die Rückgabe-Typen der aufgerufenen Methode und der Delegationsmethode identisch sind. Weiterhin spielt die Reihenfolge der Parameter in diesem Beispiel keine Rolle, da es nur einen Parameter gibt. Daher stellt die Übergabe der Parameter- und Rückgabewerte kein Problem dar.\\\\
 Folgendes Beispiel soll zeigen, wie mit unterschiedlichen Reihenfolgen bzgl. der Parameter bei einer Methoden-Delegation umzugehen ist.
 \paragraph{Beispiel} Die Methoden-Delegation aus Listing \ref{lst:methdel2} ist ein Beispiel für einen solchen Fall. Hier wird die aufgerufene Methode $\texttt{heal}$ mit den Parametern $\texttt{Patient}$ und $\texttt{MedCabinet}$ aus dem Typ $\texttt{PatientMedicalFireFighter}$ an die gleichnamige Methode aus dem Typ $\texttt{InverseDoctor}$ delegiert. Die Delegationsmethoden verwendet zwar identische Parameter-Typen, aber die Reihenfolge, in der die Parameter übergeben werden, ist unterschiedlich.
-\begin{lstlisting}[style = dsl, caption = "Methoden-Delegation mit Parametern in unterschiedlicher Reihenfolge", captionpos = b]
+\begin{lstlisting}[style = dsl, caption = Methoden-Delegation mit Parametern in unterschiedlicher Reihenfolge, captionpos = b]
 	PatientMedicalFireFighter.heal(Patient, MedCabinet):void --> posModi(1,0)  InverseDoctor.heal(MedCabinet,Patient):void
 \end{lstlisting}\label{lst:methdel2}
 \noindent
@@ -346,13 +346,13 @@ So wird in dem o.g. Beispiel der erste Parameter der aufgerufenen Methoden (Inde
 Ein weiteres Beispiel soll zeigen, wie mit übergebenen Typen umzugehen ist, die nicht ohne Probleme übergeben werden können. Dafür ist jedoch vorab zu klären, wann dies der Fall ist.\\\\
 Dass identische Typen keine Probleme bei der Übergabe zwischen aufgerufener Methode und Delegationsmethode darstellen, wurde in den oben genannten Beispielen gezeigt.\\\\
 Darüber hinaus können Typen aber auch dann ohne Probleme übergeben werden, wenn sie sich aufgrund des Substitutionsprinzips austauschen lassen. Daher kann ein Typ $T$ anstelle eines Typs $T'$ verwendet werden, sofern $T \leq T'$ gilt.
-\paragraph{Beispiel} In Listing \ref{lst:methdel3} ist eine Methoden-Delegation aufgerührt, bei der sowohl die Parameter- als auch die Rückgabe-Typen der aufgerufenen Methode und der Delegationsmethode nicht auf Basis des Substitionsprinzips übergeben werden können.
-\begin{lstlisting}[style = dsl, caption = "Methoden-Delegation mit Typkonvertierung", captionpos = b]
+\paragraph{Beispiel} In folgendem Listing ist eine Methoden-Delegation aufgerührt, bei der sowohl die Parameter- als auch die Rückgabe-Typen der aufgerufenen Methode und der Delegationsmethode nicht auf Basis des Substitionsprinzips übergeben werden können.
+\begin{lstlisting}[style = dsl, caption = Methoden-Delegation mit Typkonvertierung, captionpos = b]
 	MedicalFireFighter.extinguishFire(ExtFire):boolean --> FireFigher.extinguishFire(Fire):FireState
 \end{lstlisting}\label{lst:methdel3}
 \noindent
 In einem solchen Fall müssen die Parameter-Typen der aufgerufenen Methoden in die Parameter-Typen der Delegationsmethode konvertiert werden. Analog dazu muss der Rückgabetyp der Delegationsmethode in den Rückgabetyp der aufgerufenen Methoden konvertiert werden.\\\\
-Angenommen, die Funktion $\mathit{proxies(S,T)}$ beschreibt eine Menge von Proxies, mit $S$ als Source-Typ und $T$ als Menge der Target-Typen. Dann müssten bezogen auf die Methoden-Delegation aus Listing \ref{lst:methdel3} für die Parameter-Typen einer der Proxies aus der Menge $\mathit{proxies(\texttt{Fire}, \{\texttt{ExtFire}\})}$ an die Delegationsmethode übergeben werden. Nach der Ausführung der Delegationsmethode müsste ein Proxy aus der Menge $\mathit{proxies(\texttt{boolean},\{\texttt{FireState}\})}$ an die aufgerufenen Methode als Rückgabetyp übergeben werden. Der Sachverhalt wird in Abbildung \ref{fig:DEL_extinguishFire} schematisch dargestellt.
+Angenommen, die Funktion $\mathit{proxies(S,T)}$ beschreibt eine Menge von Proxies, mit $S$ als Source-Typ und $T$ als Menge der Target-Typen. Dann müssten bezogen auf die Methoden-Delegation aus Listing 4 für die Parameter-Typen einer der Proxies aus der Menge $\mathit{proxies(\texttt{Fire}, \{\texttt{ExtFire}\})}$ an die Delegationsmethode übergeben werden. Nach der Ausführung der Delegationsmethode müsste ein Proxy aus der Menge $\mathit{proxies(\texttt{boolean},\{\texttt{FireState}\})}$ an die aufgerufenen Methode als Rückgabetyp übergeben werden. Der Sachverhalt wird in Abbildung \ref{fig:DEL_extinguishFire} schematisch dargestellt.
 \begin{figure}[H]
 \includegraphics[width=\linewidth]{MDEL_extinguishFire}
 \caption{Delegation der Methode $\texttt{extinguishFire}$ mit Typkonvertierungen}
@@ -387,11 +387,11 @@ Die oben genannten Matchingrelationen werden für die Definition weiterer Matche
 T \Rightarrow_{spec} T'  }{T \Rightarrow_{internCont} T'}
 \end{gather*}
 \subsubsection{ContentTypeMatcher}
-Der \emph{ContentTypeMatcher} matcht einen Typ $T$ auf einen Typ $T'$, wobei $T'$ ein Feld enthält, auf dessen Typ $T''$ der Typ $T$ über die Matchingrelation $\Rightarrow_{internCont}$ gematcht werden kann. So kann bspw. der Typ $\texttt{boolean}$ aus Listing \ref{lst:libEx} auf den Typ $\texttt{FireState}$ gematcht werden.
+Der \emph{ContentTypeMatcher} matcht einen Typ $T$ auf einen Typ $T'$, wobei $T'$ ein Feld enthält, auf dessen Typ $T''$ der Typ $T$ über die Matchingrelation $\Rightarrow_{internCont}$ gematcht werden kann. So kann bspw. der Typ $\texttt{boolean}$ aus Listing 1 auf den Typ $\texttt{FireState}$ gematcht werden.
 \\\\
 Die dazugehörige Matchingrelation $\Rightarrow_{content}$ wird durch folgende Regel beschrieben:
 \begin{gather*}
-\frac{\exists f:T''\in felder(T'). T \Rightarrow_{internCont} T''}{T \Rightarrow_{content} T'}
+\frac{\exists \mathit{T''\text{ }f}\in felder(T'): T \Rightarrow_{internCont} T''}{T \Rightarrow_{content} T'}
 \end{gather*}
 \noindent
 So würde für die Typen $\texttt{boolean}$ und $\texttt{FireState}$ gelten: 
@@ -399,11 +399,11 @@ So würde für die Typen $\texttt{boolean}$ und $\texttt{FireState}$ gelten:
 \texttt{boolean} \Rightarrow_{content} \texttt{FireState}
 \end{gather*}
 \subsubsection{ContainerTypeMatcher}
-Der \emph{ContainerTypeMatcher} stellt im Verhältnis zum \emph{ContentTypeMatcher} das Matching in die entgegengesetzte Richtung dar. So kann bspw. auch der Typ $\texttt{FireState}$ auf den Typ $\texttt{booealn}$ aus Listing \ref{lst:libEx} gematcht werden.
+Der \emph{ContainerTypeMatcher} stellt im Verhältnis zum \emph{ContentTypeMatcher} das Matching in die entgegengesetzte Richtung dar. So kann bspw. auch der Typ $\texttt{FireState}$ auf den Typ $\texttt{booealn}$ aus Listing 1 gematcht werden.
 \\\\
 Die dazugehörige Matchingrelation $\Rightarrow_{container}$ wird durch folgende Regel beschrieben:
 \begin{gather*}
-\frac{\exists f:T''\in felder(T). T'' \Rightarrow_{internCont} T'}{T \Rightarrow_{container} T'}
+\frac{\exists \mathit{T''\text{ }f}\in felder(T): T'' \Rightarrow_{internCont} T'}{T \Rightarrow_{container} T'}
 \end{gather*}
 \noindent
 So gilt für die Typen $\texttt{FireState}$ und $\texttt{boolean}$: 
@@ -418,14 +418,14 @@ Zur Definition des letzten Matchers werden die Matchingrelationen der oben genan
 \subsubsection{StructuralTypeMatcher} 
 Der \emph{StructuralTypeMatcher} matcht einen \emph{required Typ} $R$ auf einen \emph{provided Typ} $P$ auf der Basis struktureller Eigenschaften der Methoden, die in den Typen deklariert sind. 
 \\\\
-Somit soll bspw. der Typ $\texttt{MedicalFireFighter}$ auf den Typ $\texttt{FireFighter}$ (siehe Listing \ref{lst:libEx}) gematcht werden. Als ein weiteres Beispiel, bezogen auf die Typen aus Listing \ref{lst:libEx}, kann das Matching des Typs $\texttt{MedicalFireFighter}$ auf den Typ $\texttt{Doctor}$ angebracht werden.
+Somit soll bspw. der Typ $\texttt{MedicalFireFighter}$ auf den Typ $\texttt{FireFighter}$ (siehe Listing 1) gematcht werden. Als ein weiteres Beispiel, bezogen auf die Typen aus Listing 1, kann das Matching des Typs $\texttt{MedicalFireFighter}$ auf den Typ $\texttt{Doctor}$ angebracht werden.
 \\\\
 Damit ein required Typ $R$ auf einen provided Typ $P$ über den \emph{StrukturalTypeMatcher} gematcht werden kann, muss mindestens eine Methode aus $R$ zu einer Methode aus $P$ gematcht werden. Die Menge der gematchten Methoden aus $R$ in $P$ wird wie folgt beschrieben:
 \begin{gather*}
 structM(R,P) := \left\{ 
 				\begin{array}{l|l}
-				& m(T):T' \in methoden(R) \wedge \mathit{ }\\
-m(T):T'						& \exists n(S):S' \in methoden(P) .\\								 &  S\Rightarrow_{internStruct}T \wedge T' \Rightarrow_{internStruct}S' 
+				& \mathit{T'\text{ }m(T)} \in \mathit{methoden(R)} \wedge \mathit{ }\\
+T'\text{ }m(T)	& \exists \mathit{S'\text{ }n(S)} \in \mathit{methoden(P)} :\\								 				&  S\Rightarrow_{internStruct}T \wedge T' \Rightarrow_{internStruct}S' 
 				\end{array}
               \right\}
 \end{gather*}
@@ -462,77 +462,83 @@ Im Hinblick darauf, dass eine Konvertierung von einem Super-Typ und einen Sub-Ty
 \paragraph{Formalisierung}
 Formal wird ein \emph{Sub-Proxy} durch die Regeln beschrieben, die im Folgenden vorgestellt werden. Ein \emph{Sub-Proxy} enthält genau einen Target-Typ. Für einen Proxy $P$ wird dieser Sachverhalt durch die folgende Regel dargestellt.
 \begin{gather*}
-\frac{|P.targets| = 1 \wedge \forall T' \in P.targets. T = T'}{\mathit{singleTarget(P,T)}}
+\frac{|P.targets| = 1 \wedge \forall T' \in P.targets: T = T'}{\mathit{singleTarget(P,T)}}
 \end{gather*}
-Darüber hinaus enthält ein \emph{Sub-Proxy} $P$ eine bestimmte Menge von Methoden-Delegationen. Dabei muss in allen Methodendelegationen das Attribut $\texttt{field}$ der aufgerufenen Methoden mit dem der Delegationsmethoden übereinstimmen. Folgende Regel stellt diesen Sachverhalt für eine Menge von Methoden-Delegationen $\mathit{DELList}$ dar.
+Darüber hinaus enthält ein \emph{Sub-Proxy} $P$ eine bestimmte Menge von Methoden-Delegationen. Dabei muss in allen Methodendelegationen das Attribut $\texttt{field}$ der aufgerufenen Methoden mit dem der Delegationsmethoden übereinstimmen. Folgende Regel stellt diesen Sachverhalt für eine Menge von Methoden-Delegationen $\mathit{MDList}$ dar.
 \begin{gather*}
-\frac{\splitfrac{\forall \mathit{DEL_1}\in \mathit{DELList}. \neg(\exists \mathit{DEL_2} \in \mathit{DEL_1.call.field} \neq \mathit{DEL_2.call.field}}{ \vee \mathit{DEL_1.del.field} \neq \mathit{DEL_2.del.field} )}}
-{\mathit{equalRefs(DELList)}}
+\frac{\splitfrac{\forall \mathit{MD_1}\in \mathit{MDList}: \neg(\exists \mathit{MD_2} \in \mathit{MDList}:\mathit{MD_1.call.field} \neq \mathit{MD_2.call.field}}{ \vee \mathit{MD_1.del.field} \neq \mathit{MD_2.del.field} )}}
+{\mathit{equalRefs(MDList)}}
 \end{gather*}
-Für jede einzelne Methoden-Delegation $\mathit{DEL}$ gilt weiterhin, dass die aufgerufene Methode und die Delegationsmethode denselben Namen haben.
+Für jede einzelne Methoden-Delegation $\mathit{MD}$ gilt weiterhin, dass die aufgerufene Methode und die Delegationsmethode denselben Namen haben.
 \begin{gather*}
-\frac{\mathit{DEL.call.name} = \mathit{DEL.del.name}}
-{\mathit{nominalDel(DEL)}}
+\frac{\mathit{MD.call.name} = \mathit{MD.del.name}}
+{\mathit{methDel_{nominal}(MD)}}
 \end{gather*}
-Die aufgerufene Methode muss dabei generell im Typ aus dem Attribut $call.delType$ deklariert sein und die Delegationsmethode im Typ aus dem Attribut $del.delType$.
+Die aufgerufene Methode muss dabei generell im Typ aus dem Attribut $\texttt{call.delType}$ deklariert sein und die Delegationsmethode im Typ aus dem Attribut $\texttt{del.delType}$.
 \begin{gather*}
-\frac{\exists m(P_1,...,P_n):R \in \mathit{methoden(DEL.call.delType)}. \mathit{DEL.call.name} = m}
-{\mathit{simpleCallMethod(DEL, P)}}
+\frac{\exists \mathit{T'\text{ } m(T)} \in \mathit{methoden(MD.call.delType)}: \mathit{MD.call.name} = m}
+{\mathit{callMethod_{simple}(MD)}}
 \end{gather*}
 \begin{gather*}
-\frac{\exists m(P_1,...,P_n):R \in \mathit{methoden(DEL.del.delType)}. \mathit{DEL.del.name} = m}
-{\mathit{simpleDelMethod(DEL, P)}}
+\frac{\exists \mathit{T'\text{ }m(T)} \in \mathit{methoden(MD.del.delType)}: \mathit{MD.del.name} = m}
+{\mathit{delMethod_{simple}(MD)}}
 \end{gather*}
 Zusätzlich muss das Attribut $\texttt{field}$ im Attribut $\texttt{call}$ mit dem Wert $\texttt{self}$ belegt und das Attribut $\texttt{mainType}$ mit dem Source-Typ des Proxies belegt sein.
 \begin{gather*}
-\frac{\mathit{DEL.call.mainType} = \mathit{P.type} \wedge \mathit{DEL.call.field} = \mathit{self}}
-{\mathit{simpleDelSource(DEL, P)}}
+\frac{\mathit{MD.call.mainType} = \mathit{P.type} \wedge \mathit{MD.call.field} = \mathit{self}}
+{\mathit{callMethodDelType_{simple}(MD, P)}}
 \end{gather*}
 Damit ist auch automatisch gewährleistet, dass die Attribute $\texttt{mainType}$ und $\texttt{delType}$ im Attribut $\texttt{call}$ übereinstimmen. (siehe Tabelle \ref{tab:attrGrProxies})\\\\
 Ähnliches gilt für die Attribute $\texttt{field}$ und $\texttt{mainType}$ im Attribut $\texttt{del}$. Hierbei muss der Wert des Attributs $\texttt{mainType}$ jedoch mit dem Target-Typ des Proxies übereinstimmen.
 \begin{gather*}
-\frac{\mathit{DEL.del.field} = \mathit{self} \wedge  \mathit{DEL.del.mainType} \in \mathit{P.targets} }
-{\mathit{simpleDelTarget(DEL, P)}}
+\frac{\mathit{MD.del.field} = \mathit{self} \wedge  \mathit{MD.del.mainType} \in \mathit{P.targets} }
+{\mathit{delMethodDelType_{simple}(MD, P)}}
 \end{gather*}
 Damit ist wiederum automatisch gewährleistet, dass die Attribute $\texttt{mainType}$ und $\texttt{delType}$ im Attribut $\texttt{del}$ übereinstimmen. (siehe Tabelle \ref{tab:attrGrProxies})\\\\
-Die Regeln für die linke Seite einer Methoden-Delegation $\mathit{DEL}$ innerhalb eines \emph{Sub-Proxies} $P$ können damit in folgender Regel zusammengefasst werden:
+Die Regeln für die linke Seite einer Methoden-Delegation $\mathit{MD}$ innerhalb eines \emph{Sub-Proxies} $P$ können damit in folgender Regel zusammengefasst werden:
 \begin{gather*}
-\frac{\mathit{simpleCallMethod(DEL,P)} \wedge \mathit{simpleDelSource(DEL,P)}}
-{\mathit{simpleCall(DEL,P)}}
+\frac{\mathit{callMethod_{simple}(MD)} \wedge \mathit{callMethodDelType_{simple}(MD,P)}}
+{\mathit{call_{simple}(MD,P)}}
 \end{gather*}
-Analog dazu können auch die Regeln für die rechte Seite einer Methoden-Delegation $\mathit{DEL}$ innerhalb eines \emph{Sub-Proxies} $P$ zusammengefasst werden:
+Analog dazu können auch die Regeln für die rechte Seite einer Methoden-Delegation $\mathit{MD}$ innerhalb eines \emph{Sub-Proxies} $P$ zusammengefasst werden:
 \begin{gather*}
-\frac{\mathit{simpleDelMethod(DEL,P)} \wedge \mathit{simpleDelTarget(DEL,P)}}
-{\mathit{simpleDel(DEL,P)}}
+\frac{\mathit{delMethod_{simple}(MD)} \wedge \mathit{delMethodDelType_{simple}(MD,P)}}
+{\mathit{del_{simple}(MD,P)}}
 \end{gather*}
-Im \emph{Sub-Proxy} ist darüber hinaus noch die Methoden-Delegation zu beachten, die bei einem Aufruf zu einem Fehler führt. Dieser Fall wird für eine Methoden-Delegation $\mathit{DEL}$ wie folgt beschrieben:
+Im \emph{Sub-Proxy} ist darüber hinaus noch die Methoden-Delegation zu beachten, die bei einem Aufruf zu einem Fehler führt. Dieser Fall wird für eine Methoden-Delegation $\mathit{MD}$ wie folgt beschrieben:
 \begin{gather*}
-\frac{\mathit{DEL.del.name} = \mathit{none}}
-{\mathit{errDel(DEL)}}
+\frac{\mathit{MD.del.name} = \mathit{none}}
+{\mathit{del_{err}(MD)}}
 \end{gather*}
-Die genannten Regeln für eine Methoden-Delegation $\mathit{DEL}$ in einem \emph{Sub-Proxy} lassen sich über die beiden folgenden Regeln beschreiben:
+Die genannten Regeln für eine Methoden-Delegation $\mathit{MD}$ in einem \emph{Sub-Proxy} lassen sich über die beiden folgenden Regeln beschreiben:
 \begin{gather*}
-\frac{\mathit{simpleCall(DEL,P)} \wedge \mathit{simpleDel(DEL,P) \wedge \mathit{nominalDel(DEL)}}}
-{\mathit{subDEL(DEL,P)}}
+\frac{\mathit{call_{simple}(MD,P)} \wedge \mathit{del_{simple}(MD,P) \wedge \mathit{methDel_{nominal}(MD)}}}
+{\mathit{methDel_{sub}(MD,P)}}
 \end{gather*}
 \begin{gather*}
-\frac{\mathit{simpleCall(DEL,P)}\wedge\mathit{errDel(DEL)}
+\frac{\mathit{call_{simple}(MD,P)}\wedge\mathit{del_{err}(MD)}
 }
-{\mathit{subDEL(DEL,P)}}
+{\mathit{methDel_{sub}(MD,P)}}
 \end{gather*}
 Innerhalb eines \emph{Sub-Proxies} gibt es für jede Methode $m$ des Source-Typ genau eine Methoden-Delegation mit der Methode $m$ als aufgerufene Methode. Damit lässt sich für einen Proxy $P$ in Bezug auf alle seine Methoden-Delegationen folgende Regeln formulieren:
 \begin{gather*}
-\frac{\splitfrac{|\mathit{methoden(P.type)}| = |P.dels| \wedge}{ \splitfrac{\forall m(P_1,...,P_n):R \in \mathit{methoden(P.type)}.\exists DEL \in P.dels.}{m = \mathit{DEL.call.name} \wedge \mathit{subDEL(DEL,P)}
+\frac{\splitfrac{\mathit{M} = \mathit{methoden(P.type)}\wedge|\mathit{M}| = |P.dels| \wedge \forall \mathit{T'\text{ }m(T)} \in \mathit{M}:}{\exists \mathit{MD} \in \mathit{P.dels}:m = \mathit{MD.call.name} \wedge \mathit{methDel_{sub}(MD,P)
  }}
 }
-{\mathit{subDELList(P)}}
+{\mathit{methDelList_{sub}(P)}}
 \end{gather*}
+Für einen Proxy $P$ kann die Regel $\mathit{equalRefs(P)}$ im Allgemeinen mit der Bedingung zusammengefasst werden, die besagt, dass ein Proxy immer einen bestimmten Source-Typ $S$ haben muss. Die zusammengefasste Regel lautet:
+\begin{gather*}
+\frac{\mathit{P.type} = \mathit{S} \wedge \mathit{equalRefs(P)}}{\mathit{proxy(P,S)}}
+\end{gather*}
+\noindent
 Die Menge der \emph{Sub-Proxies}, die mit dem Source-Typ $T$ und dem Target-Typ $T'$ erzeugt werden, wird durch die folgende Funktion beschrieben.
 \begin{gather*}
 \mathit{proxies_{sub}(T,T')} := 
 \left\{\begin{array}{l|l}
-	P	& P.type = T \wedge  \mathit{singleTarget(T')} \wedge \mathit{ }\\
-		& \mathit{equalRefs(P.dels)} \wedge \mathit{subDELList(P)}
+		& \mathit{proxy(P,T)}\wedge \mathit{ } \\
+	P	& \mathit{targets_{single}(P,T')} \wedge \mathit{ } \\
+		& \mathit{methDelList_{sub}(P)}
 		 \end{array}
 \right\}
 \end{gather*}
@@ -558,35 +564,36 @@ Der abstrakte Syntaxbaum mit den dazugehörigen Attributen ist Abbildung \ref{fi
 \paragraph{Formalisierung}
 Formal wird ein \emph{Content-Proxy} durch die Regeln beschrieben, die im Folgenden vorgestellt werden.\\\\
 Ein \emph{Content-Proxy} enthält, wie auch der \emph{Sub-Proxy}, genau einen Target-Typ. Ebenfalls identisch zum \emph{Sub-Proxy} sind die Bedingungen hinsichtlich der aufgerufenen Methoden in den einzelnen Methoden-Delegationen.\\\\
-In den Delegationsmethoden einer einzelnen Methoden-Delegation $\mathit{MDEL}$ dürfen die Attribute $\texttt{mainType}$ und $\texttt{delType}$ im \emph{Content-Proxy} nicht identisch sein. Dementsprechend darf das Attribut $\texttt{field}$ nicht mit dem Wert $\texttt{self}$ belegt sein. Vielmehr muss für das Attribut $\texttt{delTyp}$ und den Source-Typ $T$ des Proxies ein Matching der Form $T \Rightarrow_{internCont} \mathit{MDEL.del.delTyp}$ gelten. Daher gilt für den \emph{Content-Proxy} die folgende Regel:
+In den Delegationsmethoden einer einzelnen Methoden-Delegation $\mathit{MD}$ dürfen die Attribute $\texttt{mainType}$ und $\texttt{delType}$ im \emph{Content-Proxy} nicht identisch sein. Dementsprechend darf das Attribut $\texttt{field}$ nicht mit dem Wert $\texttt{self}$ belegt sein. Vielmehr muss für das Attribut $\texttt{delTyp}$ und den Source-Typ $T$ des Proxies ein Matching der Form $T \Rightarrow_{internCont} \mathit{MD.del.delTyp}$ gelten. Daher gilt für den \emph{Content-Proxy} die folgende Regel:
 \begin{gather*}
-\frac{\mathit{P.type} \Rightarrow_{internCont} \mathit{MDEL.del.delType}  \wedge \mathit{MDEL.del.mainType} \in \mathit{P.targets}}
-{\mathit{contentDelTarget(MDEL,P)}}
+\frac{\mathit{P.type} \Rightarrow_{internCont} \mathit{MD.del.delType}  \wedge \mathit{MD.del.mainType} \in \mathit{P.targets}}
+{\mathit{delMethodDelType_{content}(MD,P)}}
 \end{gather*}
 \noindent
-Damit kann eine zusammenfassende Regel für die Delegationsmethoden einer Methoden-Delegation $\mathit{MDEL}$ wie folgt definiert werden:
+Damit kann eine zusammenfassende Regel für die Delegationsmethoden einer Methoden-Delegation $\mathit{MD}$ wie folgt definiert werden:
 \begin{gather*}
-\frac{\mathit{simpleDelMethod(MDEL,P)} \wedge \mathit{contentDelTarget(MDEL,P)}}
-{\mathit{contentDel(MDEL,P)}}
+\frac{\mathit{delMethod_{simple}(MD)} \wedge \mathit{delMethodDelType_{content}(MD,P)}}
+{\mathit{del_{content}(MD,P)}}
 \end{gather*}
-Die zusammenfassende Regel für eine einzelne Methoden-Delegation $\mathit{MDEL}$ innerhalb eines \emph{Content-Proxies} hat die folgende Form:
+Die zusammenfassende Regel für eine einzelne Methoden-Delegation $\mathit{MD}$ innerhalb eines \emph{Content-Proxies} hat die folgende Form:
 \begin{gather*}
-\frac{\mathit{simpleCall(MDEL,P)} \wedge \mathit{contentDel(MDEL,P) \wedge \mathit{nominalDel(MDEL)}}}
-{\mathit{contentMDEL(MDEL,P)}}
+\frac{\mathit{call_{simple}(MD,P)} \wedge \mathit{del_{content}(MD,P) \wedge \mathit{methDel_{nominal}(MD)}}}
+{\mathit{methDel_{content}(MD,P)}}
 \end{gather*}
 Wie auch im \emph{Sub-Proxy} gibt es im \emph{Content-Proxy} für jede Methode $m$ des Source-Typen genau eine Methoden-Delegation mit der Methode $m$ als aufgerufene Methode. Daraus ergibt sich für alle Methoden-Delegationen aus einem \emph{Content-Proxy} $P$ folgende Regel:
 \begin{gather*}
-\frac{\splitfrac{|\mathit{methoden(P.type)}| = |P.dels| \wedge}{ \splitfrac{\forall m(P_1,...,P_n):R \in \mathit{methoden(P.type)}.\exists D \in P.dels.}{m = \mathit{D.call.name} \wedge \mathit{contentMDEL(D,P)}
- }}
-}
-{contentMDELList(P)}
+\frac{\splitfrac{M = \mathit{methoden(P.type) }\wedge|\mathit{M}| = |\mathit{P.dels}| \wedge \forall \mathit{T' \text{ }m(T)} \in \mathit{M}:}{ \exists \mathit{MD} \in \mathit{P.dels}:m = \mathit{MD.call.name} \wedge \mathit{methDel_{content}(MD,P)
+ }
+}}
+{methDelList_{content}(P)}
 \end{gather*}
 Die Menge der \emph{Content-Proxies}, die mit dem Source-Typ $T$ und dem Target-Typ $T'$ erzeugt werden, wird durch die folgende Funktion beschrieben.
 \begin{gather*}
 \mathit{proxies_{content}(T,T')} := 
 \left\{\begin{array}{l|l}
-	P	& P\texttt{.type} = T \wedge  \mathit{singleTarget(T')} \wedge \mathit{ }\\
-		& \mathit{equalRefs(P.dels)} \wedge \mathit{contentMDELList(P)} 
+		& \mathit{proxy(P,T)} \wedge \mathit{ } \\
+	P	& \mathit{targets_{single}(P,T')} \wedge \mathit{ }\\
+		& \mathit{methDelList_{content}(P)} 
 		 \end{array}
 \right\}
 \end{gather*}
@@ -611,37 +618,38 @@ Der abstrakte Syntaxbaum mit den dazugehörigen Attributen ist Abbildung \ref{fi
 \paragraph{Formalisierung}
 Formal wird ein \emph{Container-Proxy} durch die Regeln beschrieben, die im Folgenden vorgestellt werden.\\\\
 Ein \emph{Container-Proxy} enthält, wie die vorher beschriebenen Proxies, genau einen Target-Typ. Die Eigenschaften der Delegationsmethoden innerhalb der einzelnen Methoden-Delegationen gleichen denen aus dem \emph{Sub-Proxy}.\\\\
-In den angerufenen Methoden einer einzelnen Methoden-Delegation dürfen die Attribute $\texttt{mainType}$ und $\texttt{delType}$ im \emph{Container-Proxy} nicht übereinstimmen. Dementsprechend darf das Attribut $\texttt{field}$ nicht mit dem Wert $\texttt{self}$ belegt sein. Vielmehr müssen der Wert des Attributs $\texttt{delTyp}$ und der Target-Typ $T$ des Proxies ein Matching der Form $T \Rightarrow_{internCont} \texttt{delTyp}$ ausweisen. Daher gilt für den \emph{Container-Proxy} folgende Regel.
+In den angerufenen Methoden einer einzelnen Methoden-Delegation $\mathit{MD}$ dürfen die Attribute $\texttt{mainType}$ und $\texttt{delType}$ im \emph{Container-Proxy} nicht übereinstimmen. Dementsprechend darf das Attribut $\texttt{field}$ nicht mit dem Wert $\texttt{self}$ belegt sein. Vielmehr müssen der Wert des Attributs $\texttt{delTyp}$ und der Target-Typ $T$ des Proxies ein Matching der Form $T \Rightarrow_{internCont} \texttt{delTyp}$ ausweisen. Daher gilt für den \emph{Container-Proxy} $P$ folgende Regel.
 \begin{gather*}
-\frac{\splitfrac{\mathit{MDEL.call.mainType} = \mathit{P.type} \wedge \mathit{ }}
-{ \forall T \in \mathit{P.targets}. T \Rightarrow_{internCont} \mathit{MDEL.call.delType}}
+\frac{\splitfrac{\mathit{MD.call.mainType} = \mathit{P.type} \wedge \forall \mathit{T} \in \mathit{P.targets}:}
+{  \mathit{T} \Rightarrow_{internCont} \mathit{MD.call.delType}}
 }
-{\mathit{containerDelSource(MDEL,P)}}
+{\mathit{callMethodDelType_{container}(MD,P)}}
 \end{gather*}
 \noindent
 Damit kann eine zusammenfassende Regel für die aufgerufenen Methoden wie folgt definiert werden:
 \begin{gather*}
-\frac{\mathit{simpleCallMethod(DEL,P)} \wedge \mathit{containerDelSource(DEL,P)}}
-{\mathit{containerCall(DEL,P)}}
+\frac{\mathit{callMethod_{simple}(MD)} \wedge \mathit{callMethodDelType_{container}(MD,P)}}
+{\mathit{call_{container}(MD,P)}}
 \end{gather*}
-Die zusammenfassende Regel für eine einzelne Methoden-Delegation innerhalb eines \emph{Container-Proxies} hat die folgende Form:
+Die zusammenfassende Regel für eine einzelne Methoden-Delegation $\mathit{MD}$ innerhalb eines \emph{Container-Proxies} hat die folgende Form:
 \begin{gather*}
-\frac{\mathit{containerCall(DEL,P)} \wedge \mathit{simpleDel(DEL,P) \wedge \mathit{nominalDel(DEL)}}}
-{\mathit{containerMDEL(DEL,P)}}
+\frac{\mathit{call_{container}(MD,P)} \wedge \mathit{del_{simple}(MD,P)} \wedge \mathit{methDel_{nominal}(MD)}}
+{\mathit{methDel_{container}(MD,P)}}
 \end{gather*}
 Für einen \emph{Container-Proxy} $P$ gilt ebenfalls die Regel $\mathit{equalRefs(P.dels)}$. Daher müssen die Werte des Attributs $\texttt{call.delType}$ aller Methoden-Delegationen des Proxies $P$ übereinstimmen. Ferner muss es für jede Methode $m$ des Typen aus $\texttt{call.delType}$ genau eine Methoden-Delegation mit der Methode $m$ als aufgerufene Methode existieren. Daraus ergibt sich für alle Methoden-Delegationen aus einem \emph{Content-Proxy} $P$ folgende Regel:
 \begin{gather*}
-\frac{\splitfrac{|\mathit{methoden(P.dels[0].call.delType)}| = |P.dels| \wedge}{ \splitfrac{\forall m(P_1,...,P_n):R \in \mathit{methoden(P.dels[0].call.delType)}.}{\exists D \in P.dels.m = \mathit{D.call.name} \wedge \mathit{containerMDEL(D,P)}
+\frac{\splitfrac{\mathit{M} = \mathit{methoden(P.dels[0].call.delType)} \wedge |\mathit{M}| = |P.dels| \wedge \forall \mathit{T' \text{ } m(T)} \in \mathit{M}:}
+{\exists \mathit{MD} \in P.dels:m = \mathit{MD.call.name} \wedge \mathit{methDel_{container}(MD,P)}
  }}
-}
-{\mathit{containerMDELList(P)}}
+{\mathit{methDelList_{container}(P)}}
 \end{gather*}
 Die Menge der \emph{Container-Proxies}, die mit dem Source-Typ $T$ und dem Target-Typ $T'$ erzeugt werden, wird durch die folgende Funktion beschrieben.
 \begin{gather*}
 \mathit{proxies_{container}(T,T')} := 
 \left\{\begin{array}{l|l}
-	P	& P\texttt{.type} = T \wedge  \mathit{singleTarget(T')} \wedge \mathit{ }\\
-		& \mathit{equalRefs(P.dels)} \wedge \mathit{containerMDELList(P)} 
+		& \mathit{proxy(P,T)}  \wedge \mathit{ } \\
+	P	& \mathit{target_{single}(P,T')} \wedge \mathit{ } \\
+		& \mathit{methDelList_{container}(P)} 
 		 \end{array}
 \right\}
 \end{gather*}
@@ -671,41 +679,42 @@ Ein \emph{struktureller Proxy} wird formal durch die folgenden Regeln beschriebe
 Ein \emph{struktureller Proxy} kann, wie bereits erwähnt, mehrere Target-Typen enthalten.
 Für jeden Target-Typ $T$ muss dabei jedoch wenigstens eine Delegationsmethode im Proxy mit einem Attribut $\texttt{target} = T$ existiert. Dadurch gilt die für einen \emph{strukturellen Proxy} Proxy $P$:
 \begin{gather*}
-\frac{\forall T \in \mathit{P.targets}.\exists \mathit{MDEL} \in \mathtt{P.dels}.\mathit{MDEL.del.target} = T}{\mathit{structTargets(P)}}
+\frac{\forall \mathit{T} \in \mathit{P.targets}:\exists \mathit{M} \in \mathtt{P.dels}:\mathit{M.del.target} = T}{\mathit{targets_{struct}(P, T)}}
 \end{gather*}
-Für die aufgerufene Methode und die Delegationsmethode einer einzelnen Methoden-Delegation $\mathit{MDEL}$ gelten im \emph{strukturellen Proxy} dieselben Regeln wie für den \emph{Sub-Proxy}. Die Namen der aufgerufenen Methode und der Delegationsmethode müssen dabei jedoch nicht übereinstimmen. Dafür müssen diese beiden Methode jedoch ein strukturelles Matching aufweisen. Bezogen auf die Rückgabe-Typen einer aufgerufenen Methode $\mathit{CALLM}$ und der Delegationsmethode $\mathit{DELM}$ aus einer Methoden-Delegation muss daher Folgendes gelten.
+Für die aufgerufene Methode und die Delegationsmethode einer einzelnen Methoden-Delegation $\mathit{M}$ gelten im \emph{strukturellen Proxy} dieselben Regeln wie für den \emph{Sub-Proxy}. Die Namen der aufgerufenen Methode und der Delegationsmethode müssen dabei jedoch nicht übereinstimmen. Dafür müssen diese beiden Methode jedoch ein strukturelles Matching aufweisen. Bezogen auf die Rückgabe-Typen einer aufgerufenen Methode $\mathit{C}$ und der Delegationsmethode $\mathit{D}$ aus einer Methoden-Delegation muss daher Folgendes gelten.
 \begin{gather*}
-\frac{\mathit{DELM.returnType} \Rightarrow_{internStruct} \mathit{CALLM.returnType}}{\mathit{structRT(CALLM, DELM)}}
+\frac{\mathit{D.returnType} \Rightarrow_{internStruct} \mathit{C.returnType}}{\mathit{return_{struct}(C,D)}}
 \end{gather*} 
 Weiterhin muss für die Parameter-Typen gelten:
 \begin{gather*}
-\frac{\mathit{CALLM.paramCount} = 0}{\mathit{structParams(CALLM, DELM)}}
+\frac{\mathit{C.paramCount} = 0}{\mathit{params_{struct}(C,D)}}
 \end{gather*} 
 \begin{gather*}
-\frac{\splitfrac{\forall i \in \{0,...,\mathit{CALL.paramCount}-1\}.}
-{ \mathit{CALLM.paramTypes}[i] \Rightarrow_{internStruct} \mathit{DELM.paramTypes}[\mathit{DELM.posModi}[i]]
-}}{\mathit{structParams(CALLM, DELM)}}
+\frac{\splitfrac{\forall \mathit{i} \in \{0,...,\mathit{C.paramCount}-1\}:}
+{ \mathit{C.paramTypes}[i] \Rightarrow_{internStruct} \mathit{D.paramTypes}[\mathit{D.posModi}[i]]
+}}{\mathit{params_{struct}(C,D)}}
 \end{gather*} 
-Für eine einzelne Methoden-Delegation $\mathit{MDEL}$ eines \emph{strukturellen Proxies} $P$ kann dann folgende Regel aufgestellt werden.
+Für eine einzelne Methoden-Delegation $\mathit{MD}$ eines \emph{strukturellen Proxies} $P$ kann dann folgende Regel aufgestellt werden.
 \begin{gather*}
-\frac{\splitfrac{\mathit{simpleCall(MDEL,P)} \wedge \mathit{simpleDel(MDEL,P)} \wedge} {\mathit{structRT(MDEL.call, MDEL.del)} \wedge \mathit{structParams(MDEL.call, MDEL.del)}}
+\frac{\splitfrac{\mathit{call_{simple}(MD,P)} \wedge \mathit{del_{simple}(MD,P)} \wedge} {\mathit{return_{struct}(MD.call, MD.del)} \wedge \mathit{params_{struct}(MD.call, MD.del)}}
 }
-{\mathit{structMDEL(MDEL, P)}}
+{\mathit{methDel_{struct}(MD,P)}}
 \end{gather*}
 In einem \emph{strukturellen Proxy} muss für jede Methode $m$ des Source-Typen genau eine Methoden-Delegation mit der Methode $m$ als aufgerufene Methode existieren. Daraus ergibt sich für alle Methoden-Delegationen aus einem \emph{strukturellen Proxy} $P$ folgende Regel:
 \begin{gather*}
-\frac{\splitfrac{|\mathit{methoden(P.type)}| = |P.dels| \wedge}{ \splitfrac{\forall m(P_1,...,P_n):R \in \mathit{methoden(P.type)}.}{\exists DEL \in P.dels.m = \mathit{DEL.call.name} \wedge \mathit{structMDEL(DEL,P)}
- }}
+\frac{\splitfrac{\mathit{M} = \mathit{methoden(P.type)} \wedge |\mathit{M}| = |\mathit{P.dels}| \wedge \forall \mathit{T' \text{ }m(T)} \in \mathit{M}:}{\exists \mathit{MD} \in \mathit{P.dels}:\mathit{MD.call.name} = m \wedge \mathit{methDel_{struct}(MD,P)}
+ }
 }
-{\mathit{structMDELList(P)}}
+{\mathit{methDelList_{struct}(P)}}
 \end{gather*}
 Wie in Abschnitt 
 Die Menge der \emph{strukturellen Proxies}, die mit dem Source-Typ $R$ und der Menge von Target-Typen $T$ erzeugt werden, wird durch die folgende Funktion beschrieben.
 \begin{gather*}
 \mathit{proxies_{struct}(R,T)} := 
 \left\{\begin{array}{l|l}
-	P	& P\texttt{.type} = R \wedge  \mathit{structTargets(P)} \wedge \mathit{ }\\
-		& \mathit{equalRefs(P.dels)} \wedge \mathit{structMDELList(P)} 
+		& \mathit{proxy(P,R)}\wedge \mathit{ }\\
+	P	& \mathit{targets_{struct}(P,T)} \wedge \mathit{ }\\
+		& \mathit{methDelList_{struct}(P)}  
 		 \end{array}
 \right\}
 \end{gather*}
@@ -715,7 +724,7 @@ Die Proxy-Funktion der einzelnen Proxy-Arten werden zur Beschreibung einer allge
 
 \begin{table}[H]
 \centering
-\begin{tabular}{|p{4cm}|p{4cm}|p{3cm}|}
+\begin{tabular}{|c|c|c|}
 \hline
 \hline
 \centering\textbf{Proxy-Art} & \textbf{Matchingrelation} & \textbf{Funktionsname}\\
@@ -755,21 +764,21 @@ $\mathit{proxies_{struct}}$
  \label{tab:baseMatcher}
 \end{table}
 \noindent
-Die im Abschnitt \ref{sec:proxygram} erwähnte Funktion $\mathit{proxy(S,T)}$ kann darauf aufbauend für einen Source-Typ $S$ und eine Menge von Target-Typen $T$ wie folgt beschrieben werden.
+Die im Abschnitt \ref{sec:proxygram} erwähnte Funktion $\mathit{proxies(S,T)}$ kann darauf aufbauend für einen Source-Typ $S$ und eine Menge von Target-Typen $T$ wie folgt beschrieben werden.
 \begin{gather*}
 \mathit{proxies(S,T)} := 
 \left\{\begin{array}{ll}
 \mathit{proxy_{sub}(S,T)}	& \text{wenn } |T| = 1 \wedge \mathit{ }\\
-& \forall T' \in T. S \Rightarrow_{sub} T'\\	
+& \forall T' \in T: S \Rightarrow_{sub} T'\\	
 &\\
 \mathit{proxy_{content}(S,T)}	& \text{wenn } |T| = 1 \wedge \mathit{ }\\
-& \forall T' \in T. S \Rightarrow_{content} T' \\
+& \forall T' \in T: S \Rightarrow_{content} T' \\
 &\\
 \mathit{proxy_{container}(S,T)} & \text{wenn } |T| = 1 \wedge \mathit{ } \\
-& \forall T' \in T. S \Rightarrow_{container} T' \\
+& \forall T' \in T: S \Rightarrow_{container} T' \\
 &\\
 \mathit{proxy_{struct}(S,T)} & \text{wenn } |T| > 0 \wedge \mathit{ } \\
-&\forall T' \in T. S \Rightarrow_{struct} T'
+&\forall T' \in T: S \Rightarrow_{struct} T'
 		 \end{array}
 \right\}
 \end{gather*}
