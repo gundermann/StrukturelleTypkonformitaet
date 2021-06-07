@@ -14,28 +14,10 @@
 \definecolor{pred}{rgb}{0.9,0,0}
 \definecolor{pgrey}{rgb}{0.46,0.45,0.48}
 
-\lstdefinestyle{dsl}{
-	 morekeywords={with, proxy, structproxy, for, simpleproxy, contentproxy, containerproxy, nominalproxy, provided, required, interface, extends, inject, in, posModi},
-  showspaces=false,
-  showtabs=false,
-  breaklines=true,
-   literate=
-               {-->}{$\rightarrow{}$}{1}
-               ,
-  showstringspaces=false,
-  breakatwhitespace=true,
-  commentstyle=\color{pgreen},
-  keywordstyle=\color{pblue},
-  stringstyle=\color{pred},
-  basicstyle=\fontsize{9}{10}\selectfont\ttfamily,
-  moredelim=[il][\textcolor{pgrey}]{$ $},
-  moredelim=[is][\textcolor{pgrey}]{\%\%}{\%\%}
-}
 
-
-\lstdefinestyle{dsl}{
+\lstdefinestyle{pseudo}{
 mathescape,  
-	 morekeywords={function, for, if, return },
+	 morekeywords={function, for, if, return, else },
   showspaces=false,
   showtabs=false,
   breaklines=true,
@@ -45,6 +27,7 @@ mathescape,
   keywordstyle=\color{pblue},
   stringstyle=\color{pred},
   basicstyle=\fontsize{9}{10}\selectfont\ttfamily,
+  tabsize=2,
   moredelim=[il][\textcolor{pgrey}]{$ $},
   moredelim=[is][\textcolor{pgrey}]{\%\%}{\%\%}
 }
@@ -67,16 +50,16 @@ Das Ziel der semantischen Evaluation ist es, einen der Proxies, die im Rahmen de
 Da die Anforderungen an die gesuchte Komponente mit bedacht spezifiziert werden müssen, ist es irrelevant, ob es mehrere Proxies gibt, die den vordefinierten Testfällen standhalten. Vielmehr soll bei der semantischen Evaluation lediglich ein Proxy gefunden werden, dessen Semantik zu positiven Ergebnissen hinsichtlich aller vordefinierten Testfälle führt. Somit wird die semantische Evaluation beendet, sobald ein solcher Proxy gefunden ist.\\\\
 Bei der Exploration soll letztendlich in einer Bibliothek $L$ zu einem vorgegebenen required Type $R$ ein Proxy gefunden werden. Die Menge dieser Proxies wurde im vorherigen über $\mathit{cover(R,L)}$ beschrieben. Die in dieser Menge befindlichen Proxies können eine unterschiedliche Anzahl von Target-Typen enthalten.\\\\
 Das in dieser Arbeit beschriebene Konzept basiert auf der Annahme, dass bei der Entwicklung davon ausgegangen wird, dass der gesamte Anwendungsfall - oder Teile davon - , der mit der vordefinierten Struktur und den vordefinierten Tests abgebildet werden soll, schon einmal genauso oder so ähnlich in dem gesamten System implementiert wurde. Aus diesem Grund kann für die semantische Evaluation grundsätzlich davon ausgegangen werden, dass die erfolgreiche Durchführung aller relevanten Tests umso wahrscheinlicher ist je weniger Target-Typen im Proxy verwendet werden.\\\\
-Somit werden zuerst die Proxies auf ihr semantisches Matching überprüft, in denen lediglich ein Target-Typ verwendet wird. Die Menge der Proxies aus einer Menge von Proxies $P$ mit einer Anzahl $A$ von Target-Typen wird durch folgende Funktion beschrieben:
+Somit werden zuerst die Proxies auf ihr semantisches Matching überprüft, in denen lediglich ein Target-Typ verwendet wird. Die Menge der Proxies aus einer Menge von Proxies $P$ mit einer Anzahl $a$ von Target-Typen wird durch folgende Funktion beschrieben:
 \begin{gather*}
-proxiesMitTargets(P,A) := \{P | P.targetCount = A\}
+proxiesMitTargets(P,a) := \{P | P.targetCount = a\}
 \end{gather*}
 Die maximale Anzahl der Target-Typen in einerm Proxy zu einem required Typ $R$ ist gleich der Anzahl der Methoden in P.
 \begin{gather*}
 maxTargets(R) := |\mathit{methoden(R)}|
 \end{gather*}
 So kann der Algorithmus für die semantische Evaluation der Menge $P$ von Proxies, die für einen required Typ $R$ erzeugt wurden, mit der Menge von Testfällen $T$ wie folgt im Pseudo-Code beschrieben werden. Dabei sei davon auszugehen, dass ein Test aus $T$ mit einem Proxy $p$ über eine Methode $\texttt{eval(p)}$ ausgewertet werden kann. Diese Methode gibt bei erfolgreicher Durchführung den Rückgabewert $\texttt{true}$ und anderenfalls $\texttt{false}$ zurück.
-\begin{lstlisting}[style = dsl]
+\begin{lstlisting}[style = pseudo]
 function semanticEval(R, P, T){
 	for( i = 1; i <= maxTargets(R); i++ ){
 		proxy = evalProxiesMitTarget(P,i,T)	
@@ -115,9 +98,11 @@ function evalProxy(proxy, T){
 	return true
 }
 \end{lstlisting}
-Die Dauer der Laufzeit der oben genannten Funktionen hängt maßgeblich von der Anzahl der Proxies $\mathit{PA}$ ab. Im schlimmsten Fall müssen alle Proxies hinsichtlich der vordefinierten Tests evaluiert werden.\\\\
-Die Heuristiken, die in den folgenden Abschnitten vorgestellt werden, sollen im Allgemeinen die Anzahl der zu prüfenden Proxies reduzieren. Sie werden immer innerhalb der Methode $\texttt{relevantProxies}$ angewendet. So kann diese Methode wie in folgendem Listing erweitert werden. Die jeweilige Heuristik wird dann über die Methode $\texttt{applyHeuristic}$ beschrieben.
-\begin{lstlisting}[style = dsl]
+Die Dauer der Laufzeit der oben genannten Funktionen hängt maßgeblich von der Anzahl der Proxies $\mathit{PA}$ ab. Im schlimmsten Fall müssen alle Proxies hinsichtlich der vordefinierten Tests evaluiert werden. Um die Anzahl der zu prüfenden Proxies zu reduzieren werden, die im folgenden Abschnitt beschriebenen Heuristiken verwendet.
+
+\subsection{Heuristiken}
+Die Heuristiken werden immer innerhalb der Methode $\texttt{relevantProxies}$ angewendet. So kann diese Methode wie in folgendem Listing erweitert werden. Die jeweilige Heuristik wird dann über die Methode $\texttt{applyHeuristic}$ beschrieben.
+\begin{lstlisting}[style = pseudo]
 
 function relevantProxies(P,anzahl){
 	proxies = proxiesMitTargets(P,anzahl)
@@ -127,12 +112,14 @@ function relevantProxies(P,anzahl){
 
 \end{lstlisting}
 
-\subsection{Ratingbasierte Heuristiken}
-Die folgenden Heuristiken haben zum Ziel, die Reihenfolge, in der die Proxies hinsichtlich der vordefinierten Tests evaluiert werden, so anzupassen, dass ein passender Proxy möglichst früh evaluiert wird. Dabei dient jeweils ein Rating der Proxies als Kriterium für die Festlegung der Reihenfolge.
+\subsection{Heuristiken für die Optimierung der Reihenfolge}
+Die folgende Heuristik hat zum Ziel, die Reihenfolge, in der die Proxies hinsichtlich der vordefinierten Tests evaluiert werden, so anzupassen, dass ein passender Proxy möglichst früh überprüft wird.
 
-
-\subsubsection{Qualitatives Rating}
-Bei dem so genannten \emph{qualitative Rating} eines Proxies handelt es sich um einen numerischen Wert. Um diesen Wert zu ermitteln, wird für jeden Matcher ein Basisrating vergeben. Folgende Funktion beschreibt das Basisrating für das Matching zweier Typen $S$ und $T$:
+\subsubsection{Heuristik: Low Matcherrating First (LMF)}
+%TODO
+Die folgende Heuristik hat zum Ziel, die Reihenfolge, in der die Proxies hinsichtlich der vordefinierten Tests evaluiert werden, so anzupassen, dass ein passender Proxy möglichst früh überprüft wird. Dabei dient jeweils ein so genanntes \emph{Matcherrating} der Proxies als Kriterium für die Festlegung der Reihenfolge.
+\\\\
+Bei dem Matcherrating eines Proxies handelt es sich um einen numerischen Wert. Um diesen Wert zu ermitteln, wird für jeden Matcher ein Basisrating vergeben. Folgende Funktion beschreibt das Basisrating für das Matching zweier Typen $S$ und $T$:
 \begin{gather*}
 \mathit{base(S,T)} =  \left\{ 
 				\begin{array}{l|l}
@@ -171,9 +158,9 @@ Bei dem so genannten \emph{qualitative Rating} eines Proxies handelt es sich um 
 %\end{table}
 %\noindent
 Dabei ist zu erwähnen, dass einige der o.g. Matcher über dasselbe Basisrating erfügen. Das liegt daran, dass sie technisch jeweils gemeinsam umgesetzt wurden.\footnote{Der \emph{GenTypeMatcher} und der \emph{SpecTypeMatcher} wurden gemeinsam in der Klasse $\texttt{GenSpecTypeMatcher}$ umgesetzt. Der \emph{ContentTypeMatcher} und der \emph{ContainerTypeMatcher} wurden gemeinsam in der Klasse $\texttt{WrappedTypeMatcher}$ umgesetzt. (siehe angehängter Quellcode)}\\\\
-Das qualitative Rating eines Proxies $P$ wird über die Funktion $\mathit{qualRating(P)}$ beschrieben. Dieses ist von dem qualitativen Rating der Methoden-Delegation innerhalb des Proxies $P$ abhängig. Das qualitative Rating einer Methoden-Delegation ist von den Basisratings der Matcher abhängig, über die die Parameter- und Rückgabe-Typen der aufgerufenen Methode und der Delegationsmethoden gematcht werden können. Das qualitative Rating einer Methoden-Delegation $\mathit{MD}$ soll über die Funktion $\mathit{mdRating(MD)}$ beschrieben werden.\\\\
-Für die Definition der beiden Funktionen $\mathit{qualRating(P)}$ und $\mathit{mdRating(MD)}$ gibt es unterschiedliche Möglichkeiten. In dieser Arbeit werden 4 Varianten als Definitionen vorgeschlagen, die in einem späteren Abschnitt untersucht werden.\\\\
-Für die Vorschläge zur Definition von $\mathit{qualRating(P)}$ sei $P$ ein struktureller Proxy mit $n$ Methoden-Delegation.
+Das Matcherrating eines Proxies $P$ wird über die Funktion $\mathit{rating(P)}$ beschrieben. Dieses ist von dem Matcherrating der Methoden-Delegation innerhalb des Proxies $P$ abhängig. Das Matcherrating einer Methoden-Delegation ist von den Basisratings der Matcher abhängig, über die die Parameter- und Rückgabe-Typen der aufgerufenen Methode und der Delegationsmethoden gematcht werden können. Das qualitative Rating einer Methoden-Delegation $\mathit{MD}$ soll über die Funktion $\mathit{mdRating(MD)}$ beschrieben werden.\\\\
+Für die Definition der beiden Funktionen $\mathit{rating(P)}$ und $\mathit{mdRating(MD)}$ gibt es unterschiedliche Möglichkeiten. In dieser Arbeit werden 4 Varianten als Definitionen vorgeschlagen, die in einem späteren Abschnitt untersucht werden.\\\\
+Für die Vorschläge zur Definition von $\mathit{rating(P)}$ sei $P$ ein struktureller Proxy mit $n$ Methoden-Delegation.
 Darüber hinaus gelten für die Definition von $\mathit{mdRating(MD)}$ für eine Methoden-Delegation $\mathit{MD}$ folgende verkürzte Schreibweisen:
 \begin{gather*}
 	\mathit{pc} := \mathit{MD.call.paramCount}
@@ -211,7 +198,7 @@ Weiterhin seien die folgenden Funktionen gegeben:
 \begin{gather*}
 \mathit{mdRating(MD)} = \frac{\mathit{sum(basesMD(MD))}}{\mathit{pc} + 1}
 \\\\
-\mathit{qualRating(P)} = \frac{ \mathit{sum(mdRating(P.dels[0]),...,mdRating(P.dels[n-1]))}}{n}
+\mathit{rating(P)} = \frac{ \mathit{sum(mdRating(P.dels[0]),...,mdRating(P.dels[n-1]))}}{n}
 \end{gather*}
 
 
@@ -221,7 +208,7 @@ Weiterhin seien die folgenden Funktionen gegeben:
 \begin{gather*}
 \mathit{mdRating(MD)} = \mathit{max(basesMD(MD))}
 \\\\
-\mathit{qualRating(P)} = \frac{\mathit{max(mdRating(P.dels[0]),...,mdRating(P.dels[n-1]))}}{n}
+\mathit{rating(P)} = \frac{\mathit{max(mdRating(P.dels[0]),...,mdRating(P.dels[n-1]))}}{n}
 \end{gather*}
 
 
@@ -231,7 +218,7 @@ Weiterhin seien die folgenden Funktionen gegeben:
 \begin{gather*}
 \mathit{mdRating(MD)} = \mathit{min(basesMD(MD))}
 \\\\
-\mathit{qualRating(P)} = \frac{\mathit{min(mdRating(P.dels[0]),...,mdRating(P.dels[n-1]))}}{n}
+\mathit{rating(P)} = \frac{\mathit{min(mdRating(P.dels[0]),...,mdRating(P.dels[n-1]))}}{n}
 \end{gather*}
 
 \paragraph{Variante 4: Durchschnitt aus Minimum und Maximum}
@@ -239,22 +226,122 @@ Weiterhin seien die folgenden Funktionen gegeben:
 \begin{gather*}
 \mathit{mdRating(MD)} = \frac{\mathit{max(basesMD(MD))}+\mathit{min(basesMD(MD))}}{2}
 \\\\
-\mathit{qualRating(P)} = \frac{\splitfrac{ \mathit{max(mdRating(P.dels[0]),...,mdRating(P.dels[n-1]))}}{+\mathit{min(mdRating(P.dels[0]),...,mdRating(P.dels[n-1]))}}}{2}
+\mathit{rating(P)} = \frac{\splitfrac{ \mathit{max(mdRating(P.dels[0]),...,mdRating(P.dels[n-1]))}}{+\mathit{min(mdRating(P.dels[0]),...,mdRating(P.dels[n-1]))}}}{2}
 \end{gather*}
 \noindent
-Da die Funktion $\mathit{qualRating}$ von $\mathit{mdrating}$ abhängt und für $\mathit{mdrating}$ 4 Variante gegeben sind, ergeben sich für jede gegebene Variante für die Definition von $\mathit{qualRating}$ weitere 4 Varianten. Dadurch sind insgesamt 16 Varianten für die Definition von $\mathit{qualRating}$ gegeben.\\\\
+Da die Funktion $\mathit{rating}$ von $\mathit{mdrating}$ abhängt und für $\mathit{mdrating}$ 4 Variante gegeben sind, ergeben sich für jede gegebene Variante für die Definition von $\mathit{rating}$ weitere 4 Varianten. Dadurch sind insgesamt 16 Varianten für die Definition von $\mathit{rating}$ gegeben.\\\\
 Zur Anwendung der Heuristik muss das qualitative Rating bei der Auswahl der Proxies in der semantischen Evaluation beachtet werden. Die erfolgt innerhalb der Methode $\texttt{applyHeuristic(proxies)}$. Für diese Heuristik sei dazu eine Methode $\texttt{sort(proxies, rateFunc)}$ angenommen, die eine Liste zurückgibt, in der die Elemente in der übergebenen Liste $\texttt{proxies}$ aufsteigend nach den Werten sortiert, die durch die Applikation der übergebenen Funktion $\texttt{rateFunc}$ auf ein einzelnes Element aus der Liste $\texttt{proxies}$ ermittelt werden. Darauf aufbauend wird die Methode $\texttt{applyHeuristic(proxies)}$ für diese Heuristik in Pseudo-Code wie folgt definiert:
 
-\begin{lstlisting}[style = dsl]
+\begin{lstlisting}[style = pseudo]
 function applyHeuristic(proxies){
-	return sort(proxies, qualRating)
+	return sort(proxies, rating)
 }
 \end{lstlisting}
 
-\subsubsection{Quantitatives Rating}
+\subsubsection{Heuristik: Passed Tests Targets First (PTTF)}
+Das Testergebnis, welches bei Applikation eines Testfalls für einen Proxy ermittelt wird, ist maßgeblich von den Methoden-Delegationen des Proxies abhängig. Jede Methoden-Delegation $\mathit{MD}$ enthält ein Typ in dem die Delegationsmethode spezifiziert ist. Dieser Typ befindet sich im Attribut $\mathit{MD.del.delTyp}$. Im Fall der sturkturellen Proxies, handelt es sich bei diesem Typ um einen der Target-Typen des Proxies.\\\\
+Für einen required Typ $R$ aus einer Bibliothek $L$, kann ein Target-Typ $T$ in den Mengen der möglichen Mengen von Target-Typen $\mathit{cover(R,L)}$ mehrmals auftreten. Die gilt insbesondere dann, wenn es in $\mathit{cover(R,L)}$ Mengen gibt, deren Mächtigkeit größer ist, als die Mächtigkeit der Menge, in der $T$ enthalten ist. Daher gilt:
+\begin{gather*}
+\frac{\mathit{TG},\mathit{TG'} \in \mathit{cover(R,L)} \wedge T \in \mathit{TG} \wedge |\mathit{TG}| < |\mathit{TG'}|}{\exists \mathit{TG''} \in \mathit{cover(R,L)} : |\mathit{TG'}| = |\mathit{TG''}| \wedge T \in \mathit{TG''}}
+\end{gather*}
+\noindent
+\paragraph{Beweis:}
+%TODO
+Sei $R$ ein required Typ aus der Bibliothek $L$. Sei weiterhin $T \in \mathit{TG}$ und $\mathit{TG} \in \mathit{cover(R,L)}$.
+\\\\
+Wie bereits erwähnt, ist das Ergebnis der semantischen Tests ausschlaggebend für diese Heuristik. Es wird davon ausgegangen, dass wenn ein Teil der Testfälle durch einen Proxy $P$ erfolgreich durchgeführt werden, sollte die Reihenfolge der zu prüfenden Proxies so angepasst werden, dass die Proxies, die einen Target-Typen des Proxies $P$ verwenden, zuerst geprüft werden.\\\\
+Dafür sind mehrere Anpassungen bzgl. der Implementierung von Nöten. 
+Zum einen müssen die Informationen bzgl. der bestandenen Tests ausgewertet werden können. Dazu wird von der Methode $\texttt{evalProxy(proxy)}$ ein Objekt vom Typ $\texttt{TestResult}$ zurückgegeben (siehe Abbildung \ref{abb_testresult}).
+\begin{figure}
 
-\subsection{Testergebnisbasierte Heuristiken}
-Die folgenden Heuristiken haben zum Ziel, basierend auf den fehlgeschlagenen Evaluationen von Proxies, darauf schließen, dass auch die Evaluation anderer Proxies fehlschlägt. Dadurch werden diese Proxies bei der weiteren Evaluation herausgefiltert.
+\end{figure}\label{abb_testresult}
+\noindent
+Die Attribute der Klasse $\texttt{TestResult}$, die für diese Heuristik relevant sind, werden in Tabelle \ref{tab_relAttrPTTF} kurz beschrieben.
+\begin{table}
+
+\end{table}\label{tab_relAttrPTTF}
+\noindent
+Um das Objekt vom Typ $\texttt{TestResult}$ mit korrekten Daten befüllen zu können, müssen die bestandenen Tests innerhalb der Methode $\texttt{evalProxy(proxy)}$ mitgezählt werden.\\\\
+Mit Hinblick auf die Laufzeit der Suche, muss in Frage gestellt werden, ob in diesem Fall alle Testfälle durchgeführt werden sollen, oder ob die Evaluation des Proxies, wie gehabt abbrechen soll, sofern ein Testfall nicht erfolgreich durch geführt wurde. Beide Ansätze erfordern zwei unterschiedliche Implementierungen (siehe Listing \ref{lst_PTTFV1} und \ref{lst_PTTFV2}).
+\begin{lstlisting}[style = pseudo, caption = Variante 1: Abbruch bei fehlschlagendem Test, captionpos = b]
+function evalProxy(proxy, T){
+	passedTests = 0
+	for( test : T ){
+		if( !test.eval(proxy) ){
+		\\ wenn ein Test fehlschlaegt, dann entspricht der 
+		\\ Proxy nicht den semantischen Anforderungen
+			return new TestResult(passedTests, false)
+		}
+		passedTests++
+	}
+	return new TestResult(passedTests, true)
+}
+\end{lstlisting}\label{lst_PTTFV1}
+
+\paragraph{Variante 2: Alle Tests durchführen}
+
+
+\begin{lstlisting}[style = pseudo,caption = Variante 2: Alle Tests durchführen, captionpos = b]
+function evalProxy(proxy, T){
+	passedTests = 0
+	result = true
+	for( test : T ){
+		if( !test.eval(proxy) ){
+		//alle Tests werden durchgefuehrt
+			result = false
+		} 
+		else {
+			passedTests++
+		}
+	}
+	return new TestResult(passedTests, result)
+}
+\end{lstlisting}\label{lst_PTTFV2}
+Die Auswirkung auf die Laufzeit dieser beiden Varianten ist von der Komplexität der einzelnen Testfälle abhängig. Auf eine Reduktion der zu prüfenden Proxies hat die Wahl zwischen Variante 1 und Variante 2 keine Auswirkung. Da Variante 1 aufgrund dessen, dass nicht alle Testfälle durchgeführt werden, eine kürzere Laufzeit verspricht, wird die Evaluation der Heuristiken mit dieser Variante durchgeführt.
+\\\\
+Um die erzielten Optimierungen vornehmen zu können, wird zu Beginn der semantischen Evaluation ein Objekt der Klasse $\texttt{OptimizeInfo}$ (siehe Abbildung \ref{abb_optimizeInfo}) erzeugt und in der globalen Variable $\texttt{optiInfo}$ gespeichert. Dieses Objekt existiert während der gesamten Laufzeit der semantischen Evaluation und wird um die gewonnenen Informationen, die für dieses und weitere Heuristiken relevant sind, währenddessen angereichert.
+\\\\
+Im Vergleich zu der Heuristik LMF aus dem vorherigen Abschnitt biete die Heuristik PTTF die Möglichkeit den auch die Reihenfolge der Proxies aus der aktuellen Iteration zu optimieren. Dazu muss die Methode $\texttt{evalProxiesMitTarget}$ wie in Listing \ref{lst_erwEvalProxiesMitTarget} erweitert werden.
+\begin{lstlisting}[style = pseudo,caption = Auswertung des Testergebnisses, captionpos = b]
+function evalProxiesMitTarget(P, anzahl, T){
+	proxies = relevantProxies(P,anzahl)
+	testedProxies = []
+	for( proxy : proxies ){
+		testResult =  evalProxy(proxy, T)
+		if ( testResult.passed() ){
+			// passenden Proxy gefunden
+			return proxy
+		}
+		else {
+			testedProxies.add(proxy)
+			if ( testResult.getPassedTests() > 0){
+				// OptimizeInfo mit den Targets des Proxies anreichern
+				optiInfo.addPriorityTargets(P.targets)
+				// noch nicht evaluierte Proxies ermitteln
+				leftProxies = proxies.removeAll(testedProxies)
+				proxies = applyHeuristic(leftProxies)		
+		}
+	}
+	// kein passenden Proxy gefunden
+	return null
+}
+\end{lstlisting}\label{lst_erwEvalProxiesMitTarget}
+\noindent
+%TODO
+Die Optimierung der Reihenfolge erfolgt wie gehabt in der Methode $\mathit{applyHeuristic(proxies)}$. Dabei ist davon auszugehen, dass die Methode $\texttt{sortPTTF}$ zwei Parameter $\texttt{proxies}$ und $\texttt{prioTargets}$ erwartet. Bei dem Parameter $\texttt{proxies}$ handelt es sich um eine Liste von Proxies. Bei dem Parameter $\texttt{prioTargets}$ handelt es sich um eine Liste von Typen. Die Methode $\texttt{sortPTTF}$ erzeugt eine Kopie der Liste $\texttt{proxies}$ und sortiert deren Elemente. Die Sortierung mit dieselben Elementen, die auch im ersten Parameter $\texttt{proxies}$ enthalten sind, erzeugt. Allerdings sind die Elemente in der erzeugten Liste so sortiert, dass die Proxies, die meisten Target-Typen enthalten, der auch in der Liste aus dem zweiten Parameter $\texttt{prioTargets}$ vorkommen, vor denen stehen
+\begin{lstlisting}[style = pseudo,caption = Auswertung des Testergebnisses, captionpos = b]
+function applyHeuristic(proxies){
+	return sortPTTF(proxies, optiInfo.getPrioTargets())
+}
+\end{lstlisting}\label{lst_applyHeuristicPTTF}
+
+\subsection{Heuristiken für den Ausschluss aus der weiteren semantischen Evaluation}
+Bei den folgenden Heuristiken handelt es sich um Ausschlussverfahren. Das bedeutet, dass bestimmte Proxies auf der Basis von Erkenntnissen, die während der laufenden semantischen Evaluation entstanden sind, für den weiteren Verlauf ausgeschlossen werden. Dadurch soll die erneute Prüfung eines Proxies, der ohnehin nicht zum gewünschten Ergebnis führt, verhindert werden.
+\subsubsection{Heuristik: Pivot-Method Call Elimination}
+Bei dieser Heuristik handelt es sich um ein Ausschlussverfahren, welches auf früher gewonnene Erkenntnisse basiert.
+\subsubsection{Heuristik: Single-Method-Test Elimination}
+
+
 
 
 \end{document}
