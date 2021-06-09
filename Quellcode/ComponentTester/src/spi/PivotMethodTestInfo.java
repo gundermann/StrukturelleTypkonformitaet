@@ -1,9 +1,18 @@
 package spi;
 
+import org.junit.Before;
+
 public interface PivotMethodTestInfo {
 
   PivotMethodInfoContainer getPivotMethodInfoContainer();
 
+
+  @Before
+  default void before() {
+    reset();
+  }
+
+  
   default void reset() {
     getPivotMethodInfoContainer().setPivotMethodExecuted( false );
   }

@@ -38,7 +38,9 @@ public class SingleMethodTestEvaluator {
   private void handleError( InvocationTargetException e, Object testInstance, TestResult testResult ) {
     // e.printStackTrace();
     Optional<SigMaGlueException> optSigMaGlueExc = findCausedSigMaGlueExcetion( e );
-    if ( optSigMaGlueExc.isPresent() && testInstance instanceof PivotMethodTestInfo
+    if ( optSigMaGlueExc.isPresent() && 
+    		//TODO Muss das als Pivot-Method-Call definiert werden?
+    		testInstance instanceof PivotMethodTestInfo
         && !PivotMethodTestInfo.class.cast( testInstance ).pivotMethodCallExecuted() ) {
       Method calledPivotMethod = optSigMaGlueExc.get().getCalledSourceMethod();
       // System.out.println( String.format( "called pivot method found: %s", calledPivotMethod.getName() ) );
@@ -130,7 +132,7 @@ public class SingleMethodTestEvaluator {
   }
 
   private Optional<Method> findBeforeMethod( Class<?> testClass ) {
-    Method[] declaredMethods = testClass.getDeclaredMethods();
+    Method[] declaredMethods = testClass.getMethods();
     for ( Method method : declaredMethods ) {
       if ( method.getAnnotation( Before.class ) != null ) {
         return Optional.of( method );
@@ -140,7 +142,7 @@ public class SingleMethodTestEvaluator {
   }
 
   private Method[] findTestMethods( Class<?> testClass ) {
-    Method[] declaredMethods = testClass.getDeclaredMethods();
+    Method[] declaredMethods = testClass.getMethods();
     Collection<Method> testMethods = new ArrayList<>();
     for ( Method method : declaredMethods ) {
       if ( method.getAnnotation( QueryTypeTest.class ) != null ) {
