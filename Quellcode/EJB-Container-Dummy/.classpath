@@ -7,8 +7,8 @@
 	<classpathentry kind="lib" path="lib/junit4.jar"/>
 	<classpathentry kind="lib" path="lib/easymock-3.0.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Signature Matching"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/profil-repository"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/ComponentTester"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/DesiredComponentSourcerer"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/profilcs-repository"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

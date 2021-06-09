@@ -7,8 +7,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
 
-import org.junit.Before;
-
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.desired.IntubatingFireFighter;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.beans.FireState;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Fire;
@@ -26,11 +24,6 @@ public class IntubatingFireFighterTest implements PivotMethodTestInfo {
   private boolean pivotMethodCallExecuted;
 
   private PivotMethodInfoContainer pmiContainer = new PivotMethodInfoContainer();
-
-  @Before
-  public void before() {
-    reset();
-  }
 
   @QueryTypeInstanceSetter
   public void setProvider( IntubatingFireFighter intubatingFireFighter ) {

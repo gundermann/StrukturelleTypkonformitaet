@@ -5,8 +5,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.Arrays;
 import java.util.Collection;
 
-import org.junit.Before;
-
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.desired.IntubatingFreeing;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Injured;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Suffer;
@@ -20,11 +18,6 @@ public class IntubatingFreeingTest implements PivotMethodTestInfo {
   private IntubatingFreeing intubatingFreeing;
 
   private PivotMethodInfoContainer pmiContainer = new PivotMethodInfoContainer();
-
-  @Before
-  public void before() {
-    reset();
-  }
 
   @QueryTypeInstanceSetter
   public void setProvider( IntubatingFreeing intubatingFireFighter ) {

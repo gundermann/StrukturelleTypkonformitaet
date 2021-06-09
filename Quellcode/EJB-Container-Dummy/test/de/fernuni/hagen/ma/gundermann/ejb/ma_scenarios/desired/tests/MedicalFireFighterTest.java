@@ -6,8 +6,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.Arrays;
 import java.util.Objects;
 
-import org.junit.Before;
-
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.desired.MedCabinet;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.desired.MedicalFireFighter;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Fire;
@@ -22,11 +20,6 @@ public class MedicalFireFighterTest implements PivotMethodTestInfo {
   private MedicalFireFighter medicalFireFighter;
 
   private PivotMethodInfoContainer pmiContainer = new PivotMethodInfoContainer();
-
-  @Before
-  public void before() {
-    reset();
-  }
 
   @QueryTypeInstanceSetter
   public void setMedicalFireFighter( MedicalFireFighter medicalFireFighter ) {
