@@ -10,7 +10,6 @@ import org.junit.After;
 import org.junit.Before;
 
 import glue.SigMaGlueException;
-import spi.PivotMethodTestInfo;
 import tester.annotation.QueryTypeTest;
 
 public class SingleMethodTestEvaluator {
@@ -18,12 +17,12 @@ public class SingleMethodTestEvaluator {
   public TestResult test( Object testInstance ) {
     TestResult testResult = new TestResult( TestType.SINGLE_METHOD );
     try {
-      // setup
+      // setup before @BeforeClass
 
       // test
       invokeTests( testInstance, testResult );
 
-      // tear down
+      // tear down after @AfterClass
 
       return testResult;
     }
@@ -38,10 +37,7 @@ public class SingleMethodTestEvaluator {
   private void handleError( InvocationTargetException e, Object testInstance, TestResult testResult ) {
     // e.printStackTrace();
     Optional<SigMaGlueException> optSigMaGlueExc = findCausedSigMaGlueExcetion( e );
-    if ( optSigMaGlueExc.isPresent() && 
-    		//TODO Muss das als Pivot-Method-Call definiert werden?
-    		testInstance instanceof PivotMethodTestInfo
-        && !PivotMethodTestInfo.class.cast( testInstance ).pivotMethodCallExecuted() ) {
+    if ( optSigMaGlueExc.isPresent() ) {
       Method calledPivotMethod = optSigMaGlueExc.get().getCalledSourceMethod();
       // System.out.println( String.format( "called pivot method found: %s", calledPivotMethod.getName() ) );
       testResult.addPivotMethodCalled( calledPivotMethod );
