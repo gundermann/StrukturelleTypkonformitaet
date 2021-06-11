@@ -8,11 +8,11 @@ import java.util.Collection;
 import DE.data_experts.profi.profilcs.antrag2015.stammdaten.business.impl.Foerderprogramm;
 import de.fernuni.hagen.ma.gundermann.ejb.pcs_scenarios.desired.FoerderprogrammeProvider;
 import spi.PivotMethodInfoContainer;
-import spi.PivotMethodTestInfo;
+import spi.FirstCalledMethodInfo;
 import tester.annotation.QueryTypeInstanceSetter;
 import tester.annotation.QueryTypeTest;
 
-public class FoerderprogrammProviderTest implements PivotMethodTestInfo {
+public class FoerderprogrammProviderTest implements FirstCalledMethodInfo {
 
   private FoerderprogrammeProvider provider;
 

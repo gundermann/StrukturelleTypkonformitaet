@@ -10,11 +10,11 @@ import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.beans.FireState;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Fire;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.IntubationPartient;
 import spi.PivotMethodInfoContainer;
-import spi.PivotMethodTestInfo;
+import spi.FirstCalledMethodInfo;
 import tester.annotation.QueryTypeInstanceSetter;
 import tester.annotation.QueryTypeTest;
 
-public class IntubatingPatientFireFighterTest implements PivotMethodTestInfo {
+public class IntubatingPatientFireFighterTest implements FirstCalledMethodInfo {
 
   private IntubatingPatientFireFighter intubatingPatientFireFighter;
 

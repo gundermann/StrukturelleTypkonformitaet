@@ -10,6 +10,7 @@ import org.junit.After;
 import org.junit.Before;
 
 import glue.SigMaGlueException;
+import spi.FirstCalledMethodInfo;
 import tester.annotation.QueryTypeTest;
 
 public class SingleMethodTestEvaluator {
@@ -37,7 +38,8 @@ public class SingleMethodTestEvaluator {
   private void handleError( InvocationTargetException e, Object testInstance, TestResult testResult ) {
     // e.printStackTrace();
     Optional<SigMaGlueException> optSigMaGlueExc = findCausedSigMaGlueExcetion( e );
-    if ( optSigMaGlueExc.isPresent() ) {
+    if ( optSigMaGlueExc.isPresent() && testInstance instanceof FirstCalledMethodInfo
+            && !FirstCalledMethodInfo.class.cast( testInstance ).pivotMethodCallExecuted() ) {
       Method calledPivotMethod = optSigMaGlueExc.get().getCalledSourceMethod();
       // System.out.println( String.format( "called pivot method found: %s", calledPivotMethod.getName() ) );
       testResult.addPivotMethodCalled( calledPivotMethod );

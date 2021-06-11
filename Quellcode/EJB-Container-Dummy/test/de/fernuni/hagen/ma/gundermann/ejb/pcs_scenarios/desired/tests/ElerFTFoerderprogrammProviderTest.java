@@ -8,11 +8,11 @@ import java.util.Collection;
 import DE.data_experts.profi.profilcs.antrag2015.eler.ft.stammdaten.business.ElerFTFoerderprogramm;
 import de.fernuni.hagen.ma.gundermann.ejb.pcs_scenarios.desired.ElerFTFoerderprogrammeProvider;
 import spi.PivotMethodInfoContainer;
-import spi.PivotMethodTestInfo;
+import spi.FirstCalledMethodInfo;
 import tester.annotation.QueryTypeInstanceSetter;
 import tester.annotation.QueryTypeTest;
 
-public class ElerFTFoerderprogrammProviderTest implements PivotMethodTestInfo {
+public class ElerFTFoerderprogrammProviderTest implements FirstCalledMethodInfo {
 
   private ElerFTFoerderprogrammeProvider provider;
 

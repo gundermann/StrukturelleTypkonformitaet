@@ -9,11 +9,11 @@ import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.desired.IntubatingFreeing
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Injured;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Suffer;
 import spi.PivotMethodInfoContainer;
-import spi.PivotMethodTestInfo;
+import spi.FirstCalledMethodInfo;
 import tester.annotation.QueryTypeInstanceSetter;
 import tester.annotation.QueryTypeTest;
 
-public class IntubatingFreeingTest implements PivotMethodTestInfo {
+public class IntubatingFreeingTest implements FirstCalledMethodInfo {
 
   private IntubatingFreeing intubatingFreeing;
 

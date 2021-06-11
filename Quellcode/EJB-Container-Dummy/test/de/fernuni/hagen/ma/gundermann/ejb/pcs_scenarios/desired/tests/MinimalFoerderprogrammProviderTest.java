@@ -11,11 +11,11 @@ import DE.data_experts.profi.profilcs.antrag2015.stammdaten.business.impl.Foerde
 import DE.data_experts.profi.util.allg.DvFoerderprogramm;
 import de.fernuni.hagen.ma.gundermann.ejb.pcs_scenarios.desired.MinimalFoerderprogrammeProvider;
 import spi.PivotMethodInfoContainer;
-import spi.PivotMethodTestInfo;
+import spi.FirstCalledMethodInfo;
 import tester.annotation.QueryTypeInstanceSetter;
 import tester.annotation.QueryTypeTest;
 
-public class MinimalFoerderprogrammProviderTest implements PivotMethodTestInfo {
+public class MinimalFoerderprogrammProviderTest implements FirstCalledMethodInfo {
 
   private MinimalFoerderprogrammeProvider provider;
 

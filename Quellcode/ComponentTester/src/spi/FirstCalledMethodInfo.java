@@ -2,16 +2,13 @@ package spi;
 
 import org.junit.Before;
 
-import glue.SigMaGlueException;
 
 /**
- * @deprecated Die {@link PivotMethodTestInfo} wird nur gefüllt, wenn ein Methodenaufruf nicht durchgeführt werden konnte. In diesem Fall wird eine {@link SigMaGlueException} geworfen.
- * Da die {@link SigMaGlueException} das Kriterium für die dazugehörige Heuristik ist, kann auf dieses Interface verzichtet werden.
+ * Es gilt trotzdem zu pruefen, ob die Heuristik, fuer die dieses Konstrukt notwendig ist, Relevanz hat.
  * @author ngundermann
  *
  */
-@Deprecated
-public interface PivotMethodTestInfo {
+public interface FirstCalledMethodInfo {
 
   PivotMethodInfoContainer getPivotMethodInfoContainer();
 
@@ -21,7 +18,6 @@ public interface PivotMethodTestInfo {
     reset();
   }
 
-  
   default void reset() {
     getPivotMethodInfoContainer().setPivotMethodExecuted( false );
   }
