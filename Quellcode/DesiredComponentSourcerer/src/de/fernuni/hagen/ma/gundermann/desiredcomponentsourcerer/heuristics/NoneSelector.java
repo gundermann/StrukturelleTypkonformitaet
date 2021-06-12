@@ -29,7 +29,7 @@ public class NoneSelector implements Selector {
   }
 
   @Override
-  public void addToBlacklist( Collection<MethodMatchingInfo> methodMatchingInfo ) {
+  public void addToBlacklist( Collection<Collection<MethodMatchingInfo>> mmiCombis ) {
     // do nothing
 
   }

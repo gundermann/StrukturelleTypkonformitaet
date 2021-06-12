@@ -1,110 +1,118 @@
 package tester;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 public class TestResult {
 
-  private Result result;
+	private Result result;
 
-  private final TestType testType;
+	private int testCount = 0;
 
-  private int testCount = 0;
+	private int passedTests = 0;
 
-  private int passedTests = 0;
+	private Cause cause;
 
-  private Throwable throwable;
+	private Throwable throwable;
 
-  private String pivotTestName;
+	private Set<Method> calledMethods = new HashSet<>();
 
-  private Collection<Method> pivotMethodsCalled = new ArrayList<>();
+	private Method failedMethodCall;
 
-  private Collection<String> failedSingleMethods = new ArrayList<>();
+	public TestResult(boolean testPassed) {
+		this.result = testPassed ? Result.PASSED : Result.FAILED;
+	}
 
-  public TestResult( boolean testPassed, TestType testType ) {
-    this.result = testPassed ? Result.PASSED : Result.FAILED;
-    this.testType = testType;
-  }
+	public TestResult() {
+	}
 
-  public TestResult( TestType testType ) {
-    this.testType = testType;
-  }
+	public void canceledByFailedDelegation(Throwable e, Method failedMethodCall) {
+		this.failedMethodCall = failedMethodCall;
+		this.result = Result.CANCELED;
+		this.cause = Cause.FAILED_DELEGATION;
+		this.throwable = e;
+	}
 
-  public TestType getTestType() {
-    return testType;
-  }
+	public void canceledByException(Throwable e) {
+		this.result = Result.CANCELED;
+		this.cause = Cause.EXCEPTION;
+		this.throwable = e;
+	}
 
-  public void canceled( Throwable e ) {
-    this.result = Result.CANCELED;
-    this.throwable = e;
-  }
+	public void failed(WrappedAssertionError ae) {
+		this.result = Result.FAILED;
+		this.cause = Cause.ASSERTION;
+		this.throwable = ae;
+	}
 
-  @Deprecated
-  public void canceled( Throwable e, Method pivotMethod ) {
-    this.result = Result.CANCELED;
-    this.throwable = e;
-    addPivotMethodCalled( pivotMethod );
-  }
+	public void passed() {
+		this.result = Result.PASSED;
+	}
 
-  public void failed( WrappedAssertionError ae ) {
-    this.result = Result.FAILED;
-    this.throwable = ae;
-    this.pivotTestName = ae.getTestName();
-  }
+	void enhanceResult(TestResult tempResult) {
+		if (tempResult != null) {
+			this.result = tempResult.getResult() != null ? tempResult.getResult() : this.result;
+			addTests(tempResult.getTestCount());
+			this.passedTests = this.passedTests + tempResult.getPassedTests();
+			this.calledMethods.addAll(tempResult.getCalledMethods());
+			this.throwable = tempResult.getException();
+			this.failedMethodCall = tempResult.getFailedMethodCall();
+			this.cause = tempResult.cause;
+		}
+	}
 
-  public void passed() {
-    this.result = Result.PASSED;
-  }
+	public void addTests(int additionalTestCount) {
+		this.testCount += additionalTestCount;
+	}
 
-  public void addTests( int additionalTestCount ) {
-    this.testCount += additionalTestCount;
-  }
+	public void incrementPassedTests() {
+		this.passedTests++;
+	}
 
-  public void incrementPassedTests() {
-    this.passedTests++;
-  }
+	public Result getResult() {
+		return result;
+	}
 
-  public Result getResult() {
-    return result;
-  }
+	public int getTestCount() {
+		return testCount;
+	}
 
-  public int getTestCount() {
-    return testCount;
-  }
+	public int getPassedTests() {
+		return passedTests;
+	}
 
-  public int getPassedTests() {
-    return passedTests;
-  }
+	public Throwable getException() {
+		return throwable;
+	}
 
-  public Throwable getException() {
-    return throwable;
-  }
+	public Method getFailedMethodCall() {
+		return failedMethodCall;
+	}
 
-  public String getPivotTestName() {
-    return pivotTestName;
-  }
+	public Cause getCause() {
+		return cause;
+	}
 
-  public void addPivotMethodCalled( Method pivotMethod ) {
-    if ( pivotMethod != null ) {
-      pivotMethodsCalled.add( pivotMethod );
-    }
-  }
+	public void setFailedMethodCall(Method failedMethodCall) {
+		this.failedMethodCall = failedMethodCall;
+	}
 
-  public Collection<Method> getPivotMethodCalls() {
-    return pivotMethodsCalled;
-  }
+	public Collection<Method> getCalledMethods() {
+		return calledMethods;
+	}
 
-  public void addFailedSingleMethod( String singleMethod ) {
-    failedSingleMethods.add( singleMethod );
-  }
+	public void addCalledMethod(Method m) {
+		calledMethods.add(m);
+	}
 
-  public Collection<String> getFailedSingleMethods() {
-    return failedSingleMethods;
-  }
+	public static enum Result {
+		CANCELED, PASSED, FAILED;
+	}
 
-  public static enum Result {
-    CANCELED, PASSED, FAILED;
-  }
+	public static enum Cause {
+		ASSERTION, FAILED_DELEGATION, EXCEPTION;
+	}
 
 }

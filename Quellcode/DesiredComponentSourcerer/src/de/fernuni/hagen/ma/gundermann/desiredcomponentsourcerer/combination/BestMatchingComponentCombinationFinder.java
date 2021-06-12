@@ -69,7 +69,7 @@ public class BestMatchingComponentCombinationFinder {
 
   }
 
-  public void optimizeMatchingInfoBlacklist( Collection<MethodMatchingInfo> collection ) {
+  public void optimizeMatchingInfoBlacklist( Collection<Collection<MethodMatchingInfo>> collection ) {
     for ( int i = currentSelectorIndex; i < selectors.length; i++ ) {
       selectors[i].addToBlacklist( collection );
     }

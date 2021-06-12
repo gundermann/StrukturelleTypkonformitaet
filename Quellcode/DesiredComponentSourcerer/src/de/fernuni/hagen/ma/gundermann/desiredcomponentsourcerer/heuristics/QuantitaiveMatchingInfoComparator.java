@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import matching.modules.PartlyTypeMatchingInfo;
 
+@Deprecated
 public class QuantitaiveMatchingInfoComparator implements Comparator<PartlyTypeMatchingInfo> {
 
   // Der mit dem hoechsten Ranking soll vorne stehen

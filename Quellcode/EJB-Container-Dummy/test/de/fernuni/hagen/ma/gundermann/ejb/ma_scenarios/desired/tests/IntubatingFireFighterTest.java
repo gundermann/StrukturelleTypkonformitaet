@@ -3,6 +3,8 @@ package de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.desired.tests;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
@@ -12,59 +14,46 @@ import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.beans.FireState;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Fire;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Injured;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Suffer;
-import spi.PivotMethodInfoContainer;
-import spi.FirstCalledMethodInfo;
+import spi.CalledMethodInfo;
 import tester.annotation.QueryTypeInstanceSetter;
 import tester.annotation.QueryTypeTest;
 
-public class IntubatingFireFighterTest implements FirstCalledMethodInfo {
+public class IntubatingFireFighterTest implements CalledMethodInfo {
 
-  private IntubatingFireFighter intubatingFireFighter;
+	private IntubatingFireFighter intubatingFireFighter;
+	private Collection<Method> calledMethods = new ArrayList<Method>();
 
-  private boolean pivotMethodCallExecuted;
+	@QueryTypeInstanceSetter
+	public void setProvider(IntubatingFireFighter intubatingFireFighter) {
+		this.intubatingFireFighter = intubatingFireFighter;
+	}
 
-  private PivotMethodInfoContainer pmiContainer = new PivotMethodInfoContainer();
+	@QueryTypeTest(testedSingleMethod = "extinguishFire")
+	public void free() {
+		Fire fire = new Fire();
+		FireState fireState = intubatingFireFighter.extinguishFire(fire);
+		addCalledMethod(getMethod("extinguishFire", IntubatingFireFighter.class));
+		assertTrue(Objects.equals(fireState.isActive(), fire.isActive()));
+		assertFalse(fire.isActive());
+	}
 
-  @QueryTypeInstanceSetter
-  public void setProvider( IntubatingFireFighter intubatingFireFighter ) {
-    this.intubatingFireFighter = intubatingFireFighter;
-  }
+	@QueryTypeTest(testedSingleMethod = "intubate")
+	public void intubate() {
+		Collection<Suffer> suffer = Arrays.asList(Suffer.BREATH_PROBLEMS);
+		Injured patient = new Injured(suffer);
+		intubatingFireFighter.intubate(patient);
+		addCalledMethod(getMethod("intubate", IntubatingFireFighter.class));
+		assertTrue(patient.isStabilized());
+	}
 
-  @QueryTypeTest( testedSingleMethod = "extinguishFire" )
-  public void free() {
-    Fire fire = new Fire();
-    FireState fireState = intubatingFireFighter.extinguishFire( fire );
-    markPivotMethodCallExecuted();
-    assertTrue( Objects.equals( fireState.isActive(), fire.isActive() ) );
-    assertFalse( fire.isActive() );
-  }
+	@Override
+	public void addCalledMethod(Method m) {
+		calledMethods.add(m);
+	}
 
-  @QueryTypeTest( testedSingleMethod = "intubate" )
-  public void intubate() {
-    Collection<Suffer> suffer = Arrays.asList( Suffer.BREATH_PROBLEMS );
-    Injured patient = new Injured( suffer );
-    intubatingFireFighter.intubate( patient );
-    markPivotMethodCallExecuted();
-    assertTrue( patient.isStabilized() );
-  }
+	@Override
+	public Collection<Method> getCalledMethods() {
+		return calledMethods;
+	}
 
-  @Override
-  public void reset() {
-    pivotMethodCallExecuted = false;
-  }
-
-  @Override
-  public void markPivotMethodCallExecuted() {
-    pivotMethodCallExecuted = true;
-  }
-
-  @Override
-  public boolean pivotMethodCallExecuted() {
-    return pivotMethodCallExecuted;
-  }
-
-  @Override
-  public PivotMethodInfoContainer getPivotMethodInfoContainer() {
-    return pmiContainer;
-  }
 }

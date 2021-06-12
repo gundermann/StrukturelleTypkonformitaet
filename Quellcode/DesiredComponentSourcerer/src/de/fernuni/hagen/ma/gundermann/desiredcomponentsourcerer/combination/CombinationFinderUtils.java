@@ -9,7 +9,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.Transformator;
-import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.MethodMatchingInfoBlacklistFilter;
+import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.MMICombiBlacklistFilter;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.AnalyzationUtils;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.Logger;
 import matching.modules.PartlyTypeMatchingInfo;
@@ -28,7 +28,7 @@ public abstract class CombinationFinderUtils {
 
   public static Map<Method, Collection<CombinationPartInfo>> transformToCombinationPartInfosPerMethod(
       Map<Method, Collection<PartlyTypeMatchingInfo>> method2typeMatchingInfos,
-      Collection<Integer> methodMatchingInfoHCBlacklist ) {
+      Collection<Collection<Integer>> methodMatchingInfoHCBlacklist ) {
 
     AnalyzationUtils.filterCount = 0;
     Map<Method, Collection<CombinationPartInfo>> transformed = new HashMap<>();
@@ -45,11 +45,11 @@ public abstract class CombinationFinderUtils {
           .collect( Collectors.toList() );
 
       // filter blacklist items by hashcode
-      combiPartInfos = new MethodMatchingInfoBlacklistFilter( methodMatchingInfoHCBlacklist, false )
-          .filter( combiPartInfos );
+      combiPartInfos = new MMICombiBlacklistFilter( methodMatchingInfoHCBlacklist, false )
+          .filterBlacklistedSingleMMI( combiPartInfos );
       transformed.put( method, combiPartInfos );
     }
-    Logger.infoF( "filtered by %s: %d", MethodMatchingInfoBlacklistFilter.class.getSimpleName(),
+    Logger.infoF( "filtered by %s: %d", MMICombiBlacklistFilter.class.getSimpleName(),
         AnalyzationUtils.filterCount );
     return transformed;
   }

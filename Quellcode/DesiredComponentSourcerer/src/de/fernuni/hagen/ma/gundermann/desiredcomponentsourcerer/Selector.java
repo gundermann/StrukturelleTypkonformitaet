@@ -14,7 +14,7 @@ public interface Selector {
 
   void addHigherPotentialType( Class<?> higherPotentialType );
 
-  void addToBlacklist( Collection<MethodMatchingInfo> collection );
+  void addToBlacklist( Collection<Collection<MethodMatchingInfo>> mmiCombis );
 
   void addToBlacklist( Class<?> componentInterface );
 

@@ -34,14 +34,14 @@ public class AccumulatedMatchingRateComparator implements Comparator<Collection<
     }
 
     // Vorher
-     Double ranking1 = mr1.get().map( MatcherRate::getMatcherRating ).reduce( 0d, ( a, b ) -> a + b );
+//     Double ranking1 = mr1.get().map( MatcherRate::getMatcherRating ).reduce( 0d, ( a, b ) -> a + b );
     // TODO
-//    Double ranking1 = Setting.QUALITATIVE_COMPONENT_MATCH_RATE_CUMULATION.apply( mr1.get() ).getMatcherRating();
+    Double ranking1 = Setting.QUALITATIVE_COMPONENT_MATCH_RATE_CUMULATION.apply( mr1.get() ).getMatcherRating();
 
     // Vorher
-     Double ranking2 = mr2.get().map( MatcherRate::getMatcherRating ).reduce( 0d, ( a, b ) -> a + b );
+//     Double ranking2 = mr2.get().map( MatcherRate::getMatcherRating ).reduce( 0d, ( a, b ) -> a + b );
     // TODO
-//    Double ranking2 = Setting.QUALITATIVE_COMPONENT_MATCH_RATE_CUMULATION.apply( mr2.get() ).getMatcherRating();
+    Double ranking2 = Setting.QUALITATIVE_COMPONENT_MATCH_RATE_CUMULATION.apply( mr2.get() ).getMatcherRating();
 
     return Double.compare( ranking1, ranking2 );
   }

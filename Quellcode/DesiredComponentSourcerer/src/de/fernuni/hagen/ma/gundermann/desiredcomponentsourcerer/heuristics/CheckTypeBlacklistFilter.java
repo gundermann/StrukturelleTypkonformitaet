@@ -13,7 +13,6 @@ import matching.modules.PartlyTypeMatchingInfo;
  * H: blacklist if no implementation available
  */
 
-// TODO Unit-Test
 public final class CheckTypeBlacklistFilter {
 
   private final Collection<Integer> hashCodeBlacklist;

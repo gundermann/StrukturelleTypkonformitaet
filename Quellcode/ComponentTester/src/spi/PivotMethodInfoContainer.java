@@ -1,5 +1,6 @@
 package spi;
 
+@Deprecated
 public class PivotMethodInfoContainer {
 
   boolean pivotMethodExecuted = false;
