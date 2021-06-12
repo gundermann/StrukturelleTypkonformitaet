@@ -5,9 +5,9 @@ import java.util.Date;
 
 import DE.data_experts.profi.profilcs.antrag2015.stammdaten.business.impl.Foerderprogramm;
 import de.fernuni.hagen.ma.gundermann.ejb.pcs_scenarios.desired.tests.MinimalFoerderprogrammProviderTest;
-import tester.annotation.QueryTypeTestReference;
+import tester.annotation.RequiredTypeTestReference;
 
-@QueryTypeTestReference( testClasses = MinimalFoerderprogrammProviderTest.class )
+@RequiredTypeTestReference( testClasses = MinimalFoerderprogrammProviderTest.class )
 public interface MinimalFoerderprogrammeProvider {
 
   // Versuch 1: Nur diese Methode wurde deklariert => 149/885 relevanten Beans

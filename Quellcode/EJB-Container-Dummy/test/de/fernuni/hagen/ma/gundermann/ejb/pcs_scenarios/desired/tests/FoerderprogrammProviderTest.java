@@ -3,36 +3,41 @@ package de.fernuni.hagen.ma.gundermann.ejb.pcs_scenarios.desired.tests;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import DE.data_experts.profi.profilcs.antrag2015.stammdaten.business.impl.Foerderprogramm;
 import de.fernuni.hagen.ma.gundermann.ejb.pcs_scenarios.desired.FoerderprogrammeProvider;
-import spi.PivotMethodInfoContainer;
-import spi.FirstCalledMethodInfo;
-import tester.annotation.QueryTypeInstanceSetter;
-import tester.annotation.QueryTypeTest;
+import spi.CalledMethodInfo;
+import tester.annotation.RequiredTypeInstanceSetter;
+import tester.annotation.RequiredTypeTest;
 
-public class FoerderprogrammProviderTest implements FirstCalledMethodInfo {
+public class FoerderprogrammProviderTest implements CalledMethodInfo {
 
-  private FoerderprogrammeProvider provider;
+	private FoerderprogrammeProvider provider;
 
-  private PivotMethodInfoContainer pmiContainer = new PivotMethodInfoContainer();
+	private Collection<Method> calledMethods = new ArrayList<Method>();
 
+	@RequiredTypeInstanceSetter
+	public void setProvider(FoerderprogrammeProvider provider) {
+		this.provider = provider;
+	}
 
-  @QueryTypeInstanceSetter
-  public void setProvider( FoerderprogrammeProvider provider ) {
-    this.provider = provider;
-  }
+	@RequiredTypeTest
+	public void testEmptyCollection() {
+		Collection<Foerderprogramm> alleFreigegebenenFPs = provider.getAlleFreigegebenenFPs();
+		addCalledMethod(getMethod("getAlleFreigegebenenFPs", FoerderprogrammeProvider.class));
+		assertThat(alleFreigegebenenFPs, notNullValue());
+	}
 
-  @QueryTypeTest( testedSingleMethod = "getAlleFreigegebenenFPs" )
-  public void testEmptyCollection() {
-    Collection<Foerderprogramm> alleFreigegebenenFPs = provider.getAlleFreigegebenenFPs();
-    markPivotMethodCallExecuted();
-    assertThat( alleFreigegebenenFPs, notNullValue() );
-  }
+	@Override
+	public void addCalledMethod(Method m) {
+		calledMethods.add(m);
+	}
 
-  @Override
-  public PivotMethodInfoContainer getPivotMethodInfoContainer() {
-    return pmiContainer;
-  }
+	@Override
+	public Collection<Method> getCalledMethods() {
+		return calledMethods;
+	}
 }

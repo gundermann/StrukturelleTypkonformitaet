@@ -2,11 +2,11 @@ package tester.querytypes;
 
 import java.math.BigInteger;
 
-import tester.annotation.QueryTypeTestReference;
+import tester.annotation.RequiredTypeTestReference;
 import tester.querytypes.tests.Interface1Test1;
 import tester.querytypes.tests.Interface1Test2;
 
-@QueryTypeTestReference( testClasses = { Interface1Test1.class, Interface1Test2.class } )
+@RequiredTypeTestReference( testClasses = { Interface1Test1.class, Interface1Test2.class } )
 public interface Interface1 {
 
   boolean getTrue();

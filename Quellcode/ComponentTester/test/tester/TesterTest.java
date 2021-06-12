@@ -1,6 +1,5 @@
 package tester;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
@@ -61,10 +60,5 @@ public class TesterTest {
     assertTrue( result.getResult() == Result.CANCELED );
   }
 
-  @Test
-  public void containsAny() {
-    Tester tester = new Tester();
-    assertFalse( tester.containsAnySingleMethodTests( Interface2Test.class ) );
-  }
 
 }

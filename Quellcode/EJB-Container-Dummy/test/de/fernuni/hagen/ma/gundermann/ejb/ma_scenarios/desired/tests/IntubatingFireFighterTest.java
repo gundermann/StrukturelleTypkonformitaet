@@ -15,20 +15,20 @@ import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Fire;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Injured;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Suffer;
 import spi.CalledMethodInfo;
-import tester.annotation.QueryTypeInstanceSetter;
-import tester.annotation.QueryTypeTest;
+import tester.annotation.RequiredTypeInstanceSetter;
+import tester.annotation.RequiredTypeTest;
 
 public class IntubatingFireFighterTest implements CalledMethodInfo {
 
 	private IntubatingFireFighter intubatingFireFighter;
 	private Collection<Method> calledMethods = new ArrayList<Method>();
 
-	@QueryTypeInstanceSetter
+	@RequiredTypeInstanceSetter
 	public void setProvider(IntubatingFireFighter intubatingFireFighter) {
 		this.intubatingFireFighter = intubatingFireFighter;
 	}
 
-	@QueryTypeTest(testedSingleMethod = "extinguishFire")
+	@RequiredTypeTest
 	public void free() {
 		Fire fire = new Fire();
 		FireState fireState = intubatingFireFighter.extinguishFire(fire);
@@ -37,7 +37,7 @@ public class IntubatingFireFighterTest implements CalledMethodInfo {
 		assertFalse(fire.isActive());
 	}
 
-	@QueryTypeTest(testedSingleMethod = "intubate")
+	@RequiredTypeTest
 	public void intubate() {
 		Collection<Suffer> suffer = Arrays.asList(Suffer.BREATH_PROBLEMS);
 		Injured patient = new Injured(suffer);

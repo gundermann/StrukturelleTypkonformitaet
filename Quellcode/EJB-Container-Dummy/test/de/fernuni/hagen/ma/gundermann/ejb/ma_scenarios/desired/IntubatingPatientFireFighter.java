@@ -4,9 +4,9 @@ import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.desired.tests.IntubatingP
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.beans.FireState;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Fire;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.IntubationPartient;
-import tester.annotation.QueryTypeTestReference;
+import tester.annotation.RequiredTypeTestReference;
 
-@QueryTypeTestReference( testClasses = IntubatingPatientFireFighterTest.class )
+@RequiredTypeTestReference( testClasses = IntubatingPatientFireFighterTest.class )
 public interface IntubatingPatientFireFighter {
 
   public void intubate( IntubationPartient patient );

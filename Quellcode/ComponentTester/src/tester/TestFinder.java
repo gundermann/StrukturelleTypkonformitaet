@@ -3,7 +3,7 @@ package tester;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import tester.annotation.QueryTypeTestReference;
+import tester.annotation.RequiredTypeTestReference;
 
 class TestFinder<T> {
 
@@ -23,8 +23,8 @@ class TestFinder<T> {
     // Nachteile:
     // - stärkere Bedingungen an die Ablage der Testklassen (mit der Annotation können die Testklassen sonstwo liegen.)
     // - die Angabe weiterer Informationen ist dadurch nicht gewaehrleistet
-    if ( qt.isAnnotationPresent( QueryTypeTestReference.class ) ) {
-      QueryTypeTestReference queryTypeTestReference = qt.getAnnotation( QueryTypeTestReference.class );
+    if ( qt.isAnnotationPresent( RequiredTypeTestReference.class ) ) {
+      RequiredTypeTestReference queryTypeTestReference = qt.getAnnotation( RequiredTypeTestReference.class );
       for ( Class<?> testClass : queryTypeTestReference.testClasses() ) {
         testClasses.add( testClass );
       }

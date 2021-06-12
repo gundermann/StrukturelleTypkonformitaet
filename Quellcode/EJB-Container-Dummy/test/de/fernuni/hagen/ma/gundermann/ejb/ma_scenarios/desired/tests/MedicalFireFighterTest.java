@@ -3,7 +3,10 @@ package de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.desired.tests;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Objects;
 
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.desired.MedCabinet;
@@ -11,40 +14,47 @@ import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.desired.MedicalFireFighte
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Fire;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Injured;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Suffer;
-import spi.PivotMethodInfoContainer;
-import spi.FirstCalledMethodInfo;
-import tester.annotation.QueryTypeInstanceSetter;
+import spi.CalledMethodInfo;
+import tester.annotation.RequiredTypeInstanceSetter;
+import tester.annotation.RequiredTypeTest;
 
-public class MedicalFireFighterTest implements FirstCalledMethodInfo {
+public class MedicalFireFighterTest implements CalledMethodInfo {
 
-  private MedicalFireFighter medicalFireFighter;
+	private MedicalFireFighter medicalFireFighter;
 
-  private PivotMethodInfoContainer pmiContainer = new PivotMethodInfoContainer();
+	private Collection<Method> calledMethods = new ArrayList<Method>();
 
-  @QueryTypeInstanceSetter
-  public void setMedicalFireFighter( MedicalFireFighter medicalFireFighter ) {
-    this.medicalFireFighter = medicalFireFighter;
-  }
+	@RequiredTypeInstanceSetter
+	public void setMedicalFireFighter(MedicalFireFighter medicalFireFighter) {
+		this.medicalFireFighter = medicalFireFighter;
+	}
 
-  public void heal() {
-    Injured injured = new Injured( Arrays.asList( Suffer.BREATH_PROBLEMS ) );
-    MedCabinet med = new MedCabinet();
-    medicalFireFighter.heal( injured, med );
-    markPivotMethodCallExecuted();
-    assertTrue( injured.getSuffers().isEmpty() );
-  }
+	@RequiredTypeTest
+	public void heal() {
+		Injured injured = new Injured(Arrays.asList(Suffer.BREATH_PROBLEMS));
+		MedCabinet med = new MedCabinet();
+		medicalFireFighter.heal(injured, med);
+		addCalledMethod(getMethod("heal", MedicalFireFighter.class));
+		assertTrue(injured.getSuffers().isEmpty());
+	}
 
-  public void extinguishFire() {
-    Fire fire = new Fire();
-    boolean isFireActive = medicalFireFighter.extinguishFire( fire );
-    markPivotMethodCallExecuted();
-    assertTrue( Objects.equals( isFireActive, fire.isActive() ) );
-    assertFalse( isFireActive );
-  }
+	@RequiredTypeTest
+	public void extinguishFire() {
+		Fire fire = new Fire();
+		boolean isFireActive = medicalFireFighter.extinguishFire(fire);
+		addCalledMethod(getMethod("extinguishFire", MedicalFireFighter.class));
+		assertTrue(Objects.equals(isFireActive, fire.isActive()));
+		assertFalse(isFireActive);
+	}
 
-  @Override
-  public PivotMethodInfoContainer getPivotMethodInfoContainer() {
-    return pmiContainer;
-  }
+	@Override
+	public void addCalledMethod(Method m) {
+		calledMethods.add(m);
+	}
+
+	@Override
+	public Collection<Method> getCalledMethods() {
+		return calledMethods;
+	}
 
 }

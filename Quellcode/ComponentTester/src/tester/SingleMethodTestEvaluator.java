@@ -11,7 +11,7 @@ import org.junit.Before;
 
 import glue.SigMaGlueException;
 import spi.CalledMethodInfo;
-import tester.annotation.QueryTypeTest;
+import tester.annotation.RequiredTypeTest;
 
 public class SingleMethodTestEvaluator {
 
@@ -126,7 +126,7 @@ public class SingleMethodTestEvaluator {
 		Method[] declaredMethods = testClass.getMethods();
 		Collection<Method> testMethods = new ArrayList<>();
 		for (Method method : declaredMethods) {
-			if (method.getAnnotation(QueryTypeTest.class) != null) {
+			if (method.getAnnotation(RequiredTypeTest.class) != null) {
 				testMethods.add(method);
 			}
 		}

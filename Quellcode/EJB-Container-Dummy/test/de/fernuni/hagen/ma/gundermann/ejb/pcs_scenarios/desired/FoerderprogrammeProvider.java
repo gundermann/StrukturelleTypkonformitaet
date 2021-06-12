@@ -7,9 +7,9 @@ import DE.data_experts.profi.profilcs.antrag2015.stammdaten.business.impl.Foerde
 import DE.data_experts.profi.util.DvAntragsJahr;
 import DE.data_experts.profi.util.allg.DvFoerderprogramm;
 import de.fernuni.hagen.ma.gundermann.ejb.pcs_scenarios.desired.tests.FoerderprogrammProviderTest;
-import tester.annotation.QueryTypeTestReference;
+import tester.annotation.RequiredTypeTestReference;
 
-@QueryTypeTestReference( testClasses = FoerderprogrammProviderTest.class )
+@RequiredTypeTestReference( testClasses = FoerderprogrammProviderTest.class )
 public interface FoerderprogrammeProvider {
 
   // Versuch 1: Nur diese Methode wurde deklariert => 149/885 relevanten Beans

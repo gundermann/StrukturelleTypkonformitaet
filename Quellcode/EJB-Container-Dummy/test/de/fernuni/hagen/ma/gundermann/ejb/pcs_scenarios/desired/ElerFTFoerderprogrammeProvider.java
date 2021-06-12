@@ -7,9 +7,9 @@ import DE.data_experts.profi.profilcs.antrag2015.eler.ft.stammdaten.business.Ele
 import DE.data_experts.profi.util.DvAntragsJahr;
 import DE.data_experts.profi.util.allg.DvFoerderprogramm;
 import de.fernuni.hagen.ma.gundermann.ejb.pcs_scenarios.desired.tests.ElerFTFoerderprogrammProviderTest;
-import tester.annotation.QueryTypeTestReference;
+import tester.annotation.RequiredTypeTestReference;
 
-@QueryTypeTestReference( testClasses = ElerFTFoerderprogrammProviderTest.class )
+@RequiredTypeTestReference( testClasses = ElerFTFoerderprogrammProviderTest.class )
 public interface ElerFTFoerderprogrammeProvider {
 
   // Versuch 1: Nur diese Methode wurde deklariert => 173/885 relevanten Beans
