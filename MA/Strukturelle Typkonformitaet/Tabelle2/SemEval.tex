@@ -65,8 +65,42 @@ mathescape,
 
 
 \subsection{Semantische Evaluation}
-Das Ziel der semantischen Evaluation ist es, einen der Proxies, die im Rahmen der 1. Stufe der Exploration erzeugt wurden, hinsichtlich der vordefinierten Testfälle zu evaluieren. Da die gesamte Exploration zur Laufzeit des Programms durchgeführt wird, stellt sie hinsichtlich der nicht-funktionalen Anforderungen eine zeitkritische Komponente dar.\\\\
-Da die Anforderungen an die gesuchte Komponente mit bedacht spezifiziert werden müssen, ist es irrelevant, ob es mehrere Proxies gibt, die den vordefinierten Testfällen standhalten. Vielmehr soll bei der semantischen Evaluation lediglich ein Proxy gefunden werden, dessen Semantik zu positiven Ergebnissen hinsichtlich aller vordefinierten Testfälle führt. Somit wird die semantische Evaluation beendet, sobald ein solcher Proxy gefunden ist.\\\\
+Das Ziel der semantischen Evaluation ist es, einen der Proxies, die im Rahmen der 1. Stufe der Exploration erzeugt wurden, hinsichtlich der vordefinierten Testfälle zu evaluieren. Da die gesamte Exploration zur Laufzeit des Programms durchgeführt wird, stellt sie hinsichtlich der nicht-funktionalen Anforderungen eine zeitkritische Komponente dar.
+\\\\
+Da die Anforderungen an die gesuchte Komponente mit bedacht spezifiziert werden müssen, ist es irrelevant, ob es mehrere Proxies gibt, die den vordefinierten Testfällen standhalten. Vielmehr soll bei der semantischen Evaluation lediglich ein Proxy gefunden werden, dessen Semantik zu positiven Ergebnissen hinsichtlich aller vordefinierten Testfälle führt. Somit wird die semantische Evaluation beendet, sobald ein solcher Proxy gefunden ist.
+\subsubsection{Besonderheiten der Testfälle}
+Bei den vordefinierten Tests handelt es sich auf formaler Ebene um Typen, die eine eval-Methode mit der Struktur $\texttt{boolean eval( proxy )}$ anbieten, welche einen Proxy als Parameter erwartet und ein Objekt vom Typ $\texttt{boolean}$ zurückgibt. Weiterhin verfügt ein Test über die in Tabelle \ref{tab_testfelder}  aufgeführten Felder, deren Werte bei der Abarbeitung der Methode $\texttt{eval}$ verändert werden.
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{3cm}|p{10cm}|}
+\hline
+\hline
+\textbf{Feldname} & \textbf{Erläuterung} \\
+\hline
+$\texttt{calledMethods}$
+&
+Eine Liste von Namen von Methoden des Proxies, die bei der Durchführung der eval-Methode aufgerufen wurden.
+\\
+\hline
+$\texttt{failedMethod}$
+&
+Der Name einer Methode des Proxies, bei der es während der Ausführung der eval-Methode zu einem Fehler kam.
+\\
+\hline
+\hline
+\end{tabular}
+\caption{Felder der Tests}
+\label{tab_testfelder}
+\end{table}
+\noindent
+Die Implementierung der eval-Methode ist an folgende Bedingungen geknüpft:
+\begin{enumerate}
+\item Nach einem erfolgreichen Aufruf einer Methode auf dem als Parameter übergebenen Proxy-Objekt, wird der Name der dieser Methode in der Liste im Feld $\texttt{calledMethods}$ ergänzt.
+\item Nach einem fehlgeschlagenen Aufruf einer Methode auf dem als Parameter übergebenen Proxy-Objekt, wird das Feld $\texttt{failedMethod}$ mit dem Namen der fehlgeschlagenen Methode belegt. Zusätzlich wird die eval-Methode direkt danach mit dem Rückgabewert $\texttt{false}$ beendet.
+\item Wenn der Proxy den Test erfüllt, wird der Wert $\texttt{true}$ zurückgegeben. Anderenfalls wird der Wert $\texttt{false}$ zurückgegeben.
+\end{enumerate}
+%TODO Beispiel
+\subsubsection{Algorithmus für die semantische Evaluation}
 Bei der Exploration soll letztendlich in einer Bibliothek $L$ zu einem vorgegebenen required Type $R$ ein Proxy gefunden werden. Die Menge dieser Proxies wurde im vorherigen über $\mathit{cover(R,L)}$ beschrieben. Die in dieser Menge befindlichen Proxies können eine unterschiedliche Anzahl von Target-Typen enthalten.\\\\
 Das in dieser Arbeit beschriebene Konzept basiert auf der Annahme, dass bei der Entwicklung davon ausgegangen wird, dass der gesamte Anwendungsfall - oder Teile davon - , der mit der vordefinierten Struktur und den vordefinierten Tests abgebildet werden soll, schon einmal genauso oder so ähnlich in dem gesamten System implementiert wurde. Aus diesem Grund kann für die semantische Evaluation grundsätzlich davon ausgegangen werden, dass die erfolgreiche Durchführung aller relevanten Tests umso wahrscheinlicher ist je weniger Target-Typen im Proxy verwendet werden.\\\\
 Somit werden zuerst die Proxies auf ihr semantisches Matching überprüft, in denen lediglich ein Target-Typ verwendet wird. Die Menge der Proxies aus einer Menge von Proxies $P$ mit einer Anzahl $a$ von Target-Typen wird durch folgende Funktion beschrieben:
@@ -79,7 +113,7 @@ maxTargets(R) := |\mathit{methoden(R)}|
 \end{gather*}
 \noindent
 %TODO - Text überarbeiten!!! (passt nicht mehr zum Algorithmus aus dem Listing)
-So kann der Algorithmus für die semantische Evaluation der Menge $P$ von Proxies, die für einen required Typ $R$ erzeugt wurden, mit der Menge von Testklassen $TC$ wie folgt im Pseudo-Code beschrieben werden. Dabei sei davon auszugehen, dass ein Test aus $T$ mit einem Proxy $p$ über eine Methode $\texttt{eval(p)}$ ausgewertet werden kann. Diese Methode gibt bei erfolgreicher Durchführung den Rückgabewert $\texttt{true}$ und anderenfalls $\texttt{false}$ zurück.
+So kann der Algorithmus für die semantische Evaluation der Menge von Proxies (Parameter $\texttt{proxies}$), die für einen required Typ (Parameter $\texttt{reqType}$) erzeugt wurden, mit der Menge von Tests (Parameter $\texttt{tests}$) wie folgt im Pseudo-Code beschrieben werden. Die globale Variable $\texttt{passedTests}$ enthält dabei die Anzahl der für den aktuell zu überprüfenden Proxy erfolgreich durchgeführten Tests.
 \begin{lstlisting}[style = pseudo, caption = Semantische Evaluation ohne Heuristiken, captionpos = b, label = lst_semEval]
 passedTests = 0
 
@@ -115,7 +149,7 @@ function evalProxiesMitTarget(proxies, tests){
 
 function evalProxy(proxy, tests){
 	for( test : tests ){
-		if( !test.eval(proxy) ){
+		if( !test.eval( proxy ) ){
 			\\ wenn ein Test fehlschlaegt, dann entspricht der 
 			\\ Proxy nicht den semantischen Anforderungen
 			return
@@ -125,21 +159,14 @@ function evalProxy(proxy, tests){
 }
 \end{lstlisting}
 Die Dauer der Laufzeit der oben genannten Funktionen hängt maßgeblich von der Anzahl der Proxies $\mathit{PA}$ ab. Im schlimmsten Fall müssen alle Proxies hinsichtlich der vordefinierten Tests evaluiert werden. Um die Anzahl der zu prüfenden Proxies zu reduzieren werden, die im folgenden Abschnitt beschriebenen Heuristiken verwendet.
+\\\\
+Um die einzelnen Stufen der semantischen Evaluation besser unterscheiden zu können, sei der Algorithmus aus Listing \ref{lst_semEval} in zwei Iterationsstufen unterteilt. Die erste Iterationsstufe beschreibt die Iteration über möglichen Anzahlen für die Target-Typen in der Funktion $\texttt{semanticEval}$ (siehe Zeile 3-14). Die zweite Itertationsstufe beschreibt die Iteration über die Proxies mit einer gleichen Anzahl an Target-Typen in der Funktion $\texttt{evalProxiesMitTarget}$ (siehe Zeile 20-31). Die Heuristiken sind so gestaltet, dass sie die Itertationsobjekte dieser beiden Iterationsstufen beeinflussen.
 
 \subsection{Heuristiken}
-Die Heuristiken werden an unterschiedlichen Stellen des Algorithmus' für die semantische Evaluation aus Listing \ref{lst_semEval} eingebaut. Teilweise ist es für die Verwendung einer Heuristik notwendig, weitere Information während der semantischen Evaluation zu ermitteln und zu speichern. In den folgenden Abschnitten werden die Heuristiken und die dafür notwendigen Anpassungen an den jeweiligen Funktionen beschriebene.
-
-%Die Heuristiken werden immer innerhalb der Methode $\texttt{relevantProxies}$ angewendet. So kann diese Methode wie in folgendem Listing erweitert werden. Die jeweilige Heuristik wird dann über die Methode $\texttt{applyHeuristic}$ beschrieben.
-%\begin{lstlisting}[style = pseudo]
-%function relevantProxies(P,anzahl){
-%	proxies = proxiesMitTargets(P,anzahl)
-%	optmizedProxies = applyHeuristic(proxies)
-%	return optmizedProxies
-%}
-%\end{lstlisting}
+Die Heuristiken werden an unterschiedlichen Stellen des Algorithmus' für die semantische Evaluation aus Listing \ref{lst_semEval} eingebaut. Teilweise ist es für die Verwendung einer Heuristik notwendig, weitere Information während der semantischen Evaluation zu ermitteln und zu speichern. In den folgenden Abschnitten werden die Heuristiken und die dafür notwendigen Anpassungen an den jeweiligen Funktionen beschrieben.
 
 \subsubsection{Heuristiken für die Optimierung der Reihenfolge}
-Die folgenden Heuristiken haben zum Ziel, die Reihenfolge, in der die Proxies hinsichtlich der vordefinierten Tests geprüft werden, so anzupassen, dass ein passender Proxy möglichst früh überprüft wird.
+Die folgenden Heuristiken haben zum Ziel, die Reihenfolge, in der die Proxies hinsichtlich der vordefinierten Tests geprüft werden, so anzupassen, dass ein passender Proxy möglichst früh geprüft wird.
 
 
 \paragraph{Heuristik LMF: Beachtung des Matcherratings}
@@ -373,9 +400,37 @@ Bei den folgenden Heuristiken handelt es sich um Ausschlussverfahren. Das bedeut
 \\\\
 Die Heuristiken zielen darauf ab, Methodendelegationen, die immer fehlschlagen, zu identifizieren. Wurde eine solche Methodendelegation gefunden, können alle Proxies, die diese Methodendelegation enthalten von der weiteren Exploration ausgeschlossen werden.
 \\\\
-Die identifizierten Methodendelegationen werden dazu in einer globalen Variable gehalten. Aus einer Liste von Proxies können darauf aufbauend diejenigen Proxies entfernt werden, die eine der gehaltenen Methodendelegationen enthalten. Dabei wird davon ausgegangen, dass die Methoden eines required Typen über den Namen identifiziert werden können.
+Um eine solche Methodendelegation identifizieren zu können, müssen die Testfälle weitere Besonderheiten erfüllen und Informationen bereitstellen. Zum Einen ist es notwendig, dass spezielle Tests verwendet werden, in denen lediglich eine Methode getestet wird. So kann auf der Basis eines Fehlgeschlagenen Tests geschlussfolgert werden, dass die Methodendelegation, die für die getestete Methode verwendet wurde, ebenfalls in anderen Proxies zu einem Fehlschlag des Testfalls führt.
 \\\\
-Listing \ref{lst_BLallg} zeigt die allgemeinen Anpassungen für die folgenden Heuristiken basieren auf den Funktionen aus Listing \ref{lst_semEval}.
+Zu diesem Zweck sei angenommen, dass ein einzelner Test über ein Attribut $\texttt{isSingleMethodTest}$ und $\texttt{singleMethodName}$. Die beiden Attribute sind durch den Entwickler bei der Implementierung dieser Tests zu füllen. Dabei ist vorgesehen, dass das Attribut $\texttt{isSingleMethodTest}$ mit dem Wert $\texttt{true}$ belegt ist, wenn es sich um einen Test handelt, in dem lediglich eine Methode des Proxies aufgerufen wird. Darüber hinaus ist die Attribut $\texttt{singleMethodName}$ mit dem Namen der in dem Testfall aufgerufene Methode des Proxies zu belegen.
+\\\\
+Basierend auf diesen Werten der beiden Attribute, können die Tests in folgende Kategorien unterteilt werden:
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{5.5cm}|p{6.5cm}|}
+\hline
+\hline
+\textbf{Test-Kategorie} & \textbf{Eigenschaften} \\
+\hline
+Single-Method-Test 
+& 
+$\texttt{isSingleMethodTest} = \texttt{true}$\newline
+$\texttt{singleMethodName} \neq \texttt{null}$ \\
+\hline
+Multi-Method-Test 
+& 
+$\texttt{isSingleMethodTest} = \texttt{false}$\\
+\hline
+\hline
+\end{tabular}
+
+\end{table}
+\noindent
+Die Methodendelegationen, die auf der Basis der beiden folgenden Heuristiken aussortiert werden sollen, werden zu diesem Zweck in einer globalen Variable gehalten. Aus einer Liste von Proxies können darauf aufbauend diejenigen Proxies entfernt werden, die eine jener Methodendelegationen enthalten. Dabei wird davon ausgegangen, dass die Methoden eines required Typen über den Namen identifiziert werden können.
+\\\\
+Zusätzlich ist zu erwähnen, dass die folgenden Heuristiken, wie auch die Heuristik PTTF, eine Optimierung der zu testenden Proxies nach jeder fehlgeschlagenden Evaluation eines Proxies erlauben. Ob eine Optimierung an diesem Punkt möglich ist, wird durch eine neue globale Variable $\texttt{blacklistChanged}$ gesteuert.
+\\\\
+Listing \ref{lst_BLallg} zeigt die allgemeinen Anpassungen für die folgenden Heuristiken basieren auf den Funktionen aus Listing \ref{lst_BLallg}.
 \begin{lstlisting}[style = pseudo, label = lst_BLallg]
 methodDelegationBlacklist = []
 blacklistChanged = false
@@ -427,12 +482,14 @@ function BL( proxies ){
 
 \end{lstlisting}
 \noindent
-In den folgenden Heuristiken wird die globale Variable auf unterschiedliche Weise innerhalb der Funktion $\texttt{evalProxy}$ gefüllt.
+Die folgenden Heuristiken erfordern jeweils eine Anpassung der Funktion $\texttt{evalProxy}$.
 
 
 \paragraph{Heuristik BL\_FSMT: Beachtung fehlgeschlagener Single-Method-Test}
 \noindent
 \newline
+Basierend darauf, dass ein 
+
 
 \begin{lstlisting}[style = pseudo, caption = Semantische Evaluation mit Heuristik SMTE, captionpos = b, label = lst_semEval_SMTE]
 
@@ -442,7 +499,7 @@ function evalProxy(proxy, T){
 		if( test.eval( proxy ) ){
 			passedTestcases = passedTestcases + 1
 		}elseif( test.isSingleMethodTest ){
-			methodName = test.testedSingleMethodName
+			methodName = test.singleMethodName
 			mDel = getMethodDelegation(proxy, methodName)
 			blacklistChanged = true
 		}		
@@ -480,9 +537,12 @@ function evalProxy(proxy, T){
 			passedTestcases = passedTestcases + 1
 		}
 		catch (SigMaGlueException e){
-			mDel = e.getFailedMethodDelegation()
-			failedMethodDelegation.add(mDel)
-			blacklistChanged = true
+			mDel = e.failedMethodDelegation
+			if( test.isSingleMethodTest && 
+				mDel.call.name == test.singleMethodName){
+				failedMethodDelegation.add(mDel)
+				blacklistChanged = true		
+			}		
 			return
 		} 
 	}
