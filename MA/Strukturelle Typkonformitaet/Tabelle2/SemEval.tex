@@ -103,14 +103,16 @@ Die Implementierung der eval-Methode ist an folgende Bedingungen geknüpft:
 \subsubsection{Algorithmus für die semantische Evaluation}
 Bei der Exploration soll letztendlich in einer Bibliothek $L$ zu einem vorgegebenen required Type $R$ ein Proxy gefunden werden. Die Menge dieser Proxies wurde im vorherigen über $\mathit{cover(R,L)}$ beschrieben. Die in dieser Menge befindlichen Proxies können eine unterschiedliche Anzahl von Target-Typen enthalten.\\\\
 Das in dieser Arbeit beschriebene Konzept basiert auf der Annahme, dass bei der Entwicklung davon ausgegangen wird, dass der gesamte Anwendungsfall - oder Teile davon - , der mit der vordefinierten Struktur und den vordefinierten Tests abgebildet werden soll, schon einmal genauso oder so ähnlich in dem gesamten System implementiert wurde. Aus diesem Grund kann für die semantische Evaluation grundsätzlich davon ausgegangen werden, dass die erfolgreiche Durchführung aller relevanten Tests umso wahrscheinlicher ist je weniger Target-Typen im Proxy verwendet werden.\\\\
-Somit werden zuerst die Proxies auf ihr semantisches Matching überprüft, in denen lediglich ein Target-Typ verwendet wird. Die Menge der Proxies aus einer Menge von Proxies $P$ mit einer Anzahl $a$ von Target-Typen wird durch folgende Funktion beschrieben:
+Daher sei folgende Funktion für eine Menge von Proxies $P$ und eine ganze Zahl $a > 0$ definiert:
+%Somit werden zuerst die Proxies auf ihr semantisches Matching überprüft, in denen lediglich ein Target-Typ verwendet wird. Die Menge der Proxies aus einer Menge von Proxies $P$ mit einer Anzahl $a$ von Target-Typen wird durch folgende Funktion beschrieben:
 \begin{gather*}
-proxiesMitTargets(P,a) := \{P | P.targetCount = a\}
+\mathit{proxiesWithTargets(P,a)} := \{P | P.targetCount = a\}
 \end{gather*}
-Die maximale Anzahl der Target-Typen in einerm Proxy zu einem required Typ $R$ ist gleich der Anzahl der Methoden in P.
+Die maximale Anzahl der Target-Typen eines Proxies für einen required Typ $R$ ist gleich der Anzahl der Methoden in $R$.
 \begin{gather*}
-maxTargets(R) := |\mathit{methoden(R)}|
+\mathit{maxTargets(R)} := |\mathit{methoden(R)}|
 \end{gather*}
+
 \noindent
 %TODO - Text überarbeiten!!! (passt nicht mehr zum Algorithmus aus dem Listing)
 So kann der Algorithmus für die semantische Evaluation der Menge von Proxies (Parameter $\texttt{proxies}$), die für einen required Typ (Parameter $\texttt{reqType}$) erzeugt wurden, mit der Menge von Tests (Parameter $\texttt{tests}$) wie folgt im Pseudo-Code beschrieben werden. Die globale Variable $\texttt{passedTests}$ enthält dabei die Anzahl der für den aktuell zu überprüfenden Proxy erfolgreich durchgeführten Tests.
@@ -131,7 +133,7 @@ function semanticEval( reqType , proxies , tests ){
 }
 
 function relevantProxies(P,anzahl){
-	return proxiesMitTargets(P,anzahl);
+	return proxiesWithTargets(P,anzahl);
 }
 
 function evalProxiesMitTarget(proxies, tests){
@@ -158,9 +160,9 @@ function evalProxy(proxy, tests){
 	}
 }
 \end{lstlisting}
-Die Dauer der Laufzeit der oben genannten Funktionen hängt maßgeblich von der Anzahl der Proxies $\mathit{PA}$ ab. Im schlimmsten Fall müssen alle Proxies hinsichtlich der vordefinierten Tests evaluiert werden. Um die Anzahl der zu prüfenden Proxies zu reduzieren werden, die im folgenden Abschnitt beschriebenen Heuristiken verwendet.
+Die Dauer der Laufzeit der oben genannten Funktionen hängt maßgeblich von der Anzahl der Proxies für required Typs $R$ in einer Bibliothek $L$ ab (siehe auch Funktion $\mathit{libProxyCount}$). Im schlimmsten Fall müssen alle Proxies hinsichtlich der vordefinierten Tests evaluiert werden. Um die Anzahl der zu prüfenden Proxies zu reduzieren werden, die im folgenden Abschnitt beschriebenen Heuristiken verwendet.
 \\\\
-Um die einzelnen Stufen der semantischen Evaluation besser unterscheiden zu können, sei der Algorithmus aus Listing \ref{lst_semEval} in zwei Iterationsstufen unterteilt. Die erste Iterationsstufe beschreibt die Iteration über möglichen Anzahlen für die Target-Typen in der Funktion $\texttt{semanticEval}$ (siehe Zeile 3-14). Die zweite Itertationsstufe beschreibt die Iteration über die Proxies mit einer gleichen Anzahl an Target-Typen in der Funktion $\texttt{evalProxiesMitTarget}$ (siehe Zeile 20-31). Die Heuristiken sind so gestaltet, dass sie die Itertationsobjekte dieser beiden Iterationsstufen beeinflussen.
+Um die einzelnen Stufen der semantischen Evaluation besser unterscheiden zu können, sei der Algorithmus aus Listing \ref{lst_semEval} in zwei Iterationsstufen unterteilt. Die erste Iterationsstufe beschreibt die Iteration über Proxies mit einer bestimmten Anzahlen von Target-Typen in der Funktion $\texttt{semanticEval}$ (siehe Zeile 3-14). Die zweite Itertationsstufe beschreibt die Iteration über die Proxies mit einer gleichen Anzahl an Target-Typen in der Funktion $\texttt{evalProxiesMitTarget}$ (siehe Zeile 20-31). Die Heuristiken sind so gestaltet, dass sie die Itertationsobjekte dieser beiden Iterationsstufen beeinflussen.
 
 \subsection{Heuristiken}
 Die Heuristiken werden an unterschiedlichen Stellen des Algorithmus' für die semantische Evaluation aus Listing \ref{lst_semEval} eingebaut. Teilweise ist es für die Verwendung einer Heuristik notwendig, weitere Information während der semantischen Evaluation zu ermitteln und zu speichern. In den folgenden Abschnitten werden die Heuristiken und die dafür notwendigen Anpassungen an den jeweiligen Funktionen beschrieben.
@@ -174,7 +176,7 @@ Die folgenden Heuristiken haben zum Ziel, die Reihenfolge, in der die Proxies hi
 \newline
 Bei dieser Heuristik werden die Proxies auf der Basis eines so genannten Matcherratings bewertet. Bei dem Matcherrating eines Proxies handelt es sich um einen numerischen Wert. Um diesen Wert zu ermitteln, wird für jeden Matcher ein Basisrating vergeben. Folgende Funktion beschreibt das Basisrating für das Matching zweier Typen $S$ und $T$:
 \begin{gather*}
-\mathit{base(S,T)} =  \left\{ 
+\mathit{base(S,T)} :=  \left\{ 
 				\begin{array}{l}
 					100 | S \Rightarrow_{exact}  T  \\
 					200 | S \Rightarrow_{gen}  T  \\
@@ -205,18 +207,13 @@ Darüber hinaus gelten für die Definition von $\mathit{mdRating(MD)}$ für eine
 \end{gather*}
 Weiterhin seien die folgenden Funktionen gegeben:
 \begin{gather*}
-\mathit{basesMD(MD)} =  
-				\begin{array}{l}
-					  \mathit{base(dRT, cRT)} \mathit{ }\cup \mathit{base(cPT[0],dPT[pos[0]])} \\
-					  \mathit{ }\cup ... \cup \mathit{base(cPT[pc],dPT[pos[pc]])}
-				\end{array}    
+\mathit{basesMD(MD)} :=  \mathit{base(dRT, cRT)} \cup \bigcup\limits_{i=0}^{pc-1} \mathit{base(cPT[i],dPT[pos[i]])}
 				\\\\
 				\mathit{sum(v_1,...v_n)} = \sum_{i=1}^{n}v_i
 \\\\         
 \mathit{max(v_1,...,v_n)} = v_{m}| 1 \leq m \leq n  \wedge \forall i \in  \{1,...,n\}: v_i \leq v_{m}
 \\\\       
-\mathit{min(v_1,...,v_n)} = v_{m}| 1 \leq m \leq n  \wedge \forall i \in  \{1,...,n\}: v_i \geq v_{m}
-\\\\    
+\mathit{min(v_1,...,v_n)} = v_{m}| 1 \leq m \leq n  \wedge \forall i \in  \{1,...,n\}: v_i \geq v_{m}   
 \end{gather*}
 
 
