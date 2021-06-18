@@ -101,28 +101,35 @@ Die Implementierung der eval-Methode ist an folgende Bedingungen geknüpft:
 \end{enumerate}
 %TODO Beispiel
 \subsubsection{Algorithmus für die semantische Evaluation}
-Bei der Exploration soll letztendlich in einer Bibliothek $L$ zu einem vorgegebenen required Type $R$ ein Proxy gefunden werden. Die Menge dieser Proxies wurde im vorherigen über $\mathit{cover(R,L)}$ beschrieben. Die in dieser Menge befindlichen Proxies können eine unterschiedliche Anzahl von Target-Typen enthalten.\\\\
-Das in dieser Arbeit beschriebene Konzept basiert auf der Annahme, dass bei der Entwicklung davon ausgegangen wird, dass der gesamte Anwendungsfall - oder Teile davon - , der mit der vordefinierten Struktur und den vordefinierten Tests abgebildet werden soll, schon einmal genauso oder so ähnlich in dem gesamten System implementiert wurde. Aus diesem Grund kann für die semantische Evaluation grundsätzlich davon ausgegangen werden, dass die erfolgreiche Durchführung aller relevanten Tests umso wahrscheinlicher ist je weniger Target-Typen im Proxy verwendet werden.\\\\
-Daher sei folgende Funktion für eine Menge von Proxies $P$ und eine ganze Zahl $a > 0$ definiert:
-%Somit werden zuerst die Proxies auf ihr semantisches Matching überprüft, in denen lediglich ein Target-Typ verwendet wird. Die Menge der Proxies aus einer Menge von Proxies $P$ mit einer Anzahl $a$ von Target-Typen wird durch folgende Funktion beschrieben:
-\begin{gather*}
-\mathit{proxiesWithTargets(P,a)} := \{P | P.targetCount = a\}
-\end{gather*}
+Bei der Exploration soll letztendlich in einer Bibliothek $L$ zu einem vorgegebenen required Type $R$ ein Proxy gefunden werden. Die Mengen der Target-Typen auf deren Basis mehrere Proxies erzeugt werden können, wurde im vorherigen Abschnitt über $\mathit{cover(R,L)}$ beschrieben. Die in $T = \mathit{cover(R,L)}$ befindlichen Mengen können eine unterschiedliche Anzahl von Target-Typen enthalten.
+\\\\
 Die maximale Anzahl der Target-Typen eines Proxies für einen required Typ $R$ ist gleich der Anzahl der Methoden in $R$.
 \begin{gather*}
 \mathit{maxTargets(R)} := |\mathit{methoden(R)}|
 \end{gather*}
+\noindent
+In Bezug zur Funktion $\mathit{cover}$ gilt:
+\begin{gather*}
+\forall T \in \mathit{cover(R,L)} : |T| \leq \mathit{methoden(R)}
+\end{gather*}
+\noindent
+Das in dieser Arbeit beschriebene Konzept basiert auf der Annahme, dass der gesamte Anwendungsfall - oder Teile davon - , der mit der vordefinierten Struktur und den vordefinierten Tests abgebildet werden soll, schon einmal genauso oder so ähnlich in dem gesamten System implementiert wurde. Aus diesem Grund kann für die semantische Evaluation davon ausgegangen werden, dass die erfolgreiche Durchführung aller relevanten Tests umso wahrscheinlicher ist, je weniger Target-Typen im Proxy verwendet werden.
+\\\\
+Sei folgende Funktion für eine Menge von Target-Typen $T \in \mathit{cover(R,L)}$ und eine ganze Zahl $a > 0$ definiert:
+\begin{gather*}
+\mathit{targetSets(T,a)} := \{T_i | T_i \in T \wedge |T_i| = a\}
+\end{gather*}
+
 
 \noindent
-%TODO - Text überarbeiten!!! (passt nicht mehr zum Algorithmus aus dem Listing)
-So kann der Algorithmus für die semantische Evaluation der Menge von Proxies (Parameter $\texttt{proxies}$), die für einen required Typ (Parameter $\texttt{reqType}$) erzeugt wurden, mit der Menge von Tests (Parameter $\texttt{tests}$) wie folgt im Pseudo-Code beschrieben werden. Die globale Variable $\texttt{passedTests}$ enthält dabei die Anzahl der für den aktuell zu überprüfenden Proxy erfolgreich durchgeführten Tests.
+Ausgehend von einer Bibliothek $L$ kann der Algorithmus für die semantische Evaluation der Proxies, die für einen required Typ $R$ mit den Mengen der Target-Typen $T = \mathit{cover(R, L)}$ erzeugt werden können, und der Menge von Tests (Parameter $\texttt{tests}$) wie folgt im Pseudo-Code beschrieben werden. Die globale Variable $\texttt{passedTests}$ enthält dabei die Anzahl der für den aktuell zu überprüfenden Proxy erfolgreich durchgeführten Tests. Außerdem sei davon auszugehen, dass die Funktionen aus den vorherigen Abschnitten wie beschrieben definiert sind.
 \begin{lstlisting}[style = pseudo, caption = Semantische Evaluation ohne Heuristiken, captionpos = b, label = lst_semEval]
 passedTests = 0
 
-function semanticEval( reqType , proxies , tests ){
-	for( i = 1; i <= maxTargets( reqType ); i++ ){
-		relProxies = relevantProxies( proxies, i )
-		proxy = evalProxiesMitTarget(relProxies, tests)	
+function semanticEval( R, T, tests ){
+	for( i = 1; i <= $\mathit{maxTargets( R )}$; i++ ){
+		relProxies = relevantProxies( R, T, i )
+		proxy = evalProxies( relProxies, tests )	
 		if( proxy != null ){
 			// passenden Proxy gefunden
 			return proxy
@@ -132,11 +139,16 @@ function semanticEval( reqType , proxies , tests ){
 	return null;
 }
 
-function relevantProxies(P,anzahl){
-	return proxiesWithTargets(P,anzahl);
+function relevantProxies(R, T, anzahl){
+	proxies = []
+	targetSets = $\mathit{targetSets( T, anzahl )}$
+	for( targets : targetSets ){
+		proxies.addAll( $\mathit{proxies( R, targets )}$ )
+	}
+	return proxies;
 }
 
-function evalProxiesMitTarget(proxies, tests){
+function evalProxies(proxies, tests){
 	for( proxy : proxies ){
 		passedTests = 0
 		evalProxy(proxy, tests)
@@ -160,9 +172,9 @@ function evalProxy(proxy, tests){
 	}
 }
 \end{lstlisting}
-Die Dauer der Laufzeit der oben genannten Funktionen hängt maßgeblich von der Anzahl der Proxies für required Typs $R$ in einer Bibliothek $L$ ab (siehe auch Funktion $\mathit{libProxyCount}$). Im schlimmsten Fall müssen alle Proxies hinsichtlich der vordefinierten Tests evaluiert werden. Um die Anzahl der zu prüfenden Proxies zu reduzieren werden, die im folgenden Abschnitt beschriebenen Heuristiken verwendet.
-\\\\
-Um die einzelnen Stufen der semantischen Evaluation besser unterscheiden zu können, sei der Algorithmus aus Listing \ref{lst_semEval} in zwei Iterationsstufen unterteilt. Die erste Iterationsstufe beschreibt die Iteration über Proxies mit einer bestimmten Anzahlen von Target-Typen in der Funktion $\texttt{semanticEval}$ (siehe Zeile 3-14). Die zweite Itertationsstufe beschreibt die Iteration über die Proxies mit einer gleichen Anzahl an Target-Typen in der Funktion $\texttt{evalProxiesMitTarget}$ (siehe Zeile 20-31). Die Heuristiken sind so gestaltet, dass sie die Itertationsobjekte dieser beiden Iterationsstufen beeinflussen.
+Die Dauer der Laufzeit der oben genannten Funktionen hängt maßgeblich von der Anzahl der Proxies für required Typs $R$ in einer Bibliothek $L$ ab (siehe auch Funktion $\mathit{proxyCount}$). Im schlimmsten Fall müssen alle Proxies hinsichtlich der vordefinierten Tests erzeugt und evaluiert werden. Um die Anzahl dieser Proxies zu reduzieren, werden die im folgenden Abschnitt beschriebenen Heuristiken verwendet.
+%\\\\
+%Um die einzelnen Stufen der semantischen Evaluation besser unterscheiden zu können, sei der Algorithmus aus Listing \ref{lst_semEval} in zwei Iterationsstufen unterteilt. Die erste Iterationsstufe beschreibt die Iteration über Proxies mit einer bestimmten Anzahlen von Target-Typen in der Funktion $\texttt{semanticEval}$ (siehe Zeile 3-14). Die zweite Itertationsstufe beschreibt die Iteration über die Proxies mit einer gleichen Anzahl an Target-Typen in der Funktion $\texttt{evalProxiesMitTarget}$ (siehe Zeile 20-31). Die Heuristiken sind so gestaltet, dass sie die Itertationsobjekte dieser beiden Iterationsstufen beeinflussen.
 
 \subsection{Heuristiken}
 Die Heuristiken werden an unterschiedlichen Stellen des Algorithmus' für die semantische Evaluation aus Listing \ref{lst_semEval} eingebaut. Teilweise ist es für die Verwendung einer Heuristik notwendig, weitere Information während der semantischen Evaluation zu ermitteln und zu speichern. In den folgenden Abschnitten werden die Heuristiken und die dafür notwendigen Anpassungen an den jeweiligen Funktionen beschrieben.
@@ -182,9 +194,9 @@ Bei dieser Heuristik werden die Proxies auf der Basis eines so genannten Matcher
 					200 | S \Rightarrow_{gen}  T  \\
 					200 | S \Rightarrow_{spec}  T  \\
 					300 | S \Rightarrow_{contained}  T   \\
-					300 | S \Rightarrow_{container}  T  					
-				\end{array}
-              \right\}
+					300 | S \Rightarrow_{container}  T  				
+				\end{array}             
+	\right\}
 \end{gather*}
 \noindent
 Dabei ist zu erwähnen, dass einige der o.g. Matcher über dasselbe Basisrating erfügen. Das liegt daran, dass sie technisch jeweils gemeinsam umgesetzt wurden.\footnote{Der \emph{GenTypeMatcher} und der \emph{SpecTypeMatcher} wurden gemeinsam in der Klasse $\texttt{GenSpecTypeMatcher}$ umgesetzt. Der \emph{ContentTypeMatcher} und der \emph{ContainerTypeMatcher} wurden gemeinsam in der Klasse $\texttt{WrappedTypeMatcher}$ umgesetzt. (siehe angehängter Quellcode)}\\\\

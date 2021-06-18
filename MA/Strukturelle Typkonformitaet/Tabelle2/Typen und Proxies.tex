@@ -789,7 +789,7 @@ Die im Abschnitt \ref{sec:proxygram} erwähnte Funktion $\mathit{proxies(S,T)}$ 
 \end{gather*}
 \subsubsection{Anzahl möglicher Proxies innerhalb einer Bibliothek}
 Innerhalb einer Bibliothek $L$ kann für einen required Typ $R$ mitunter eine Vielzahl von \emph{Proxies} erzeugt werden. 
-Die folgende Funktion $\mathit{cover}$ beschreibt die eine Menge von Mengen von provided Typen aus einer Bibliothek $L$, die für die Erzeugung eines Proxies für $R$ verwendet werden können.
+Die folgende Funktion $\mathit{cover}$ beschreibt eine Menge von Mengen von provided Typen aus der Bibliothek $L$, die für die Erzeugung eines Proxies für $R$ verwendet werden können.
 \begin{gather*}
 cover(R,L) := 
 \left\{\begin{array}{l|l}
@@ -800,11 +800,11 @@ cover(R,L) :=
 \end{array}\right\}
 \end{gather*}
 \noindent
-Darüber hinaus können zu einer Menge $T \in \mathit{cover(R,L)}$ durchaus mehrere Proxies erzeugt werden. Das ist dann der Fall, wenn mehrere der Methoden aus den provided Typen mit einer Methode aus dem required Typ $R$ strukturell übereinstimmen.
+
 
 
 \paragraph{Beispiel}
-Sei folgenden Bibliothek $L$ gegeben.
+Sei folgende Bibliothek $L$ gegeben.
 \begin{lstlisting}[style = dsl]
 provided Come extends Object{
 	String hello()
@@ -820,15 +820,17 @@ required Greeting{
 	String bye()
 }
 \end{lstlisting}
-Über die Funktion $\mathit{cover}$ für den required Typ $\texttt{Greeting}$ werden folgenden Mengen von Target-Typen für die Bildung von entsprechenden Proxies ermittelt.
+Über die Funktion $\mathit{cover}$ werden folgenden Mengen von Target-Typen für die Bildung von Proxies für den required Typ $\texttt{Greeting}$ ermittelt.
 \begin{gather*}
 \mathit{cover(\texttt{Greeting},L)} = \{
 	\{\texttt{Come}\},\{\texttt{Leave}, \texttt{Come}\}
 \}
 \end{gather*}
 \noindent
+Mit einer Menge $T \in \mathit{cover(R,L)}$ können durchaus mehrere Proxies erzeugt werden. Das ist dann der Fall, wenn mehrere der Methoden, die in den provided Typen aus $T$ deklariert wurden, mit einer Methode des required Typs $R$ strukturell übereinstimmen.
+Die Anzahl der möglichen Proxies für ein required Typ $R$ mit einer bestimmten Mengen von Target-Typen $T_1,...,T_k$ ist somit von der Anzahl der Methoden abhängig, die in einem der Target-Typen des Proxies deklariert wurden und strukturell mit den Methoden aus $R$ übereinstimmen. 
 \\\\
-Die Anzahl der möglichen Proxies für ein required Typ $R$ mit einer bestimmten Mengen von Target-Typen $T_1,...,T_k$ ist von der Anzahl der Methoden abhängig, die in einem der Target-Typen des Proxies deklariert wurden und strukturell mit den Methoden aus $R$ übereinstimmen. Die Menge der Methoden aus einem provided Typ $T$, die strukturell mit einer Methoden $\methodForm{A}{m}{P}$ übereinstimmen, wird über die Funktion $\mathit{structM_{target}}$ beschrieben.
+Die Menge der Methoden der provided Typen aus einer Menge $T$, die strukturell mit einer Methoden mit der Struktur $\methodForm{A}{m}{P}$ übereinstimmen, wird über die Funktion $\mathit{structM_{target}}$ beschrieben.
 \begin{gather*}
 \mathit{structM_{target}(\methodForm{A}{m}{P}, T)} := 
 \left\{\begin{array}{l|l}
@@ -841,7 +843,7 @@ Die Anzahl der möglichen Proxies für ein required Typ $R$ mit einer bestimmten
 \end{gather*}
 \noindent
 Sei $R$ ein required Typ und $T$ eine Menge von provided Typen innerhalb einer Bibliothek $L$ mit $T \in \mathit{cover(R,L)}$. Sei weiterhin $\{m_1,...,m_n\} = \mathit{methoden(R)}$.
-Fernen seien $M_1,...,M_n$ die Mengen der Methoden der Target-Typen in $T$, die mit jeweils einer Methode $m_i \in \mathit{methoden(R)}$  strukturell übereinstimmen.
+Dann bilden $M_1,...,M_n$ wie folgt die Mengen der Methoden der Target-Typen in $T$, die mit jeweils einer Methode $m_i \in \mathit{methoden(R)}$  strukturell übereinstimmen.
 \begin{gather*}
 M_1 = \mathit{structM_{target}(m_1,T)}\\
 ...\\
@@ -850,7 +852,7 @@ M_n = \mathit{structM_{target}(m_n,T)}
 Für jede Kombination von jeweils einem Element aus jeder der Mengen $M_1,...M_n$ kann ein Proxy für $R$ mit der Menge der Target-Typen $T$ erzeugt werden.
 
 \paragraph{Beispiel}
-Aufbauend auf dem vorherigen Beispiel ergeben sich für die Menge der Target-Typen  $\{\texttt{Leave}, \texttt{Come}\}$ und die beiden Methoden des required Typ $\texttt{Greeting}$ folgende Menge über die Funktion $\mathit{targetStructM}$:
+Aufbauend auf dem vorherigen Beispiel ergeben sich für die Menge der Target-Typen  $\{\texttt{Leave}, \texttt{Come}\}$ und die beiden Methoden des required Typs $\texttt{Greeting}$ folgende Menge von übereinstimmenden Methoden über die Funktion $\mathit{structM_{target}}$:
 \begin{gather*}
 \mathit{structM_{target}(\methodForm{String}{hello}{},\{\texttt{Leave}, \texttt{Come}\})} = 
 \left\{
@@ -870,7 +872,7 @@ Aufbauend auf dem vorherigen Beispiel ergeben sich für die Menge der Target-Typ
 \right\}
 \end{gather*}
 \noindent
-Darauch aufbauend lassen sich durch die Kombination jeweils eines Elements dieser beiden Mengen für $\texttt{Greeting}$ die folgenden vier Proxies mit den Target-Typen $\texttt{Leave}$ und $\texttt{Come}$ erzeugen.
+Darauch aufbauend lassen sich die folgenden vier Proxies mit den Target-Typen $\texttt{Leave}$ und $\texttt{Come}$ erzeugen.
 \begin{lstlisting}[style = dsl]
 proxy Greeting with [Come, Leave]{
 	Greeting.hello():String --> Come.hello():String
@@ -897,8 +899,8 @@ proxy Greeting with [Come, Leave]{
 \end{lstlisting}
 \noindent
 \\\\
-Für die Bildung eines Proxies wird aus jeder der oben genannten Menge $M_1,...,M_n$ genau ein Element als Delegationsmethode verwendet werden. Die Anzahl aller möglichen Proxies für ein required Typ $R$ aus einer Menge von Target-Typen $T$ und unter der Annahme, dass $\{m_1,...,m_n\} = \mathit{methoden(R)}$, sei über die Funktion $\mathit{proxyCount(R,T)}$ ausgedrückt. Für $\mathit{proxyCount(R,T)}$ ist zu beachten, dass es sich dabei lediglich um eine Annäherung an die tatsächliche Anzahl der Proxies unter den oben beschriebenen Bedingungen abbildet. Dies liegt daran, dass eine Delegationsmethoden $dm$ innerhalb eines Proxy maximal einmal als verwendet werden darf. Dennoch ist es möglich, dass es zwischen den oben genannten Mengen 
-$M_1,...,M_n$ Überschneidungen gibt (siehe vorheriges Beispiel). Daher gelten folgende Regeln unter den oben genannten Modalitäten:
+Für die Bildung eines Proxies wird aus jeder der oben genannten Menge $M_1,...,M_n$ genau ein Element als Delegationsmethode verwendet werden. Die Anzahl aller möglichen Proxies für ein required Typ $R$ aus einer Menge von Target-Typen $T$ und unter der Annahme, dass $\{m_1,...,m_n\} = \mathit{methoden(R)}$, sei über die Funktion $\mathit{proxyCount(R,T)}$ ausgedrückt. Für $\mathit{proxyCount(R,T)}$ ist zu beachten, dass es sich dabei lediglich um eine Annäherung an die tatsächliche Anzahl der Proxies handelt, die unter den oben beschriebenen Bedingungen erzeugt werden können. Dies liegt daran, dass eine Delegationsmethoden $dm \in M_1 \cup ... \cup M_n$ innerhalb eines Proxy maximal einmal verwendet werden darf. Es ist jedoch möglich, dass es zwischen den oben genannten Mengen 
+$M_1,...,M_n$ Überschneidungen gibt (siehe vorheriges Beispiel). Daher gelten für die Funktion $\mathit{proxyCount}$ folgende Regeln unter den oben genannten Modalitäten:
 \begin{gather*}
 \frac{M_1 \cap ... \cap M_n = \emptyset}{\mathit{proxyCount(R,T)} = \prod\limits_{i=1}^{n}|M_i| }
 \\\\
@@ -921,7 +923,7 @@ m_n
 = \mathit{methoden(R)}
 \end{array}
 \end{gather*}
-Da innerhalb einer Bibliothek $L$ mehrere Mengen von Target-Typen zur Bildung eines Proxies für einen $R$ infrage kommen (siehe Funktion $\mathit{cover}$) muss die Anzahl der Proxies über die Funktion $\mathit{proxyCount}$ für alle Elemente aus $\mathit{cover(R,L)}$ ermittelt und summiert werden. Die folgenden Funktion beschreibt diesen Sachverhalt für einen required Typ $R$ aus einer Bibliothek $L$.
+Da innerhalb einer Bibliothek $L$ mehrere Mengen von Target-Typen zur Bildung eines Proxies für einen required Typ $R$ infrage kommen (siehe Funktion $\mathit{cover}$) muss die Anzahl der Proxies über die Funktion $\mathit{proxyCount}$ für alle Elemente aus $\mathit{cover(R,L)}$ ermittelt und summiert werden. Die folgende Funktion beschreibt diesen Sachverhalt für einen required Typ $R$ aus einer Bibliothek $L$.
 \begin{gather*}
 \mathit{libProxyCount(R,L)} = 
 \begin{array}{l|l}
