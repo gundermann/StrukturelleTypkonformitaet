@@ -1,0 +1,54 @@
+\ProvidesPackage{foudations}
+
+
+
+\lstdefinestyle{dsl}{
+	 morekeywords={with, proxy, structproxy, for, simpleproxy, contentproxy, containerproxy, nominalproxy, provided, required, interface, extends, inject, in, posModi},
+  showspaces=false,
+  showtabs=false,
+  breaklines=true,
+   literate=
+               {-->}{$\rightarrow{}$}{1}
+               ,
+  showstringspaces=false,
+  breakatwhitespace=true,
+  commentstyle=\color{pgreen},
+  keywordstyle=\color{pblue},
+  stringstyle=\color{pred},
+   tabsize=2,
+  basicstyle=\fontsize{9}{10}\selectfont\ttfamily,
+  moredelim=[il][\textcolor{pgrey}]{$ $},
+  moredelim=[is][\textcolor{pgrey}]{\%\%}{\%\%}
+}
+
+
+\lstdefinestyle{pseudo}{
+mathescape,  
+	 morekeywords={function, for, if, return, else, try, catch },
+  showspaces=false,
+  showtabs=false,
+  breaklines=true,
+  numbers=left,
+  showstringspaces=false,
+  breakatwhitespace=true,
+  commentstyle=\color{pgreen},
+  keywordstyle=\color{pblue},
+  stringstyle=\color{pred},
+  basicstyle=\fontsize{9}{10}\selectfont\ttfamily,
+  tabsize=2,
+  moredelim=[il][\textcolor{pgrey}]{$ $},
+  moredelim=[is][\textcolor{pgrey}]{\%\%}{\%\%}
+}
+
+
+\newcommand{\matchTyp}[3]
+{
+#1  
+\Rightarrow_{#2}
+ #3
+}
+
+\newcommand{\methodForm}[3]
+{
+\mathit{#1}\texttt{ }\mathit{#2(#3)}  
+}

@@ -1,0 +1,517 @@
+\usepackage{ausarbeitung}
+
+
+%\usepackage[latin1]{inputenc}
+\usepackage[pdftex]{color,graphicx}
+\usepackage[hypertexnames=false]{hyperref}
+\usepackage[ngerman]{babel}
+\usepackage{fancyhdr}
+\usepackage{amssymb}
+%\usepackage[some]{background} % Draft Wasserzeichen mit Option pages=all sonst pages=some
+%\usepackage{amsmath}
+%\usepackage[rflt]{floatflt}
+%\usepackage{tabularx}
+
+%% Package-Erweiterungen
+\usepackage{listings}
+\usepackage{changepage}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{setspace}
+\usepackage{color}
+\usepackage{colortbl}
+
+
+\usepackage{foundations}
+
+%% Diese Farben werden für den Quelltext verwendet
+\definecolor{srcblue}{rgb}{0,0,0.5}
+\definecolor{srcgray}{rgb}{0.5,0.5,0.5}
+\definecolor{srcred}{rgb}{0.5,0,0}
+
+\definecolor{rot}{rgb}{1,0.3,0}
+\definecolor{gelb}{rgb}{1,1,0}
+\definecolor{gruen}{rgb}{0,1,0.4}
+
+\graphicspath{{pics/}}
+
+% --- Farbdefinitionen ----------------------------------------
+\definecolor{rot}{rgb}{1,0.3,0}
+\definecolor{gelb}{rgb}{1,1,0}
+\definecolor{gruen}{rgb}{0,1,0.4}
+\definecolor{darkblue}{rgb}{0.2,0.3,1}
+\definecolor{lightblue}{rgb}{0.6,0.7,1}
+\definecolor{white}{rgb}{1,1,1}
+\definecolor{pblue}{rgb}{0.13,0.13,1}
+\definecolor{pgreen}{rgb}{0,0.5,0}
+\definecolor{pred}{rgb}{0.9,0,0}
+\definecolor{pgrey}{rgb}{0.46,0.45,0.48}
+
+\bibliographystyle{geralpha}
+
+\usepackage[figuresright]{rotating}
+\usepackage{geometry}
+\geometry{a4paper,left=20mm,right=20mm} 
+
+\newlength{\fullwidth} % Width of text plus margin notes
+\setlength{\fullwidth}{\textwidth}
+
+
+\lstset{language=Java,
+  showspaces=false,
+  showtabs=false,
+  breaklines=true,
+   literate=
+               {-->}{$\rightarrow{}$}{1}
+               ,
+  showstringspaces=false,
+  breakatwhitespace=true,
+  commentstyle=\color{pgreen},
+  keywordstyle=\color{pblue},
+  stringstyle=\color{pred},
+  basicstyle=\fontsize{9}{10}\selectfont\ttfamily,
+  moredelim=[il][\textcolor{pgrey}]{$ $},
+  moredelim=[is][\textcolor{pgrey}]{\%\%}{\%\%}
+}
+
+
+\lstdefinestyle{dsl}{
+	 morekeywords={with, subproxy, structproxy, for, simpleproxy, contentproxy, containerproxy, nominalproxy, provided, required, interface, extends},
+  showspaces=false,
+  showtabs=false,
+  breaklines=true,
+   literate=
+               {-->}{$\rightarrow{}$}{1}
+               ,
+  showstringspaces=false,
+  breakatwhitespace=true,
+  commentstyle=\color{pgreen},
+  keywordstyle=\color{pblue},
+  stringstyle=\color{pred},
+  basicstyle=\fontsize{9}{10}\selectfont\ttfamily,
+  moredelim=[il][\textcolor{pgrey}]{$ $},
+  moredelim=[is][\textcolor{pgrey}]{\%\%}{\%\%}
+}
+
+
+\usepackage{varwidth}
+\newcommand\tabrotate[1]{\begin{turn}{90}\rlap{#1}\end{turn}}
+\newcommand\tabvarwidth[2][3cm]{\begin{varwidth}[b]{#1}\centering #2\end{varwidth}}
+\newcommand{\myparagraph}[1]{\paragraph{#1}\mbox{}\\}
+\newcommand{\mysubparagraph}[1]{\underline{#1}\mbox{}\\}
+
+
+
+%----------------------------------------------------------------------------------
+% \backmatter	{ PAGE_COUNTER }
+%
+% Setzt die Umgebungen fuer den Teil nach dem Hauptteil
+%\renewcommand{\backmatter}[1]{
+%  \thispagestyle{empty}
+%  \fancyhf{}
+%  \lhead{\rightmark}
+%  \cfoot{\thepage}
+%  \pagenumbering{roman}
+%  \setcounter{page}{#1}
+%}
+
+%----------------------------------------------------------------------------------
+% \vft		{ NUMBER }
+%			{ UPPER_LEFT }
+%			{ UPPER_RIGHT }
+%			{ LOWER_LEFT }
+%			{ LOWER_RIGHT }
+%			{ CAPTION }
+%			{ LABEL }
+%
+% Vier-Felder-Tafel
+\newcommand{\vft}[7]{
+\begin{table}[H]
+\centering
+\small
+\doublespacing
+\begin{tabular}[c]{|c|c|c|}
+\hline
+#1 & \cellcolor{gruen}\textbf{positiv} & \cellcolor{rot}\textbf{negativ} \\
+\hline
+\cellcolor{rot}&\cellcolor{rot}&\cellcolor{rot}\\
+\tabrotate{\cellcolor{rot}\textbf{falsch}} & \multirow{-2}{*}{\cellcolor{rot}#2}&\multirow{-2}{*}{\cellcolor{rot}#3}\\
+\hline
+\cellcolor{gruen}&\cellcolor{gruen}&\cellcolor{rot}\\
+\tabrotate{\cellcolor{gruen}richtig} &\multirow{-2}{*}{\cellcolor{gruen}#4}&\multirow{-2}{*}{\cellcolor{rot}#5} \\
+\hline
+\end{tabular}
+\singlespacing
+\caption{#6}
+ \label{tab:#7}
+\end{table}
+}
+
+%----------------------------------------------------------------------------------
+% \inhTyp		{ CHILD }
+%				{ PARENT }
+%
+% Gleichung, die eine Vererbung darstellt
+\newcommand{\inhTyp}[2]
+{
+#1 < #2
+}
+
+%----------------------------------------------------------------------------------
+% \selTyp		{ WRAPPER }
+%				{ ATTR }
+%
+% Gleichung, die eine Selektion darstellt
+\newcommand{\selTyp}[2]
+{
+#1 \# #2
+}
+
+%----------------------------------------------------------------------------------
+% \delegate		{ SOURCE }
+%				{ TARGET }
+%
+% Gleichung, die eine Delegation darstellt
+\newcommand{\delegate}[2]
+{
+#1 \Rightarrow #2
+}
+
+%----------------------------------------------------------------------------------
+% \applyMatcher		{ SOURCE }
+%					{ TARGET }
+%
+% Gleichung, die Applikation eines Matchers auf einen Parameter 
+\newcommand{\applyMatcher}[2]
+{
+(#1)#2
+}
+
+%----------------------------------------------------------------------------------
+% matcherEquivDef		{ MATCHER }
+%						
+%
+% Umgebung für die Definition der Übereinstimmung eines Matchers
+\newenvironment{matcherEquivDef}[1]{
+\begin{adjustwidth}{2cm}{0cm}
+\underline{Matching (#1)}
+\end{adjustwidth}
+\begin{eqnarray*}
+}
+{
+\end{eqnarray*}
+}
+
+%----------------------------------------------------------------------------------
+% matcherConvDef		{ MATCHER }
+%						{ ANNAHME }
+%
+% Umgebung für die Definition der Übereinstimmung eines Matchers
+\newenvironment{matcherConvDef}[2]{
+\begin{adjustwidth}{2cm}{0cm}
+\underline{Konvertierung (#1)}\newline
+#2
+\end{adjustwidth}
+\begin{eqnarray*}
+}
+{
+\end{eqnarray*}
+}
+
+%----------------------------------------------------------------------------------
+% \myFigure	[ LABEL_PREFIX (optional) ]
+%				{ FILENAME (without extension) }
+%				{ CAPTION TEXT }
+%				{ SHORT VERSION OF CAPTION TEXT }
+%
+%Bild wird in Originalgroesse gesetzt
+%picture using full width of the page
+\newcommand{\myFigure}[3]
+{
+\begin{figure}[H]
+	\center{
+	\begin{minipage}{\fullwidth}
+	\center{
+		\includegraphics{#1}
+		\caption{#2}
+		\label{abb:#3}
+		}
+	\end{minipage}
+	}
+\end{figure}
+}
+
+
+%----------------------------------------------------------------------------------
+% \myScalableFigure	[ scale (optional) ]
+%				{ FILENAME (without extension) }
+%				{ CAPTION TEXT }
+%				{ SHORT VERSION OF CAPTION TEXT }
+%
+%Bild wird in Originalgroesse gesetzt
+%picture using full width of the page
+\newcommand{\myScalableFigure}[4][0.5\linewidth]
+{
+\begin{figure}[H]
+	\center{
+	\begin{minipage}{\fullwidth}
+	\center{
+		\includegraphics[width=#1]{#2}
+		\caption{#3}
+		\label{abb:#4}
+		}
+	\end{minipage}
+	}
+\end{figure}
+}
+
+%----------------------------------------------------------------------------------
+% \myBigFigure	[ WIDTH (optional) ]
+%				{ FILENAME (without extension) }
+%				{ CAPTION TEXT }
+%				{ SHORT VERSION OF CAPTION TEXT }
+%
+%Bild wird in kompletter Breite gesetzt
+%picture using full width of the page
+\newcommand{\myBigFigure}[4][\fullwidth]
+{
+\begin{figure}[H]
+	\center{
+	\begin{minipage}{#1}
+		\includegraphics[width=#1]{#2}
+		\caption{#3}
+		\label{abb:#4}
+	\end{minipage}
+	}
+\end{figure}
+}
+
+
+%----------------------------------------------------------------------------------
+% \myNeighbourFigures	NOT WORKING!!!!
+%				{ PROPORTION OF 1  }
+%				{ FILENAME OF 1 (without extension) }
+%				{ CAPTION TEXT OF 1 }
+%				{ REF OF 1}
+%   			[ PROPORTION OF DISTANCE (optional)]
+%				{ PROPORTION OF 1  }
+%				{ FILENAME OF 1 (without extension) }
+%				{ CAPTION TEXT OF 1 }
+%				{ REF OF 1}
+%
+%Zwei Bilder nebeneinander
+%\newcommand{\myNeighbourFigures}[9]
+%{
+%\begin{figure}[H]
+%\begin{minipage}[b]{#1\linewidth}
+%  \centering
+%  \includegraphics[width=\linewidth]{#2}
+%  \captionof{figure}{#3}
+%  \label{abb:#4}%
+
+%\end{minipage}%
+%\hspace{#5\linewidth}% Abstand zwischen Bilder
+%\begin{minipage}[b]{(#6\linewidth}
+
+
+ % \centering
+ % \includegraphics[width=\linewidth]{#7}
+ % \captionof{figure}{#8}
+ % \label{abb:#9}
+
+%\end{minipage}
+%\end{figure}
+
+%}
+
+
+%----------------------------------------------------------------------------------
+% \myBigFigureGraphic	
+%						[ PARAMS (optional) ]
+%				{ FILENAME (without extension) }
+%				{ CAPTION TEXT }
+%				{ SHORT VERSION OF CAPTION TEXT }
+%
+%Bild wird in kompletter Breite gesetzt
+%picture using full width of the page
+\newcommand{\myBigFigureGraphic}[5][width=\fullwidth]
+{
+\begin{figure}[H]
+	\center
+	\includegraphics[#1]{#2}
+	\caption{#3}
+	\label{abb:#4}
+\end{figure}
+}
+
+
+
+%----------------------------------------------------------------------------------
+% \myBigFigure	[ LABEL_PREFIX (optional) ]
+%				{ FILENAME (without extension) }
+%				{ CAPTION TEXT }
+%				{ SHORT VERSION OF CAPTION TEXT }
+%
+%Bild wird in kompletter Breite gesetzt
+%picture using full width of the page
+\newcommand{\myBigFigureCited}[5][abb:]
+{
+\begin{figure}[H]
+	\center{
+	\begin{minipage}{\fullwidth}
+		\includegraphics[width= \fullwidth]{#2}
+		\caption[#3]{#3#4}
+		\label{#1_#5}
+	\end{minipage}
+	}
+\end{figure}
+}
+
+
+%----------------------------------------------------------------------------------
+% \dcite	{ Text }
+%				{ source }
+%				{ page }
+%
+%Direktes Zitat
+\newcommand{\dcite}[3]
+{
+\emph{\glqq#1\grqq}\cite[S.#3]{#2}}
+
+%----------------------------------------------------------------------------------
+% \dcite	{ Text }
+%				{ source }
+%				{ page }
+%
+%Direktes Zitat
+\newcommand{\simpledcite}[2]
+{
+\emph{\glqq#1\grqq}\cite{#2}}
+
+
+%----------------------------------------------------------------------------------
+% \vcite	
+%				{ source }
+%				{ page }
+%
+%Direktes Zitat
+\newcommand{\vcite}[2]
+{
+(vgl. \cite[S.#2]{#1})}
+
+
+%----------------------------------------------------------------------------------
+% \vcite	
+%				{ source }
+%				{ page }
+%
+%Direktes Zitat
+\newcommand{\simplevcite}[1]
+{
+(vgl. \cite{#1})}
+
+%----------------------------------------------------------------------------------
+% \myHUGEFigure	[ LABEL_PREFIX (optional) ]
+%				{ FILENAME (without extension) }
+%				{ CAPTION TEXT }
+%				{ SHORT VERSION OF CAPTION TEXT }
+%
+%Bild wird rotiert und quer in kompletter Breite gesetzt
+%landscape picture using the full width of the rotated page
+\newcommand{\myHugeFigure}[4][abb:]
+{
+\begin{sidewaysfigure}[H]
+	
+		\includegraphics[width= \textheight]{#2}
+		\caption{#3}
+		\label{#1_#4}
+	
+\end{sidewaysfigure}
+}
+
+
+%----------------------------------------------------------------------------------
+% \myHUGEFigure	[ LABEL_PREFIX (optional) ]
+%				{ FILENAME (without extension) }
+%				{ CAPTION TEXT }
+%				{ SHORT VERSION OF CAPTION TEXT }
+%
+%Bild wird rotiert und quer in kompletter Breite gesetzt
+%landscape picture using the full width of the rotated page
+\newcommand{\myHugeFigureCited}[5][abb:]
+{
+\begin{sidewaysfigure}[t!bp]
+	
+		\includegraphics[width= \textheight]{#2}
+		\caption[#3]{#3#4}
+		\label{#1_#5}
+	
+\end{sidewaysfigure}
+}
+
+
+%-----------------------------------------------------------------------
+% \abbref		{ PIC REFERENCE }
+%
+%Verweis auf eine Abbildung
+\newcommand{\abbref}[1]{Abbildung \ref{abb:#1}}
+
+
+
+%-----------------------------------------------------------------------
+% \tabref		{ PIC REFERENCE }
+%
+%Verweis auf eine Tabelle
+\newcommand{\tabref}[1]{Tabelle \ref{tab:#1}}
+
+%-----------------------------------------------------------------------
+% \refs		{ TAB REFERENCE_START }
+%			{ TAB REFERENCE_END }
+%
+%Verweise
+\newcommand{\refs}[2]{\ref{#1}-\ref{#2}}
+
+%-----------------------------------------------------------------------
+% \tabsrefs		{ TAB REFERENCE_START }
+%				{ TAB REFERENCE_END }
+%
+%Verweis auf eine Tabelle
+\newcommand{\tabsrefs}[2]{Tabellen \ref{tab:#1}-\ref{tab:#2}}
+
+%-----------------------------------------------------------------------
+% \abbsrefs		{ PIC REFERENCE_START }
+%				{ PIC REFERENCE_END }
+%
+%Verweis auf eine Tabelle
+\newcommand{\abbsrefs}[2]{Abbildungen \ref{abb:#1}-\ref{abb:#2}}
+
+
+
+
+%-----------------------------------------------------------------------
+% \lstref		{ PIC REFERENCE }
+%
+%Verweis auf ein Listing
+\newcommand{\lstref}[1]{Listing \ref{#1}}
+
+
+%-----------------------------------------------------------------------
+% \lstsrefs		{ LST REFERENCE Begin }
+%				{ LST REFERENCE End }
+%
+%Verweis auf mehrere Listings
+\newcommand{\lstsrefs}[2]{Listings \ref{#1}-\ref{#2}}
+
+%-----------------------------------------------------------------------
+% \appref		{ APPENDIX REFERENCE }
+%
+%Verweis auf ein Anhang
+\newcommand{\appref}[1]{Anhang \ref{#1}}
+
+\newcommand{\gloss}[1]{\emph{\gls{#1}}}
+
+\newcommand{\glossLink}[2]{\emph{\glslink{#1}{#2}}}
+
+
