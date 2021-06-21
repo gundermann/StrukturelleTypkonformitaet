@@ -1,0 +1,15 @@
+\ProvidesPackage{examples}
+
+
+\newcounter{examplec}
+\setcounter{examplec}{0}
+
+
+\newenvironment{example}[1]{
+\stepcounter{examplec}
+\paragraph{Beispiel \arabic{examplec}}\label{#1}
+}
+{
+\noindent
+\\
+}

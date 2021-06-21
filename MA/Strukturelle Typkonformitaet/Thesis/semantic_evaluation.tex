@@ -35,11 +35,27 @@ Die Implementierung der eval-Methode ist an folgende Bedingungen geknüpft:
 \item Nach einem fehlgeschlagenen Aufruf einer Methode auf dem als Parameter übergebenen Proxy-Objekt, wird das Feld $\texttt{failedMethod}$ mit dem Namen der fehlgeschlagenen Methode belegt. Zusätzlich wird die eval-Methode direkt danach mit dem Rückgabewert $\texttt{false}$ beendet.
 \item Wenn der Proxy den Test erfüllt, wird der Wert $\texttt{true}$ zurückgegeben. Anderenfalls wird der Wert $\texttt{false}$ zurückgegeben.
 \end{enumerate}
-%TODO Beispiel
+
+\begin{example}{xmpl_evalMethode}
+In folgendem Listing ist eine eval-Methode aufgeführt, die die oben genannten Bedingungen erfüllt. Es sei davon auszugehen, dass der als Parameter übergebene Proxy eine Methode mit der Struktur $\methodForm{Integer}{add}{Integer x, Integer y}$
+anbietet. Der Fehlschlag ($\texttt{err}$) dieser Methode wird über einen Try-Catch-Block abgefangen.
+\begin{lstlisting}[style = pseudo]
+function eval( proxy ){
+	res = 0	
+	try{
+		res = proxy.add(1, 1)
+		calledMethods.add( "add" )
+	} catch( err ) {
+		failesMethods.add( "add" )
+		return false;
+	}
+	return res == 2;
+}
+\end{lstlisting}
+\end{example}
+
 \subsection{Algorithmus für die semantische Evaluation}
-Bei der Exploration soll letztendlich in einer Bibliothek $L$ zu einem vorgegebenen required Type $R$ ein Proxy gefunden werden. Die Mengen der Target-Typen auf deren Basis mehrere Proxies erzeugt werden können, wurde im vorherigen Abschnitt über $\mathit{cover(R,L)}$ beschrieben. Die in $T = \mathit{cover(R,L)}$ befindlichen Mengen können eine unterschiedliche Anzahl von Target-Typen enthalten.
-\\\\
-Die maximale Anzahl der Target-Typen eines Proxies für einen required Typ $R$ ist gleich der Anzahl der Methoden in $R$.
+Bei der Exploration soll letztendlich in einer Bibliothek $L$ zu einem vorgegebenen required Type $R$ ein Proxy gefunden werden. Die Mengen der Target-Typen auf deren Basis mehrere Proxies erzeugt werden können, wurden im Abschnitt \ref{sec_anzahlProxies} über $\mathit{cover(R,L)}$ beschrieben. Die in $T = \mathit{cover(R,L)}$ befindlichen Mengen können eine unterschiedliche Anzahl von Target-Typen enthalten. Die maximale Mächtigkeit einer Menge $T_i \in T$ ist gleich der Anzahl der Methoden in $R$.
 \begin{gather*}
 \mathit{maxTargets(R)} := |\mathit{methoden(R)}|
 \end{gather*}
@@ -49,16 +65,15 @@ In Bezug zur Funktion $\mathit{cover}$ gilt:
 \forall T \in \mathit{cover(R,L)} : |T| \leq \mathit{methoden(R)}
 \end{gather*}
 \noindent
+\\
 Das in dieser Arbeit beschriebene Konzept basiert auf der Annahme, dass der gesamte Anwendungsfall - oder Teile davon - , der mit der vordefinierten Struktur und den vordefinierten Tests abgebildet werden soll, schon einmal genauso oder so ähnlich in dem gesamten System implementiert wurde. Aus diesem Grund kann für die semantische Evaluation davon ausgegangen werden, dass die erfolgreiche Durchführung aller relevanten Tests umso wahrscheinlicher ist, je weniger Target-Typen im Proxy verwendet werden.
 \\\\
 Sei folgende Funktion für eine Menge von Target-Typen $T \in \mathit{cover(R,L)}$ und eine ganze Zahl $a > 0$ definiert:
 \begin{gather*}
 \mathit{targetSets(T,a)} := \{T_i | T_i \in T \wedge |T_i| = a\}
 \end{gather*}
-
-
 \noindent
-Ausgehend von einer Bibliothek $L$ kann der Algorithmus für die semantische Evaluation der Proxies, die für einen required Typ $R$ mit den Mengen der Target-Typen $T = \mathit{cover(R, L)}$ erzeugt werden können, und der Menge von Tests (Parameter $\texttt{tests}$) wie folgt im Pseudo-Code beschrieben werden. Die globale Variable $\texttt{passedTests}$ enthält dabei die Anzahl der für den aktuell zu überprüfenden Proxy erfolgreich durchgeführten Tests. Außerdem sei davon auszugehen, dass die Funktionen aus den vorherigen Abschnitten wie beschrieben definiert sind.
+Ausgehend von einer Bibliothek $L$ kann der Algorithmus für die semantische Evaluation der Proxies, die für einen required Typ $R$ mit den Mengen der Target-Typen $T = \mathit{cover(R, L)}$ erzeugt werden können, und der Menge von Tests (Parameter $\texttt{tests}$) wie folgt im Pseudo-Code beschrieben werden. Die globale Variable $\texttt{passedTests}$ enthält dabei die Anzahl der für den aktuell zu überprüfenden Proxy erfolgreich durchgeführten Tests. Außerdem sei davon auszugehen, dass die Funktionen aus Abschnitt \ref{sec_structEval} wie beschrieben definiert sind.
 \begin{lstlisting}[style = pseudo, caption = Semantische Evaluation ohne Heuristiken, captionpos = b, label = lst_semEval]
 passedTests = 0
 
@@ -108,19 +123,18 @@ function evalProxy(proxy, tests){
 	}
 }
 \end{lstlisting}
-Die Dauer der Laufzeit der oben genannten Funktionen hängt maßgeblich von der Anzahl der Proxies für required Typs $R$ in einer Bibliothek $L$ ab (siehe auch Funktion $\mathit{proxyCount}$). Im schlimmsten Fall müssen alle Proxies hinsichtlich der vordefinierten Tests erzeugt und evaluiert werden. Um die Anzahl dieser Proxies zu reduzieren, werden die im folgenden Abschnitt beschriebenen Heuristiken verwendet.
-%\\\\
-%Um die einzelnen Stufen der semantischen Evaluation besser unterscheiden zu können, sei der Algorithmus aus Listing \ref{lst_semEval} in zwei Iterationsstufen unterteilt. Die erste Iterationsstufe beschreibt die Iteration über Proxies mit einer bestimmten Anzahlen von Target-Typen in der Funktion $\texttt{semanticEval}$ (siehe Zeile 3-14). Die zweite Itertationsstufe beschreibt die Iteration über die Proxies mit einer gleichen Anzahl an Target-Typen in der Funktion $\texttt{evalProxiesMitTarget}$ (siehe Zeile 20-31). Die Heuristiken sind so gestaltet, dass sie die Itertationsobjekte dieser beiden Iterationsstufen beeinflussen.
+Die Dauer der Laufzeit der in Listing \ref{lst_semEval} definierten Funktionen hängt maßgeblich von der Anzahl der Proxies ab, die für den required Typ $R$ in der Bibliothek $L$ erzeugt werden können (siehe auch Abschnitt \ref{sec_anzahlProxies} Funktion $\mathit{proxyCount}$). Im schlimmsten Fall müssen alle Proxies hinsichtlich der vordefinierten Tests erzeugt und evaluiert werden. Um die Anzahl dieser Proxies zu reduzieren, werden die im folgenden Abschnitt beschriebenen Heuristiken verwendet.
+
 
 \section{Heuristiken}
-Die Heuristiken werden an unterschiedlichen Stellen des Algorithmus' für die semantische Evaluation aus Listing \ref{lst_semEval} eingebaut. Teilweise ist es für die Verwendung einer Heuristik notwendig, weitere Information während der semantischen Evaluation zu ermitteln und zu speichern. In den folgenden Abschnitten werden die Heuristiken und die dafür notwendigen Anpassungen an den jeweiligen Funktionen beschrieben.
+Die Heuristiken werden an unterschiedlichen Stellen des Algorithmus aus Listing \ref{lst_semEval} eingebaut. Teilweise ist es für die Verwendung einer Heuristik notwendig, weitere Information während der semantischen Evaluation zu ermitteln und diese zu speichern. In den folgenden Abschnitten werden die Heuristiken und die dafür notwendigen Anpassungen an den jeweiligen Funktionen beschrieben.
 
 \subsection{Heuristiken für die Optimierung der Reihenfolge}
 Die folgenden Heuristiken haben zum Ziel, die Reihenfolge, in der die Proxies hinsichtlich der vordefinierten Tests geprüft werden, so anzupassen, dass ein passender Proxy möglichst früh geprüft wird.
 
 
 \subsubsection{Heuristik LMF: Beachtung des Matcherratings}
-Bei dieser Heuristik werden die Proxies auf der Basis eines so genannten Matcherratings bewertet. Bei dem Matcherrating eines Proxies handelt es sich um einen numerischen Wert. Um diesen Wert zu ermitteln, wird für jeden Matcher ein Basisrating vergeben. Folgende Funktion beschreibt das Basisrating für das Matching zweier Typen $S$ und $T$:
+Bei dieser Heuristik werden die Proxies auf der Basis eines so genannten Matcherratings bewertet. Bei dem Matcherrating eines Proxies handelt es sich um einen numerischen Wert. Um diesen Wert zu ermitteln, wird für jede Matchingrelation bzw. für jeden Matcher aus Abschnitt \ref{sec_matcher} ein Basisrating vergeben. Folgende Funktion beschreibt das Basisrating für das Matching zweier Typen $S$ und $T$:
 \begin{gather*}
 \mathit{base(S,T)} :=  \left\{ 
 				\begin{array}{l}
@@ -130,14 +144,14 @@ Bei dieser Heuristik werden die Proxies auf der Basis eines so genannten Matcher
 					300 | S \Rightarrow_{contained}  T   \\
 					300 | S \Rightarrow_{container}  T  				
 				\end{array}             
-	\right\}
+	\right.
 \end{gather*}
 \noindent
-Dabei ist zu erwähnen, dass einige der o.g. Matcher über dasselbe Basisrating erfügen. Das liegt daran, dass sie technisch jeweils gemeinsam umgesetzt wurden.\footnote{Der \emph{GenTypeMatcher} und der \emph{SpecTypeMatcher} wurden gemeinsam in der Klasse $\texttt{GenSpecTypeMatcher}$ umgesetzt. Der \emph{ContentTypeMatcher} und der \emph{ContainerTypeMatcher} wurden gemeinsam in der Klasse $\texttt{WrappedTypeMatcher}$ umgesetzt. (siehe angehängter Quellcode)}\\\\
-Das Matcherrating eines Proxies $P$ wird über die Funktion $\mathit{rating(P)}$ beschrieben. Dieses ist von dem Matcherrating der Methoden-Delegation innerhalb des Proxies $P$ abhängig. Das Matcherrating einer Methoden-Delegation ist von den Basisratings der Matcher abhängig, über die die Parameter- und Rückgabe-Typen der aufgerufenen Methode und der Delegationsmethoden gematcht werden können. Das qualitative Rating einer Methoden-Delegation $\mathit{MD}$ soll über die Funktion $\mathit{mdRating(MD)}$ beschrieben werden.\\\\
-Für die Definition der beiden Funktionen $\mathit{rating(P)}$ und $\mathit{mdRating(MD)}$ gibt es unterschiedliche Möglichkeiten. In dieser Arbeit werden 4 Varianten als Definitionen vorgeschlagen, die in einem späteren Abschnitt untersucht werden.\\\\
-Für die Vorschläge zur Definition von $\mathit{rating(P)}$ sei $P$ ein struktureller Proxy mit $n$ Methoden-Delegation.
-Darüber hinaus gelten für die Definition von $\mathit{mdRating(MD)}$ für eine Methoden-Delegation $\mathit{MD}$ folgende verkürzte Schreibweisen:
+Dabei ist zu erwähnen, dass einige der o.g. Matcher über dasselbe Basisrating erfügen. Das liegt daran, dass sie technisch jeweils gemeinsam umgesetzt wurden.\footnote{Der \emph{GenTypeMatcher} und der \emph{SpecTypeMatcher} wurden gemeinsam in der Klasse $\texttt{GenSpecTypeMatcher}$ umgesetzt. Der \emph{ContentTypeMatcher} und der \emph{ContainerTypeMatcher} wurden gemeinsam in der Klasse $\texttt{WrappedTypeMatcher}$ umgesetzt. (siehe angehängter Quellcode)}
+\\\\
+Das Matcherrating eines Proxies $P$ wird über die Funktion $\mathit{rating}$ beschrieben. Dieses ist von dem Matcherrating der Methoden-Delegation innerhalb von $P$ abhängig. Das Matcherrating einer Methoden-Delegation ist von den Basisratings der Matcher abhängig, über die die Parameter- und Rückgabe-Typen der aufgerufenen Methode und der Delegationsmethoden gematcht werden können. 
+\\\\
+Für die Definition von Funktionen gelten im weiteren Verlauf folgende verkürzte Schreibweise in Bezug auf eine Methoden-Delegation $\mathit{MD}$:
 \begin{gather*}
 	\mathit{pc} := \mathit{MD.call.paramCount}
 	\\
@@ -151,23 +165,27 @@ Darüber hinaus gelten für die Definition von $\mathit{mdRating(MD)}$ für eine
 	\\
 	\mathit{pos} := \mathit{MD.call.posModi}
 \end{gather*}
-Weiterhin seien die folgenden Funktionen gegeben:
+\noindent
+Darauf aufbauend sei die Menge der Matcherratings der Paare von Parameter- und Rückgabetypen aus der aufgerufenen Methode und den Delegationsmethode einer Methoden-Delegation $\mathit{MD}$ wie folgt definiert:
 \begin{gather*}
-\mathit{basesMD(MD)} :=  \mathit{base(dRT, cRT)} \cup \bigcup\limits_{i=0}^{pc-1} \mathit{base(cPT[i],dPT[pos[i]])}
-				\\\\
-				\mathit{sum(v_1,...v_n)} = \sum_{i=1}^{n}v_i
-\\\\         
+\mathit{bases_{MD}(MD)} :=  \mathit{base(dRT, cRT)} \cup \bigcup\limits_{i=0}^{pc-1} \mathit{base(cPT[i],dPT[pos[i]])}
+\end{gather*}
+\noindent
+Das Matcherrating einer Methoden-Delegation $\mathit{MD}$ sei über die Funktion $\mathit{mdRating}$ beschrieben. Für die Definition der beiden Funktionen $\mathit{rating}$ und $\mathit{mdRating}$ gibt es unterschiedliche Möglichkeiten. In dieser Arbeit werden 4 Varianten als Definitionen vorgeschlagen, die in Kapitel \ref{chap_evaluation} untersucht werden.
+\\\\
+Dazu seien die folgenden Hilfsfunktionen definiert:
+\begin{gather*}    
+\mathit{sum(v_1,...v_n)} = \sum_{i=1}^{n}v_i
+\\\\
 \mathit{max(v_1,...,v_n)} = v_{m}| 1 \leq m \leq n  \wedge \forall i \in  \{1,...,n\}: v_i \leq v_{m}
 \\\\       
 \mathit{min(v_1,...,v_n)} = v_{m}| 1 \leq m \leq n  \wedge \forall i \in  \{1,...,n\}: v_i \geq v_{m}   
 \end{gather*}
-
-
-
+Für die folgenden Vorschläge zur Definition von $\mathit{rating}$ und $\mathit{mdRating}$ sei $P$ ein struktureller Proxy mit $n$ Methoden-Delegation.
 \paragraph{Variante 1: Durchschnitt}
 
 \begin{gather*}
-\mathit{mdRating(MD)} = \frac{\mathit{sum(basesMD(MD))}}{\mathit{pc} + 1}
+\mathit{mdRating(MD)} = \frac{\mathit{sum(bases_{MD}(MD))}}{\mathit{pc} + 1}
 \\\\
 \mathit{rating(P)} = \frac{ \mathit{sum(mdRating(P.dels[0]),...,mdRating(P.dels[n-1]))}}{n}
 \end{gather*}
@@ -177,7 +195,7 @@ Weiterhin seien die folgenden Funktionen gegeben:
 \paragraph{Variante 2: Maximum}
 
 \begin{gather*}
-\mathit{mdRating(MD)} = \mathit{max(basesMD(MD))}
+\mathit{mdRating(MD)} = \mathit{max(bases_{MD}(MD))}
 \\\\
 \mathit{rating(P)} = \frac{\mathit{max(mdRating(P.dels[0]),...,mdRating(P.dels[n-1]))}}{n}
 \end{gather*}
@@ -187,7 +205,7 @@ Weiterhin seien die folgenden Funktionen gegeben:
 \paragraph{Variante 3: Minimum}
 
 \begin{gather*}
-\mathit{mdRating(MD)} = \mathit{min(basesMD(MD))}
+\mathit{mdRating(MD)} = \mathit{min(bases_{MD}(MD))}
 \\\\
 \mathit{rating(P)} = \frac{\mathit{min(mdRating(P.dels[0]),...,mdRating(P.dels[n-1]))}}{n}
 \end{gather*}
@@ -195,13 +213,13 @@ Weiterhin seien die folgenden Funktionen gegeben:
 \paragraph{Variante 4: Durchschnitt aus Minimum und Maximum}
 
 \begin{gather*}
-\mathit{mdRating(MD)} = \frac{\mathit{max(basesMD(MD))}+\mathit{min(basesMD(MD))}}{2}
+\mathit{mdRating(MD)} = \frac{\mathit{max(bases_{MD}(MD))}+\mathit{min(bases_{MD}(MD))}}{2}
 \\\\
 \mathit{rating(P)} = \frac{\splitfrac{ \mathit{max(mdRating(P.dels[0]),...,mdRating(P.dels[n-1]))}}{+\mathit{min(mdRating(P.dels[0]),...,mdRating(P.dels[n-1]))}}}{2}
 \end{gather*}
 \noindent
-Da die Funktion $\mathit{rating}$ von $\mathit{mdrating}$ abhängt und für $\mathit{mdrating}$ 4 Variante gegeben sind, ergeben sich für jede gegebene Variante für die Definition von $\mathit{rating}$ weitere 4 Varianten. Dadurch sind insgesamt 16 Varianten für die Definition von $\mathit{rating}$ gegeben.\\\\
-
+Da die Funktion $\mathit{rating}$ von $\mathit{mdRating}$ abhängt und für $\mathit{mdRating}$ 4 Variante vorgeschlagen wurden, ergeben sich für jede vorgeschlagene Variante für die Definition von $\mathit{rating}$ weitere 4 Varianten. Dadurch sind insgesamt 16 Varianten für die Definition von $\mathit{rating}$ gegeben.
+\\\\
 %TODO - Text überarbeiten!!! (passt nicht mehr zum Algorithmus aus dem Listing)
 Zur Anwendung der Heuristik muss das qualitative Rating bei der Auswahl der Proxies in der semantischen Evaluation beachtet werden. Die erfolgt innerhalb der Methode $\texttt{applyHeuristic(proxies)}$. Für diese Heuristik sei dazu eine Methode $\texttt{sort(proxies, rateFunc)}$ angenommen, die eine Liste zurückgibt, in der die Elemente in der übergebenen Liste $\texttt{proxies}$ aufsteigend nach den Werten sortiert, die durch die Applikation der im Parameter $\texttt{rateFunc}$ übergebenen Funktion auf ein einzelnes Element aus der Liste $\texttt{proxies}$ ermittelt werden. Darauf aufbauend wird die Methode $\texttt{applyHeuristic(proxies)}$ für diese Heuristik in Pseudo-Code wie folgt definiert:
 
