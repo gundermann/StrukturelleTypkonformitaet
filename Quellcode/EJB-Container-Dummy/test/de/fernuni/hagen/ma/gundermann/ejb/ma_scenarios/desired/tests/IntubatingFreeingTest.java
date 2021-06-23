@@ -10,11 +10,11 @@ import java.util.Collection;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.desired.IntubatingFreeing;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Injured;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Suffer;
-import spi.CalledMethodInfo;
+import spi.TriedMethodCallsInfo;
 import tester.annotation.RequiredTypeInstanceSetter;
 import tester.annotation.RequiredTypeTest;
 
-public class IntubatingFreeingTest implements CalledMethodInfo {
+public class IntubatingFreeingTest implements TriedMethodCallsInfo {
 
 	private IntubatingFreeing intubatingFreeing;
 	private Collection<Method> calledMethods = new ArrayList<Method>();
@@ -29,7 +29,7 @@ public class IntubatingFreeingTest implements CalledMethodInfo {
 		Collection<Suffer> suffer = Arrays.asList(Suffer.LOCKED);
 		Injured patient = new Injured(suffer);
 		intubatingFreeing.free(patient);
-		addCalledMethod(getMethod("free", IntubatingFreeing.class));
+		addTriedMethodCall(getMethod("free", IntubatingFreeing.class));
 		assertTrue(patient.isStabilized());
 	}
 
@@ -38,17 +38,17 @@ public class IntubatingFreeingTest implements CalledMethodInfo {
 		Collection<Suffer> suffer = Arrays.asList(Suffer.BREATH_PROBLEMS);
 		Injured patient = new Injured(suffer);
 		intubatingFreeing.intubate(patient);
-		addCalledMethod(getMethod("intubate", IntubatingFreeing.class));
+		addTriedMethodCall(getMethod("intubate", IntubatingFreeing.class));
 		assertTrue(patient.isStabilized());
 	}
 
 	@Override
-	public void addCalledMethod(Method m) {
+	public void addTriedMethodCall(Method m) {
 		calledMethods.add(m);
 	}
 
 	@Override
-	public Collection<Method> getCalledMethods() {
+	public Collection<Method> getTriedMethodCalls() {
 		return calledMethods;
 	}
 }

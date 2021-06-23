@@ -17,7 +17,7 @@ public class TestResult {
 
 	private Throwable throwable;
 
-	private Set<Method> calledMethods = new HashSet<>();
+	private Set<Method> triedMethodCalls = new HashSet<>();
 
 	private Method failedMethodCall;
 
@@ -56,7 +56,7 @@ public class TestResult {
 			this.result = tempResult.getResult() != null ? tempResult.getResult() : this.result;
 			addTests(tempResult.getTestCount());
 			this.passedTests = this.passedTests + tempResult.getPassedTests();
-			this.calledMethods.addAll(tempResult.getCalledMethods());
+			this.triedMethodCalls.addAll(tempResult.getTriedMethodCalls());
 			this.throwable = tempResult.getException();
 			this.failedMethodCall = tempResult.getFailedMethodCall();
 			this.cause = tempResult.cause;
@@ -99,12 +99,12 @@ public class TestResult {
 		this.failedMethodCall = failedMethodCall;
 	}
 
-	public Collection<Method> getCalledMethods() {
-		return calledMethods;
+	public Collection<Method> getTriedMethodCalls() {
+		return triedMethodCalls;
 	}
 
-	public void addCalledMethod(Method m) {
-		calledMethods.add(m);
+	public void addTriedMethodCall(Method m) {
+		triedMethodCalls.add(m);
 	}
 
 	public static enum Result {

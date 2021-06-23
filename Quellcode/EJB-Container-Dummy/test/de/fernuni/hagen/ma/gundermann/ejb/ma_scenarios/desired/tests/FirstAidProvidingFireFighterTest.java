@@ -12,11 +12,11 @@ import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.desired.FirstAidProviding
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Injured;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Fire;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Suffer;
-import spi.CalledMethodInfo;
+import spi.TriedMethodCallsInfo;
 import tester.annotation.RequiredTypeInstanceSetter;
 import tester.annotation.RequiredTypeTest;
 
-public class FirstAidProvidingFireFighterTest implements CalledMethodInfo {
+public class FirstAidProvidingFireFighterTest implements TriedMethodCallsInfo {
 
 	private FirstAidProvidingFireFighter firstAidProvidingFireFighter;
 	private Collection<Method> calledMethods = new ArrayList<Method>();
@@ -30,7 +30,7 @@ public class FirstAidProvidingFireFighterTest implements CalledMethodInfo {
 	public void extinguishFire() {
 		Fire fire = new Fire();
 		firstAidProvidingFireFighter.extinguishFire(fire);
-		addCalledMethod(getMethod("extinguishFire", FirstAidProvidingFireFighter.class));
+		addTriedMethodCall(getMethod("extinguishFire", FirstAidProvidingFireFighter.class));
 		assertFalse(fire.isActive());
 	}
 
@@ -39,17 +39,17 @@ public class FirstAidProvidingFireFighterTest implements CalledMethodInfo {
 		Collection<Suffer> suffer = Arrays.asList(Suffer.LOCKED, Suffer.BREATH_PROBLEMS, Suffer.OPEN_WOUND);
 		Injured patient = new Injured(suffer);
 		firstAidProvidingFireFighter.provideFirstAid(patient);
-		addCalledMethod(getMethod("provideFirstAid", FirstAidProvidingFireFighter.class));
+		addTriedMethodCall(getMethod("provideFirstAid", FirstAidProvidingFireFighter.class));
 		assertTrue(patient.isStabilized());
 	}
 
 	@Override
-	public void addCalledMethod(Method m) {
+	public void addTriedMethodCall(Method m) {
 		calledMethods.add(m);
 	}
 
 	@Override
-	public Collection<Method> getCalledMethods() {
+	public Collection<Method> getTriedMethodCalls() {
 		return calledMethods;
 	}
 

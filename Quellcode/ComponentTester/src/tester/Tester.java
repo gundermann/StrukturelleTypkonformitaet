@@ -18,7 +18,7 @@ class Tester {
 				if (testInstance == null) {
 					continue;
 				}
-				tempResult = new SingleMethodTestEvaluator().test(testInstance);
+				tempResult = new TestEvaluator().test(testInstance);
 				finalResult.enhanceResult(tempResult);
 				if(finalResult.getResult() != Result.PASSED) {
 					return finalResult;

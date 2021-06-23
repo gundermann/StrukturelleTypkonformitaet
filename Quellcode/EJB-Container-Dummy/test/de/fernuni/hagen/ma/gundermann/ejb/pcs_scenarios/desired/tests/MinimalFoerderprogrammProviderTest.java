@@ -12,11 +12,11 @@ import java.util.Date;
 import DE.data_experts.profi.profilcs.antrag2015.stammdaten.business.impl.Foerderprogramm;
 import DE.data_experts.profi.util.allg.DvFoerderprogramm;
 import de.fernuni.hagen.ma.gundermann.ejb.pcs_scenarios.desired.MinimalFoerderprogrammeProvider;
-import spi.CalledMethodInfo;
+import spi.TriedMethodCallsInfo;
 import tester.annotation.RequiredTypeInstanceSetter;
 import tester.annotation.RequiredTypeTest;
 
-public class MinimalFoerderprogrammProviderTest implements CalledMethodInfo {
+public class MinimalFoerderprogrammProviderTest implements TriedMethodCallsInfo {
 
 	private MinimalFoerderprogrammeProvider provider;
 
@@ -30,7 +30,7 @@ public class MinimalFoerderprogrammProviderTest implements CalledMethodInfo {
 	@RequiredTypeTest
 	public void testEmptyCollection() {
 		Collection<String> alleFreigegebenenFPs = provider.getAlleFreigegebenenFPs();
-		addCalledMethod(getMethod("getAlleFreigegebenenFPs", MinimalFoerderprogrammeProvider.class));
+		addTriedMethodCall(getMethod("getAlleFreigegebenenFPs", MinimalFoerderprogrammeProvider.class));
 		assertThat(alleFreigegebenenFPs, notNullValue());
 	}
 
@@ -38,7 +38,7 @@ public class MinimalFoerderprogrammProviderTest implements CalledMethodInfo {
 	public void testGetFoerderprogramm() {
 		String fpCode = "123";
 		Foerderprogramm fp = provider.getFoerderprogramm(fpCode, 2015, new Date());
-		addCalledMethod(getMethod("getFoerderprogramm", MinimalFoerderprogrammeProvider.class));
+		addTriedMethodCall(getMethod("getFoerderprogramm", MinimalFoerderprogrammeProvider.class));
 		assertThat(fp, notNullValue());
 		DvFoerderprogramm dvFP = fp.getFoerderprogramm();
 		assertThat(dvFP, notNullValue());
@@ -57,12 +57,12 @@ public class MinimalFoerderprogrammProviderTest implements CalledMethodInfo {
 	}
 
 	@Override
-	public void addCalledMethod(Method m) {
+	public void addTriedMethodCall(Method m) {
 		calledMethods.add(m);
 	}
 
 	@Override
-	public Collection<Method> getCalledMethods() {
+	public Collection<Method> getTriedMethodCalls() {
 		return calledMethods;
 	}
 

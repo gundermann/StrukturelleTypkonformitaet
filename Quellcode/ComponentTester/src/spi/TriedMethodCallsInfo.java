@@ -5,11 +5,11 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-public interface CalledMethodInfo {
+public interface TriedMethodCallsInfo {
 
-	void addCalledMethod(Method m);
+	void addTriedMethodCall(Method m);
 
-	Collection<Method> getCalledMethods();
+	Collection<Method> getTriedMethodCalls();
 
 	default Method getMethod(String name, Class<?> type) {
 		try {

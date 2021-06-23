@@ -9,11 +9,11 @@ import java.util.Collection;
 
 import DE.data_experts.profi.profilcs.antrag2015.eler.ft.stammdaten.business.ElerFTFoerderprogramm;
 import de.fernuni.hagen.ma.gundermann.ejb.pcs_scenarios.desired.ElerFTFoerderprogrammeProvider;
-import spi.CalledMethodInfo;
+import spi.TriedMethodCallsInfo;
 import tester.annotation.RequiredTypeInstanceSetter;
 import tester.annotation.RequiredTypeTest;
 
-public class ElerFTFoerderprogrammProviderTest implements CalledMethodInfo {
+public class ElerFTFoerderprogrammProviderTest implements TriedMethodCallsInfo {
 
 	private ElerFTFoerderprogrammeProvider provider;
 	private Collection<Method> calledMethods = new ArrayList<Method>();
@@ -30,17 +30,17 @@ public class ElerFTFoerderprogrammProviderTest implements CalledMethodInfo {
 	@RequiredTypeTest
 	public void testEmptyCollection() {
 		Collection<ElerFTFoerderprogramm> alleFreigegebenenFPs = provider.getAlleFreigegebenenFPs();
-		addCalledMethod(getMethod("getAlleFreigegebenenFPs", ElerFTFoerderprogrammeProvider.class));
+		addTriedMethodCall(getMethod("getAlleFreigegebenenFPs", ElerFTFoerderprogrammeProvider.class));
 		assertThat(alleFreigegebenenFPs, notNullValue());
 	}
 
 	@Override
-	public void addCalledMethod(Method m) {
+	public void addTriedMethodCall(Method m) {
 		calledMethods.add(m);
 	}
 
 	@Override
-	public Collection<Method> getCalledMethods() {
+	public Collection<Method> getTriedMethodCalls() {
 		return calledMethods;
 	}
 

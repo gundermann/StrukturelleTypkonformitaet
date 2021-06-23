@@ -14,11 +14,11 @@ import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.desired.MedicalFireFighte
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Fire;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Injured;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Suffer;
-import spi.CalledMethodInfo;
+import spi.TriedMethodCallsInfo;
 import tester.annotation.RequiredTypeInstanceSetter;
 import tester.annotation.RequiredTypeTest;
 
-public class MedicalFireFighterTest implements CalledMethodInfo {
+public class MedicalFireFighterTest implements TriedMethodCallsInfo {
 
 	private MedicalFireFighter medicalFireFighter;
 
@@ -34,7 +34,7 @@ public class MedicalFireFighterTest implements CalledMethodInfo {
 		Injured injured = new Injured(Arrays.asList(Suffer.BREATH_PROBLEMS));
 		MedCabinet med = new MedCabinet();
 		medicalFireFighter.heal(injured, med);
-		addCalledMethod(getMethod("heal", MedicalFireFighter.class));
+		addTriedMethodCall(getMethod("heal", MedicalFireFighter.class));
 		assertTrue(injured.getSuffers().isEmpty());
 	}
 
@@ -42,18 +42,18 @@ public class MedicalFireFighterTest implements CalledMethodInfo {
 	public void extinguishFire() {
 		Fire fire = new Fire();
 		boolean isFireActive = medicalFireFighter.extinguishFire(fire);
-		addCalledMethod(getMethod("extinguishFire", MedicalFireFighter.class));
+		addTriedMethodCall(getMethod("extinguishFire", MedicalFireFighter.class));
 		assertTrue(Objects.equals(isFireActive, fire.isActive()));
 		assertFalse(isFireActive);
 	}
 
 	@Override
-	public void addCalledMethod(Method m) {
+	public void addTriedMethodCall(Method m) {
 		calledMethods.add(m);
 	}
 
 	@Override
-	public Collection<Method> getCalledMethods() {
+	public Collection<Method> getTriedMethodCalls() {
 		return calledMethods;
 	}
 

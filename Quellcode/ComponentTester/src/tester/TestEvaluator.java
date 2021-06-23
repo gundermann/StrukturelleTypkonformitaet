@@ -10,11 +10,10 @@ import org.junit.After;
 import org.junit.Before;
 
 import glue.SigMaGlueException;
-import spi.CalledMethodInfo;
+import spi.TriedMethodCallsInfo;
 import tester.annotation.RequiredTypeTest;
 
-//TODO Rename - es gibt nur noch einen
-public class SingleMethodTestEvaluator {
+public class TestEvaluator {
 
 	public TestResult test(Object testInstance) {
 		TestResult testResult = new TestResult();
@@ -38,9 +37,10 @@ public class SingleMethodTestEvaluator {
 	private void handleError(InvocationTargetException e, Object testInstance, TestResult testResult) {
 		// e.printStackTrace();
 		Optional<SigMaGlueException> optSigMaGlueExc = findCausedSigMaGlueExcetion(e);
-		if (optSigMaGlueExc.isPresent()		) {
-			Method calledPivotMethod = optSigMaGlueExc.get().getCalledSourceMethod();
-			testResult.canceledByFailedDelegation(optSigMaGlueExc.get(), calledPivotMethod);
+		if (optSigMaGlueExc.isPresent()) {
+			SigMaGlueException sigMaGlueException = optSigMaGlueExc.get();
+			Method failedMethod = sigMaGlueException.getCalledSourceMethod();
+			testResult.canceledByFailedDelegation(sigMaGlueException, failedMethod);
 		} else {
 			testResult.canceledByException(e);
 		}
@@ -97,9 +97,9 @@ public class SingleMethodTestEvaluator {
 	}
 
 	private void collectCalledMethods(Object testInstance, TestResult testResult) {
-		if(testInstance instanceof CalledMethodInfo) {
-			Collection<Method> calledMethods = CalledMethodInfo.class.cast(testInstance).getCalledMethods();
-			calledMethods.forEach(testResult::addCalledMethod);
+		if (testInstance instanceof TriedMethodCallsInfo) {
+			Collection<Method> calledMethods = TriedMethodCallsInfo.class.cast(testInstance).getTriedMethodCalls();
+			calledMethods.forEach(testResult::addTriedMethodCall);
 		}
 	}
 

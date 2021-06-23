@@ -9,11 +9,11 @@ import java.util.Collection;
 
 import DE.data_experts.profi.profilcs.antrag2015.stammdaten.business.impl.Foerderprogramm;
 import de.fernuni.hagen.ma.gundermann.ejb.pcs_scenarios.desired.FoerderprogrammeProvider;
-import spi.CalledMethodInfo;
+import spi.TriedMethodCallsInfo;
 import tester.annotation.RequiredTypeInstanceSetter;
 import tester.annotation.RequiredTypeTest;
 
-public class FoerderprogrammProviderTest implements CalledMethodInfo {
+public class FoerderprogrammProviderTest implements TriedMethodCallsInfo {
 
 	private FoerderprogrammeProvider provider;
 
@@ -27,17 +27,17 @@ public class FoerderprogrammProviderTest implements CalledMethodInfo {
 	@RequiredTypeTest
 	public void testEmptyCollection() {
 		Collection<Foerderprogramm> alleFreigegebenenFPs = provider.getAlleFreigegebenenFPs();
-		addCalledMethod(getMethod("getAlleFreigegebenenFPs", FoerderprogrammeProvider.class));
+		addTriedMethodCall(getMethod("getAlleFreigegebenenFPs", FoerderprogrammeProvider.class));
 		assertThat(alleFreigegebenenFPs, notNullValue());
 	}
 
 	@Override
-	public void addCalledMethod(Method m) {
+	public void addTriedMethodCall(Method m) {
 		calledMethods.add(m);
 	}
 
 	@Override
-	public Collection<Method> getCalledMethods() {
+	public Collection<Method> getTriedMethodCalls() {
 		return calledMethods;
 	}
 }
