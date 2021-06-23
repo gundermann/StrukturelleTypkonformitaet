@@ -1,0 +1,69 @@
+\chapter{Semantische Evaluation mit allen vorgestellten Heuristiken}\label{app_semEvalMitAllenHeuristiken}
+Die in den Abschnitten \ref{sec_lmf} - \ref{sec_bl_mnc} vorgestellten Heuristiken können miteinander Kombiniert werden. Listing \ref{lst_heuristikkombination} zeigt die Implementierung der Funktionen, die für diese Kombination auf der Basis von Listing \ref{lst_semEval} angepasst oder ergänzt werden müssen.
+
+%TODO - Die drei Funktionen sollten einzeln erklärt werden
+\begin{lstlisting}[style = pseudo, caption = Kombination aller Heuristiken, captionpos = b, label = lst_heuristikkombination]
+function evalProxiesMitTarget( proxies, tests ){
+	testedProxies = []
+	for( proxy : proxies ){
+		passedTestcases = 0
+		blacklistChanged = false
+		evalProxy(proxy, tests)
+		if( passedTests == T.size ){
+			// passenden Proxy gefunden
+			return proxy
+		}
+		else{
+			testedProxies.add(proxy)
+			if( passedTests > 0 || blacklistChanged ){
+				// noch nicht evaluierte Proxies ermitteln
+				optmizedProxies = proxies.removeAll( testedProxies )
+				// Heuristik PTTF
+				if( passedTests > 0 ){
+					priorityTargets.addAll( proxy.targets )
+					optmizedProxies = PTTF( optmizedProxies )	
+				}
+				// Heuristik BL_FFMD und BL_FSMT
+				if( blacklistChanged ){
+					optmizedProxies = BL( optmizedProxies )	
+				}
+				return evalProxiesMitTarget( optmizedProxies, tests )
+			}
+		}
+	}
+	// kein passenden Proxy gefunden
+	return null
+}
+
+function evalProxy(proxy, tests){
+	for( test : tests ){
+		//alle Tests werden durchgefuehrt	
+		try{
+			if( test.eval( proxy ) ){
+				passedTestcases = passedTestcases + 1
+			}elseif( test.isSingleMethodTest ){
+				methodName = test.testedSingleMethodName
+				mDel = getMethodDelegation( proxy, methodName )
+				methodDelegationBlacklist.add( mDel )
+				blacklistChanged = true
+				return
+			}
+		}
+		catch (SigMaGlueException e){
+			mDel = e.failedMethodDelegation
+			methodDelegationBlacklist.add( mDel )
+			blacklistChanged = true
+			return
+		} 
+	}
+}
+
+function relevantProxies( proxies, anzahl ){
+	relProxies = proxiesMitTargets( proxies, anzahl );
+	optimizedLMF = LMF( relProxies )
+	optimizedPTTF = PTTF( optimizedLMF )
+	return BL( optimizedPTTF )
+} 
+
+
+\end{lstlisting}

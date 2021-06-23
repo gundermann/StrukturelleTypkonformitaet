@@ -106,16 +106,16 @@
 
 %----------------------------------------------------------------------------------
 % \backmatter	{ PAGE_COUNTER }
-%
+
 % Setzt die Umgebungen fuer den Teil nach dem Hauptteil
-%\renewcommand{\backmatter}[1]{
-%  \thispagestyle{empty}
-%  \fancyhf{}
-%  \lhead{\rightmark}
-%  \cfoot{\thepage}
-%  \pagenumbering{roman}
-%  \setcounter{page}{#1}
-%}
+\renewcommand{\backmatter}[1]{
+  \thispagestyle{empty}
+  \fancyhf{}
+  \lhead{\rightmark}
+  \cfoot{\thepage}
+  \pagenumbering{roman}
+  \setcounter{page}{#1}
+}
 
 %----------------------------------------------------------------------------------
 % \vft		{ NUMBER }

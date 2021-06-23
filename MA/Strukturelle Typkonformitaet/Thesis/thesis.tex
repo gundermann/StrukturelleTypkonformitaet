@@ -37,28 +37,33 @@
 %\newpage
 
 \mainmatter
-%\include{introduction}
-%\include{requirements}
+\input{introduction}
+\input{problem}
 \input{foundations}
-%\include{explorationcomponent}
-%\include{heuristics}
-%\include{evaluation}
+\input{implementation}
+\input{evaluation}
+\chapter{Diskussion}
+\chapter{Ausblick}
+\chapter{Schlussbemerkung}
 
 
-\backmatter{6}
+\appendix
+\addcontentsline{toc}{chapter}{Literaturverzeichnis}
+\bibliography{thesisbib}{}
 
-%\begin{appendix}
+\input{app_heuristicCombi}
+
+
+
+
 %\include{MatcherExamples}
 %\include{AnhangB}
-%\end{appendix}
 
 
 %\include{cd}
 
 
 %\phantomsection
-%\addcontentsline{toc}{chapter}{Literaturverzeichnis}
-\bibliography{thesisbib}{}
 
 
 \end{document}
