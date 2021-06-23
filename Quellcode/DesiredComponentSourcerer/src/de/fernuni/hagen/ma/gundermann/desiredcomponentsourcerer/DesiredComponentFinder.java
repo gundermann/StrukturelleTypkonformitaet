@@ -165,42 +165,24 @@ public class DesiredComponentFinder {
 		TestResult testResult = componentTester.testComponent(convertedComponent);
 		logTestResult(testResult);
 		TestedComponent<DesiredInterface> testedComponent = new TestedComponent<>(convertedComponent, testResult);
-
-		// H: blacklist by failed method combination calls
-		if (HeuristicSetting.BLACKLIST_FIRST_CALLED_METHOD) {
-			if(testResult.getCause() == Cause.FAILED_DELEGATION ) {
-				Method failedMethodCall = testResult.getFailedMethodCall();
-				Collection<Method> failedMethodCombi = new ArrayList<Method>(testResult.getCalledMethods());
-				failedMethodCombi.add(failedMethodCall);
-				Logger.infoF("blacklist by failed call of method combination: %s", 
-						failedMethodCombi.stream().map(m -> m.getName()).collect(Collectors.joining(",")));
-				
-				List<MethodMatchingInfo> failedMMICombi = components2MatchingInfo.values().stream().flatMap(Collection::stream)
-				.filter(mmi -> failedMethodCombi.contains(mmi.getSource()))
-				.collect(Collectors.toList());
-				Logger.infoF("blacklisting mmi found: %d", failedMMICombi.size());
-				testedComponent.addBlacklistedMMICombi(failedMMICombi);
+		
+		// H: blacklist failed method calls
+		if (HeuristicSetting.BLACKLIST_FAILED_CALLED_METHODS ) {
+			Method failedMethodCall = testResult.getFailedMethodCall();
+			Collection<Method> failedMethodCombi = new ArrayList<Method>(testResult.getCalledMethods());
+			if(failedMethodCall != null) {
+				failedMethodCombi.add(failedMethodCall);				
 			}
+			Logger.infoF("blacklist by failed method combination: %s",
+					failedMethodCombi.stream().map(m -> m.getName()).collect(Collectors.joining(",")));
+
+			List<MethodMatchingInfo> failedMMICombi = components2MatchingInfo.values().stream()
+					.flatMap(Collection::stream).filter(mmi -> failedMethodCombi.contains(mmi.getSource()))
+					.collect(Collectors.toList());
+			Logger.infoF("blacklisting mmi found: %d", failedMMICombi.size());
+			testedComponent.addBlacklistedMMICombi(failedMMICombi);
 		}
 
-		// H: blacklist failed single methods tested
-		if (HeuristicSetting.BLACKLIST_SINGLE_METHOD_TEST_FAILED) {
-			if(testResult.getCause() == Cause.ASSERTION 
-					&& testResult.getCalledMethods().size() == 1) {
-				Method failedMethod = testResult.getCalledMethods().iterator().next();
-				List<MethodMatchingInfo> failedMMICombi = components2MatchingInfo.values().stream().flatMap(Collection::stream)
-				.filter(mmi -> failedMethod.equals(mmi.getSource()))
-				.collect(Collectors.toList());
-				
-				if(failedMMICombi.size() != 1) {
-					System.err.println(String.format("BL_FSMT hat %d Kombinationen gefunden", failedMMICombi.size()));
-				}else {
-					Logger.infoF("blacklist by failed single method test of method: %s", failedMethod.getName());
-					testedComponent.addBlacklistedMMICombi(failedMMICombi);
-				}
-				
-			}
-		}
 		return testedComponent;
 	}
 

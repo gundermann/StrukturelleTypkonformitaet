@@ -13,6 +13,7 @@ import glue.SigMaGlueException;
 import spi.CalledMethodInfo;
 import tester.annotation.RequiredTypeTest;
 
+//TODO Rename - es gibt nur noch einen
 public class SingleMethodTestEvaluator {
 
 	public TestResult test(Object testInstance) {
