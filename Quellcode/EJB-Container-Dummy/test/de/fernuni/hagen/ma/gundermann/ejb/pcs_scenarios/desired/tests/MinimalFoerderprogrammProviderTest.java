@@ -29,16 +29,16 @@ public class MinimalFoerderprogrammProviderTest implements TriedMethodCallsInfo 
 
 	@RequiredTypeTest
 	public void testEmptyCollection() {
-		Collection<String> alleFreigegebenenFPs = provider.getAlleFreigegebenenFPs();
 		addTriedMethodCall(getMethod("getAlleFreigegebenenFPs", MinimalFoerderprogrammeProvider.class));
+		Collection<String> alleFreigegebenenFPs = provider.getAlleFreigegebenenFPs();
 		assertThat(alleFreigegebenenFPs, notNullValue());
 	}
 
 	@RequiredTypeTest
 	public void testGetFoerderprogramm() {
 		String fpCode = "123";
-		Foerderprogramm fp = provider.getFoerderprogramm(fpCode, 2015, new Date());
 		addTriedMethodCall(getMethod("getFoerderprogramm", MinimalFoerderprogrammeProvider.class));
+		Foerderprogramm fp = provider.getFoerderprogramm(fpCode, 2015, new Date());
 		assertThat(fp, notNullValue());
 		DvFoerderprogramm dvFP = fp.getFoerderprogramm();
 		assertThat(dvFP, notNullValue());

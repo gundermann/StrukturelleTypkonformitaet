@@ -29,8 +29,8 @@ public class ElerFTFoerderprogrammProviderTest implements TriedMethodCallsInfo {
 	// auch automatisch bei JUnit-Tests ausgef�hrt.
 	@RequiredTypeTest
 	public void testEmptyCollection() {
-		Collection<ElerFTFoerderprogramm> alleFreigegebenenFPs = provider.getAlleFreigegebenenFPs();
 		addTriedMethodCall(getMethod("getAlleFreigegebenenFPs", ElerFTFoerderprogrammeProvider.class));
+		Collection<ElerFTFoerderprogramm> alleFreigegebenenFPs = provider.getAlleFreigegebenenFPs();
 		assertThat(alleFreigegebenenFPs, notNullValue());
 	}
 

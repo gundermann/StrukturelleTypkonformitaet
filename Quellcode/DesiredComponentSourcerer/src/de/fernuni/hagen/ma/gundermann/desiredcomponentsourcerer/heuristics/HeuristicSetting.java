@@ -10,7 +10,7 @@ public interface HeuristicSetting {
 	 */
 	static boolean BLACKLIST_NO_IMPLEMENTATION_AVAILABLE = true;
 
-	static boolean BLACKLIST_FAILED_CALLED_METHODS = true;
+	static boolean BLACKLIST_FAILED_TRIED_METHOD_CALLS = true;
 
 	static boolean COMBINE_COMPOMENTS_WITH_PASSED_TESTS_FIRST = true;
 }

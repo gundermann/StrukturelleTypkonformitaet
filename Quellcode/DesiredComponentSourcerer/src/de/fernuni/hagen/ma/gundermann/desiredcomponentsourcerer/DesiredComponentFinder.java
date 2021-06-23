@@ -165,9 +165,9 @@ public class DesiredComponentFinder {
 		TestResult testResult = componentTester.testComponent(convertedComponent);
 		logTestResult(testResult);
 		TestedComponent<DesiredInterface> testedComponent = new TestedComponent<>(convertedComponent, testResult);
-		
+
 		// H: blacklist failed method calls
-		if (HeuristicSetting.BLACKLIST_FAILED_CALLED_METHODS ) {
+		if (HeuristicSetting.BLACKLIST_FAILED_TRIED_METHOD_CALLS) {
 			Collection<Method> failedMethodCombi = new ArrayList<Method>(testResult.getTriedMethodCalls());
 			Logger.infoF("blacklist by failed method combination: %s",
 					failedMethodCombi.stream().map(m -> m.getName()).collect(Collectors.joining(",")));
@@ -188,8 +188,8 @@ public class DesiredComponentFinder {
 		case FAILED:
 			Logger.infoF("called Methods: %s",
 					testResult.getTriedMethodCalls().stream().map(Method::getName).collect(Collectors.joining(",")));
-			Logger.infoF("test interpretation: %s",
-					testResult.getTriedMethodCalls().size() == 1 ? "Single-Method-Test" : "Multi-Method-Test");
+//			Logger.infoF("test interpretation: %s",
+//					testResult.getTriedMethodCalls().size() == 1 ? "Single-Method-Test" : "Multi-Method-Test");
 			break;
 		case CANCELED:
 			Logger.infoF("test canceled: caused by %s\n%s\n%s", testResult.getCause(),

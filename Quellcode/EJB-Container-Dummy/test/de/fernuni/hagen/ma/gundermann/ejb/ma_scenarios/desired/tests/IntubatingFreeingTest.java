@@ -28,8 +28,8 @@ public class IntubatingFreeingTest implements TriedMethodCallsInfo {
 	public void free() {
 		Collection<Suffer> suffer = Arrays.asList(Suffer.LOCKED);
 		Injured patient = new Injured(suffer);
-		intubatingFreeing.free(patient);
 		addTriedMethodCall(getMethod("free", IntubatingFreeing.class));
+		intubatingFreeing.free(patient);
 		assertTrue(patient.isStabilized());
 	}
 
@@ -37,8 +37,8 @@ public class IntubatingFreeingTest implements TriedMethodCallsInfo {
 	public void intubate() {
 		Collection<Suffer> suffer = Arrays.asList(Suffer.BREATH_PROBLEMS);
 		Injured patient = new Injured(suffer);
-		intubatingFreeing.intubate(patient);
 		addTriedMethodCall(getMethod("intubate", IntubatingFreeing.class));
+		intubatingFreeing.intubate(patient);
 		assertTrue(patient.isStabilized());
 	}
 

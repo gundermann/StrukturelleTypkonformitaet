@@ -31,8 +31,8 @@ public class IntubatingFireFighterTest implements TriedMethodCallsInfo {
 	@RequiredTypeTest
 	public void free() {
 		Fire fire = new Fire();
-		FireState fireState = intubatingFireFighter.extinguishFire(fire);
 		addTriedMethodCall(getMethod("extinguishFire", IntubatingFireFighter.class));
+		FireState fireState = intubatingFireFighter.extinguishFire(fire);
 		assertTrue(Objects.equals(fireState.isActive(), fire.isActive()));
 		assertFalse(fire.isActive());
 	}
@@ -41,8 +41,8 @@ public class IntubatingFireFighterTest implements TriedMethodCallsInfo {
 	public void intubate() {
 		Collection<Suffer> suffer = Arrays.asList(Suffer.BREATH_PROBLEMS);
 		Injured patient = new Injured(suffer);
-		intubatingFireFighter.intubate(patient);
 		addTriedMethodCall(getMethod("intubate", IntubatingFireFighter.class));
+		intubatingFireFighter.intubate(patient);
 		assertTrue(patient.isStabilized());
 	}
 

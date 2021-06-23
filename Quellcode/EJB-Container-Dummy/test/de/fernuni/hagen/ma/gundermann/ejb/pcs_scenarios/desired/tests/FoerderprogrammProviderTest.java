@@ -26,8 +26,8 @@ public class FoerderprogrammProviderTest implements TriedMethodCallsInfo {
 
 	@RequiredTypeTest
 	public void testEmptyCollection() {
-		Collection<Foerderprogramm> alleFreigegebenenFPs = provider.getAlleFreigegebenenFPs();
 		addTriedMethodCall(getMethod("getAlleFreigegebenenFPs", FoerderprogrammeProvider.class));
+		Collection<Foerderprogramm> alleFreigegebenenFPs = provider.getAlleFreigegebenenFPs();
 		assertThat(alleFreigegebenenFPs, notNullValue());
 	}
 

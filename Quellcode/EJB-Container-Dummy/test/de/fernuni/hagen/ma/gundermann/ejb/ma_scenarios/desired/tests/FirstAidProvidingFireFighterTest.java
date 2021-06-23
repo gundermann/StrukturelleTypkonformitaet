@@ -29,8 +29,8 @@ public class FirstAidProvidingFireFighterTest implements TriedMethodCallsInfo {
 	@RequiredTypeTest
 	public void extinguishFire() {
 		Fire fire = new Fire();
-		firstAidProvidingFireFighter.extinguishFire(fire);
 		addTriedMethodCall(getMethod("extinguishFire", FirstAidProvidingFireFighter.class));
+		firstAidProvidingFireFighter.extinguishFire(fire);
 		assertFalse(fire.isActive());
 	}
 
@@ -38,8 +38,8 @@ public class FirstAidProvidingFireFighterTest implements TriedMethodCallsInfo {
 	public void provideFirstAid() {
 		Collection<Suffer> suffer = Arrays.asList(Suffer.LOCKED, Suffer.BREATH_PROBLEMS, Suffer.OPEN_WOUND);
 		Injured patient = new Injured(suffer);
-		firstAidProvidingFireFighter.provideFirstAid(patient);
 		addTriedMethodCall(getMethod("provideFirstAid", FirstAidProvidingFireFighter.class));
+		firstAidProvidingFireFighter.provideFirstAid(patient);
 		assertTrue(patient.isStabilized());
 	}
 

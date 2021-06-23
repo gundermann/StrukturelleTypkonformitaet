@@ -33,16 +33,16 @@ public class MedicalFireFighterTest implements TriedMethodCallsInfo {
 	public void heal() {
 		Injured injured = new Injured(Arrays.asList(Suffer.BREATH_PROBLEMS));
 		MedCabinet med = new MedCabinet();
-		medicalFireFighter.heal(injured, med);
 		addTriedMethodCall(getMethod("heal", MedicalFireFighter.class));
+		medicalFireFighter.heal(injured, med);
 		assertTrue(injured.getSuffers().isEmpty());
 	}
 
 	@RequiredTypeTest
 	public void extinguishFire() {
 		Fire fire = new Fire();
-		boolean isFireActive = medicalFireFighter.extinguishFire(fire);
 		addTriedMethodCall(getMethod("extinguishFire", MedicalFireFighter.class));
+		boolean isFireActive = medicalFireFighter.extinguishFire(fire);
 		assertTrue(Objects.equals(isFireActive, fire.isActive()));
 		assertFalse(isFireActive);
 	}
