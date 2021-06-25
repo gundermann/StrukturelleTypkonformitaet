@@ -6,8 +6,8 @@
 
 
 \newenvironment{example}[1]{
-\stepcounter{examplec}
-\paragraph{Beispiel \arabic{examplec}}\label{#1}
+\refstepcounter{examplec}\label{#1}
+\paragraph{Beispiel \arabic{examplec}}
 }
 {
 \noindent
