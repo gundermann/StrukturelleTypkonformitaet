@@ -1,1 +1,44 @@
 \chapter{Implementierung}
+Die Implementierung der Explorationskomponente besteht aus drei Hauptbestandteilen, die jeweils als separates Java-Projekt umgesetzt wurden. Im weiteren Verlauf werden diese Java-Projekte als Module bezeichnet.
+\\\\
+In Abbildung \ref{fig_arch} ist die Architektur der Explorationskomponente aufgeführt. Die das Modul \emph{DesiredComponentSourcerer} stellt eine Schnittstelle nach Außen bereit, über die die Explorationskomponenten in ein beliebiges Projekt eingebunden werden kann. Weiterhin ist das Modul \emph{DesiredComponentSourcerer} von den Modulen \emph{ComponentTester} und \emph{SignatureMatching} abhängig, die selbst keine Abhängigkeiten zueinander haben.
+\\\\
+Darüber hinaus, werden folgende externe Bibliotheken verwendet:
+\begin{itemize}
+\item easymock 3.0 \cite{easymock}
+\item cglib 3.3.0 \cite{cglib}
+\item objenesis 3.1 \cite{objenesis}
+\end{itemize}
+Auf die konkrete Verwendung der externen Bibliotheken wird in den detaillierteren Beschreibungen der einzelnen Module in den folgenden Abschnitten eingegangen. Im Anschluss an die Beschreibung der Module wird auf die Nutzung der Schnittstelle zur Einbindung der Explorationskomponente in beliebige Java-Projekt eingegangen.
+\section{Modul: SignatureMatching}
+In diesem Modul sind die Implementierungen der Matcher, die in Abschnitt \ref{sec_matcher} formal beschrieben wurden, untergebracht. So befinden sich, wie in dem Klassendiagramm in Abbildung \ref{fig_cdSigMa} zu erkennen ist, mehrere Klassen, die das Interface \emph{TypeMatcher} implementieren. Dieses Interface bietet die Methode $\texttt{matchesType}$ an, über die die jeweilige Matchingrelation eines formal definierten Matchers implementiert wird. Bei der Implementierung wurden einige der in Abschnitt \ref{sec_matcher} formal beschriebenen Matcher gemeinsam in einer Klasse umgesetzt. Die unten stehende Tabelle \ref{tab_matcher2impl} zeigt die Zuordnung von Matchern zu den jeweiligen Klassen.
+\begin{table}[h!]
+\centering
+\begin{tabular}{|l|l|}
+\hline
+\hline
+\textbf{Matcher} & \textbf{Implementierung (Klasse)} \\
+\hline
+ExactTypeMatcher & ExactTypeMatcher \\
+\hline
+GenTypeMatcher & GenSpecTypeMatcher \\
+\hline
+SpecTypeMatcher & GenSpecTypeMatcher \\
+\hline
+ContentTypeMatcher & WrappedTypeMatcher \\
+\hline
+ContainerTypeMatcher & WrappedTypeMatcher \\
+\hline
+StructuralTypeMatcher & StructuralTypeMatcher \\
+\hline
+\hline
+\end{tabular}
+\caption{Zuordnung der Matcher zu den Klassen, in denen sie implementiert sind}
+\end{table}\label{tab_matcher2impl}
+
+
+\section{Modul: ComponentTester}
+
+\section{Modul: DesiredComponentSourcerer}
+
+\section{Einbindung der Explorationskomponente}
