@@ -19,22 +19,22 @@ public class Interface1Test2 {
   }
 
   @RequiredTypeTest
-  void addPartlyNativeWrapped() {
+  public void addPartlyNativeWrapped() {
     assertThat( testInterface.addPartlyNativeWrapped( 1, 1 ), equalTo( 2 ) );
   }
 
   @RequiredTypeTest
-  void subPartlyNativeWrapped() {
+  public void subPartlyNativeWrapped() {
     assertThat( testInterface.subPartlyNativeWrapped( 3, 1 ), equalTo( 2 ) );
   }
 
   @RequiredTypeTest
-  void addPartlyWrapped() {
+  public void addPartlyWrapped() {
     assertThat( testInterface.addPartlyWrapped( BigInteger.ONE, 1 ), equalTo( 2 ) );
   }
 
   @RequiredTypeTest
-  void subPartlyWrapped() {
+  public void subPartlyWrapped() {
     assertThat( testInterface.subPartlyWrapped( 3, BigInteger.ONE ), equalTo( 2 ) );
   }
 

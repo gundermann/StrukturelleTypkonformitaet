@@ -53,11 +53,11 @@ public class TesterTest {
   }
 
   @Test
-  public void componentTypeNotMatchSetterType() {
+  public void passAllTestWithNoTestComponentSetter() {
     Interface1 component = new Interface1FailTestsImpl();
     Collection<Class<?>> testClasses = Arrays.asList( Interface2Test.class );
     TestResult result = new Tester().testComponent( component, testClasses );
-    assertTrue( result.getResult() == Result.CANCELED );
+    assertTrue( result.getResult() == Result.PASSED );
   }
 
 

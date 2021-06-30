@@ -17,17 +17,17 @@ public class Interface1Test1 {
   }
 
   @RequiredTypeTest
-  void getOne() {
+  public void getOne() {
     assertThat( testInterface.getOne(), equalTo( 1 ) );
   }
 
   @RequiredTypeTest
-  void getTrue() {
+  public void getTrue() {
     assertThat( testInterface.getTrue(), equalTo( true ) );
   }
 
   @RequiredTypeTest
-  void getFalse() {
+  public void getFalse() {
     assertThat( testInterface.getFalse(), equalTo( false ) );
   }
 
