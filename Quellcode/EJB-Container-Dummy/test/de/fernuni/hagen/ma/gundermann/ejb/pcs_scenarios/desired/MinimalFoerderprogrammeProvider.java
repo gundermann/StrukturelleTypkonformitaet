@@ -4,8 +4,8 @@ import java.util.Collection;
 import java.util.Date;
 
 import DE.data_experts.profi.profilcs.antrag2015.stammdaten.business.impl.Foerderprogramm;
+import api.RequiredTypeTestReference;
 import de.fernuni.hagen.ma.gundermann.ejb.pcs_scenarios.desired.tests.MinimalFoerderprogrammProviderTest;
-import tester.annotation.RequiredTypeTestReference;
 
 @RequiredTypeTestReference( testClasses = MinimalFoerderprogrammProviderTest.class )
 public interface MinimalFoerderprogrammeProvider {

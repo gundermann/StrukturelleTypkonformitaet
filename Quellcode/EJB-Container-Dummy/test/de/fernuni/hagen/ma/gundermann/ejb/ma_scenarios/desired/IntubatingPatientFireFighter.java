@@ -1,10 +1,10 @@
 package de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.desired;
 
+import api.RequiredTypeTestReference;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.desired.tests.IntubatingPatientFireFighterTest;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.beans.FireState;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Fire;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.IntubationPartient;
-import tester.annotation.RequiredTypeTestReference;
 
 @RequiredTypeTestReference( testClasses = IntubatingPatientFireFighterTest.class )
 public interface IntubatingPatientFireFighter {

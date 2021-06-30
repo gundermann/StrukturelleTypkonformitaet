@@ -8,13 +8,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 
+import api.RequiredTypeInstanceSetter;
+import api.RequiredTypeTest;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.desired.IntubatingPatientFireFighter;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.beans.FireState;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Fire;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.IntubationPartient;
 import spi.TriedMethodCallsInfo;
-import tester.annotation.RequiredTypeInstanceSetter;
-import tester.annotation.RequiredTypeTest;
 
 public class IntubatingPatientFireFighterTest implements TriedMethodCallsInfo {
 

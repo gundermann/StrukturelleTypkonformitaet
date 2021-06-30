@@ -6,8 +6,8 @@ import java.util.Date;
 import DE.data_experts.profi.profilcs.antrag2015.eler.ft.stammdaten.business.ElerFTFoerderprogramm;
 import DE.data_experts.profi.util.DvAntragsJahr;
 import DE.data_experts.profi.util.allg.DvFoerderprogramm;
+import api.RequiredTypeTestReference;
 import de.fernuni.hagen.ma.gundermann.ejb.pcs_scenarios.desired.tests.ElerFTFoerderprogrammProviderTest;
-import tester.annotation.RequiredTypeTestReference;
 
 @RequiredTypeTestReference( testClasses = ElerFTFoerderprogrammProviderTest.class )
 public interface ElerFTFoerderprogrammeProvider {

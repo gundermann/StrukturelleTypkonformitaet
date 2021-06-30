@@ -9,9 +9,9 @@ import java.util.Optional;
 import org.junit.After;
 import org.junit.Before;
 
+import api.RequiredTypeTest;
 import glue.SigMaGlueException;
 import spi.TriedMethodCallsInfo;
-import tester.annotation.RequiredTypeTest;
 
 public class TestEvaluator {
 

@@ -3,7 +3,7 @@ package tester;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import tester.annotation.RequiredTypeTestReference;
+import api.RequiredTypeTestReference;
 
 class TestFinder<T> {
 

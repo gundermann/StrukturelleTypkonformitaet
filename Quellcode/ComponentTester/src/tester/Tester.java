@@ -4,8 +4,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
 
+import api.RequiredTypeInstanceSetter;
 import tester.TestResult.Result;
-import tester.annotation.RequiredTypeInstanceSetter;
 
 class Tester {
 

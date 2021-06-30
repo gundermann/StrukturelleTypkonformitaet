@@ -16,18 +16,18 @@ import net.sf.cglib.proxy.MethodInterceptor;
 
 public class ClassProxyFactory<T> implements ProxyFactory<T> {
 
-  private final Class<T> targetStrcture;
+  private final Class<T> sourceType;
 
-  public ClassProxyFactory( Class<T> targetStrcture ) {
-    this.targetStrcture = targetStrcture;
+  public ClassProxyFactory( Class<T> sourceType ) {
+    this.sourceType = sourceType;
   }
 
   @SuppressWarnings( "unchecked" )
   @Override
-  public T createProxy( Map<Object, Collection<MethodMatchingInfo>> components2MatchingInfo ) {
+  public T createProxy( Map<Object, Collection<MethodMatchingInfo>> targets2MatchingInfo ) {
     Enhancer enhancer = new Enhancer();
-    enhancer.setSuperclass( targetStrcture );
-    BehaviourDelegateInvocationHandler handler = new BehaviourDelegateInvocationHandler( components2MatchingInfo );
+    enhancer.setSuperclass( sourceType );
+    BehaviourDelegateInvocationHandler handler = new BehaviourDelegateInvocationHandler( targets2MatchingInfo );
 
     MethodInterceptor methodInterceptor = ( obj, method, args, proxyMethod ) -> {
       return handler.intercept( obj, method, args, proxyMethod );
@@ -43,31 +43,11 @@ public class ClassProxyFactory<T> implements ProxyFactory<T> {
   }
 
   @Override
-  public T createProxy( Object component, Collection<MethodMatchingInfo> matchingInfos ) {
+  public T createProxy( Object target, Collection<MethodMatchingInfo> matchingInfos ) {
     Map<Object, Collection<MethodMatchingInfo>> components2MatchingInfo = new HashMap<>();
-    components2MatchingInfo.put( component, matchingInfos );
+    components2MatchingInfo.put( target, matchingInfos );
     return createProxy( components2MatchingInfo );
   }
-
-  // private void logFieldError( String fieldname, String classname ) {
-  // Logger.err( String.format( "field %s not found in class hierarchy of %s",
-  // fieldname, classname ) );
-  // }
-  //
-  // private Field getDeclaredFieldOfClassHierachry( Class<? extends Object> startClass,
-  // String fieldName ) {
-  // Field declaredField = null;
-  // try {
-  // declaredField = startClass.getDeclaredField( fieldName );
-  // }
-  // catch ( NoSuchFieldException | SecurityException e ) {
-  // if ( startClass.getSuperclass() != null ) {
-  // return getDeclaredFieldOfClassHierachry( startClass.getSuperclass(), fieldName );
-  // }
-  // }
-  // return declaredField;
-  //
-  // }
 
   static class ClassProxyFactoryCreator implements ProxyFactoryCreator {
 

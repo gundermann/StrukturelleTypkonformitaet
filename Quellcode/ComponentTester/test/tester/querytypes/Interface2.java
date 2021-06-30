@@ -1,6 +1,6 @@
 package tester.querytypes;
 
-import tester.annotation.RequiredTypeTestReference;
+import api.RequiredTypeTestReference;
 import tester.querytypes.tests.Interface2Test;
 
 @RequiredTypeTestReference( testClasses = Interface2Test.class )

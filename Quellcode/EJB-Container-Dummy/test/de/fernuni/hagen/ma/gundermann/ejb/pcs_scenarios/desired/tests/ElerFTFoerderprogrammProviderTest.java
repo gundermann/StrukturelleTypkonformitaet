@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import DE.data_experts.profi.profilcs.antrag2015.eler.ft.stammdaten.business.ElerFTFoerderprogramm;
+import api.RequiredTypeInstanceSetter;
+import api.RequiredTypeTest;
 import de.fernuni.hagen.ma.gundermann.ejb.pcs_scenarios.desired.ElerFTFoerderprogrammeProvider;
 import spi.TriedMethodCallsInfo;
-import tester.annotation.RequiredTypeInstanceSetter;
-import tester.annotation.RequiredTypeTest;
 
 public class ElerFTFoerderprogrammProviderTest implements TriedMethodCallsInfo {
 

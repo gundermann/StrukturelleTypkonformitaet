@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import DE.data_experts.profi.profilcs.antrag2015.stammdaten.business.impl.Foerderprogramm;
+import api.RequiredTypeInstanceSetter;
+import api.RequiredTypeTest;
 import de.fernuni.hagen.ma.gundermann.ejb.pcs_scenarios.desired.FoerderprogrammeProvider;
 import spi.TriedMethodCallsInfo;
-import tester.annotation.RequiredTypeInstanceSetter;
-import tester.annotation.RequiredTypeTest;
 
 public class FoerderprogrammProviderTest implements TriedMethodCallsInfo {
 

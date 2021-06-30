@@ -11,10 +11,10 @@ import java.util.Date;
 
 import DE.data_experts.profi.profilcs.antrag2015.stammdaten.business.impl.Foerderprogramm;
 import DE.data_experts.profi.util.allg.DvFoerderprogramm;
+import api.RequiredTypeInstanceSetter;
+import api.RequiredTypeTest;
 import de.fernuni.hagen.ma.gundermann.ejb.pcs_scenarios.desired.MinimalFoerderprogrammeProvider;
 import spi.TriedMethodCallsInfo;
-import tester.annotation.RequiredTypeInstanceSetter;
-import tester.annotation.RequiredTypeTest;
 
 public class MinimalFoerderprogrammProviderTest implements TriedMethodCallsInfo {
 

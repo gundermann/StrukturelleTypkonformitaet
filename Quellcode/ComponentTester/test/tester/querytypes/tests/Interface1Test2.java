@@ -5,8 +5,8 @@ import static org.junit.Assert.assertThat;
 
 import java.math.BigInteger;
 
-import tester.annotation.RequiredTypeInstanceSetter;
-import tester.annotation.RequiredTypeTest;
+import api.RequiredTypeInstanceSetter;
+import api.RequiredTypeTest;
 import tester.querytypes.Interface1;
 
 public class Interface1Test2 {

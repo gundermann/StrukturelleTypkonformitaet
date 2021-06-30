@@ -2,7 +2,7 @@ package tester.querytypes;
 
 import java.math.BigInteger;
 
-import tester.annotation.RequiredTypeTestReference;
+import api.RequiredTypeTestReference;
 import tester.querytypes.tests.Interface1Test1;
 import tester.querytypes.tests.Interface1Test2;
 

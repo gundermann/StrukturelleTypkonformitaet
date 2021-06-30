@@ -6,8 +6,8 @@ import java.util.Date;
 import DE.data_experts.profi.profilcs.antrag2015.stammdaten.business.impl.Foerderprogramm;
 import DE.data_experts.profi.util.DvAntragsJahr;
 import DE.data_experts.profi.util.allg.DvFoerderprogramm;
+import api.RequiredTypeTestReference;
 import de.fernuni.hagen.ma.gundermann.ejb.pcs_scenarios.desired.tests.FoerderprogrammProviderTest;
-import tester.annotation.RequiredTypeTestReference;
 
 @RequiredTypeTestReference( testClasses = FoerderprogrammProviderTest.class )
 public interface FoerderprogrammeProvider {

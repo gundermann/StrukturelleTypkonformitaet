@@ -1,8 +1,8 @@
 package de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.desired;
 
+import api.RequiredTypeTestReference;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.desired.tests.IntubatingFreeingTest;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Injured;
-import tester.annotation.RequiredTypeTestReference;
 
 @RequiredTypeTestReference( testClasses = IntubatingFreeingTest.class )
 public interface IntubatingFreeing {

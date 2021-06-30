@@ -9,9 +9,7 @@ public class TypeConverter<T> {
 
   private final ProxyFactory<T> proxyFactory;
 
-  // Was ist mit ENUMs?
   public TypeConverter( Class<T> targetStructure ) {
-    // this.targetStructure = targetStructure;
     // Grundlagen pruefen:
     // Interface oder Klasse
     if ( targetStructure.isInterface() ) {
