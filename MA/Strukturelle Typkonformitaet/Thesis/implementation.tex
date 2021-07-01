@@ -8,6 +8,7 @@ Darüber hinaus, werden folgende externe Bibliotheken verwendet:
 \item easymock 3.0 \cite{easymock}
 \item cglib 3.3.0 \cite{cglib}
 \item objenesis 3.1 \cite{objenesis}
+\item junit 4.13.0 \cite{junit}
 \end{itemize}
 Auf die konkrete Verwendung der externen Bibliotheken wird in den detaillierteren Beschreibungen der einzelnen Module in den folgenden Abschnitten eingegangen. Im Anschluss an die Beschreibung der Module wird auf die Nutzung der Schnittstelle zur Einbindung der Explorationskomponente in beliebige Java-Projekt eingegangen.
 \section{Modul: SignatureMatching}
@@ -72,7 +73,7 @@ Damit die Testmethoden in den Testklassen, den in Abschnitt \ref{sec_testanforde
 \noindent
 So muss jede Testklasse eine Methode bereitstellen, über die ein Objekt vom Typ $R$ in die Instanz der Testklasse injiziert werden kann. Diese Methode ist mit der Annotation $\texttt{RequiredTypeInstanceSetter}$. Das Injizieren des zu testenden Proxies wird von einem Objekt der Klasse $\texttt{Tester}$ übernommen.
 \\\\
-Die Testmethoden müssen von der Sichtbarkeit her öffentlich ($\texttt{public}$) sein. Weiterhin dürfen die Testmethoden keine Parameter erwarten und müssen mit der Annotation $\texttt{RequiredTypeTest}$ markiert sein. %TODO assertions
+Die Testmethoden müssen von der Sichtbarkeit her öffentlich ($\texttt{public}$) sein. Weiterhin dürfen die Testmethoden keine Parameter erwarten und müssen mit der Annotation $\texttt{RequiredTypeTest}$ markiert sein. Die Erwartungen innerhalb der Testmethoden müssen über die in JUnit 4 zur Verfügung stehenden Methoden aus der Klasse $\texttt{Assert}$ (vgl. \cite{junit_api}) deklariert werden. Testdaten, die für alle Testmethoden innerhalb einer Testklasse zur Verfügung stehen sollen, können diese innerhalb von Methoden erzeugt werden, die über die in JUnit 4 bereitgestellten Annotationen $\texttt{Before}$ und $\texttt{After}$ (vgl. \cite{junit_api}) versehen werden.
 \\\\
 Um die Reihenfolge der versuchten Aufrufe der Methoden, die von $R$ angeboten werden, zu verwalten, muss die Testklasse das Interface $\texttt{TriedMethodCallsInfo}$ implementieren. Dadurch wird die Implementierung der Methoden $\texttt{addTriedMethodCall}$ und $\texttt{getTriedMethodCalls}$ erzwungen (siehe Abbilfung \ref{cd_ctSPI}). Die Methode $\texttt{getMethod}$ kann mit der default-Implementierung übernommen werden, sofern die in $R$ deklarierten Methoden über den Namen identifiziert werden können.
 \begin{figure}
