@@ -2,7 +2,7 @@
 Das Ziel der semantischen Evaluation ist es, einen der Proxies, die aus den Mengen von Target-Typen, die im Rahmen der strukturellen Evaluation erzeugt werden können, hinsichtlich der vordefinierten Testfälle zu evaluieren. Da die gesamte Exploration zur Laufzeit des Programms durchgeführt wird, stellt sie hinsichtlich der nicht-funktionalen Anforderungen eine zeitkritische Komponente dar.
 \\\\
 Da die Anforderungen an die gesuchte Komponente mit bedacht spezifiziert werden müssen, ist es irrelevant, ob es mehrere Proxies gibt, die hinsichtlich der vordefinierten Testfällen positiv evaluatiert werden können. Es ist ausreichend lediglich ein Proxy zu finden, dessen Semantik zu positiven Ergebnissen hinsichtlich aller vordefinierten Testfälle führt.
-\subsection{Besonderheiten der Testfälle}
+\subsection{Besonderheiten der Testfälle}\label{sec_testanforderungen}
 Bei den vordefinierten Tests handelt es sich auf formaler Ebene um Typen, die eine eval-Methode mit der Struktur $\texttt{boolean eval( proxy )}$ anbieten, welche einen Proxy als Parameter erwartet und ein Objekt vom Typ $\texttt{boolean}$ zurückgibt. Weiterhin verfügt ein Test über ein Attribut $\texttt{triedMethodCalls}$, in dem eine Liste von Methodennamen des Proxies, die bei der Durchführung der eval-Methode aufgerufen wurden, hinterlegt ist.
 \\\\
 Die Implementierung der eval-Methode ist an folgende Bedingungen geknüpft:
@@ -285,7 +285,7 @@ function PTTF( proxies ){
 }
 \end{lstlisting}
 
-\subsection{Beachtung fehlgeschlagener Methodenaufrufe (BL\_NMC)}\label{sec_bl_mnc}
+\subsection{Beachtung fehlgeschlagener Methodenaufrufe (BL\_NMC)}\label{sec_bl_nmc}
 Diese Heuristik mit dem Namen \emph{blacklist negative method calls} (kurz: BL\_NMC) beschreibt ein Ausschlussverfahren. Das bedeutet, dass bestimmte Proxies auf der Basis von Erkenntnissen, die während der laufenden semantischen Evaluation entstanden sind, für den weiteren Verlauf ausgeschlossen werden. Dadurch soll die erneute Prüfung eines Proxies, der ohnehin nicht zum gewünschten Ergebnis führt, verhindert werden.
 \\\\
 Die Heuristik zielt darauf ab, Methoden-Delegationen, die immer fehlschlagen, zu identifizieren. Wurde eine solche Methoden-Delegation gefunden, können alle Proxies, die diese Methoden-Delegation enthalten von der weiteren Exploration ausgeschlossen werden.

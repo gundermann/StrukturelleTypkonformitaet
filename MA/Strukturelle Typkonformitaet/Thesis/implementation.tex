@@ -19,25 +19,75 @@ In diesem Modul sind die Implementierungen der Matcher, die in Abschnitt \ref{se
 \hline
 \textbf{Matcher} & \textbf{Implementierung (Klasse)} \\
 \hline
-ExactTypeMatcher & ExactTypeMatcher \\
+ExactTypeMatcher & $\texttt{ExactTypeMatcher}$ \\
 \hline
-GenTypeMatcher & GenSpecTypeMatcher \\
+GenTypeMatcher & $\texttt{GenSpecTypeMatcher}$ \\
 \hline
-SpecTypeMatcher & GenSpecTypeMatcher \\
+SpecTypeMatcher & $\texttt{GenSpecTypeMatcher}$ \\
 \hline
-ContentTypeMatcher & WrappedTypeMatcher \\
+ContentTypeMatcher & $\texttt{WrappedTypeMatcher}$ \\
 \hline
-ContainerTypeMatcher & WrappedTypeMatcher \\
+ContainerTypeMatcher & $\texttt{WrappedTypeMatcher}$ \\
 \hline
-StructuralTypeMatcher & StructuralTypeMatcher \\
+StructuralTypeMatcher & $\texttt{StructuralTypeMatcher}$ \\
 \hline
 \hline
 \end{tabular}
 \caption{Zuordnung der Matcher zu den Klassen, in denen sie implementiert sind}
 \end{table}\label{tab_matcher2impl}
+\noindent
+Neben der Methode $\texttt{matchesType}$ bietet das Interface $\texttt{TypeMatcher}$ noch die Methode $\texttt{matchesWithRating}$ an. Über diese Methode wird das in Abschnitt \ref{sec_lmf} beschriebene Matcherrating bzgl. der beiden gematchten Typen zurückgegeben.
+\\\\
+Die dritte der Methode, die von dem Interface $\texttt{TypeMatcher}$ angeboten wird, ist $\texttt{calculateTypeMatchingInfos}$. Diese Methode erzeugt für einen Source- und einen Target-Typ eine Liste von Objekte der Klasse $\texttt{ModuleMatchingInfo}$ (siehe Abbildung \ref{cd_modmi}).
+\begin{figure}
+\end{figure}\label{cd_modmi}
+\noindent
+Die Objekte dieser Klasse enthalten sämtliche Informationen, die für die Generierung eines Proxies für den Source-Typen mit dem Target-Typ relevant sind. So enthält ein solches Objekt in den Attributen $\texttt{source}$ bzw. $\texttt{target}$ den Source- bzw. Target-Typ für die es erzeugt wurde. Darüber hinaus ist für jede Methode, die im Source-Typ enthalten ist, ein Objekt vom Typ $\texttt{MethodMatchingInfo}$ in dem Attribut $\texttt{methodMatchingInfos}$ hinterlegt. Zusätzlich befindet sich im Attribut $\texttt{converterCreator}$ ein Objekt dessen Klasse das Interface $\texttt{ProxyFactoryCreator}$ hinterlegt. Auf die Klassen $\texttt{MethodMatchingInfo}$ und $\texttt{ProxyFactoryCreator}$ wird zu einem späteren Zeitpunkt weiter eingegangen.
+\\\\
+Die Matcher-Klassen $\texttt{ExactTypeMatcher}$, $\texttt{GenSpecTypeMatcher}$ und $\texttt{WrappedTypeMatcher}$ implementieren auch das von $\texttt{TypeMatcher}$ erbende Interfaces $\texttt{CombinalbeTypeMatcher}$. Klassen, die dieses Interface implementieren können über die Klasse $\texttt{MatcherCombiner}$ zu einem neuen $\texttt{TypeMatcher}$-Objekt kombiniert werden. Ein solcher kombinierte $\texttt{TypeMatcher}$ versucht beim Aufruf der Methode $\texttt{matchesType(S,T)}$ die beiden Typen $S$ und $T$ über einen der kombinierten Matcher zu matchen. Abbildung \ref{sd_matchercombiner} zeigt das Sequenzdiagramm für diesen Aufruf. Dabei liefert die Methode $\texttt{getSortedMatcher}$ eine sortiert Liste der kombinierten Matcher. Die Sortierung wird aufsteigend entsprechend dem Matcherrating der kombinierten Matcher vorgenommen.
+\begin{figure}
+\end{figure}\label{sd_matchercombiner}
+\noindent
+Darüber hinaus gibt es noch das von $\texttt{TypeMatcher}$ erbende Interface $\texttt{PartlyTypeMatcher}$. Dieses Interface wird nur von dem $\texttt{StructuralTypeMatcher}$ implementiert, welcher u.a. als Schnittstelle zwischen dem Modul \emph{SignatureMatching} und \emph{DesiredComponentSourcerer} fungiert. Wie der Name des Interfaces bereits impliziert, bieten die Implementierungen des Interfaces $\texttt{PartlyTypeMatcher}$ die Möglichkeit, zwei Typen nur teilweise zu Matchen. Das bildet die Grundlage für die Ermittlung der Typen, aus denen die Proxies für die semantische Evaluation erzeugt werden können (vgl. Abschnitt \ref{sec_ergStructEval}). So stellen die Objekte, die über die Methode $\texttt{calculatePartlyTypeMatchingInfos}$ erzeugten wurden, auf formaler Ebene die Elemente der Mengen, die in Abschnitt \ref{sec_ergStructEval} über Funktion $\texttt{cover}$ beschrieben wurden, dar.
+\\\\
+Neben den Implementierungen der Matcher sind in dem Modul \emph{SignatureMatching} auch die Generatoren für die Proxies untergebracht.  Als Schnittstelle für die Erzeugung der Proxies dient die Klasse $\texttt{TypeConverter}$. Die Proxies werden unter der Zuhilfenahme der Bibliotheken \emph{cglib} und \emph{objenesis} erzeugt. Das Erzeugen eines Proxies erfolgt über die Factory-Klassen, die Abbildung \ref{cd_proxyFactories} entnommen werden können.
+\begin{figure}
 
+\end{figure}\label{cd_proxyFactories}
+Eine Proxy-Factory wird in Abhängigkeit von Source-Typ verwendet. Die Delegation der auf den Source-Typ aufgerufenen Methoden erfolgt auf Basis einer $\texttt{MethodMatchingInfo}$ (siehe Klassendiagramm in Abbildung \ref{cd_mmi}).
+\begin{figure}
+\end{figure}\label{cd_mmi}
+\noindent
+Ein Objekt der Klasse $\texttt{MethodMatchingInfo}$ enthält in den Attributen $\texttt{source}$ und $\texttt{target}$ je eine Methode. Dabei ist im Attribut $\texttt{source}$ die aufgerufene Methode der Methoden-Delegation und im Attribut $\texttt{target}$ die Delegationsmethode enthalten. Darüber hinaus wird im Attribut $\texttt{returnTypeMatchingInfo}$ ein Objekt der Klasse $\texttt{ModuleMatchingInfo}$ gehalten , welches alle notwendigen Informationen für das Erzeugen eines Proxies des Rückgabetyp der aufgerufenen Methode aus dem Rückgabetyp der Delegationsmethode. Analog dazu wird im Attribut $\texttt{argumentTypeMatchingInfos}$ eine Map, bestehend aus weiteren Objekten der Klasse $\texttt{ModuleMatchingInfo}$ und jeweils einem Objekt der Klasse $\texttt{ParamPosition}$, gehalten. Diese Map enthält alle notwendigen Information für das Erzeugen eines Proxies für die Parametertypen der Delegationsmethoden aus den Parametertypen der aufgerufenen Methode, sowie der Anpassung der Übergabeposition bei der Delegation der aufgerufenen Methode (siehe auch Abschnitt \ref{sec:proxygram}).
+\\\\
+Die Koordination der Methoden-Delegationen ist in der Klasse $\texttt{BehaviourDelegateInvocationHandler}$ implementiert. Eine Instanz dieser Klasse wird dem Proxy-Objekt bei der Erzeugung über einen $\texttt{MethodInterceptor}$ mitgegeben.
 
 \section{Modul: ComponentTester}
+Dieses Modul ist für die Definition und Ausführung der vordefinierten Tests zuständig. Dazu sei davon auszugehen, dass ein required Typ $R$ in Form eines Interfaces existiert. Um Tests für $R$ zu definieren, können eine oder mehrere Testklassen implementiert werden. Die Testklassen werden dabei in dem Interface $R$ über das Attribut $\texttt{testClasses}$ der Annotation $\\texttt{RequiredTypeTestReference}$ angegeben. Ein Beispiel für die Deklaration eines required Typ in Form eines Java-Interfaces und den dazugehörigen Testklassen ist im Anhang zu finden.
+\\\\
+Damit die Testmethoden in den Testklassen, den in Abschnitt \ref{sec_testanforderungen} beschriebenen Eigenschaften genügen, stehen mehrere Artefakte in dem API- und dem SPI-Package des ComponentTester-Moduls bereit (siehe Abbildung \ref{fig_cdCompTester}).
+\begin{figure}
+
+\end{figure}\label{fig_cdCompTester}
+\noindent
+So muss jede Testklasse eine Methode bereitstellen, über die ein Objekt vom Typ $R$ in die Instanz der Testklasse injiziert werden kann. Diese Methode ist mit der Annotation $\texttt{RequiredTypeInstanceSetter}$. Das Injizieren des zu testenden Proxies wird von einem Objekt der Klasse $\texttt{Tester}$ übernommen.
+\\\\
+Die Testmethoden müssen von der Sichtbarkeit her öffentlich ($\texttt{public}$) sein. Weiterhin dürfen die Testmethoden keine Parameter erwarten und müssen mit der Annotation $\texttt{RequiredTypeTest}$ markiert sein. %TODO assertions
+\\\\
+Um die Reihenfolge der versuchten Aufrufe der Methoden, die von $R$ angeboten werden, zu verwalten, muss die Testklasse das Interface $\texttt{TriedMethodCallsInfo}$ implementieren. Dadurch wird die Implementierung der Methoden $\texttt{addTriedMethodCall}$ und $\texttt{getTriedMethodCalls}$ erzwungen (siehe Abbilfung \ref{cd_ctSPI}). Die Methode $\texttt{getMethod}$ kann mit der default-Implementierung übernommen werden, sofern die in $R$ deklarierten Methoden über den Namen identifiziert werden können.
+\begin{figure}
+
+\end{figure}\label{cd_ctSPI}
+\noindent
+Die Implementierung der Methoden $\texttt{addTriedMethodCall}$ und $\texttt{getTriedMethodCalls}$ hat so zu erfolgen, dass bei einem Aufruf der Methode $\texttt{addTriedMethodCall}$ der übergebene Parameter an eine Liste angefügt wird. Der Aufruf der Methode $\texttt{getTriedMethodCalls}$ liefert eben diese Liste als Rückgabewert. Weiterhin ist sicherzustellen, dass vor dem Aufruf einer Methode $m$ aus $R$ die Methode $\texttt{addTriedMethodCall}$ mit $m$ als Parameter aufgerufen wird. Im Anhang ist ein Beispiel für die korrekte Implementierung einer Testklasse zu finden.
+\\\\
+Der Test eines Proxies für $R$ wird über eine Instanz der Klasse $\texttt{ComponentTester}$ angestoßen. In Abhängigkeit der in $R$ deklarierten Testklassen werden alle darin befindlichen Testmethoden durchgeführt, bis einer dieser Testfälle fehlschlägt. Der Aufrufer erhält dabei ein der Klasse $\texttt{TestResult}$ zurück (siehe Abbildung \ref{cd_testresult}). 
+\begin{figure}
+
+\end{figure}\label{cd_testresult}
+\noindent
+In diesem Objekt sind die für die Auswertung des Testergebnisses relevanten Informationen vorhanden, auf die die Heuristiken \emph{PTTF} (siehe Abschnitt \ref{sec_pttf}) und \emph{BL\_NMC} (siehe Abschnitt \ref{sec_bl_nmc}) angewiesen sind.
+
 
 \section{Modul: DesiredComponentSourcerer}
 
