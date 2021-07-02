@@ -28,9 +28,9 @@ public class IntubatingPatientFireFighterTest implements TriedMethodCallsInfo {
 	}
 
 	@RequiredTypeTest
-	public void free() {
+	public void extinguishFire() {
 		Fire fire = new Fire();
-		addTriedMethodCall(getMethod("free", IntubatingPatientFireFighter.class));
+		addTriedMethodCall(getMethod("extinguishFire", IntubatingPatientFireFighter.class));
 		FireState fireState = intubatingPatientFireFighter.extinguishFire(fire);
 		assertTrue(Objects.equals(fireState.isActive(), fire.isActive()));
 		assertFalse(fire.isActive());

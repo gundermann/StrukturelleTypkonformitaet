@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import DE.data_experts.profi.profilcs.antrag2015.eler.ft.stammdaten.ejb.ElerFTStammdatenAuskunftService;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.DesiredComponentFinder;
+import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.DesiredComponentFinderConfig;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.Logger;
 import de.fernuni.hagen.ma.gundermann.ejb.EJBContainer;
 import de.fernuni.hagen.ma.gundermann.ejb.pcs_scenarios.desired.ElerFTFoerderprogrammeProvider;
@@ -15,22 +16,22 @@ import de.fernuni.hagen.ma.gundermann.ejb.pcs_scenarios.provided.beans.impl.EftS
 
 public class FindElerFTFoerderprogrammeProviderTest {
 
-  @Before
-  public void setup() {
-    Logger.setOutputFile(
-        "tmp_" + this.getClass().getSimpleName() + ".csv" );
-    Logger.setLogFile(
-        "tmp_" + this.getClass().getSimpleName() + ".log" );
-  }
+	@Before
+	public void setup() {
+		Logger.setOutputFile("tmp_" + this.getClass().getSimpleName() + ".csv");
+		Logger.setLogFile("tmp_" + this.getClass().getSimpleName() + ".log");
+	}
 
-  @Test
-  public void findFullMatchingElerFTFoerderprogrammeProvider() {
-    Class<ElerFTFoerderprogrammeProvider> desiredInterface = ElerFTFoerderprogrammeProvider.class;
-    EJBContainer.CONTAINER.registerBean( ElerFTStammdatenAuskunftService.class, new EftSTDAuskunftImpl() );
-    ElerFTFoerderprogrammeProvider desiredBean = new DesiredComponentFinder(
-        EJBContainer.CONTAINER.getRegisteredBeanInterfaces(), EJBContainer.CONTAINER::getOptBean )
-            .getDesiredComponent( desiredInterface );
-    assertThat( desiredBean, notNullValue() );
-  }
+	@Test
+	public void findFullMatchingElerFTFoerderprogrammeProvider() {
+		Class<ElerFTFoerderprogrammeProvider> desiredInterface = ElerFTFoerderprogrammeProvider.class;
+		EJBContainer.CONTAINER.registerBean(ElerFTStammdatenAuskunftService.class, new EftSTDAuskunftImpl());
+		DesiredComponentFinderConfig config = new DesiredComponentFinderConfig.Builder(
+				EJBContainer.CONTAINER.getRegisteredBeanInterfaces(), EJBContainer.CONTAINER::getOptBean)
+						.useHeuristicBL_NMC().useHeuristicLMF().useHeuristicPTTF().build();
+		ElerFTFoerderprogrammeProvider desiredBean = new DesiredComponentFinder(config)
+				.getDesiredComponent(desiredInterface);
+		assertThat(desiredBean, notNullValue());
+	}
 
 }
