@@ -5,7 +5,7 @@ import java.util.function.Function;
 
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.Preconditions;
 
-public class RequiredComponentFinderConfig {
+public class DesiredComponentFinderConfig {
 
 	private final Class<?>[] providedInterfaces;
 	private final Function<Class<?>, Optional<?>> providedImplementationGetters;
@@ -14,7 +14,7 @@ public class RequiredComponentFinderConfig {
 	private boolean useBL_NMC;
 
 
-	private RequiredComponentFinderConfig(Class<?>[] providedInterfaces, Function<Class<?>, Optional<?>> providedImplementationGetters) {
+	private DesiredComponentFinderConfig(Class<?>[] providedInterfaces, Function<Class<?>, Optional<?>> providedImplementationGetters) {
 		this.providedInterfaces = providedInterfaces;
 		this.providedImplementationGetters = providedImplementationGetters;
 	}
@@ -56,15 +56,15 @@ public class RequiredComponentFinderConfig {
 	
 	public static class Builder {
 
-		private final RequiredComponentFinderConfig config;
+		private final DesiredComponentFinderConfig config;
 
 		public Builder(Class<?>[] providedInterfaces, Function<Class<?>, Optional<?>> providedImplementationGetters) {
 			Preconditions.argNotNull(providedInterfaces, "providedInterfaces");
 			Preconditions.argNotNull(providedImplementationGetters, "providedImplementationGetters");
-			config = new RequiredComponentFinderConfig(providedInterfaces, providedImplementationGetters);
+			config = new DesiredComponentFinderConfig(providedInterfaces, providedImplementationGetters);
 		}
 
-		public RequiredComponentFinderConfig build() {
+		public DesiredComponentFinderConfig build() {
 			return config;
 		}
 

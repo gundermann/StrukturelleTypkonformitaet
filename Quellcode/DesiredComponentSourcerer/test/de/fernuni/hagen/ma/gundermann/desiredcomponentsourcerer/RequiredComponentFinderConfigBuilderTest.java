@@ -17,19 +17,19 @@ public class RequiredComponentFinderConfigBuilderTest {
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldThrowIllegalArgumentExceptionWhenProvidedInterfacesIsNull() {
-		new RequiredComponentFinderConfig.Builder(null, a-> Optional.empty());
+		new DesiredComponentFinderConfig.Builder(null, a-> Optional.empty());
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldThrowIllegalArgumentExceptionWhenOptProvidedImplementationGettersIsNull() {
-		new RequiredComponentFinderConfig.Builder(new Class<?>[] {}, null);
+		new DesiredComponentFinderConfig.Builder(new Class<?>[] {}, null);
 	}
 	
 	@Test
 	public void shouldCreateWithGivenParams() {
 		Class<?>[] providedInterfaces = new Class<?>[] {String.class, Integer.class};
 		Function<Class<?>, Optional<?>> providedImplementationGetter = c -> Optional.empty();
-		RequiredComponentFinderConfig config = new RequiredComponentFinderConfig.Builder(providedInterfaces, providedImplementationGetter).build();
+		DesiredComponentFinderConfig config = new DesiredComponentFinderConfig.Builder(providedInterfaces, providedImplementationGetter).build();
 		assertNotNull(config.getProvidedInterfaces());
 		assertThat(config.getProvidedInterfaces().length, equalTo(2));
 		assertThat(Arrays.asList(config.getProvidedInterfaces()), hasItems(String.class, Integer.class));
@@ -44,7 +44,7 @@ public class RequiredComponentFinderConfigBuilderTest {
 	public void shouldCreateWithConfiguredHeuristicLMF() {
 		Class<?>[] providedInterfaces = new Class<?>[] {String.class, Integer.class};
 		Function<Class<?>, Optional<?>> providedImplementationGetter = c -> Optional.empty();
-		RequiredComponentFinderConfig config = new RequiredComponentFinderConfig.Builder(providedInterfaces, providedImplementationGetter)
+		DesiredComponentFinderConfig config = new DesiredComponentFinderConfig.Builder(providedInterfaces, providedImplementationGetter)
 				.useHeuristicLMF()
 				.build();
 		
@@ -64,7 +64,7 @@ public class RequiredComponentFinderConfigBuilderTest {
 	public void shouldCreateWithConfiguredHeuristicPTTF() {
 		Class<?>[] providedInterfaces = new Class<?>[] {String.class, Integer.class};
 		Function<Class<?>, Optional<?>> providedImplementationGetter = c -> Optional.empty();
-		RequiredComponentFinderConfig config = new RequiredComponentFinderConfig.Builder(providedInterfaces, providedImplementationGetter)
+		DesiredComponentFinderConfig config = new DesiredComponentFinderConfig.Builder(providedInterfaces, providedImplementationGetter)
 				.useHeuristicPTTF()
 				.build();
 		
@@ -84,7 +84,7 @@ public class RequiredComponentFinderConfigBuilderTest {
 	public void shouldCreateWithConfiguredHeuristicBL_NMC() {
 		Class<?>[] providedInterfaces = new Class<?>[] {String.class, Integer.class};
 		Function<Class<?>, Optional<?>> providedImplementationGetter = c -> Optional.empty();
-		RequiredComponentFinderConfig config = new RequiredComponentFinderConfig.Builder(providedInterfaces, providedImplementationGetter)
+		DesiredComponentFinderConfig config = new DesiredComponentFinderConfig.Builder(providedInterfaces, providedImplementationGetter)
 				.useHeuristicBL_NMC()
 				.build();
 		
@@ -104,7 +104,7 @@ public class RequiredComponentFinderConfigBuilderTest {
 	public void shouldCreateWithConfiguredHeuristic_All() {
 		Class<?>[] providedInterfaces = new Class<?>[] {String.class, Integer.class};
 		Function<Class<?>, Optional<?>> providedImplementationGetter = c -> Optional.empty();
-		RequiredComponentFinderConfig config = new RequiredComponentFinderConfig.Builder(providedInterfaces, providedImplementationGetter)
+		DesiredComponentFinderConfig config = new DesiredComponentFinderConfig.Builder(providedInterfaces, providedImplementationGetter)
 				.useHeuristicBL_NMC()
 				.useHeuristicLMF()
 				.useHeuristicPTTF()

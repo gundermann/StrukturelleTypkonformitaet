@@ -36,7 +36,7 @@ public class DesiredComponentFinder {
 
 	private Collection<Heuristic> usedHeuristics = new ArrayList<Heuristic>();
 
-	public DesiredComponentFinder(RequiredComponentFinderConfig config) {
+	public DesiredComponentFinder(DesiredComponentFinderConfig config) {
 		this.registeredComponentInterfaces = config.getProvidedInterfaces();
 		this.optComponentGetter = config.getProvidedImplementationGetter();
 		if (config.useHeuristicLMF()) {
