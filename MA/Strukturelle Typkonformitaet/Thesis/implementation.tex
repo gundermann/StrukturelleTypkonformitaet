@@ -91,5 +91,21 @@ In diesem Objekt sind die für die Auswertung des Testergebnisses relevanten Inf
 
 
 \section{Modul: DesiredComponentSourcerer}
+In diesem Modul wird die Exploration koordiniert. Zum Starten der Exploration für ein \emph{desired Interface} muss zuerst eine Instanz der Klasse $\texttt{DesiredComponentFinder}$ erzeugt werden (genannt: \emph{Finder}). Dies erfolgt über einen Konstruktor, der ein Objekt der Klasse $\texttt{DesiredComponentFinderConfig}$ (genannt: \emph{Konfig}) erwartet (siehe Abbildung \ref{cd_finderCreation}). 
+\begin{figure}
 
-\section{Einbindung der Explorationskomponente}
+\end{figure}\label{cd_finderCreation}
+\noindent
+Die Erzeugung einer solchen \emph{Konfig} erfolgt über einen Builder. Dabei müssen zum Einen die Angabe aller provided Typen in Form einer Liste von Interfaces. Zum Anderen wird eine Funktion ($\texttt{java.util.Function}$) gefordert, über die die Implementierungen der im Parameter übergebenen Interfaces ermittelt werden können.
+\\\\
+Zum Zweck der gezielten Evaluation der Heuristiken in Kapitel \ref{chap_evaluation} kann über die \emph{Konfig} gesteuert werden, welche der in Abschnitt \ref{sec_heuristics} beschriebenen Heuristiken bei der Exploration verwendet werden sollen. Dies erfolgt über die in Abbildung \ref{cd_finderCreation} ersichtlichen Methoden mit den Präfix $\texttt{useHeuristic*}$.
+\\\\
+Die Exploration wird nach der Erzeugung des \emph{Finders} über den Aufruf der Methode $\texttt{getDesiredComponent}$ mit der Übergabe des \emph{desired Interface} $R$ als Parameter. Im Anschluss wird die syntaktische Evaluation für alle \emph{provided Interfaces} durchgeführt. Auf formaler ebene gleicht dieser Schritt der Ausführung der Funktion $\mathit{cover(R,L)}$, wobei die in $L$ befindlichen \emph{provided Typen} auf die an der \emph{Finder} übergebenen \emph{provided Interfaces} beschränkt sind.
+\\\\
+Nach der syntaktischen Evaluation, wird gemäß Abschnitt \ref{sev_semEval} die semantische Evaluation durchgeführt. Dabei werden zuerst die Proxies aus den Kombinationen der gematchten \emph{provided Interfaces}\footnote{Diese Kombinationen sind mit den Elementen der Mengen aus $\mathit{cover(R,L)}$ gleichzusetzen.} erzeugt, welche im Anschluss hinsichtlich der vordefinierten Tests zum \emph{desired Interface} evaluiert werden. Dabei werden die Heuristiken, die in der \emph{Konfig} hinterlegt wurden, angewendet. Sofern bei der Exploration ein Proxy erfolgreich evaluiert wurde, wird dieser als Ergebnis des Aufrufs der Methode $\texttt{getDesiredComponent}$ zurückgegeben. 
+\\\\
+Das Sequenzdiagramm in Abbildung \ref{sd_exploration} zeigt dabei die Interaktionen der drei vorgestellten Module bei der Durchführung der Exploration.
+\begin{figure}
+
+\end{figure}\label{sd_exploration}
+\noindent
