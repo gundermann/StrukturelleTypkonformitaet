@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.Heuristic;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.Selector;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.CombinationFinderUtils;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.CombinationInfo;
@@ -45,10 +46,13 @@ public class CombinationSelector implements Selector {
 	// H: blacklist if no implementation available
 	private final Collection<Integer> checkTypeHCBlacklist = new ArrayList<>();
 
-	public CombinationSelector(List<PartlyTypeMatchingInfo> infos) {
+	private final Collection<Heuristic> usedHeuristics;
+
+	public CombinationSelector(List<PartlyTypeMatchingInfo> infos, Collection<Heuristic> usedHeuristics) {
 		this.infos = infos;
 		this.originalMethods = infos.stream().findFirst().map(PartlyTypeMatchingInfo::getOriginalMethods)
 				.orElse(Collections.emptyList());
+		this.usedHeuristics = usedHeuristics;
 	}
 
 	@Override
@@ -76,7 +80,8 @@ public class CombinationSelector implements Selector {
 	}
 
 	private void collectRelevantMatchingInfoCombinations() {
-		// H: blacklist if no implementation available
+		// H: blacklist if no implementation available + BL_NMC (muss nicht abgefragt
+		// werden, weil die fehlende Implementierungen ohnehin heruasgefiltert werden.
 		Collection<PartlyTypeMatchingInfo> relevantInfos = new CheckTypeBlacklistFilter(this.checkTypeHCBlacklist)
 				.filter(infos);
 
@@ -85,13 +90,16 @@ public class CombinationSelector implements Selector {
 
 		// H: combinate low matcher rating first
 		// sort by matcher rate
-		if (HeuristicSetting.COMBINE_LOW_MATCHER_RATING_FIRST) {
+		if (usedHeuristics.contains(Heuristic.LMF)) {
 			Collections.sort(cachedMatchingInfoCombinations, new AccumulatedMatchingRateComparator());
 		}
 
 		// H: combinate passed tests components first
 		// re-organize cache with respect to search optimization
-		Collections.sort(cachedMatchingInfoCombinations, new HigherPotentialTypesFirstComparator(higherPotentialTypes));
+		if (usedHeuristics.contains(Heuristic.PTTF)) {
+			Collections.sort(cachedMatchingInfoCombinations,
+					new HigherPotentialTypesFirstComparator(higherPotentialTypes));
+		}
 	}
 
 	private Map<Method, Collection<PartlyTypeMatchingInfo>> collectRelevantInfosPerMethod() {

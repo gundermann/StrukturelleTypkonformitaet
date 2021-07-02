@@ -12,6 +12,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.Heuristic;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.Selector;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.CombinationFinderUtils;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.CombinationInfo;
@@ -36,11 +37,12 @@ public class SingleSelector implements Selector {
 
 	// H: blacklist by pivot test calls
 	private final Collection<Collection<Integer>> methodMatchingInfoHCBlacklist = new ArrayList<>();
+	
 
-	public SingleSelector(List<PartlyTypeMatchingInfo> infos) {
+	public SingleSelector(List<PartlyTypeMatchingInfo> infos, Collection<Heuristic> usedHeuristics) {
 		Stream<List<PartlyTypeMatchingInfo>> stream = infos.stream()
 				.filter(CombinationFinderUtils::isFullMatchingComponent).map(i -> Collections.singletonList(i));
-		if (HeuristicSetting.COMBINE_LOW_MATCHER_RATING_FIRST) {
+		if (usedHeuristics.contains(Heuristic.LMF)) {
 			// H: respect to Matching Rate
 			stream = stream.sorted(new AccumulatedMatchingRateComparator());
 		}

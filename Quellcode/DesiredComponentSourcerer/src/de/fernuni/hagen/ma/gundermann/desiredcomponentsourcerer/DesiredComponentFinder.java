@@ -14,7 +14,6 @@ import java.util.stream.Stream;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.BestMatchingComponentCombinationFinder;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.CombinationInfo;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.DefaultTypeMatcherHeuristic;
-import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.HeuristicSetting;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.Logger;
 import glue.TypeConverter;
 import matching.methods.MethodMatchingInfo;
@@ -35,6 +34,23 @@ public class DesiredComponentFinder {
 
 	private int testedComponentVariations = 0;
 
+	private Collection<Heuristic> usedHeuristics = new ArrayList<Heuristic>();
+
+	public DesiredComponentFinder(RequiredComponentFinderConfig config) {
+		this.registeredComponentInterfaces = config.getProvidedInterfaces();
+		this.optComponentGetter = config.getProvidedImplementationGetter();
+		if (config.useHeuristicLMF()) {
+			usedHeuristics.add(Heuristic.LMF);
+		}
+		if (config.useHeuristicPTTF()) {
+			usedHeuristics.add(Heuristic.PTTF);
+		}
+		if (config.useHeuristicBL_NMC()) {
+			usedHeuristics.add(Heuristic.BL_NMC);
+		}
+	}
+
+	@Deprecated
 	public DesiredComponentFinder(Class<?>[] registeredComponentInterfaces,
 			Function<Class<?>, Optional<?>> optComponentGetter) {
 		this.registeredComponentInterfaces = Stream.of(registeredComponentInterfaces).distinct()
@@ -106,7 +122,7 @@ public class DesiredComponentFinder {
 			Map<Class<?>, PartlyTypeMatchingInfo> componentInterface2PartlyMatchingInfos) {
 		Logger.info("create ComponentInfos");
 		BestMatchingComponentCombinationFinder combinationFinder = new BestMatchingComponentCombinationFinder(
-				componentInterface2PartlyMatchingInfos);
+				componentInterface2PartlyMatchingInfos, this.usedHeuristics);
 
 		while (combinationFinder.hasNextCombination()) {
 			CombinationInfo combinationInfos = combinationFinder.getNextCombination();
@@ -117,7 +133,8 @@ public class DesiredComponentFinder {
 					if (testedComponent.allTestsPassed()) {
 						return testedComponent.getComponent();
 					}
-					if (HeuristicSetting.COMBINE_COMPOMENTS_WITH_PASSED_TESTS_FIRST
+					if (usedHeuristics.contains(Heuristic.PTTF)
+//							HeuristicSetting.COMBINE_COMPOMENTS_WITH_PASSED_TESTS_FIRST
 							&& testedComponent.anyTestPassed()) {
 						// H: combinate passed tests components first
 						combinationFinder.optimizeForCurrentCombination();
@@ -129,10 +146,8 @@ public class DesiredComponentFinder {
 					}
 				}
 			} catch (NoComponentImplementationFoundException e) {
-				if (HeuristicSetting.BLACKLIST_NO_IMPLEMENTATION_AVAILABLE) {
-					// H: blacklist if no implementation available
-					combinationFinder.optimizeCheckTypeBlacklist(e.getComponentInterface());
-				}
+				// H: blacklist if no implementation available
+				combinationFinder.optimizeCheckTypeBlacklist(e.getComponentInterface());
 			}
 		}
 		return null;
@@ -167,7 +182,9 @@ public class DesiredComponentFinder {
 		TestedComponent<DesiredInterface> testedComponent = new TestedComponent<>(convertedComponent, testResult);
 
 		// H: blacklist failed method calls
-		if (HeuristicSetting.BLACKLIST_FAILED_TRIED_METHOD_CALLS) {
+		if (usedHeuristics.contains(Heuristic.BL_NMC)
+//				HeuristicSetting.BLACKLIST_FAILED_TRIED_METHOD_CALLS
+		) {
 			Collection<Method> failedMethodCombi = new ArrayList<Method>(testResult.getTriedMethodCalls());
 			Logger.infoF("blacklist by failed method combination: %s",
 					failedMethodCombi.stream().map(m -> m.getName()).collect(Collectors.joining(",")));

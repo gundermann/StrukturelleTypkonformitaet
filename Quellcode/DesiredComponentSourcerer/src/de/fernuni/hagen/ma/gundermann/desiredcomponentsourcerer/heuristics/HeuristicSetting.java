@@ -1,5 +1,6 @@
 package de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics;
 
+@Deprecated
 public interface HeuristicSetting {
 
 	static boolean COMBINE_LOW_MATCHER_RATING_FIRST = true;

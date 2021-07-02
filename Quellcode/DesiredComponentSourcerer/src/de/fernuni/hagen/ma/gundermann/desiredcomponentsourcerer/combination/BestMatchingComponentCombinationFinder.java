@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.Heuristic;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.Selector;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.CombinationSelector;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.NoneSelector;
@@ -25,11 +26,11 @@ public class BestMatchingComponentCombinationFinder {
   private Optional<CombinationInfo> nextCombinationInfo = Optional.empty();
 
   public BestMatchingComponentCombinationFinder(
-      Map<Class<?>, PartlyTypeMatchingInfo> componentInterface2PartlyMatchingInfos ) {
+      Map<Class<?>, PartlyTypeMatchingInfo> componentInterface2PartlyMatchingInfos, Collection<Heuristic> usedHeuristics ) {
     quantitativeSortedInfos = new ArrayList<>(
         componentInterface2PartlyMatchingInfos.values() );
-    this.selectors[0] = new SingleSelector( quantitativeSortedInfos );
-    this.selectors[1] = new CombinationSelector( quantitativeSortedInfos );
+    this.selectors[0] = new SingleSelector( quantitativeSortedInfos, usedHeuristics );
+    this.selectors[1] = new CombinationSelector( quantitativeSortedInfos, usedHeuristics );
     Logger.infoF( "use selector: %s", selectors[0].getClass().getSimpleName() );
   }
 
