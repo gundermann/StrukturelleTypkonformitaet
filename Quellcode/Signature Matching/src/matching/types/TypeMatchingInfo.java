@@ -1,4 +1,4 @@
-package matching.modules;
+package matching.types;
 
 import java.util.Collection;
 
@@ -6,7 +6,7 @@ import glue.ProxyCreatorFactories;
 import glue.ProxyFactoryCreator;
 import matching.methods.MethodMatchingInfo;
 
-public class ModuleMatchingInfo {
+public class TypeMatchingInfo {
 
   private final Class<?> source;
 
@@ -23,7 +23,7 @@ public class ModuleMatchingInfo {
    * @param target
    * @param methodMatchingInfos
    */
-  public ModuleMatchingInfo( Class<?> source, Class<?> target, Collection<MethodMatchingInfo> methodMatchingInfos ) {
+  public TypeMatchingInfo( Class<?> source, Class<?> target, Collection<MethodMatchingInfo> methodMatchingInfos ) {
     this( source, target, methodMatchingInfos,
         methodMatchingInfos.isEmpty() ? ProxyCreatorFactories.getIdentityFactoryCreator()
             : ProxyCreatorFactories.getClassFactoryCreator() );
@@ -36,7 +36,7 @@ public class ModuleMatchingInfo {
    * @param target
    * @param methodMatchingInfos
    */
-  public ModuleMatchingInfo( Class<?> source, Class<?> target, Collection<MethodMatchingInfo> methodMatchingInfos,
+  public TypeMatchingInfo( Class<?> source, Class<?> target, Collection<MethodMatchingInfo> methodMatchingInfos,
       ProxyFactoryCreator proxyFactoryCreator ) {
     this.source = source;
     this.target = target;
@@ -52,7 +52,7 @@ public class ModuleMatchingInfo {
    * @param targetDelegate
    * @param methodMatchingInfos
    */
-  public ModuleMatchingInfo( Class<?> source, Class<?> target, String targetDelegate,
+  public TypeMatchingInfo( Class<?> source, Class<?> target, String targetDelegate,
       Collection<MethodMatchingInfo> methodMatchingInfos ) {
     this( source, target, methodMatchingInfos, ProxyCreatorFactories.getWrapperFactoryCreator( targetDelegate ) );
   }
@@ -65,7 +65,7 @@ public class ModuleMatchingInfo {
    * @param target
    * @param methodMatchingInfos
    */
-  public ModuleMatchingInfo( Class<?> source, String sourceDelegate, Class<?> target,
+  public TypeMatchingInfo( Class<?> source, String sourceDelegate, Class<?> target,
       Collection<MethodMatchingInfo> methodMatchingInfos ) {
     this( source, target, methodMatchingInfos, ProxyCreatorFactories.getWrappedFactoryCreator( sourceDelegate ) );
   }

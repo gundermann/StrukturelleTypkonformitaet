@@ -1,4 +1,4 @@
-package matching.modules;
+package matching.types;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import matching.MethodMatchingInfoCombinator;
 import matching.methods.MethodMatchingInfo;
 import util.Logger;
 
-public class ModuleMatchingInfoFactory {
+public class TypeMatchingInfoFactory {
 
   private final Class<?> targetType;
 
@@ -22,48 +22,48 @@ public class ModuleMatchingInfoFactory {
 
   private final String targetDelegateAttribute;
 
-  public ModuleMatchingInfoFactory( Class<?> targetType, Class<?> sourceType ) {
+  public TypeMatchingInfoFactory( Class<?> targetType, Class<?> sourceType ) {
     this.targetType = targetType;
     this.targetDelegateAttribute = null;
     this.sourceType = sourceType;
     this.sourceDelegateAttribute = null;
   }
 
-  public ModuleMatchingInfoFactory( Class<?> targetType, Class<?> sourceType, String sourceDelegateAttribute ) {
+  public TypeMatchingInfoFactory( Class<?> targetType, Class<?> sourceType, String sourceDelegateAttribute ) {
     this.targetType = targetType;
     this.targetDelegateAttribute = null;
     this.sourceType = sourceType;
     this.sourceDelegateAttribute = sourceDelegateAttribute;
   }
 
-  public ModuleMatchingInfoFactory( Class<?> targetType, String targetDelegateAttribute, Class<?> sourceType ) {
+  public TypeMatchingInfoFactory( Class<?> targetType, String targetDelegateAttribute, Class<?> sourceType ) {
     this.targetType = targetType;
     this.targetDelegateAttribute = targetDelegateAttribute;
     this.sourceType = sourceType;
     this.sourceDelegateAttribute = null;
   }
 
-  public ModuleMatchingInfo create() {
+  public TypeMatchingInfo create() {
     return this.create( new ArrayList<>() );
   }
 
-  public ModuleMatchingInfo create( Collection<MethodMatchingInfo> methodMatchingInfos ) {
+  public TypeMatchingInfo create( Collection<MethodMatchingInfo> methodMatchingInfos ) {
     if ( sourceDelegateAttribute != null && targetDelegateAttribute == null ) {
-      return new ModuleMatchingInfo( sourceType, sourceDelegateAttribute, targetType, methodMatchingInfos );
+      return new TypeMatchingInfo( sourceType, sourceDelegateAttribute, targetType, methodMatchingInfos );
     }
     else if ( sourceDelegateAttribute == null && targetDelegateAttribute != null ) {
-      return new ModuleMatchingInfo( sourceType, targetType, targetDelegateAttribute, methodMatchingInfos );
+      return new TypeMatchingInfo( sourceType, targetType, targetDelegateAttribute, methodMatchingInfos );
     }
     else if ( sourceDelegateAttribute == null && targetDelegateAttribute == null ) {
-      return new ModuleMatchingInfo( sourceType, targetType, methodMatchingInfos );
+      return new TypeMatchingInfo( sourceType, targetType, methodMatchingInfos );
     }
     return null;
   }
 
-  public Set<ModuleMatchingInfo> createFromMethodMatchingInfos(
+  public Set<TypeMatchingInfo> createFromMethodMatchingInfos(
       Map<Method, Collection<MethodMatchingInfo>> possibleMethodMatches ) {
     if ( possibleMethodMatches.isEmpty() ) {
-      Set<ModuleMatchingInfo> set = new HashSet<>();
+      Set<TypeMatchingInfo> set = new HashSet<>();
       set.add( create() );
       return set;
     }

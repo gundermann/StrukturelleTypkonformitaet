@@ -15,7 +15,7 @@ import org.easymock.EasyMock;
 import org.junit.Test;
 
 import matching.methods.MethodMatchingInfo;
-import matching.modules.ModuleMatchingInfo;
+import matching.types.TypeMatchingInfo;
 import testcomponents.genspec.DesiredGenInterface;
 import testcomponents.genspec.DesiredSpecInterface;
 import testcomponents.genspec.General;
@@ -99,7 +99,7 @@ public class GenSpecSignatureMatchingTypeConverterTest {
     methodMatchingInfos.add( mmiGetLong );
     methodMatchingInfos.add( mmiGetNull );
 
-    ModuleMatchingInfo moduleMatchingInfo = EasyMock.createNiceMock( ModuleMatchingInfo.class );
+    TypeMatchingInfo moduleMatchingInfo = EasyMock.createNiceMock( TypeMatchingInfo.class );
     EasyMock.expect( moduleMatchingInfo.getMethodMatchingInfos() ).andReturn( methodMatchingInfos ).anyTimes();
     EasyMock.replay( moduleMatchingInfo );
 
@@ -231,7 +231,7 @@ public class GenSpecSignatureMatchingTypeConverterTest {
     methodMatchingInfos.add( mmiGetLong );
     methodMatchingInfos.add( mmiGetNull );
 
-    ModuleMatchingInfo moduleMatchingInfo = EasyMock.createNiceMock( ModuleMatchingInfo.class );
+    TypeMatchingInfo moduleMatchingInfo = EasyMock.createNiceMock( TypeMatchingInfo.class );
     EasyMock.expect( moduleMatchingInfo.getMethodMatchingInfos() ).andReturn( methodMatchingInfos ).anyTimes();
     EasyMock.replay( moduleMatchingInfo );
 
@@ -379,7 +379,7 @@ public class GenSpecSignatureMatchingTypeConverterTest {
     methodMatchingInfos.add( mmiGetNull );
     methodMatchingInfos.add( mmiAnd );
 
-    ModuleMatchingInfo moduleMatchingInfo = EasyMock.createNiceMock( ModuleMatchingInfo.class );
+    TypeMatchingInfo moduleMatchingInfo = EasyMock.createNiceMock( TypeMatchingInfo.class );
     EasyMock.expect( moduleMatchingInfo.getMethodMatchingInfos() ).andReturn( methodMatchingInfos ).anyTimes();
     EasyMock.replay( moduleMatchingInfo );
 
@@ -502,7 +502,7 @@ public class GenSpecSignatureMatchingTypeConverterTest {
     methodMatchingInfos.add( mmiGetLong );
     methodMatchingInfos.add( mmiGetNull );
 
-    ModuleMatchingInfo moduleMatchingInfo = EasyMock.createNiceMock( ModuleMatchingInfo.class );
+    TypeMatchingInfo moduleMatchingInfo = EasyMock.createNiceMock( TypeMatchingInfo.class );
     EasyMock.expect( moduleMatchingInfo.getMethodMatchingInfos() ).andReturn( methodMatchingInfos ).anyTimes();
     EasyMock.replay( moduleMatchingInfo );
 
@@ -541,8 +541,8 @@ public class GenSpecSignatureMatchingTypeConverterTest {
   }
 
   @SuppressWarnings( { "unchecked", "rawtypes" } )
-  private ModuleMatchingInfo createMMI_G2S() throws NoSuchMethodException, SecurityException {
-    ModuleMatchingInfo mmit = EasyMock.createNiceMock( ModuleMatchingInfo.class );
+  private TypeMatchingInfo createMMI_G2S() throws NoSuchMethodException, SecurityException {
+    TypeMatchingInfo mmit = EasyMock.createNiceMock( TypeMatchingInfo.class );
     EasyMock.expect( mmit.getTarget() ).andReturn( (Class) Specific.class ).anyTimes();
     EasyMock.expect( mmit.getSource() ).andReturn( (Class) General.class ).anyTimes();
     EasyMock.expect( mmit.getConverterCreator() ).andReturn( ProxyCreatorFactories.getClassFactoryCreator() )
@@ -584,8 +584,8 @@ public class GenSpecSignatureMatchingTypeConverterTest {
   }
 
   @SuppressWarnings( { "unchecked", "rawtypes" } )
-  private ModuleMatchingInfo createMMI_S2G() throws NoSuchMethodException, SecurityException {
-    ModuleMatchingInfo mmit = EasyMock.createNiceMock( ModuleMatchingInfo.class );
+  private TypeMatchingInfo createMMI_S2G() throws NoSuchMethodException, SecurityException {
+    TypeMatchingInfo mmit = EasyMock.createNiceMock( TypeMatchingInfo.class );
     EasyMock.expect( mmit.getTarget() ).andReturn( (Class) General.class ).anyTimes();
     EasyMock.expect( mmit.getSource() ).andReturn( (Class) Specific.class ).anyTimes();
     EasyMock.expect( mmit.getConverterCreator() ).andReturn( ProxyCreatorFactories.getClassFactoryCreator() )

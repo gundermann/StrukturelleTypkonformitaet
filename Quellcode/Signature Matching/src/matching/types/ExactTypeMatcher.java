@@ -1,4 +1,4 @@
-package matching.modules;
+package matching.types;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -13,11 +13,11 @@ public class ExactTypeMatcher implements CombinableTypeMatcher {
   }
 
   @Override
-  public Collection<ModuleMatchingInfo> calculateTypeMatchingInfos( Class<?> targetType,
+  public Collection<TypeMatchingInfo> calculateTypeMatchingInfos( Class<?> targetType,
       Class<?> sourceType ) {
     if ( matchesType( targetType, sourceType ) ) {
       return Collections
-          .singletonList( new ModuleMatchingInfoFactory( targetType, sourceType ).create() );
+          .singletonList( new TypeMatchingInfoFactory( targetType, sourceType ).create() );
     }
     return Collections.emptyList();
   }

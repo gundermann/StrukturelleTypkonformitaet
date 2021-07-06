@@ -9,7 +9,7 @@ import java.util.function.Supplier;
 
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.CombinationPartInfo;
 import matching.methods.MethodMatchingInfo;
-import matching.modules.PartlyTypeMatchingInfo;
+import matching.types.PartlyTypeMatchingInfo;
 
 public class Transformator {
 

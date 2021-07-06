@@ -19,7 +19,7 @@ import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.Comb
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.AnalyzationUtils;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.CollectionUtil;
 import matching.methods.MethodMatchingInfo;
-import matching.modules.PartlyTypeMatchingInfo;
+import matching.types.PartlyTypeMatchingInfo;
 import util.Logger;
 
 /**

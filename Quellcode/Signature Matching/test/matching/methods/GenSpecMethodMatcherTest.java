@@ -6,7 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import matching.modules.GenSpecTypeMatcher;
+import matching.types.GenSpecTypeMatcher;
 
 public class GenSpecMethodMatcherTest {
 

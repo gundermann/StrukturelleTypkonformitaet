@@ -11,7 +11,7 @@ import org.easymock.EasyMock;
 import org.junit.Test;
 
 import matching.MatcherRate;
-import matching.modules.PartlyTypeMatchingInfo;
+import matching.types.PartlyTypeMatchingInfo;
 
 public class AccumulatedMatchingRateComparatorTest {
 

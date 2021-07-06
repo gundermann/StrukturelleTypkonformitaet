@@ -1,4 +1,4 @@
-package matching.modules;
+package matching.types;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -51,12 +51,12 @@ public class StructuralTypeMatcher implements PartlyTypeMatcher {
   }
 
   @Override
-  public Collection<ModuleMatchingInfo> calculateTypeMatchingInfos( Class<?> checkType, Class<?> queryType ) {
-    ModuleMatchingInfoFactory factory = new ModuleMatchingInfoFactory( checkType, queryType );
+  public Collection<TypeMatchingInfo> calculateTypeMatchingInfos( Class<?> checkType, Class<?> queryType ) {
+    TypeMatchingInfoFactory factory = new TypeMatchingInfoFactory( checkType, queryType );
     if ( queryType.equals( Object.class ) ) {
       // Dieser Spezialfall fuehrt ohne diese Sonderregelung in einen Stackoverflow, da Object als Typ immer wieder
       // auftaucht. Es ist also eine Abbruchbedingung.
-      Set<ModuleMatchingInfo> singleResult = new HashSet<>();
+      Set<TypeMatchingInfo> singleResult = new HashSet<>();
       singleResult.add( factory.create() );
       return singleResult;
     }

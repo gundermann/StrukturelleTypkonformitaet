@@ -14,7 +14,7 @@ import org.easymock.EasyMock;
 import org.junit.Test;
 
 import matching.methods.MethodMatchingInfo;
-import matching.modules.ModuleMatchingInfo;
+import matching.types.TypeMatchingInfo;
 import testcomponents.paramperm.Desired1ParameterInterface;
 import testcomponents.paramperm.Desired2ParameterInterface;
 import testcomponents.paramperm.Desired3ParameterInterface;
@@ -52,7 +52,7 @@ public class ParamPermSignatureMatchingTypeConverterTest {
 
     methodMatchingInfos.add( mmi );
 
-    ModuleMatchingInfo moduleMatchingInfo = EasyMock.createNiceMock( ModuleMatchingInfo.class );
+    TypeMatchingInfo moduleMatchingInfo = EasyMock.createNiceMock( TypeMatchingInfo.class );
     EasyMock.expect( moduleMatchingInfo.getMethodMatchingInfos() ).andReturn( methodMatchingInfos ).anyTimes();
     EasyMock.replay( moduleMatchingInfo );
 
@@ -96,7 +96,7 @@ public class ParamPermSignatureMatchingTypeConverterTest {
 
     methodMatchingInfos.add( mmi );
 
-    ModuleMatchingInfo moduleMatchingInfo = EasyMock.createNiceMock( ModuleMatchingInfo.class );
+    TypeMatchingInfo moduleMatchingInfo = EasyMock.createNiceMock( TypeMatchingInfo.class );
     EasyMock.expect( moduleMatchingInfo.getMethodMatchingInfos() ).andReturn( methodMatchingInfos ).anyTimes();
     EasyMock.replay( moduleMatchingInfo );
     Map<Object, Collection<MethodMatchingInfo>> obj2MatchingInfo = new HashMap<>();
@@ -144,7 +144,7 @@ public class ParamPermSignatureMatchingTypeConverterTest {
 
     methodMatchingInfos.add( mmi );
 
-    ModuleMatchingInfo moduleMatchingInfo = EasyMock.createNiceMock( ModuleMatchingInfo.class );
+    TypeMatchingInfo moduleMatchingInfo = EasyMock.createNiceMock( TypeMatchingInfo.class );
     EasyMock.expect( moduleMatchingInfo.getMethodMatchingInfos() ).andReturn( methodMatchingInfos ).anyTimes();
     EasyMock.replay( moduleMatchingInfo );
 

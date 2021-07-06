@@ -1,4 +1,4 @@
-package matching.modules.testmodules;
+package matching.types.testtypes;
 
 public interface InterfaceWrapper {
 

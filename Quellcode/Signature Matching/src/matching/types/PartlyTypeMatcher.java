@@ -1,4 +1,4 @@
-package matching.modules;
+package matching.types;
 
 public interface PartlyTypeMatcher extends TypeMatcher {
 

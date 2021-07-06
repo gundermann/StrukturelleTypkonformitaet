@@ -11,9 +11,9 @@ import java.util.Collection;
 import org.junit.Before;
 import org.junit.Test;
 
-import matching.modules.ExactTypeMatcher;
-import matching.modules.ModuleMatchingInfo;
-import matching.modules.WrappedTypeMatcher;
+import matching.types.ExactTypeMatcher;
+import matching.types.TypeMatchingInfo;
+import matching.types.WrappedTypeMatcher;
 
 public class WrappedTypeMethodMatcherMatchingInfosTest {
   MethodMatcher matcher;
@@ -60,7 +60,7 @@ public class WrappedTypeMethodMatcherMatchingInfosTest {
     for ( MethodMatchingInfo mmi : matchingInfos ) {
       assertThat( mmi.getSource(), equalTo( queryMethod ) );
       assertThat( mmi.getTarget(), equalTo( checkMethod ) );
-      ModuleMatchingInfo rtMatchingInfo = mmi.getReturnTypeMatchingInfo();
+      TypeMatchingInfo rtMatchingInfo = mmi.getReturnTypeMatchingInfo();
       assertThat( rtMatchingInfo, notNullValue() );
       assertThat( rtMatchingInfo.getSource(), notNullValue() );
       assertThat( rtMatchingInfo.getSource(), equalTo( Integer.class ) );
@@ -87,7 +87,7 @@ public class WrappedTypeMethodMatcherMatchingInfosTest {
     for ( MethodMatchingInfo mmi : matchingInfos ) {
       assertThat( mmi.getSource(), equalTo( queryMethod ) );
       assertThat( mmi.getTarget(), equalTo( checkMethod ) );
-      ModuleMatchingInfo rtMatchingInfo = mmi.getReturnTypeMatchingInfo();
+      TypeMatchingInfo rtMatchingInfo = mmi.getReturnTypeMatchingInfo();
       assertThat( rtMatchingInfo, notNullValue() );
       assertThat( rtMatchingInfo.getTarget(), notNullValue() );
       assertThat( rtMatchingInfo.getTarget(), equalTo( Integer.class ) );

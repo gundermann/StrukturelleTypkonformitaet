@@ -1,4 +1,4 @@
-package matching.modules;
+package matching.types;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -86,13 +86,13 @@ public class GenSpecTypeMatcher implements CombinableTypeMatcher {
   }
 
   @Override
-  public Collection<ModuleMatchingInfo> calculateTypeMatchingInfos( Class<?> checkType,
+  public Collection<TypeMatchingInfo> calculateTypeMatchingInfos( Class<?> checkType,
       Class<?> queryType ) {
     Logger.infoF( "calculate TypeMatchingInfos: %s -> %s", queryType, checkType );
     int c = ++counter;
     Logger.infoF( "start calculation: %d", c );
-    Collection<ModuleMatchingInfo> result = new ArrayList<>();
-    ModuleMatchingInfoFactory factory = new ModuleMatchingInfoFactory( checkType, queryType );
+    Collection<TypeMatchingInfo> result = new ArrayList<>();
+    TypeMatchingInfoFactory factory = new TypeMatchingInfoFactory( checkType, queryType );
     if ( checkType.equals( queryType ) ) {
       Logger.infoF( "assumtion: %s == %s", queryType, checkType );
       Logger.infoF( "finish calculation: %d", c );
@@ -162,11 +162,11 @@ public class GenSpecTypeMatcher implements CombinableTypeMatcher {
         // Regeln
         // gelten.
         // Regel 1: Der Returntype kann spezieller werden. Liskov l�sst gr��en. (Kovarianz)
-        ModuleMatchingInfo returnTypeMatchingInfo = calculateTypeMatchingInfos( genM.getReturnType(),
+        TypeMatchingInfo returnTypeMatchingInfo = calculateTypeMatchingInfos( genM.getReturnType(),
             specM.getReturnType() ).iterator().next();
 
         // Regel 2: Die Argumente k�nnen allgemeiner werden. Liskov l�sst gr��en (Kontravarianz)
-        Map<ParamPosition, Collection<ModuleMatchingInfo>> argumentTypeMatchingInfos = calculateArgumentTypesMatchingInfos(
+        Map<ParamPosition, Collection<TypeMatchingInfo>> argumentTypeMatchingInfos = calculateArgumentTypesMatchingInfos(
             specM.getParameterTypes(), genM.getParameterTypes() );
         matchingInfos.put( genM,
 
@@ -183,13 +183,13 @@ public class GenSpecTypeMatcher implements CombinableTypeMatcher {
     return matchingInfos;
   }
 
-  private Map<ParamPosition, Collection<ModuleMatchingInfo>> calculateArgumentTypesMatchingInfos(
+  private Map<ParamPosition, Collection<TypeMatchingInfo>> calculateArgumentTypesMatchingInfos(
       Class<?>[] checkATs, Class<?>[] queryATs ) {
-    Map<ParamPosition, Collection<ModuleMatchingInfo>> matchingMap = new HashMap<>();
+    Map<ParamPosition, Collection<TypeMatchingInfo>> matchingMap = new HashMap<>();
     for ( int i = 0; i < checkATs.length; i++ ) {
       Class<?> checkAT = checkATs[i];
       Class<?> queryAT = queryATs[i];
-      Collection<ModuleMatchingInfo> infos = calculateTypeMatchingInfos( checkAT, queryAT );
+      Collection<TypeMatchingInfo> infos = calculateTypeMatchingInfos( checkAT, queryAT );
       matchingMap.put( new ParamPosition( i, i ), infos );
     }
 

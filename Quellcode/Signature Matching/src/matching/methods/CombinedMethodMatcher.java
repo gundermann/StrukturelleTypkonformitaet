@@ -5,9 +5,9 @@ import java.util.Collection;
 
 import matching.MatcherCombiner;
 import matching.MatcherRate;
-import matching.modules.ExactTypeMatcher;
-import matching.modules.GenSpecTypeMatcher;
-import matching.modules.WrappedTypeMatcher;
+import matching.types.ExactTypeMatcher;
+import matching.types.GenSpecTypeMatcher;
+import matching.types.WrappedTypeMatcher;
 
 public class CombinedMethodMatcher implements MethodMatcher {
 

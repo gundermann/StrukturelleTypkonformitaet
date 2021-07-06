@@ -1,4 +1,4 @@
-package matching.modules;
+package matching.types;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -6,6 +6,9 @@ import static org.junit.Assert.assertTrue;
 import java.util.Collection;
 
 import org.junit.Test;
+
+import matching.types.ExactTypeMatcher;
+import matching.types.TypeMatchingInfo;
 
 public class ExactTypeMatcherTest {
 
@@ -30,7 +33,7 @@ public class ExactTypeMatcherTest {
   @Test
   public void typeMatchingInfos() {
     ExactTypeMatcher matcher = new ExactTypeMatcher();
-    Collection<ModuleMatchingInfo> tmi = matcher.calculateTypeMatchingInfos( String.class, String.class );
+    Collection<TypeMatchingInfo> tmi = matcher.calculateTypeMatchingInfos( String.class, String.class );
     assertTrue( tmi.size() == 1 );
     tmi = matcher.calculateTypeMatchingInfos( Object.class, String.class );
     assertTrue( tmi.isEmpty() );

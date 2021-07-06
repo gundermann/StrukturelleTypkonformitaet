@@ -1,4 +1,4 @@
-package matching.modules;
+package matching.types;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -140,45 +140,45 @@ public class WrappedTypeMatcher implements CombinableTypeMatcher {
   }
 
   @Override
-  public Collection<ModuleMatchingInfo> calculateTypeMatchingInfos( Class<?> checkType, Class<?> queryType ) {
-    Collection<ModuleMatchingInfo> allMatchingInfos = new ArrayList<>();
+  public Collection<TypeMatchingInfo> calculateTypeMatchingInfos( Class<?> checkType, Class<?> queryType ) {
+    Collection<TypeMatchingInfo> allMatchingInfos = new ArrayList<>();
 
     TypeMatcher innerMethodMatcher = innerMethodMatcherSupplier.get();
     if ( innerMethodMatcher.matchesType( checkType, queryType ) ) {
-      Collection<ModuleMatchingInfo> matchingInfos = innerMethodMatcher.calculateTypeMatchingInfos( checkType,
+      Collection<TypeMatchingInfo> matchingInfos = innerMethodMatcher.calculateTypeMatchingInfos( checkType,
           queryType );
       allMatchingInfos.addAll( matchingInfos );
     }
     if ( isWrappedIn( checkType, queryType ) ) {
-      Collection<ModuleMatchingInfo> matchingInfos = calculateWrappedTypeMatchingInfos( queryType, checkType, false );
+      Collection<TypeMatchingInfo> matchingInfos = calculateWrappedTypeMatchingInfos( queryType, checkType, false );
       allMatchingInfos.addAll( matchingInfos );
     }
     if ( isWrappedIn( queryType, checkType ) ) {
-      Collection<ModuleMatchingInfo> matchingInfos = calculateWrappedTypeMatchingInfos( checkType, queryType, true );
+      Collection<TypeMatchingInfo> matchingInfos = calculateWrappedTypeMatchingInfos( checkType, queryType, true );
       allMatchingInfos.addAll( matchingInfos );
     }
     return allMatchingInfos;
   }
 
-  private Collection<ModuleMatchingInfo> calculateWrappedTypeMatchingInfos( Class<?> wrapperClass,
+  private Collection<TypeMatchingInfo> calculateWrappedTypeMatchingInfos( Class<?> wrapperClass,
       Class<?> wrappedType, boolean isTargetWrapper ) {
-    Collection<ModuleMatchingInfo> allMatchingInfos = new ArrayList<>();
+    Collection<TypeMatchingInfo> allMatchingInfos = new ArrayList<>();
     Field[] fieldsOfWrapper = filterStaticFields( wrapperClass.getDeclaredFields() );
     for ( Field field : fieldsOfWrapper ) {
       // TODO hier wird nur auf der ersten Ebene gepr�ft. Eine tiefere Verschachtelung wird noch nicht erm�glicht.
       // ABER: Der ganze Matcher macht das noch nicht. Auch beim Pr�fen des Matchings wird nur auf der obersten Ebene
       // gepr�ft.
 
-      Collection<ModuleMatchingInfo> infosFromInnerMatcher = new ArrayList<>();
-      ModuleMatchingInfoFactory factory = null;
+      Collection<TypeMatchingInfo> infosFromInnerMatcher = new ArrayList<>();
+      TypeMatchingInfoFactory factory = null;
 
       if ( isTargetWrapper ) {
         infosFromInnerMatcher = calcInnerMatchingInfos( field.getType(), wrappedType );
-        factory = new ModuleMatchingInfoFactory( wrapperClass, field.getName(), wrappedType );
+        factory = new TypeMatchingInfoFactory( wrapperClass, field.getName(), wrappedType );
       }
       else {
         infosFromInnerMatcher = calcInnerMatchingInfos( wrappedType, field.getType() );
-        factory = new ModuleMatchingInfoFactory( wrappedType, wrapperClass, field.getName() );
+        factory = new TypeMatchingInfoFactory( wrappedType, wrapperClass, field.getName() );
       }
       // wenn infosFromInnerMatcher leer ist, dann kann auch die factory null sein
       allMatchingInfos.addAll( enhanceInfosWithDelegate( infosFromInnerMatcher, factory ) );
@@ -186,7 +186,7 @@ public class WrappedTypeMatcher implements CombinableTypeMatcher {
     return allMatchingInfos;
   }
 
-  private Collection<ModuleMatchingInfo> calcInnerMatchingInfos( Class<?> checkType, Class<?> queryType ) {
+  private Collection<TypeMatchingInfo> calcInnerMatchingInfos( Class<?> checkType, Class<?> queryType ) {
     TypeMatcher innerMethodMatcher = innerMethodMatcherSupplier.get();
     if ( innerMethodMatcher.matchesType( checkType, queryType ) ) {
       return innerMethodMatcher
@@ -207,11 +207,11 @@ public class WrappedTypeMatcher implements CombinableTypeMatcher {
         .toArray( new Field[] {} );
   }
 
-  private Collection<ModuleMatchingInfo> enhanceInfosWithDelegate( Collection<ModuleMatchingInfo> infos,
-      ModuleMatchingInfoFactory factory ) {
-    Collection<ModuleMatchingInfo> enhancedInfos = new ArrayList<>();
-    for ( ModuleMatchingInfo mmi : infos ) {
-      ModuleMatchingInfo enhancedInfo = factory.create( mmi.getMethodMatchingInfos() );
+  private Collection<TypeMatchingInfo> enhanceInfosWithDelegate( Collection<TypeMatchingInfo> infos,
+      TypeMatchingInfoFactory factory ) {
+    Collection<TypeMatchingInfo> enhancedInfos = new ArrayList<>();
+    for ( TypeMatchingInfo mmi : infos ) {
+      TypeMatchingInfo enhancedInfo = factory.create( mmi.getMethodMatchingInfos() );
       enhancedInfos.add( enhancedInfo );
     }
     return enhancedInfos;

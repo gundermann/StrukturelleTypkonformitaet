@@ -13,7 +13,7 @@ import org.easymock.EasyMock;
 import org.junit.Test;
 
 import matching.methods.MethodMatchingInfo;
-import matching.modules.ModuleMatchingInfo;
+import matching.types.TypeMatchingInfo;
 import testcomponents.wrapped.DesiredWrappedParameterInterface;
 import testcomponents.wrapped.DesiredWrapperParameterInterface;
 import testcomponents.wrapped.OfferedWrappedParameterClass;
@@ -62,7 +62,7 @@ public class WrappedTypeSignatureMatchingTypeConverterTest {
     methodMatchingInfos.add( mmiGetString );
     methodMatchingInfos.add( mmiConcat );
 
-    ModuleMatchingInfo moduleMatchingInfo = EasyMock.createNiceMock( ModuleMatchingInfo.class );
+    TypeMatchingInfo moduleMatchingInfo = EasyMock.createNiceMock( TypeMatchingInfo.class );
     EasyMock.expect( moduleMatchingInfo.getMethodMatchingInfos() ).andReturn( methodMatchingInfos ).anyTimes();
     EasyMock.replay( moduleMatchingInfo );
 
@@ -117,7 +117,7 @@ public class WrappedTypeSignatureMatchingTypeConverterTest {
     methodMatchingInfos.add( mmiValue );
     methodMatchingInfos.add( mmiConnect );
 
-    ModuleMatchingInfo moduleMatchingInfo = EasyMock.createNiceMock( ModuleMatchingInfo.class );
+    TypeMatchingInfo moduleMatchingInfo = EasyMock.createNiceMock( TypeMatchingInfo.class );
     EasyMock.expect( moduleMatchingInfo.getMethodMatchingInfos() ).andReturn( methodMatchingInfos ).anyTimes();
     EasyMock.replay( moduleMatchingInfo );
 

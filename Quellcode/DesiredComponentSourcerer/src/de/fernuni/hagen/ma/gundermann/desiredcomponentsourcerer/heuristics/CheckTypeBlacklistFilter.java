@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.CombinationPartInfo;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.AnalyzationUtils;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.Logger;
-import matching.modules.PartlyTypeMatchingInfo;
+import matching.types.PartlyTypeMatchingInfo;
 
 /**
  * H: blacklist if no implementation available

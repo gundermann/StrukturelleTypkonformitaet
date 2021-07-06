@@ -11,9 +11,9 @@ import java.util.function.Supplier;
 
 import matching.methods.MethodMatcher;
 import matching.methods.MethodMatchingInfo;
-import matching.modules.CombinableTypeMatcher;
-import matching.modules.ModuleMatchingInfo;
-import matching.modules.TypeMatcher;
+import matching.types.CombinableTypeMatcher;
+import matching.types.TypeMatcher;
+import matching.types.TypeMatchingInfo;
 
 public abstract class MatcherCombiner {
   private MatcherCombiner() {
@@ -78,7 +78,7 @@ public abstract class MatcherCombiner {
       }
 
       @Override
-      public Collection<ModuleMatchingInfo> calculateTypeMatchingInfos( Class<?> checkType, Class<?> queryType ) {
+      public Collection<TypeMatchingInfo> calculateTypeMatchingInfos( Class<?> checkType, Class<?> queryType ) {
         for ( CombinableTypeMatcher m : getSortedMatcher() ) {
           if ( m.matchesType( checkType, queryType ) ) {
             return m.calculateTypeMatchingInfos( checkType, queryType );

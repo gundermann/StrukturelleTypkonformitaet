@@ -13,8 +13,8 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import matching.modules.PartlyTypeMatchingInfo;
-import matching.modules.PartlyTypeMatchingInfoFactory;
+import matching.types.PartlyTypeMatchingInfo;
+import matching.types.PartlyTypeMatchingInfoFactory;
 
 public class HigherPotentialTypesFirstComparatorTest {
 

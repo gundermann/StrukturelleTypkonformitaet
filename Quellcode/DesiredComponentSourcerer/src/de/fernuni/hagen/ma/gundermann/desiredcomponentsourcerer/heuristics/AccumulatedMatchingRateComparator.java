@@ -7,7 +7,7 @@ import java.util.stream.Stream;
 
 import matching.MatcherRate;
 import matching.Setting;
-import matching.modules.PartlyTypeMatchingInfo;
+import matching.types.PartlyTypeMatchingInfo;
 
 /**
  * This Comparator is responsable of the following heuristic:</br>

@@ -17,19 +17,19 @@ import org.junit.Test;
 
 import matching.methods.MethodMatchingInfo.ParamPosition;
 import matching.methods.testmethods.MethodPool;
-import matching.modules.ModuleMatchingInfo;
-import matching.modules.ModuleMatchingInfoFactory;
+import matching.types.TypeMatchingInfo;
+import matching.types.TypeMatchingInfoFactory;
 
 public class MethodMatchingInfoFactoryTest {
 
-  private ModuleMatchingInfoFactory moduleMatchingInfoFactory = new ModuleMatchingInfoFactory( null, null );
+  private TypeMatchingInfoFactory moduleMatchingInfoFactory = new TypeMatchingInfoFactory( null, null );
 
   @Test
   public void create() {
     Method source = MethodPool.getMethod( "getOne" );
     Method target = MethodPool.getMethod( "getOneNativeWrapped" );
     MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( target, source );
-    ModuleMatchingInfo returnTypeMatchingInfo = moduleMatchingInfoFactory.create();
+    TypeMatchingInfo returnTypeMatchingInfo = moduleMatchingInfoFactory.create();
     MethodMatchingInfo info = factory.create( returnTypeMatchingInfo, new HashMap<>() );
     assertThat( info, notNullValue() );
     assertThat( info.getReturnTypeMatchingInfo(), equalTo( returnTypeMatchingInfo ) );
@@ -44,9 +44,9 @@ public class MethodMatchingInfoFactoryTest {
     Method source = MethodPool.getMethod( "addGen" );
     Method target = MethodPool.getMethod( "addSpec" );
     MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( target, source );
-    ModuleMatchingInfo returnTypeMatchingInfo = moduleMatchingInfoFactory.create();
+    TypeMatchingInfo returnTypeMatchingInfo = moduleMatchingInfoFactory.create();
 
-    Map<ParamPosition, ModuleMatchingInfo> argMatchingInfo = new HashMap<>();
+    Map<ParamPosition, TypeMatchingInfo> argMatchingInfo = new HashMap<>();
     argMatchingInfo.put( new ParamPosition( 1, 1 ), null );
     argMatchingInfo.put( new ParamPosition( 2, 2 ), null );
     MethodMatchingInfo info = factory.create( returnTypeMatchingInfo, argMatchingInfo );
@@ -67,12 +67,12 @@ public class MethodMatchingInfoFactoryTest {
     Method source = MethodPool.getMethod( "addGen" );
     Method target = MethodPool.getMethod( "addSpec" );
     MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( target, source );
-    ModuleMatchingInfo returnTypeMatchingInfo = moduleMatchingInfoFactory.create();
+    TypeMatchingInfo returnTypeMatchingInfo = moduleMatchingInfoFactory.create();
 
     ParamPosition pp2_1 = new ParamPosition( 2, 1 );
     ParamPosition pp1_2 = new ParamPosition( 1, 2 );
 
-    Map<ParamPosition, ModuleMatchingInfo> argMatchingInfo = new HashMap<>();
+    Map<ParamPosition, TypeMatchingInfo> argMatchingInfo = new HashMap<>();
     argMatchingInfo.put( pp2_1, null );
     argMatchingInfo.put( pp1_2, null );
     MethodMatchingInfo info = factory.create( returnTypeMatchingInfo, argMatchingInfo );
@@ -97,10 +97,10 @@ public class MethodMatchingInfoFactoryTest {
     Method source = MethodPool.getMethod( "getOne" );
     Method target = MethodPool.getMethod( "getOneNativeWrapped" );
     MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( target, source );
-    Collection<ModuleMatchingInfo> returnTypeMatchingInfos = new ArrayList<>( 2 );
+    Collection<TypeMatchingInfo> returnTypeMatchingInfos = new ArrayList<>( 2 );
     returnTypeMatchingInfos.add( moduleMatchingInfoFactory.create() );
     returnTypeMatchingInfos.add( moduleMatchingInfoFactory.create() );
-    Collection<Map<ParamPosition, Collection<ModuleMatchingInfo>>> argumentTypesMatchingInfos = new ArrayList<>( 0 );
+    Collection<Map<ParamPosition, Collection<TypeMatchingInfo>>> argumentTypesMatchingInfos = new ArrayList<>( 0 );
     Collection<MethodMatchingInfo> infos = factory.createFromTypeMatchingInfos( returnTypeMatchingInfos,
         argumentTypesMatchingInfos );
 
@@ -119,16 +119,16 @@ public class MethodMatchingInfoFactoryTest {
     Method source = MethodPool.getMethod( "getOne" );
     Method target = MethodPool.getMethod( "getOneNativeWrapped" );
     MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( target, source );
-    Collection<ModuleMatchingInfo> returnTypeMatchingInfos = new ArrayList<>( 2 );
+    Collection<TypeMatchingInfo> returnTypeMatchingInfos = new ArrayList<>( 2 );
     returnTypeMatchingInfos.add( moduleMatchingInfoFactory.create() );
     returnTypeMatchingInfos.add( moduleMatchingInfoFactory.create() );
 
-    Collection<Map<ParamPosition, Collection<ModuleMatchingInfo>>> argumentTypesMatchingInfos = new ArrayList<>( 2 );
-    Map<ParamPosition, Collection<ModuleMatchingInfo>> argumentTypesMatchingInfos1 = new HashMap<>( 2 );
+    Collection<Map<ParamPosition, Collection<TypeMatchingInfo>>> argumentTypesMatchingInfos = new ArrayList<>( 2 );
+    Map<ParamPosition, Collection<TypeMatchingInfo>> argumentTypesMatchingInfos1 = new HashMap<>( 2 );
     argumentTypesMatchingInfos1.put( new ParamPosition( 1, 1 ), Collections.singletonList( mockModuleMatchingInfo() ) );
     argumentTypesMatchingInfos1.put( new ParamPosition( 2, 2 ), Collections.singletonList( mockModuleMatchingInfo() ) );
 
-    Map<ParamPosition, Collection<ModuleMatchingInfo>> argumentTypesMatchingInfos2 = new HashMap<>( 2 );
+    Map<ParamPosition, Collection<TypeMatchingInfo>> argumentTypesMatchingInfos2 = new HashMap<>( 2 );
     argumentTypesMatchingInfos2.put( new ParamPosition( 2, 1 ), Collections.singletonList( mockModuleMatchingInfo() ) );
     argumentTypesMatchingInfos2.put( new ParamPosition( 1, 2 ), Collections.singletonList( mockModuleMatchingInfo() ) );
 
@@ -148,8 +148,8 @@ public class MethodMatchingInfoFactoryTest {
 
   }
 
-  private ModuleMatchingInfo mockModuleMatchingInfo() {
-    ModuleMatchingInfo mmi = EasyMock.createNiceMock( ModuleMatchingInfo.class );
+  private TypeMatchingInfo mockModuleMatchingInfo() {
+    TypeMatchingInfo mmi = EasyMock.createNiceMock( TypeMatchingInfo.class );
     EasyMock.replay( mmi );
     return mmi;
   }
@@ -159,8 +159,8 @@ public class MethodMatchingInfoFactoryTest {
     Method source = MethodPool.getMethod( "getOne" );
     Method target = MethodPool.getMethod( "getOneNativeWrapped" );
     MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( target, source );
-    Collection<ModuleMatchingInfo> returnTypeMatchingInfos = new ArrayList<>( 0 );
-    Map<ParamPosition, Collection<ModuleMatchingInfo>> argumentTypesMatchingInfos = new HashMap<>( 2 );
+    Collection<TypeMatchingInfo> returnTypeMatchingInfos = new ArrayList<>( 0 );
+    Map<ParamPosition, Collection<TypeMatchingInfo>> argumentTypesMatchingInfos = new HashMap<>( 2 );
     argumentTypesMatchingInfos.put( new ParamPosition( 1, 1 ), new ArrayList<>() );
     argumentTypesMatchingInfos.put( new ParamPosition( 1, 2 ), new ArrayList<>() );
     Collection<MethodMatchingInfo> infos = factory.createFromTypeMatchingInfos( returnTypeMatchingInfos,

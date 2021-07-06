@@ -7,13 +7,13 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import matching.MatcherCombiner;
-import matching.modules.CombinableTypeMatcher;
-import matching.modules.ExactTypeMatcher;
-import matching.modules.GenSpecTypeMatcher;
-import matching.modules.PartlyTypeMatcher;
-import matching.modules.StructuralTypeMatcher;
-import matching.modules.TypeMatcher;
-import matching.modules.WrappedTypeMatcher;
+import matching.types.CombinableTypeMatcher;
+import matching.types.ExactTypeMatcher;
+import matching.types.GenSpecTypeMatcher;
+import matching.types.PartlyTypeMatcher;
+import matching.types.StructuralTypeMatcher;
+import matching.types.TypeMatcher;
+import matching.types.WrappedTypeMatcher;
 
 // Exact > ParamPerm + Exact > GenSpec > ParamPerm + GenSpec > Wrapped > ParamPerm + Wrapped
 public enum DefaultTypeMatcherHeuristic {

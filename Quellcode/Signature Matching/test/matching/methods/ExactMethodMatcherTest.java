@@ -6,7 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import matching.modules.ExactTypeMatcher;
+import matching.types.ExactTypeMatcher;
 
 public class ExactMethodMatcherTest {
 

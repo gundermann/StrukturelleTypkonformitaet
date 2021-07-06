@@ -7,9 +7,9 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import matching.MatcherCombiner;
-import matching.modules.CombinableTypeMatcher;
-import matching.modules.ExactTypeMatcher;
-import matching.modules.WrappedTypeMatcher;
+import matching.types.CombinableTypeMatcher;
+import matching.types.ExactTypeMatcher;
+import matching.types.WrappedTypeMatcher;
 
 public class WrappedAndExactTypeMethodMatcherTest {
 

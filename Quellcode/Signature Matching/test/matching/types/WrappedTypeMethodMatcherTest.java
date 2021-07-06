@@ -1,4 +1,4 @@
-package matching.modules;
+package matching.types;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -7,6 +7,9 @@ import java.util.Collection;
 
 import org.junit.Test;
 
+import matching.types.ExactTypeMatcher;
+import matching.types.TypeMatchingInfo;
+import matching.types.WrappedTypeMatcher;
 import testcomponents.genspec.General;
 import testcomponents.genspec.Specific;
 import testcomponents.wrapped.Wrapped;
@@ -33,7 +36,7 @@ public class WrappedTypeMethodMatcherTest {
   @Test
   public void emptyTypeMatchingInfos() {
     WrappedTypeMatcher matcher = new WrappedTypeMatcher( () -> new ExactTypeMatcher() );
-    Collection<ModuleMatchingInfo> tmi = matcher.calculateTypeMatchingInfos( Wrapped.class, Wrapper.class );
+    Collection<TypeMatchingInfo> tmi = matcher.calculateTypeMatchingInfos( Wrapped.class, Wrapper.class );
     assertTrue( tmi.size() == 1 );
     tmi = matcher.calculateTypeMatchingInfos( Wrapper.class, Wrapped.class );
     assertTrue( tmi.size() == 1 );

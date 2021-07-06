@@ -1,4 +1,4 @@
-package matching.modules;
+package matching.types;
 
 import matching.MatcherRate;
 

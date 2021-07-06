@@ -8,32 +8,32 @@ import java.util.Map.Entry;
 import org.easymock.EasyMock;
 
 import matching.methods.MethodMatchingInfo.ParamPosition;
-import matching.modules.ModuleMatchingInfo;
+import matching.types.TypeMatchingInfo;
 import testcomponents.wrapped.Wrapped;
 import testcomponents.wrapped.Wrapper;
 
 public class MatchingInfoTestUtil {
 
   @SafeVarargs
-  static Map<ParamPosition, ModuleMatchingInfo> createMMIMap( Entry<ParamPosition, ModuleMatchingInfo>... infos ) {
-    Map<ParamPosition, ModuleMatchingInfo> map = new HashMap<>();
+  static Map<ParamPosition, TypeMatchingInfo> createMMIMap( Entry<ParamPosition, TypeMatchingInfo>... infos ) {
+    Map<ParamPosition, TypeMatchingInfo> map = new HashMap<>();
     for ( int i = 0; i < infos.length; i++ ) {
-      Entry<ParamPosition, ModuleMatchingInfo> entry = infos[i];
+      Entry<ParamPosition, TypeMatchingInfo> entry = infos[i];
       map.put( entry.getKey(), entry.getValue() );
     }
     return map;
   }
 
-  static Entry<ParamPosition, ModuleMatchingInfo> createPPMapEntry( int sourcePos, int targetPos,
-      ModuleMatchingInfo createMMI_SameTypes ) {
+  static Entry<ParamPosition, TypeMatchingInfo> createPPMapEntry( int sourcePos, int targetPos,
+      TypeMatchingInfo createMMI_SameTypes ) {
     ParamPosition paramPosition = new ParamPosition( sourcePos, targetPos );
-    Map<ParamPosition, ModuleMatchingInfo> tmpMap = new HashMap<>();
+    Map<ParamPosition, TypeMatchingInfo> tmpMap = new HashMap<>();
     tmpMap.put( paramPosition, createMMI_SameTypes );
     return tmpMap.entrySet().iterator().next();
   }
 
-  static Map<ParamPosition, ModuleMatchingInfo> createMMIMap( ModuleMatchingInfo... infos ) {
-    Map<ParamPosition, ModuleMatchingInfo> map = new HashMap<>();
+  static Map<ParamPosition, TypeMatchingInfo> createMMIMap( TypeMatchingInfo... infos ) {
+    Map<ParamPosition, TypeMatchingInfo> map = new HashMap<>();
     for ( int i = 0; i < infos.length; i++ ) {
       map.put( new ParamPosition( i, i ), infos[i] );
     }
@@ -41,8 +41,8 @@ public class MatchingInfoTestUtil {
   }
 
   @SuppressWarnings( { "unchecked", "rawtypes" } )
-  static ModuleMatchingInfo createMMI_Wrapper2Wrapped( String delegateAttr ) {
-    ModuleMatchingInfo mmi = EasyMock.createNiceMock( ModuleMatchingInfo.class );
+  static TypeMatchingInfo createMMI_Wrapper2Wrapped( String delegateAttr ) {
+    TypeMatchingInfo mmi = EasyMock.createNiceMock( TypeMatchingInfo.class );
     EasyMock.expect( mmi.getSource() ).andReturn( (Class) Wrapper.class ).anyTimes();
     EasyMock.expect( mmi.getTarget() ).andReturn( (Class) Wrapped.class ).anyTimes();
     EasyMock.expect( mmi.getMethodMatchingInfos() ).andReturn( new HashSet<>() ).anyTimes();
@@ -54,8 +54,8 @@ public class MatchingInfoTestUtil {
   }
 
   @SuppressWarnings( { "unchecked", "rawtypes" } )
-  static ModuleMatchingInfo createMMI_Wrapped2Wrapper( String delegateAttr ) {
-    ModuleMatchingInfo mmi = EasyMock.createNiceMock( ModuleMatchingInfo.class );
+  static TypeMatchingInfo createMMI_Wrapped2Wrapper( String delegateAttr ) {
+    TypeMatchingInfo mmi = EasyMock.createNiceMock( TypeMatchingInfo.class );
     EasyMock.expect( mmi.getSource() ).andReturn( (Class) Wrapped.class ).anyTimes();
     EasyMock.expect( mmi.getTarget() ).andReturn( (Class) Wrapper.class ).anyTimes();
     EasyMock.expect( mmi.getMethodMatchingInfos() ).andReturn( new HashSet<>() ).anyTimes();
@@ -67,8 +67,8 @@ public class MatchingInfoTestUtil {
   }
 
   @SuppressWarnings( { "rawtypes", "unchecked" } )
-  static ModuleMatchingInfo createMMI_SameTypes( Class<?> type ) {
-    ModuleMatchingInfo mmi = EasyMock.createNiceMock( ModuleMatchingInfo.class );
+  static TypeMatchingInfo createMMI_SameTypes( Class<?> type ) {
+    TypeMatchingInfo mmi = EasyMock.createNiceMock( TypeMatchingInfo.class );
     EasyMock.expect( mmi.getSource() ).andReturn( (Class) type ).anyTimes();
     EasyMock.expect( mmi.getTarget() ).andReturn( (Class) type ).anyTimes();
     EasyMock.expect( mmi.getMethodMatchingInfos() ).andReturn( new HashSet<>() ).anyTimes();

@@ -17,9 +17,9 @@ import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.Defau
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.Logger;
 import glue.TypeConverter;
 import matching.methods.MethodMatchingInfo;
-import matching.modules.PartlyTypeMatcher;
-import matching.modules.PartlyTypeMatchingInfo;
-import matching.modules.TypeMatcher;
+import matching.types.PartlyTypeMatcher;
+import matching.types.PartlyTypeMatchingInfo;
+import matching.types.TypeMatcher;
 import tester.ComponentTester;
 import tester.TestResult;
 import tester.TestResult.Cause;

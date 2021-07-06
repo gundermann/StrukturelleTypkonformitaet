@@ -1,16 +1,21 @@
-package matching.modules;
+package matching.types;
 
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
 import matching.MatcherCombiner;
-import matching.modules.testmodules.Class1;
-import matching.modules.testmodules.Class2;
-import matching.modules.testmodules.Enum2;
-import matching.modules.testmodules.EnumNative;
-import matching.modules.testmodules.Interface1;
-import matching.modules.testmodules.InterfaceWrapper;
+import matching.types.ExactTypeMatcher;
+import matching.types.GenSpecTypeMatcher;
+import matching.types.PartlyTypeMatcher;
+import matching.types.StructuralTypeMatcher;
+import matching.types.WrappedTypeMatcher;
+import matching.types.testtypes.Class1;
+import matching.types.testtypes.Class2;
+import matching.types.testtypes.Enum2;
+import matching.types.testtypes.EnumNative;
+import matching.types.testtypes.Interface1;
+import matching.types.testtypes.InterfaceWrapper;
 
 public class StructuralTypeMatcherMatchingTest {
 

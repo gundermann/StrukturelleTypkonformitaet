@@ -13,7 +13,7 @@ import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.NoneS
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.SingleSelector;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.Logger;
 import matching.methods.MethodMatchingInfo;
-import matching.modules.PartlyTypeMatchingInfo;
+import matching.types.PartlyTypeMatchingInfo;
 
 public class BestMatchingComponentCombinationFinder {
 

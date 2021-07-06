@@ -1,4 +1,4 @@
-package matching.modules;
+package matching.types;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;

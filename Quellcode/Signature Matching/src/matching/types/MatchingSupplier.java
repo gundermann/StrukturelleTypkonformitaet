@@ -1,4 +1,4 @@
-package matching.modules;
+package matching.types;
 
 import java.util.Collection;
 import java.util.function.Supplier;

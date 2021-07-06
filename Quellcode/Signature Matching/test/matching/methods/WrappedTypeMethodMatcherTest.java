@@ -7,8 +7,8 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
-import matching.modules.ExactTypeMatcher;
-import matching.modules.WrappedTypeMatcher;
+import matching.types.ExactTypeMatcher;
+import matching.types.WrappedTypeMatcher;
 
 public class WrappedTypeMethodMatcherTest {
   MethodMatcher matcher;

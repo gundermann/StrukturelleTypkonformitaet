@@ -1,4 +1,4 @@
-package matching.modules;
+package matching.types;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -16,14 +16,16 @@ import org.easymock.EasyMock;
 import org.junit.Test;
 
 import matching.methods.MethodMatchingInfo;
+import matching.types.TypeMatchingInfo;
+import matching.types.TypeMatchingInfoFactory;
 
-public class ModuleMatchingInfoFactoryTest {
+public class TypeMatchingInfoFactoryTest {
 
   @Test
   public void create() {
-    ModuleMatchingInfoFactory factory = new ModuleMatchingInfoFactory( Object.class,
+    TypeMatchingInfoFactory factory = new TypeMatchingInfoFactory( Object.class,
         Object.class );
-    ModuleMatchingInfo matchingInfo = factory.create();
+    TypeMatchingInfo matchingInfo = factory.create();
     assertThat( matchingInfo, notNullValue() );
     assertThat( matchingInfo.getMethodMatchingInfos(), notNullValue() );
     assertThat( matchingInfo.getMethodMatchingInfos().size(), equalTo( 0 ) );
@@ -32,9 +34,9 @@ public class ModuleMatchingInfoFactoryTest {
 
   @Test
   public void create_WithSourceDelegateAttr() {
-    ModuleMatchingInfoFactory factory = new ModuleMatchingInfoFactory( Object.class,
+    TypeMatchingInfoFactory factory = new TypeMatchingInfoFactory( Object.class,
         Object.class, "SOURCE" );
-    ModuleMatchingInfo matchingInfo = factory.create();
+    TypeMatchingInfo matchingInfo = factory.create();
     assertThat( matchingInfo, notNullValue() );
     assertThat( matchingInfo.getMethodMatchingInfos(), notNullValue() );
     assertThat( matchingInfo.getMethodMatchingInfos().size(), equalTo( 0 ) );
@@ -43,9 +45,9 @@ public class ModuleMatchingInfoFactoryTest {
 
   @Test
   public void create_WithTargetDelegateAttr() {
-    ModuleMatchingInfoFactory factory = new ModuleMatchingInfoFactory( Object.class, "TARGET",
+    TypeMatchingInfoFactory factory = new TypeMatchingInfoFactory( Object.class, "TARGET",
         Object.class );
-    ModuleMatchingInfo matchingInfo = factory.create();
+    TypeMatchingInfo matchingInfo = factory.create();
     assertThat( matchingInfo, notNullValue() );
     assertThat( matchingInfo.getMethodMatchingInfos(), notNullValue() );
     assertThat( matchingInfo.getMethodMatchingInfos().size(), equalTo( 0 ) );
@@ -54,9 +56,9 @@ public class ModuleMatchingInfoFactoryTest {
 
   @Test
   public void create_emptyMethodMatchingInfos() {
-    ModuleMatchingInfoFactory factory = new ModuleMatchingInfoFactory( Object.class,
+    TypeMatchingInfoFactory factory = new TypeMatchingInfoFactory( Object.class,
         Object.class );
-    ModuleMatchingInfo matchingInfo = factory.create( new HashSet<>() );
+    TypeMatchingInfo matchingInfo = factory.create( new HashSet<>() );
     assertThat( matchingInfo, notNullValue() );
     assertThat( matchingInfo.getMethodMatchingInfos(), notNullValue() );
     assertThat( matchingInfo.getMethodMatchingInfos().size(), equalTo( 0 ) );
@@ -64,11 +66,11 @@ public class ModuleMatchingInfoFactoryTest {
 
   @Test
   public void create_withMethodMatchingInfos() {
-    ModuleMatchingInfoFactory factory = new ModuleMatchingInfoFactory( Object.class,
+    TypeMatchingInfoFactory factory = new TypeMatchingInfoFactory( Object.class,
         Object.class );
     Set<MethodMatchingInfo> methodMatchingInfos = new HashSet<>();
     methodMatchingInfos.add( mockMethodMatchingInfo() );
-    ModuleMatchingInfo matchingInfo = factory.create( methodMatchingInfos );
+    TypeMatchingInfo matchingInfo = factory.create( methodMatchingInfos );
     assertThat( matchingInfo, notNullValue() );
     // assertThat( matchingInfo.getRating(), equalTo( 0 ) );
     assertThat( matchingInfo.getMethodMatchingInfos(), notNullValue() );
@@ -77,7 +79,7 @@ public class ModuleMatchingInfoFactoryTest {
 
   @Test
   public void create_withMultipleMethodMatchingInfos() {
-    ModuleMatchingInfoFactory factory = new ModuleMatchingInfoFactory( Object.class,
+    TypeMatchingInfoFactory factory = new TypeMatchingInfoFactory( Object.class,
         Object.class );
     Collection<MethodMatchingInfo> method1MatchingInfos = new ArrayList<>();
     method1MatchingInfos.add( mockMethodMatchingInfo() );
@@ -89,11 +91,11 @@ public class ModuleMatchingInfoFactoryTest {
     possibleMethodMatches.put( Object.class.getMethods()[0], method1MatchingInfos );
     possibleMethodMatches.put( Object.class.getMethods()[1], method2MatchingInfos );
 
-    Collection<ModuleMatchingInfo> matchingInfos = factory.createFromMethodMatchingInfos( possibleMethodMatches );
+    Collection<TypeMatchingInfo> matchingInfos = factory.createFromMethodMatchingInfos( possibleMethodMatches );
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 1 ) );
     // assertThat( matchingInfo.getRating(), equalTo( 0 ) );
-    for ( ModuleMatchingInfo info : matchingInfos ) {
+    for ( TypeMatchingInfo info : matchingInfos ) {
       assertThat( info.getMethodMatchingInfos(), notNullValue() );
       assertThat( info.getMethodMatchingInfos().size(), equalTo( 2 ) );
     }
@@ -101,7 +103,7 @@ public class ModuleMatchingInfoFactoryTest {
 
   @Test
   public void create_withMultipleMethodMatchingInfosForOneMethod() {
-    ModuleMatchingInfoFactory factory = new ModuleMatchingInfoFactory( Object.class,
+    TypeMatchingInfoFactory factory = new TypeMatchingInfoFactory( Object.class,
         Object.class );
     Collection<MethodMatchingInfo> method1MatchingInfos = new ArrayList<>();
     method1MatchingInfos.add( mockMethodMatchingInfo() );
@@ -120,11 +122,11 @@ public class ModuleMatchingInfoFactoryTest {
     possibleMethodMatches.put( Object.class.getMethods()[1], method2MatchingInfos );
     possibleMethodMatches.put( Object.class.getMethods()[2], method3MatchingInfos );
 
-    Collection<ModuleMatchingInfo> matchingInfos = factory.createFromMethodMatchingInfos( possibleMethodMatches );
+    Collection<TypeMatchingInfo> matchingInfos = factory.createFromMethodMatchingInfos( possibleMethodMatches );
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 6 ) );
     // assertThat( matchingInfo.getRating(), equalTo( 0 ) );
-    for ( ModuleMatchingInfo info : matchingInfos ) {
+    for ( TypeMatchingInfo info : matchingInfos ) {
       Collection<MethodMatchingInfo> methodMatchingInfos = info.getMethodMatchingInfos();
       assertThat( methodMatchingInfos, notNullValue() );
       assertThat( methodMatchingInfos.size(), equalTo( 3 ) );

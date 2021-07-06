@@ -11,7 +11,7 @@ import java.util.Optional;
 
 import matching.methods.MethodMatchingInfo;
 import matching.methods.MethodMatchingInfo.ParamPosition;
-import matching.modules.ModuleMatchingInfo;
+import matching.types.TypeMatchingInfo;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 import util.Logger;
@@ -86,7 +86,7 @@ public class BehaviourDelegateInvocationHandler implements MethodInterceptor, In
     Method targetMethod = methodMatchingInfo.getTarget();
     Object[] convertedArgs = convertArgs( args, methodMatchingInfo.getArgumentTypeMatchingInfos() );
     Object returnValue = targetMethod.invoke( component.getComponent(), convertedArgs );
-    ModuleMatchingInfo returnTypeMatchingInfo = methodMatchingInfo.getReturnTypeMatchingInfo();
+    TypeMatchingInfo returnTypeMatchingInfo = methodMatchingInfo.getReturnTypeMatchingInfo();
     if ( returnTypeMatchingInfo == null ) {
       return returnValue;
     }
@@ -97,17 +97,17 @@ public class BehaviourDelegateInvocationHandler implements MethodInterceptor, In
     return convertType( returnValue, returnTypeMatchingInfo );
   }
 
-  private Object[] convertArgs( Object[] args, Map<ParamPosition, ModuleMatchingInfo> argMMI ) {
+  private Object[] convertArgs( Object[] args, Map<ParamPosition, TypeMatchingInfo> argMMI ) {
     if ( args == null ) {
       return null;
     }
     Object[] convertedArgs = new Object[args.length];
     for ( int i = 0; i < args.length; i++ ) {
-      Entry<ParamPosition, ModuleMatchingInfo> moduleMatchingInfoEntry = getParameterWithRepectToPosition( i, argMMI );
+      Entry<ParamPosition, TypeMatchingInfo> moduleMatchingInfoEntry = getParameterWithRepectToPosition( i, argMMI );
       if ( moduleMatchingInfoEntry != null && moduleMatchingInfoEntry.getValue() != null
           && moduleMatchingInfoEntry.getKey() != null ) {
         ParamPosition paramPosition = moduleMatchingInfoEntry.getKey();
-        ModuleMatchingInfo moduleMatchingInfo = moduleMatchingInfoEntry.getValue();
+        TypeMatchingInfo moduleMatchingInfo = moduleMatchingInfoEntry.getValue();
         Object convertedArg = convertType( args[paramPosition.getSourceParamPosition()],
             moduleMatchingInfo );
         convertedArgs[paramPosition.getTargetParamPosition()] = convertedArg;
@@ -120,8 +120,8 @@ public class BehaviourDelegateInvocationHandler implements MethodInterceptor, In
     return convertedArgs;
   }
 
-  private Entry<ParamPosition, ModuleMatchingInfo> getParameterWithRepectToPosition( int sourceParamPosition,
-      Map<ParamPosition, ModuleMatchingInfo> argMMI ) {
+  private Entry<ParamPosition, TypeMatchingInfo> getParameterWithRepectToPosition( int sourceParamPosition,
+      Map<ParamPosition, TypeMatchingInfo> argMMI ) {
     return argMMI.entrySet().stream().filter( e -> e.getKey().getSourceParamPosition().equals( sourceParamPosition ) )
         .findFirst().orElse( null );
   }
@@ -134,7 +134,7 @@ public class BehaviourDelegateInvocationHandler implements MethodInterceptor, In
    * @return
    */
   @SuppressWarnings( "unchecked" )
-  private <RT> RT convertType( Object sourceType, ModuleMatchingInfo moduleMatchingInfo ) {
+  private <RT> RT convertType( Object sourceType, TypeMatchingInfo moduleMatchingInfo ) {
     Logger.info( String.format( "convert type %s -> %s",
         moduleMatchingInfo.getSource().getName(), moduleMatchingInfo.getTarget().getName() ) );
     // Wenn das zu konvertierende Objekt null ist, dann kann dies auch gleich zurückgegeben werden, da null-Objekte
@@ -171,7 +171,7 @@ public class BehaviourDelegateInvocationHandler implements MethodInterceptor, In
   }
 
   private boolean argumentsMatches( MethodMatchingInfo mmi, Method method ) {
-    for ( Entry<ParamPosition, ModuleMatchingInfo> argMMIEntry : mmi.getArgumentTypeMatchingInfos().entrySet() ) {
+    for ( Entry<ParamPosition, TypeMatchingInfo> argMMIEntry : mmi.getArgumentTypeMatchingInfos().entrySet() ) {
       if ( method.getParameterCount() <= argMMIEntry.getKey().getSourceParamPosition() ) {
         throw new RuntimeException( "wrong parameter count" );
       }

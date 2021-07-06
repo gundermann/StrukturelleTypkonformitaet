@@ -1,4 +1,4 @@
-package matching.modules;
+package matching.types;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -17,12 +17,19 @@ import org.junit.Test;
 
 import matching.MatcherCombiner;
 import matching.methods.MethodMatchingInfo;
-import matching.modules.testmodules.Class1;
-import matching.modules.testmodules.Class2;
-import matching.modules.testmodules.Enum2;
-import matching.modules.testmodules.EnumNative;
-import matching.modules.testmodules.Interface1;
-import matching.modules.testmodules.InterfaceWrapper;
+import matching.types.ExactTypeMatcher;
+import matching.types.GenSpecTypeMatcher;
+import matching.types.PartlyTypeMatcher;
+import matching.types.PartlyTypeMatchingInfo;
+import matching.types.StructuralTypeMatcher;
+import matching.types.TypeMatchingInfo;
+import matching.types.WrappedTypeMatcher;
+import matching.types.testtypes.Class1;
+import matching.types.testtypes.Class2;
+import matching.types.testtypes.Enum2;
+import matching.types.testtypes.EnumNative;
+import matching.types.testtypes.Interface1;
+import matching.types.testtypes.InterfaceWrapper;
 import util.Logger;
 
 public class StructuralTypeMatcherInfoCalculationTest {
@@ -46,7 +53,7 @@ public class StructuralTypeMatcherInfoCalculationTest {
 
   @Test
   public void interface2interface_full_calculation() {
-    Collection<ModuleMatchingInfo> matchingInfos = matcher.calculateTypeMatchingInfos( Interface1.class,
+    Collection<TypeMatchingInfo> matchingInfos = matcher.calculateTypeMatchingInfos( Interface1.class,
         InterfaceWrapper.class );
     assertTrue( !matchingInfos.isEmpty() );
     assertTrue( matchingInfos.size() == 12 );
@@ -80,7 +87,7 @@ public class StructuralTypeMatcherInfoCalculationTest {
 
   @Test
   public void enum2interface_full_match() {
-    Collection<ModuleMatchingInfo> matchingInfos = matcher.calculateTypeMatchingInfos( EnumNative.class,
+    Collection<TypeMatchingInfo> matchingInfos = matcher.calculateTypeMatchingInfos( EnumNative.class,
         InterfaceWrapper.class );
     assertTrue( !matchingInfos.isEmpty() );
     assertThat( matchingInfos.size(), equalTo( 144 ) );
