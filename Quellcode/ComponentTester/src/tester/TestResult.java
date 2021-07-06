@@ -28,26 +28,26 @@ public class TestResult {
 	public TestResult() {
 	}
 
-	public void canceledByFailedDelegation(Throwable e, Method failedMethodCall) {
+	void canceledByFailedDelegation(Throwable e, Method failedMethodCall) {
 		this.failedMethodCall = failedMethodCall;
 		this.result = Result.CANCELED;
 		this.cause = Cause.FAILED_DELEGATION;
 		this.throwable = e;
 	}
 
-	public void canceledByException(Throwable e) {
+	void canceledByException(Throwable e) {
 		this.result = Result.CANCELED;
 		this.cause = Cause.EXCEPTION;
 		this.throwable = e;
 	}
 
-	public void failed(WrappedAssertionError ae) {
+	void failed(WrappedAssertionError ae) {
 		this.result = Result.FAILED;
 		this.cause = Cause.ASSERTION;
 		this.throwable = ae;
 	}
 
-	public void passed() {
+	void passed() {
 		this.result = Result.PASSED;
 	}
 
@@ -63,11 +63,11 @@ public class TestResult {
 		}
 	}
 
-	public void addTests(int additionalTestCount) {
+	void addTests(int additionalTestCount) {
 		this.testCount += additionalTestCount;
 	}
 
-	public void incrementPassedTests() {
+	void incrementPassedTests() {
 		this.passedTests++;
 	}
 
@@ -95,7 +95,7 @@ public class TestResult {
 		return cause;
 	}
 
-	public void setFailedMethodCall(Method failedMethodCall) {
+	void setFailedMethodCall(Method failedMethodCall) {
 		this.failedMethodCall = failedMethodCall;
 	}
 
@@ -103,7 +103,7 @@ public class TestResult {
 		return triedMethodCalls;
 	}
 
-	public void addTriedMethodCall(Method m) {
+	void addTriedMethodCall(Method m) {
 		triedMethodCalls.add(m);
 	}
 
