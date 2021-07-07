@@ -1,59 +1,18 @@
 package matching;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.function.Supplier;
 
-import matching.methods.MethodMatcher;
-import matching.methods.MethodMatchingInfo;
 import matching.types.CombinableTypeMatcher;
 import matching.types.TypeMatcher;
 import matching.types.TypeMatchingInfo;
 
-public abstract class MatcherCombiner {
+public final class MatcherCombiner {
   private MatcherCombiner() {
-  }
-
-  public static Supplier<MethodMatcher> combine( MethodMatcher... matcher ) {
-    return () -> new MethodMatcher() {
-
-      @Override
-      public boolean matches( Method checkMethod, Method queryMethod ) {
-        for ( MethodMatcher m : matcher ) {
-          if ( m.matches( checkMethod, queryMethod ) ) {
-            return true;
-          }
-        }
-        return false;
-      }
-
-      @Override
-      public Collection<MethodMatchingInfo> calculateMatchingInfos( Method checkMethod, Method queryMethod ) {
-        for ( MethodMatcher m : matcher ) {
-          if ( m.matches( checkMethod, queryMethod ) ) {
-            return m.calculateMatchingInfos( checkMethod, queryMethod );
-          }
-        }
-        return new HashSet<>();
-      }
-
-      @Override
-      public MatcherRate matchesWithRating( Method checkMethod, Method queryMethod ) {
-        for ( MethodMatcher m : matcher ) {
-          MatcherRate rate = m.matchesWithRating( checkMethod, queryMethod );
-          if ( rate != null ) {
-            return rate;
-          }
-        }
-        return null;
-      }
-
-    };
   }
 
   public static Supplier<TypeMatcher> combine( CombinableTypeMatcher... matcher ) {
