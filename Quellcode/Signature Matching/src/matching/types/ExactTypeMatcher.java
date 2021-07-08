@@ -3,6 +3,8 @@ package matching.types;
 import java.util.Collection;
 import java.util.Collections;
 
+import glue.ProxyCreatorFactories;
+import matching.MatchingInfo;
 import matching.Setting;
 
 public class ExactTypeMatcher implements CombinableTypeMatcher {
@@ -13,11 +15,14 @@ public class ExactTypeMatcher implements CombinableTypeMatcher {
   }
 
   @Override
-  public Collection<TypeMatchingInfo> calculateTypeMatchingInfos( Class<?> targetType,
+  public Collection<MatchingInfo> calculateTypeMatchingInfos( Class<?> targetType,
       Class<?> sourceType ) {
     if ( matchesType( targetType, sourceType ) ) {
       return Collections
-          .singletonList( new TypeMatchingInfoFactory( targetType, sourceType ).create() );
+          .singletonList( new MatchingInfo.Builder(sourceType, targetType, ProxyCreatorFactories.getIdentityFactoryCreator()).build()
+        		  
+//        		  new TypeMatchingInfoFactory( targetType, sourceType ).create() 
+        		  );
     }
     return Collections.emptyList();
   }

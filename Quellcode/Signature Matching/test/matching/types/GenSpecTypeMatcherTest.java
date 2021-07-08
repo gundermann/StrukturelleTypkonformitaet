@@ -9,8 +9,7 @@ import java.util.Collection;
 
 import org.junit.Test;
 
-import matching.types.GenSpecTypeMatcher;
-import matching.types.TypeMatchingInfo;
+import matching.MatchingInfo;
 import testcomponents.genspec.General;
 import testcomponents.genspec.OfferedGenClass;
 import testcomponents.genspec.Specific;
@@ -36,18 +35,18 @@ public class GenSpecTypeMatcherTest {
   @Test
   public void typeMatchingInfos() {
     GenSpecTypeMatcher matcher = new GenSpecTypeMatcher();
-    Collection<TypeMatchingInfo> tmi = matcher.calculateTypeMatchingInfos( String.class, String.class );
-    assertTrue( tmi.size() == 1 );
-    TypeMatchingInfo mmi = tmi.iterator().next();
-    assertThat( mmi.getMethodMatchingInfos().size(), equalTo( 0 ) );
-    tmi = matcher.calculateTypeMatchingInfos( General.class, Specific.class );
-    assertTrue( tmi.size() == 1 );
-    mmi = tmi.iterator().next();
-    assertThat( mmi.getMethodMatchingInfos().size(), equalTo( 0 ) );
-    tmi = matcher.calculateTypeMatchingInfos( Specific.class, General.class );
-    assertThat( tmi.size(), equalTo( 1 ) );
-    mmi = tmi.iterator().next();
-    assertThat( mmi.getMethodMatchingInfos().size(), equalTo( 3 ) );
+    Collection<MatchingInfo> mis = matcher.calculateTypeMatchingInfos( String.class, String.class );
+    assertTrue( mis.size() == 1 );
+    MatchingInfo mi = mis.iterator().next();
+    assertThat( mi.getMethodMatchingInfoSupplier().size(), equalTo( 0 ) );
+    mis = matcher.calculateTypeMatchingInfos( General.class, Specific.class );
+    assertTrue( mis.size() == 1 );
+    mi = mis.iterator().next();
+    assertThat( mi.getMethodMatchingInfoSupplier().size(), equalTo( 0 ) );
+    mis = matcher.calculateTypeMatchingInfos( Specific.class, General.class );
+    assertThat( mis.size(), equalTo( 1 ) );
+    mi = mis.iterator().next();
+    assertThat( mi.getMethodMatchingInfoSupplier().size(), equalTo( 3 ) );
   }
 
 }

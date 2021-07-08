@@ -18,8 +18,8 @@ import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.Comb
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.Combinator;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.AnalyzationUtils;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.CollectionUtil;
+import matching.MatchingInfo;
 import matching.methods.MethodMatchingInfo;
-import matching.types.PartlyTypeMatchingInfo;
 import util.Logger;
 
 /**
@@ -28,13 +28,13 @@ import util.Logger;
  */
 public class CombinationSelector implements Selector {
 
-	private final List<PartlyTypeMatchingInfo> infos;
+	private final List<MatchingInfo> infos;
 
 	private int combinatiedComponentCount = 1;
 
 	private Collection<Collection<CombinationPartInfo>> cachedCalculatedInfos = new ArrayList<>();
 
-	private List<Collection<PartlyTypeMatchingInfo>> cachedMatchingInfoCombinations = new ArrayList<>();
+	private List<Collection<MatchingInfo>> cachedMatchingInfoCombinations = new ArrayList<>();
 
 	private final Collection<Method> originalMethods;
 
@@ -48,9 +48,9 @@ public class CombinationSelector implements Selector {
 
 	private final Collection<Heuristic> usedHeuristics;
 
-	public CombinationSelector(List<PartlyTypeMatchingInfo> infos, Collection<Heuristic> usedHeuristics) {
+	public CombinationSelector(List<MatchingInfo> infos, Collection<Heuristic> usedHeuristics) {
 		this.infos = infos;
-		this.originalMethods = infos.stream().findFirst().map(PartlyTypeMatchingInfo::getOriginalMethods)
+		this.originalMethods = infos.stream().findFirst().map(MatchingInfo::getMatchedSourceMethods)
 				.orElse(Collections.emptyList());
 		this.usedHeuristics = usedHeuristics;
 	}
@@ -70,7 +70,7 @@ public class CombinationSelector implements Selector {
 				return getNext();
 			}
 
-			Map<Method, Collection<PartlyTypeMatchingInfo>> relevantTypeMatchingInfos = collectRelevantInfosPerMethod();
+			Map<Method, Collection<MatchingInfo>> relevantTypeMatchingInfos = collectRelevantInfosPerMethod();
 			if (!relevantTypeMatchingInfos.isEmpty()) {
 				fillCachedComponent2MatchingInfo(relevantTypeMatchingInfos);
 				return getNext();
@@ -82,7 +82,7 @@ public class CombinationSelector implements Selector {
 	private void collectRelevantMatchingInfoCombinations() {
 		// H: blacklist if no implementation available + BL_NMC (muss nicht abgefragt
 		// werden, weil die fehlende Implementierungen ohnehin heruasgefiltert werden.
-		Collection<PartlyTypeMatchingInfo> relevantInfos = new CheckTypeBlacklistFilter(this.checkTypeHCBlacklist)
+		Collection<MatchingInfo> relevantInfos = new CheckTypeBlacklistFilter(this.checkTypeHCBlacklist)
 				.filter(infos);
 
 		cachedMatchingInfoCombinations = new ArrayList<>(
@@ -102,9 +102,9 @@ public class CombinationSelector implements Selector {
 		}
 	}
 
-	private Map<Method, Collection<PartlyTypeMatchingInfo>> collectRelevantInfosPerMethod() {
-		Collection<PartlyTypeMatchingInfo> combi = CollectionUtil.pop(cachedMatchingInfoCombinations);
-		Map<Method, Collection<PartlyTypeMatchingInfo>> matchingInfoPerMethod = getMatchingInfoPerMethod(combi);
+	private Map<Method, Collection<MatchingInfo>> collectRelevantInfosPerMethod() {
+		Collection<MatchingInfo> combi = CollectionUtil.pop(cachedMatchingInfoCombinations);
+		Map<Method, Collection<MatchingInfo>> matchingInfoPerMethod = getMatchingInfoPerMethod(combi);
 		// Pruefen, ob auch alle erwarteten Methoden erfuellt wurden.
 		if (!matchingInfoPerMethod.keySet().containsAll(originalMethods)) {
 			return new HashMap<>();
@@ -112,7 +112,7 @@ public class CombinationSelector implements Selector {
 		return matchingInfoPerMethod;
 	}
 
-	private void fillCachedComponent2MatchingInfo(Map<Method, Collection<PartlyTypeMatchingInfo>> typeMatchingInfos) {
+	private void fillCachedComponent2MatchingInfo(Map<Method, Collection<MatchingInfo>> typeMatchingInfos) {
 		Map<Method, Collection<CombinationPartInfo>> combiPartInfos = CombinationFinderUtils
 				.transformToCombinationPartInfosPerMethod(typeMatchingInfos, this.methodMatchingInfoHCBlacklist);
 		this.cachedCalculatedInfos = new Combinator<Method, CombinationPartInfo>().generateCombis(combiPartInfos,
@@ -123,10 +123,10 @@ public class CombinationSelector implements Selector {
 				.collect(Collectors.toList());
 	}
 
-	private Map<Method, Collection<PartlyTypeMatchingInfo>> getMatchingInfoPerMethod(
-			Collection<PartlyTypeMatchingInfo> relevantInfos) {
-		Map<Method, Collection<PartlyTypeMatchingInfo>> relevantTypeMatchingInfos = new HashMap<>();
-		for (PartlyTypeMatchingInfo info : relevantInfos) {
+	private Map<Method, Collection<MatchingInfo>> getMatchingInfoPerMethod(
+			Collection<MatchingInfo> relevantInfos) {
+		Map<Method, Collection<MatchingInfo>> relevantTypeMatchingInfos = new HashMap<>();
+		for (MatchingInfo info : relevantInfos) {
 			Collection<Method> methodsWithMatchingInfo = info.getMethodMatchingInfoSupplier().keySet();
 			for (Method m : methodsWithMatchingInfo) {
 				relevantTypeMatchingInfos.compute(m, CollectionUtil.remapping_addToValueCollection(info));

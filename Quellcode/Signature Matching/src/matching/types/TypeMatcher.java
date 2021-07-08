@@ -3,6 +3,7 @@ package matching.types;
 import java.util.Collection;
 
 import matching.MatcherRate;
+import matching.MatchingInfo;
 
 public interface TypeMatcher {
 
@@ -19,7 +20,7 @@ public interface TypeMatcher {
    */
   boolean matchesType( Class<?> checkType, Class<?> queryType );
 
-  Collection<TypeMatchingInfo> calculateTypeMatchingInfos( Class<?> checkType, Class<?> queryType );
+  Collection<MatchingInfo> calculateTypeMatchingInfos( Class<?> checkType, Class<?> queryType );
 
   MatcherRate matchesWithRating( Class<?> checkType, Class<?> queryType );
 

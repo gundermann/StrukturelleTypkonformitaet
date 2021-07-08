@@ -12,6 +12,7 @@ import java.util.Map.Entry;
 
 import org.junit.Test;
 
+import matching.MatchingInfo;
 import matching.methods.MethodMatchingInfo.ParamPosition;
 import matching.types.ExactTypeMatcher;
 import matching.types.TypeMatchingInfo;
@@ -89,10 +90,10 @@ public class ExactMethodMatcherMatchingInfosTest {
       assertThat( info.getArgumentTypeMatchingInfos(), notNullValue() );
       assertThat( info.getArgumentTypeMatchingInfos().size(), equalTo( 1 ) );
 
-      Iterator<Entry<ParamPosition, TypeMatchingInfo>> iterator = info.getArgumentTypeMatchingInfos().entrySet()
+      Iterator<Entry<ParamPosition, MatchingInfo>> iterator = info.getArgumentTypeMatchingInfos().entrySet()
           .iterator();
       while ( iterator.hasNext() ) {
-        Entry<ParamPosition, TypeMatchingInfo> argInfoEntry1 = iterator.next();
+        Entry<ParamPosition, MatchingInfo> argInfoEntry1 = iterator.next();
         assertThat( argInfoEntry1.getValue().getSource(),
             equalTo( queryMethod.getParameterTypes()[argInfoEntry1.getKey().getSourceParamPosition()] ) );
         assertThat( argInfoEntry1.getValue().getTarget(),
@@ -114,10 +115,10 @@ public class ExactMethodMatcherMatchingInfosTest {
       assertThat( info.getArgumentTypeMatchingInfos(), notNullValue() );
       assertThat( info.getArgumentTypeMatchingInfos().size(), equalTo( 2 ) );
 
-      Iterator<Entry<ParamPosition, TypeMatchingInfo>> iterator = info.getArgumentTypeMatchingInfos().entrySet()
+      Iterator<Entry<ParamPosition, MatchingInfo>> iterator = info.getArgumentTypeMatchingInfos().entrySet()
           .iterator();
       while ( iterator.hasNext() ) {
-        Entry<ParamPosition, TypeMatchingInfo> argInfoEntry1 = iterator.next();
+        Entry<ParamPosition, MatchingInfo> argInfoEntry1 = iterator.next();
         assertThat( argInfoEntry1.getValue().getSource(),
             equalTo( queryMethod.getParameterTypes()[argInfoEntry1.getKey().getSourceParamPosition()] ) );
         assertThat( argInfoEntry1.getValue().getTarget(),

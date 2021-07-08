@@ -9,7 +9,6 @@ import java.util.function.Supplier;
 
 import matching.types.CombinableTypeMatcher;
 import matching.types.TypeMatcher;
-import matching.types.TypeMatchingInfo;
 
 public final class MatcherCombiner {
   private MatcherCombiner() {
@@ -37,7 +36,7 @@ public final class MatcherCombiner {
       }
 
       @Override
-      public Collection<TypeMatchingInfo> calculateTypeMatchingInfos( Class<?> checkType, Class<?> queryType ) {
+      public Collection<MatchingInfo> calculateTypeMatchingInfos( Class<?> checkType, Class<?> queryType ) {
         for ( CombinableTypeMatcher m : getSortedMatcher() ) {
           if ( m.matchesType( checkType, queryType ) ) {
             return m.calculateTypeMatchingInfos( checkType, queryType );

@@ -1,5 +1,6 @@
 package de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.beans.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.beans.Doctor;
@@ -52,7 +53,7 @@ public class EmergencyDoctor implements Doctor, Intubator {
 
   @Override
   public void healWithMed( Injured injured, Medicine med ) {
-    Collection<Suffer> suffers = injured.getSuffers();
+    Collection<Suffer> suffers = new ArrayList<>(injured.getSuffers());
     for ( Suffer suffer : suffers ) {
       injured.healSuffer( suffer );
     }

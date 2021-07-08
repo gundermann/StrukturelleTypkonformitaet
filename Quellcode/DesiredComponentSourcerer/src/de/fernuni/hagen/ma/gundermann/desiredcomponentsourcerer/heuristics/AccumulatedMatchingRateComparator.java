@@ -6,22 +6,22 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import matching.MatcherRate;
+import matching.MatchingInfo;
 import matching.Setting;
-import matching.types.PartlyTypeMatchingInfo;
 
 /**
  * This Comparator is responsable of the following heuristic:</br>
  * H: combinate low matcher rating first
  */
-public class AccumulatedMatchingRateComparator implements Comparator<Collection<PartlyTypeMatchingInfo>> {
+public class AccumulatedMatchingRateComparator implements Comparator<Collection<MatchingInfo>> {
 
   @Override
-  public int compare( Collection<PartlyTypeMatchingInfo> o1, Collection<PartlyTypeMatchingInfo> o2 ) {
+  public int compare( Collection<MatchingInfo> o1, Collection<MatchingInfo> o2 ) {
     Optional<Stream<MatcherRate>> mr1 = Optional.ofNullable( o1 ).map( Collection::stream )
-        .map( s -> s.map( PartlyTypeMatchingInfo::getQualitativeMatchRating ) );
+        .map( s -> s.map( MatchingInfo::getQualitativeMatchRating ) );
 
     Optional<Stream<MatcherRate>> mr2 = Optional.ofNullable( o2 ).map( Collection::stream )
-        .map( s -> s.map( PartlyTypeMatchingInfo::getQualitativeMatchRating ) );
+        .map( s -> s.map( MatchingInfo::getQualitativeMatchRating ) );
 
     if ( !mr1.isPresent() && !mr2.isPresent() ) {
       return 0;

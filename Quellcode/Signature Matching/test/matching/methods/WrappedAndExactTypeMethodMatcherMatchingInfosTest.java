@@ -11,10 +11,13 @@ import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import org.junit.Test;
 
 import matching.MatcherCombiner;
+import matching.MatchingInfo;
 import matching.methods.MethodMatchingInfo.ParamPosition;
 import matching.types.CombinableTypeMatcher;
 import matching.types.ExactTypeMatcher;
@@ -38,7 +41,7 @@ public class WrappedAndExactTypeMethodMatcherMatchingInfosTest {
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 1 ) );
     for ( MethodMatchingInfo info : matchingInfos ) {
-      TypeMatchingInfo rtInfo = info.getReturnTypeMatchingInfo();
+    	MatchingInfo rtInfo = info.getReturnTypeMatchingInfo();
       assertThat( rtInfo, notNullValue() );
       assertThat( rtInfo.getSource(), equalTo( checkMethod.getReturnType() ) );
       assertThat( rtInfo.getTarget(), equalTo( queryMethod.getReturnType() ) );
@@ -57,7 +60,7 @@ public class WrappedAndExactTypeMethodMatcherMatchingInfosTest {
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 1 ) );
     for ( MethodMatchingInfo info : matchingInfos ) {
-      TypeMatchingInfo rtInfo = info.getReturnTypeMatchingInfo();
+    	MatchingInfo rtInfo = info.getReturnTypeMatchingInfo();
       assertThat( rtInfo, notNullValue() );
       assertThat( rtInfo.getSource(), equalTo( checkMethod.getReturnType() ) );
       assertThat( rtInfo.getTarget(), equalTo( queryMethod.getReturnType() ) );
@@ -86,7 +89,7 @@ public class WrappedAndExactTypeMethodMatcherMatchingInfosTest {
     for ( MethodMatchingInfo mmi : matchingInfos ) {
       assertThat( mmi.getSource(), equalTo( queryMethod ) );
       assertThat( mmi.getTarget(), equalTo( checkMethod ) );
-      TypeMatchingInfo rtMatchingInfo = mmi.getReturnTypeMatchingInfo();
+      MatchingInfo rtMatchingInfo = mmi.getReturnTypeMatchingInfo();
       assertThat( rtMatchingInfo, notNullValue() );
       assertThat( rtMatchingInfo.getSource(), notNullValue() );
       assertThat( rtMatchingInfo.getSource(), equalTo( Integer.class ) );
@@ -94,7 +97,11 @@ public class WrappedAndExactTypeMethodMatcherMatchingInfosTest {
       assertThat( rtMatchingInfo.getTarget(), notNullValue() );
       assertThat( rtMatchingInfo.getTarget(), equalTo( int.class ) );
       assertThat( rtMatchingInfo.getConverterCreator(), notNullValue() );
-      Collection<MethodMatchingInfo> rtMethodMI = rtMatchingInfo.getMethodMatchingInfos();
+      Collection<MethodMatchingInfo> rtMethodMI = rtMatchingInfo.getMethodMatchingInfoSupplier().values()
+      		.stream()
+      		.map(Supplier::get)
+      		.flatMap(Collection::stream)
+      		.collect(Collectors.toList());
       assertThat( rtMethodMI, notNullValue() );
       assertThat( rtMethodMI.size(), equalTo( 0 ) ); // Denn die Typen sind identisch
 
@@ -113,7 +120,7 @@ public class WrappedAndExactTypeMethodMatcherMatchingInfosTest {
     for ( MethodMatchingInfo mmi : matchingInfos ) {
       assertThat( mmi.getSource(), equalTo( queryMethod ) );
       assertThat( mmi.getTarget(), equalTo( checkMethod ) );
-      TypeMatchingInfo rtMatchingInfo = mmi.getReturnTypeMatchingInfo();
+      MatchingInfo rtMatchingInfo = mmi.getReturnTypeMatchingInfo();
       assertThat( rtMatchingInfo, notNullValue() );
       assertThat( rtMatchingInfo.getTarget(), notNullValue() );
       assertThat( rtMatchingInfo.getTarget(), equalTo( Integer.class ) );
@@ -121,7 +128,11 @@ public class WrappedAndExactTypeMethodMatcherMatchingInfosTest {
       assertThat( rtMatchingInfo.getSource(), notNullValue() );
       assertThat( rtMatchingInfo.getSource(), equalTo( int.class ) );
 
-      Collection<MethodMatchingInfo> rtMethodMI = rtMatchingInfo.getMethodMatchingInfos();
+      Collection<MethodMatchingInfo> rtMethodMI = rtMatchingInfo.getMethodMatchingInfoSupplier().values()
+      		.stream()
+      		.map(Supplier::get)
+      		.flatMap(Collection::stream)
+      		.collect(Collectors.toList());
       assertThat( rtMethodMI, notNullValue() );
       assertThat( rtMethodMI.size(), equalTo( 0 ) ); // Denn die Typen sind identisch
 
@@ -140,7 +151,7 @@ public class WrappedAndExactTypeMethodMatcherMatchingInfosTest {
     for ( MethodMatchingInfo mmi : matchingInfos ) {
       assertThat( mmi.getSource(), equalTo( queryMethod ) );
       assertThat( mmi.getTarget(), equalTo( checkMethod ) );
-      TypeMatchingInfo rtMatchingInfo = mmi.getReturnTypeMatchingInfo();
+      MatchingInfo rtMatchingInfo = mmi.getReturnTypeMatchingInfo();
       assertThat( rtMatchingInfo, notNullValue() );
       assertThat( rtMatchingInfo.getSource(), notNullValue() );
       assertThat( rtMatchingInfo.getSource(), equalTo( void.class ) );
@@ -148,19 +159,27 @@ public class WrappedAndExactTypeMethodMatcherMatchingInfosTest {
       assertThat( rtMatchingInfo.getTarget(), notNullValue() );
       assertThat( rtMatchingInfo.getTarget(), equalTo( void.class ) );
       assertThat( rtMatchingInfo.getConverterCreator(), notNullValue() );
-      Collection<MethodMatchingInfo> rtMethodMI = rtMatchingInfo.getMethodMatchingInfos();
+      Collection<MethodMatchingInfo> rtMethodMI = rtMatchingInfo.getMethodMatchingInfoSupplier().values()
+      		.stream()
+      		.map(Supplier::get)
+      		.flatMap(Collection::stream)
+      		.collect(Collectors.toList());
       assertThat( rtMethodMI, notNullValue() );
       assertThat( rtMethodMI.size(), equalTo( 0 ) ); // Denn die Typen sind identisch
 
-      Map<ParamPosition, TypeMatchingInfo> argumentTypeMatchingInfos = mmi.getArgumentTypeMatchingInfos();
+      Map<ParamPosition, MatchingInfo> argumentTypeMatchingInfos = mmi.getArgumentTypeMatchingInfos();
       assertThat( argumentTypeMatchingInfos, notNullValue() );
       assertThat( argumentTypeMatchingInfos.size(), equalTo( 1 ) );
-      for ( TypeMatchingInfo argMMI : argumentTypeMatchingInfos.values() ) {
+      for ( MatchingInfo argMMI : argumentTypeMatchingInfos.values() ) {
         assertThat( argMMI, notNullValue() );
         assertThat( argMMI.getSource(), notNullValue() );
         assertThat( argMMI.getTarget(), notNullValue() );
         assertThat( argMMI.getConverterCreator(), notNullValue() );
-        Collection<MethodMatchingInfo> argMethodMI = argMMI.getMethodMatchingInfos();
+        Collection<MethodMatchingInfo> argMethodMI = argMMI.getMethodMatchingInfoSupplier().values()
+        		.stream()
+        		.map(Supplier::get)
+        		.flatMap(Collection::stream)
+        		.collect(Collectors.toList());
         assertThat( argMethodMI, notNullValue() );
         assertThat( argMethodMI.size(), equalTo( 0 ) ); // Denn die Typen sind identisch
       }
@@ -175,17 +194,17 @@ public class WrappedAndExactTypeMethodMatcherMatchingInfosTest {
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 1 ) );
     for ( MethodMatchingInfo info : matchingInfos ) {
-      TypeMatchingInfo rtInfo = info.getReturnTypeMatchingInfo();
+    	MatchingInfo rtInfo = info.getReturnTypeMatchingInfo();
       assertThat( rtInfo, notNullValue() );
       assertThat( rtInfo.getSource(), equalTo( checkMethod.getReturnType() ) );
       assertThat( rtInfo.getTarget(), equalTo( queryMethod.getReturnType() ) );
       assertThat( rtInfo.getConverterCreator(), notNullValue() );
 
-      Map<ParamPosition, TypeMatchingInfo> argInfos = info.getArgumentTypeMatchingInfos();
+      Map<ParamPosition, MatchingInfo> argInfos = info.getArgumentTypeMatchingInfos();
       assertThat( argInfos, notNullValue() );
       assertThat( argInfos.size(), equalTo( 1 ) );
 
-      for ( Entry<ParamPosition, TypeMatchingInfo> argEntry : argInfos.entrySet() ) {
+      for ( Entry<ParamPosition, MatchingInfo> argEntry : argInfos.entrySet() ) {
         assertThat( argEntry.getValue().getSource(),
             equalTo( queryMethod.getParameterTypes()[argEntry.getKey().getSourceParamPosition()] ) );
         assertThat( argEntry.getValue().getTarget(),
@@ -202,17 +221,17 @@ public class WrappedAndExactTypeMethodMatcherMatchingInfosTest {
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 1 ) );
     for ( MethodMatchingInfo info : matchingInfos ) {
-      TypeMatchingInfo rtInfo = info.getReturnTypeMatchingInfo();
+    	MatchingInfo rtInfo = info.getReturnTypeMatchingInfo();
       assertThat( rtInfo, notNullValue() );
       assertThat( rtInfo.getSource(), equalTo( checkMethod.getReturnType() ) );
       assertThat( rtInfo.getTarget(), equalTo( queryMethod.getReturnType() ) );
       assertThat( rtInfo.getConverterCreator(), notNullValue() );
 
-      Map<ParamPosition, TypeMatchingInfo> argInfos = info.getArgumentTypeMatchingInfos();
+      Map<ParamPosition, MatchingInfo> argInfos = info.getArgumentTypeMatchingInfos();
       assertThat( argInfos, notNullValue() );
       assertThat( argInfos.size(), equalTo( 2 ) );
 
-      for ( Entry<ParamPosition, TypeMatchingInfo> argEntry : argInfos.entrySet() ) {
+      for ( Entry<ParamPosition, MatchingInfo> argEntry : argInfos.entrySet() ) {
         assertThat( argEntry.getValue().getSource(),
             equalTo( queryMethod.getParameterTypes()[argEntry.getKey().getSourceParamPosition()] ) );
         assertThat( argEntry.getValue().getTarget(),
@@ -231,7 +250,7 @@ public class WrappedAndExactTypeMethodMatcherMatchingInfosTest {
     for ( MethodMatchingInfo mmi : matchingInfos ) {
       assertThat( mmi.getSource(), equalTo( queryMethod ) );
       assertThat( mmi.getTarget(), equalTo( checkMethod ) );
-      TypeMatchingInfo rtMatchingInfo = mmi.getReturnTypeMatchingInfo();
+      MatchingInfo rtMatchingInfo = mmi.getReturnTypeMatchingInfo();
       assertThat( rtMatchingInfo, notNullValue() );
       assertThat( rtMatchingInfo.getSource(), notNullValue() );
       assertThat( rtMatchingInfo.getSource(), equalTo( int.class ) );
@@ -240,14 +259,18 @@ public class WrappedAndExactTypeMethodMatcherMatchingInfosTest {
       assertThat( rtMatchingInfo.getTarget(), equalTo( int.class ) );
       assertThat( rtMatchingInfo.getConverterCreator(), notNullValue() );
 
-      Collection<MethodMatchingInfo> rtMethodMI = rtMatchingInfo.getMethodMatchingInfos();
+      Collection<MethodMatchingInfo> rtMethodMI = rtMatchingInfo.getMethodMatchingInfoSupplier().values()
+      		.stream()
+      		.map(Supplier::get)
+      		.flatMap(Collection::stream)
+      		.collect(Collectors.toList());
       assertThat( rtMethodMI, notNullValue() );
       assertThat( rtMethodMI.size(), equalTo( 0 ) ); // Denn die Typen sind identisch
 
-      Map<ParamPosition, TypeMatchingInfo> argumentTypeMatchingInfos = mmi.getArgumentTypeMatchingInfos();
+      Map<ParamPosition, MatchingInfo> argumentTypeMatchingInfos = mmi.getArgumentTypeMatchingInfos();
       assertThat( argumentTypeMatchingInfos, notNullValue() );
       assertThat( argumentTypeMatchingInfos.size(), equalTo( 2 ) );
-      for ( TypeMatchingInfo argMMI : argumentTypeMatchingInfos.values() ) {
+      for ( MatchingInfo argMMI : argumentTypeMatchingInfos.values() ) {
         assertThat( argMMI, notNullValue() );
         assertThat( argMMI.getSource(), notNullValue() );
         assertThat( argMMI.getTarget(), notNullValue() );
@@ -262,7 +285,11 @@ public class WrappedAndExactTypeMethodMatcherMatchingInfosTest {
         else {
           fail( "arg source must be int or Integer" );
         }
-        Collection<MethodMatchingInfo> argMethodMI = argMMI.getMethodMatchingInfos();
+        Collection<MethodMatchingInfo> argMethodMI = argMMI.getMethodMatchingInfoSupplier().values()
+        		.stream()
+        		.map(Supplier::get)
+        		.flatMap(Collection::stream)
+        		.collect(Collectors.toList());
         assertThat( argMethodMI, notNullValue() );
         assertThat( argMethodMI.size(), equalTo( 0 ) ); // Denn die Typen sind identisch
       }
@@ -286,7 +313,7 @@ public class WrappedAndExactTypeMethodMatcherMatchingInfosTest {
     for ( MethodMatchingInfo mmi : matchingInfos ) {
       assertThat( mmi.getSource(), equalTo( queryMethod ) );
       assertThat( mmi.getTarget(), equalTo( checkMethod ) );
-      TypeMatchingInfo rtMatchingInfo = mmi.getReturnTypeMatchingInfo();
+      MatchingInfo rtMatchingInfo = mmi.getReturnTypeMatchingInfo();
       assertThat( rtMatchingInfo, notNullValue() );
       assertThat( rtMatchingInfo.getSource(), notNullValue() );
       assertThat( rtMatchingInfo.getSource(), equalTo( int.class ) );
@@ -295,14 +322,18 @@ public class WrappedAndExactTypeMethodMatcherMatchingInfosTest {
       assertThat( rtMatchingInfo.getTarget(), equalTo( int.class ) );
       assertThat( rtMatchingInfo.getConverterCreator(), notNullValue() );
 
-      Collection<MethodMatchingInfo> rtMethodMI = rtMatchingInfo.getMethodMatchingInfos();
+      Collection<MethodMatchingInfo> rtMethodMI = rtMatchingInfo.getMethodMatchingInfoSupplier().values()
+      		.stream()
+      		.map(Supplier::get)
+      		.flatMap(Collection::stream)
+      		.collect(Collectors.toList());
       assertThat( rtMethodMI, notNullValue() );
       assertThat( rtMethodMI.size(), equalTo( 0 ) ); // Denn die Typen sind identisch
 
-      Map<ParamPosition, TypeMatchingInfo> argumentTypeMatchingInfos = mmi.getArgumentTypeMatchingInfos();
+      Map<ParamPosition, MatchingInfo> argumentTypeMatchingInfos = mmi.getArgumentTypeMatchingInfos();
       assertThat( argumentTypeMatchingInfos, notNullValue() );
       assertThat( argumentTypeMatchingInfos.size(), equalTo( 2 ) );
-      for ( TypeMatchingInfo argMMI : argumentTypeMatchingInfos.values() ) {
+      for ( MatchingInfo argMMI : argumentTypeMatchingInfos.values() ) {
         assertThat( argMMI, notNullValue() );
         assertThat( argMMI.getSource(), notNullValue() );
         assertThat( argMMI.getTarget(), notNullValue() );
@@ -317,7 +348,11 @@ public class WrappedAndExactTypeMethodMatcherMatchingInfosTest {
         else {
           fail( "arg source must be int or Integer" );
         }
-        Collection<MethodMatchingInfo> argMethodMI = argMMI.getMethodMatchingInfos();
+        Collection<MethodMatchingInfo> argMethodMI = argMMI.getMethodMatchingInfoSupplier().values()
+        		.stream()
+        		.map(Supplier::get)
+        		.flatMap(Collection::stream)
+        		.collect(Collectors.toList());
         assertThat( argMethodMI, notNullValue() );
         assertThat( argMethodMI.size(), equalTo( 0 ) ); // Denn die Typen sind identisch
       }

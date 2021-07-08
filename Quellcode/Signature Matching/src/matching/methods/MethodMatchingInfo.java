@@ -3,7 +3,7 @@ package matching.methods;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-import matching.types.TypeMatchingInfo;
+import matching.MatchingInfo;
 
 public class MethodMatchingInfo {
 
@@ -11,12 +11,12 @@ public class MethodMatchingInfo {
 
   private final Method target;
 
-  private final TypeMatchingInfo returnTypeMatchingInfo;
+  private final MatchingInfo returnTypeMatchingInfo;
 
-  private final Map<ParamPosition, TypeMatchingInfo> argumentTypeMatchingInfos;
+  private final Map<ParamPosition, MatchingInfo> argumentTypeMatchingInfos;
 
-  public MethodMatchingInfo( Method source, Method target, TypeMatchingInfo returnTypeMatchingInfo,
-      Map<ParamPosition, TypeMatchingInfo> argumentTypeMatchingInfos ) {
+  public MethodMatchingInfo( Method source, Method target, MatchingInfo returnTypeMatchingInfo,
+      Map<ParamPosition, MatchingInfo> argumentTypeMatchingInfos ) {
     this.source = source;
     this.target = target;
     this.returnTypeMatchingInfo = returnTypeMatchingInfo;
@@ -31,11 +31,11 @@ public class MethodMatchingInfo {
     return target;
   }
 
-  public TypeMatchingInfo getReturnTypeMatchingInfo() {
+  public MatchingInfo getReturnTypeMatchingInfo() {
     return returnTypeMatchingInfo;
   }
 
-  public Map<ParamPosition, TypeMatchingInfo> getArgumentTypeMatchingInfos() {
+  public Map<ParamPosition, MatchingInfo> getArgumentTypeMatchingInfos() {
     return argumentTypeMatchingInfos;
   }
 

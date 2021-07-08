@@ -1,9 +1,8 @@
-package matching.types;
+package matching;
 
 import java.util.Collection;
 import java.util.function.Supplier;
 
-import matching.MatcherRate;
 import matching.methods.MethodMatchingInfo;
 
 public class MatchingSupplier {

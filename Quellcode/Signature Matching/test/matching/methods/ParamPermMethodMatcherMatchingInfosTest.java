@@ -13,9 +13,9 @@ import java.util.Map.Entry;
 
 import org.junit.Test;
 
+import matching.MatchingInfo;
 import matching.methods.MethodMatchingInfo.ParamPosition;
 import matching.types.ExactTypeMatcher;
-import matching.types.TypeMatchingInfo;
 
 public class ParamPermMethodMatcherMatchingInfosTest {
 
@@ -90,9 +90,9 @@ public class ParamPermMethodMatcherMatchingInfosTest {
       assertThat( info.getArgumentTypeMatchingInfos(), notNullValue() );
       assertThat( info.getArgumentTypeMatchingInfos().size(), equalTo( 1 ) );
 
-      Iterator<Entry<ParamPosition, TypeMatchingInfo>> iterator = info.getArgumentTypeMatchingInfos().entrySet()
+      Iterator<Entry<ParamPosition, MatchingInfo>> iterator = info.getArgumentTypeMatchingInfos().entrySet()
           .iterator();
-      Entry<ParamPosition, TypeMatchingInfo> argInfoEntry1 = iterator.next();
+      Entry<ParamPosition, MatchingInfo> argInfoEntry1 = iterator.next();
       assertThat( argInfoEntry1.getValue().getSource(),
           equalTo( queryMethod.getParameterTypes()[argInfoEntry1.getKey().getSourceParamPosition()] ) );
       assertThat( argInfoEntry1.getValue().getTarget(),
@@ -108,18 +108,18 @@ public class ParamPermMethodMatcherMatchingInfosTest {
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 2 ) );
     matchingInfos.forEach( info -> {
-      TypeMatchingInfo returnTypeMatchingInfo = info.getReturnTypeMatchingInfo();
+    	MatchingInfo returnTypeMatchingInfo = info.getReturnTypeMatchingInfo();
       assertThat( returnTypeMatchingInfo, notNullValue() );
       assertThat( returnTypeMatchingInfo.getSource(), equalTo( checkMethod.getReturnType() ) );
       assertThat( returnTypeMatchingInfo.getTarget(), equalTo( queryMethod.getReturnType() ) );
-      Map<ParamPosition, TypeMatchingInfo> argumentTypeMatchingInfos = info.getArgumentTypeMatchingInfos();
+      Map<ParamPosition, MatchingInfo> argumentTypeMatchingInfos = info.getArgumentTypeMatchingInfos();
       assertThat( argumentTypeMatchingInfos, notNullValue() );
       assertThat( argumentTypeMatchingInfos.size(), equalTo( 2 ) );
 
-      Iterator<Entry<ParamPosition, TypeMatchingInfo>> iterator = info.getArgumentTypeMatchingInfos().entrySet()
+      Iterator<Entry<ParamPosition, MatchingInfo>> iterator = info.getArgumentTypeMatchingInfos().entrySet()
           .iterator();
       while ( iterator.hasNext() ) {
-        Entry<ParamPosition, TypeMatchingInfo> argInfoEntry1 = iterator.next();
+        Entry<ParamPosition, MatchingInfo> argInfoEntry1 = iterator.next();
         assertThat( argInfoEntry1.getValue().getSource(),
             equalTo( queryMethod.getParameterTypes()[argInfoEntry1.getKey().getSourceParamPosition()] ) );
         assertThat( argInfoEntry1.getValue().getTarget(),
@@ -138,18 +138,18 @@ public class ParamPermMethodMatcherMatchingInfosTest {
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 1 ) );
     for ( MethodMatchingInfo info : matchingInfos ) {
-      TypeMatchingInfo returnTypeMatchingInfo = info.getReturnTypeMatchingInfo();
+    	MatchingInfo returnTypeMatchingInfo = info.getReturnTypeMatchingInfo();
       assertThat( returnTypeMatchingInfo, notNullValue() );
       assertThat( returnTypeMatchingInfo.getSource(), equalTo( checkMethod.getReturnType() ) );
       assertThat( returnTypeMatchingInfo.getTarget(), equalTo( queryMethod.getReturnType() ) );
-      Map<ParamPosition, TypeMatchingInfo> argumentTypeMatchingInfos = info.getArgumentTypeMatchingInfos();
+      Map<ParamPosition, MatchingInfo> argumentTypeMatchingInfos = info.getArgumentTypeMatchingInfos();
       assertThat( argumentTypeMatchingInfos, notNullValue() );
       assertThat( argumentTypeMatchingInfos.size(), equalTo( 2 ) );
 
-      Iterator<Entry<ParamPosition, TypeMatchingInfo>> iterator = info.getArgumentTypeMatchingInfos().entrySet()
+      Iterator<Entry<ParamPosition, MatchingInfo>> iterator = info.getArgumentTypeMatchingInfos().entrySet()
           .iterator();
       while ( iterator.hasNext() ) {
-        Entry<ParamPosition, TypeMatchingInfo> argInfoEntry = iterator.next();
+        Entry<ParamPosition, MatchingInfo> argInfoEntry = iterator.next();
         assertThat( argInfoEntry.getValue().getSource(),
             equalTo( queryMethod.getParameterTypes()[argInfoEntry.getKey().getSourceParamPosition()] ) );
         assertThat( argInfoEntry.getValue().getTarget(),
@@ -167,18 +167,18 @@ public class ParamPermMethodMatcherMatchingInfosTest {
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 1 ) );
     for ( MethodMatchingInfo info : matchingInfos ) {
-      TypeMatchingInfo returnTypeMatchingInfo = info.getReturnTypeMatchingInfo();
+    	MatchingInfo returnTypeMatchingInfo = info.getReturnTypeMatchingInfo();
       assertThat( returnTypeMatchingInfo, notNullValue() );
       assertThat( returnTypeMatchingInfo.getSource(), equalTo( checkMethod.getReturnType() ) );
       assertThat( returnTypeMatchingInfo.getTarget(), equalTo( queryMethod.getReturnType() ) );
-      Map<ParamPosition, TypeMatchingInfo> argumentTypeMatchingInfos = info.getArgumentTypeMatchingInfos();
+      Map<ParamPosition, MatchingInfo> argumentTypeMatchingInfos = info.getArgumentTypeMatchingInfos();
       assertThat( argumentTypeMatchingInfos, notNullValue() );
       assertThat( argumentTypeMatchingInfos.size(), equalTo( 2 ) );
 
-      Iterator<Entry<ParamPosition, TypeMatchingInfo>> iterator = info.getArgumentTypeMatchingInfos().entrySet()
+      Iterator<Entry<ParamPosition, MatchingInfo>> iterator = info.getArgumentTypeMatchingInfos().entrySet()
           .iterator();
       while ( iterator.hasNext() ) {
-        Entry<ParamPosition, TypeMatchingInfo> argInfoEntry = iterator.next();
+        Entry<ParamPosition, MatchingInfo> argInfoEntry = iterator.next();
         assertThat( argInfoEntry.getValue().getSource(),
             equalTo( queryMethod.getParameterTypes()[argInfoEntry.getKey().getSourceParamPosition()] ) );
         assertThat( argInfoEntry.getValue().getTarget(),
@@ -196,18 +196,18 @@ public class ParamPermMethodMatcherMatchingInfosTest {
     assertThat( matchingInfos, notNullValue() );
     assertThat( matchingInfos.size(), equalTo( 1 ) );
     for ( MethodMatchingInfo info : matchingInfos ) {
-      TypeMatchingInfo returnTypeMatchingInfo = info.getReturnTypeMatchingInfo();
+    	MatchingInfo returnTypeMatchingInfo = info.getReturnTypeMatchingInfo();
       assertThat( returnTypeMatchingInfo, notNullValue() );
       assertThat( returnTypeMatchingInfo.getSource(), equalTo( checkMethod.getReturnType() ) );
       assertThat( returnTypeMatchingInfo.getTarget(), equalTo( queryMethod.getReturnType() ) );
-      Map<ParamPosition, TypeMatchingInfo> argumentTypeMatchingInfos = info.getArgumentTypeMatchingInfos();
+      Map<ParamPosition, MatchingInfo> argumentTypeMatchingInfos = info.getArgumentTypeMatchingInfos();
       assertThat( argumentTypeMatchingInfos, notNullValue() );
       assertThat( argumentTypeMatchingInfos.size(), equalTo( 2 ) );
 
-      Iterator<Entry<ParamPosition, TypeMatchingInfo>> iterator = info.getArgumentTypeMatchingInfos().entrySet()
+      Iterator<Entry<ParamPosition, MatchingInfo>> iterator = info.getArgumentTypeMatchingInfos().entrySet()
           .iterator();
       while ( iterator.hasNext() ) {
-        Entry<ParamPosition, TypeMatchingInfo> argInfoEntry = iterator.next();
+        Entry<ParamPosition, MatchingInfo> argInfoEntry = iterator.next();
         assertThat( argInfoEntry.getValue().getSource(),
             equalTo( queryMethod.getParameterTypes()[argInfoEntry.getKey().getSourceParamPosition()] ) );
         assertThat( argInfoEntry.getValue().getTarget(),

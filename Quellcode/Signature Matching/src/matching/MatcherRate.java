@@ -13,7 +13,12 @@ public class MatcherRate {
 
   }
 
-  public void add( String matcherName, double additionalMatcherRating ) {
+  public MatcherRate(String matcherName, double matcherRating) {
+	this.matcherRating = matcherRating;
+	this.matcherNames = new String[] {matcherName};
+}
+
+public void add( String matcherName, double additionalMatcherRating ) {
     this.matcherRating += additionalMatcherRating;
     String[] temp = new String[this.matcherNames.length + 1];
     for ( int i = 0; i < this.matcherNames.length; i++ ) {

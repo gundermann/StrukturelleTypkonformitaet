@@ -15,6 +15,7 @@ import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.desired.MedCabinet;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.desired.MedicalFireFighter;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Fire;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Injured;
+import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Medicine;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.business.Suffer;
 import spi.TriedMethodCallsInfo;
 
@@ -33,6 +34,7 @@ public class MedicalFireFighterTest implements TriedMethodCallsInfo {
 	public void heal() {
 		Injured injured = new Injured(Arrays.asList(Suffer.BREATH_PROBLEMS));
 		MedCabinet med = new MedCabinet();
+		med.fill(new Medicine("med"));
 		addTriedMethodCall(getMethod("heal", MedicalFireFighter.class));
 		medicalFireFighter.heal(injured, med);
 		assertTrue(injured.getSuffers().isEmpty());

@@ -20,8 +20,8 @@ import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.Comb
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.Combinator;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.AnalyzationUtils;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.CollectionUtil;
+import matching.MatchingInfo;
 import matching.methods.MethodMatchingInfo;
-import matching.types.PartlyTypeMatchingInfo;
 import util.Logger;
 
 /**
@@ -29,7 +29,7 @@ import util.Logger;
  */
 public class SingleSelector implements Selector {
 
-	private List<Collection<PartlyTypeMatchingInfo>> infos;
+	private List<Collection<MatchingInfo>> infos;
 
 	private int selectedIndex = -1;
 
@@ -39,8 +39,8 @@ public class SingleSelector implements Selector {
 	private final Collection<Collection<Integer>> methodMatchingInfoHCBlacklist = new ArrayList<>();
 	
 
-	public SingleSelector(List<PartlyTypeMatchingInfo> infos, Collection<Heuristic> usedHeuristics) {
-		Stream<List<PartlyTypeMatchingInfo>> stream = infos.stream()
+	public SingleSelector(List<MatchingInfo> infos, Collection<Heuristic> usedHeuristics) {
+		Stream<List<MatchingInfo>> stream = infos.stream()
 				.filter(CombinationFinderUtils::isFullMatchingComponent).map(i -> Collections.singletonList(i));
 		if (usedHeuristics.contains(Heuristic.LMF)) {
 			// H: respect to Matching Rate
@@ -58,22 +58,22 @@ public class SingleSelector implements Selector {
 	public Optional<CombinationInfo> getNext() {
 		if (cachedCalculatedInfos.isEmpty()) {
 			selectedIndex++;
-			PartlyTypeMatchingInfo info = infos.get(selectedIndex).iterator().next();
-			Map<Method, Collection<PartlyTypeMatchingInfo>> relevantTypeMatchingInfos = getMatchingInfoPerMethod(info);
+			MatchingInfo info = infos.get(selectedIndex).iterator().next();
+			Map<Method, Collection<MatchingInfo>> relevantTypeMatchingInfos = getMatchingInfoPerMethod(info);
 			fillCachedComponent2MatchingInfo(relevantTypeMatchingInfos);
 		}
 		return Optional.of(new CombinationInfo(CollectionUtil.pop(cachedCalculatedInfos)));
 	}
 
-	private void fillCachedComponent2MatchingInfo(Map<Method, Collection<PartlyTypeMatchingInfo>> typeMatchingInfos) {
+	private void fillCachedComponent2MatchingInfo(Map<Method, Collection<MatchingInfo>> typeMatchingInfos) {
 		Map<Method, Collection<CombinationPartInfo>> combiPartInfos = CombinationFinderUtils
 				.transformToCombinationPartInfosPerMethod(typeMatchingInfos, this.methodMatchingInfoHCBlacklist);
 		this.cachedCalculatedInfos = new Combinator<Method, CombinationPartInfo>().generateCombis(combiPartInfos, this.methodMatchingInfoHCBlacklist);
 		Logger.infoF("COMBIFILTER: filtered combinations > %d", AnalyzationUtils.filterCount);
 	}
 
-	private Map<Method, Collection<PartlyTypeMatchingInfo>> getMatchingInfoPerMethod(PartlyTypeMatchingInfo info) {
-		Map<Method, Collection<PartlyTypeMatchingInfo>> relevantTypeMatchingInfos = new HashMap<>();
+	private Map<Method, Collection<MatchingInfo>> getMatchingInfoPerMethod(MatchingInfo info) {
+		Map<Method, Collection<MatchingInfo>> relevantTypeMatchingInfos = new HashMap<>();
 		Collection<Method> methodsWithMatchingInfo = info.getMethodMatchingInfoSupplier().keySet();
 		for (Method m : methodsWithMatchingInfo) {
 			relevantTypeMatchingInfos.put(m, Collections.singletonList(info));

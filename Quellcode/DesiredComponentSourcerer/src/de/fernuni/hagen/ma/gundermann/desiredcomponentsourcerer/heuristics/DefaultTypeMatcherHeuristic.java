@@ -10,7 +10,6 @@ import matching.MatcherCombiner;
 import matching.types.CombinableTypeMatcher;
 import matching.types.ExactTypeMatcher;
 import matching.types.GenSpecTypeMatcher;
-import matching.types.PartlyTypeMatcher;
 import matching.types.StructuralTypeMatcher;
 import matching.types.TypeMatcher;
 import matching.types.WrappedTypeMatcher;
@@ -40,15 +39,15 @@ public enum DefaultTypeMatcherHeuristic {
 
   private final Long combinedWrappedGenSpecExactPrio = 400L;
 
-  private final PartlyTypeMatcher structExactTM = new StructuralTypeMatcher( () -> exactTM );
+  private final TypeMatcher structExactTM = new StructuralTypeMatcher( () -> exactTM );
 
   private final Long structExactTMPrio = 500L;
 
-  private final PartlyTypeMatcher structGenSpecExactTM = new StructuralTypeMatcher( () -> combinedGenSpecExactTM );
+  private final TypeMatcher structGenSpecExactTM = new StructuralTypeMatcher( () -> combinedGenSpecExactTM );
 
   private final Long structGenSpecExactTMPrio = 600L;
 
-  private final PartlyTypeMatcher structWrappedGenSpecExactTM = new StructuralTypeMatcher(
+  private final TypeMatcher structWrappedGenSpecExactTM = new StructuralTypeMatcher(
       () -> combinedWrappedGenSpecExact );
 
   private final Long structWrappedGenSpecExactTMPrio = 700L;
@@ -65,7 +64,7 @@ public enum DefaultTypeMatcherHeuristic {
       this.structGenSpecExactTM,
       this.structWrappedGenSpecExactTM };
 
-  private PartlyTypeMatcher[] typeMatchers = new PartlyTypeMatcher[] {
+  private TypeMatcher[] typeMatchers = new TypeMatcher[] {
       // Werden ohne die ersten beiden bessere Ergebnisse erzielt? => scheinbar ja.
       // TODO Die Frage ist, wie es sich mit vielen Beans verhaelt
       // this.structExactTM,
@@ -97,7 +96,7 @@ public enum DefaultTypeMatcherHeuristic {
     return INSTANCE.getMatcherArray();
   }
 
-  public static PartlyTypeMatcher[] getPartlyTypeMatcher() {
+  public static TypeMatcher[] getPartlyTypeMatcher() {
     return INSTANCE.getPartlyMatcherArray();
   }
 
@@ -125,7 +124,7 @@ public enum DefaultTypeMatcherHeuristic {
         .min( ( e1, e2 ) -> Long.compare( e1.getValue(), e2.getValue() ) ).map( Entry::getKey ).get();
   }
 
-  private PartlyTypeMatcher[] getPartlyMatcherArray() {
+  private TypeMatcher[] getPartlyMatcherArray() {
     return this.typeMatchers;
   }
 
@@ -133,14 +132,14 @@ public enum DefaultTypeMatcherHeuristic {
     return rankedTypeMatcher;
   }
 
-  public static PartlyTypeMatcher[] createTypeMatcher( TypeMatcher[] fullTypeMatcher ) {
+  public static TypeMatcher[] createTypeMatcher( TypeMatcher[] fullTypeMatcher ) {
     INSTANCE.reorgansizeMatchers( fullTypeMatcher );
     return INSTANCE.getPartlyMatcherArray();
   }
 
   private void reorgansizeMatchers( TypeMatcher[] fullTypeMatcher ) {
     this.typeMatchers = Stream.of( fullTypeMatcher ).map( m -> new StructuralTypeMatcher( () -> m ) )
-        .collect( Collectors.toList() ).toArray( new PartlyTypeMatcher[] {} );
+        .collect( Collectors.toList() ).toArray( new TypeMatcher[] {} );
   }
 
 }

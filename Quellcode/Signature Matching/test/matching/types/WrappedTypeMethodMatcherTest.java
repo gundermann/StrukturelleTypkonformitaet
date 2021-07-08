@@ -1,12 +1,15 @@
 package matching.types;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.equalTo;
 
 import java.util.Collection;
 
 import org.junit.Test;
 
+import matching.MatchingInfo;
 import matching.types.ExactTypeMatcher;
 import matching.types.TypeMatchingInfo;
 import matching.types.WrappedTypeMatcher;
@@ -34,14 +37,20 @@ public class WrappedTypeMethodMatcherTest {
   }
 
   @Test
-  public void emptyTypeMatchingInfos() {
+  public void matchingInfos() {
     WrappedTypeMatcher matcher = new WrappedTypeMatcher( () -> new ExactTypeMatcher() );
-    Collection<TypeMatchingInfo> tmi = matcher.calculateTypeMatchingInfos( Wrapped.class, Wrapper.class );
-    assertTrue( tmi.size() == 1 );
-    tmi = matcher.calculateTypeMatchingInfos( Wrapper.class, Wrapped.class );
-    assertTrue( tmi.size() == 1 );
-    tmi = matcher.calculateTypeMatchingInfos( Specific.class, General.class );
-    assertTrue( tmi.size() == 0 );
+    Collection<MatchingInfo> mis = matcher.calculateTypeMatchingInfos( Wrapped.class, Wrapper.class );
+    assertTrue( mis.size() == 1 );
+    MatchingInfo mi = mis.iterator().next();
+    assertThat(mi.getSource(), equalTo(Wrapper.class));
+    assertThat(mi.getTarget(), equalTo(Wrapped.class));
+    mis = matcher.calculateTypeMatchingInfos( Wrapper.class, Wrapped.class );
+    assertTrue( mis.size() == 1 );
+    mi = mis.iterator().next();
+    assertThat(mi.getSource(), equalTo(Wrapped.class));
+    assertThat(mi.getTarget(), equalTo(Wrapper.class));
+    mis = matcher.calculateTypeMatchingInfos( Specific.class, General.class );
+    assertTrue( mis.size() == 0 );
   }
 
 }

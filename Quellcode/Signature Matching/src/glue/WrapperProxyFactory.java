@@ -74,7 +74,7 @@ public class WrapperProxyFactory<T> implements ProxyFactory<T> {
   // TODO Die ProxyFactory sollte im Matcher der ModuleMatchingInfo mitgegeben werden
   private ProxyFactoryCreator getRelevantProxyFactoryCreator( Collection<MethodMatchingInfo> matchingInfos ) {
     return matchingInfos.isEmpty() ? ProxyCreatorFactories.getIdentityFactoryCreator()
-        : ProxyCreatorFactories.getClassFactoryCreator();
+        : ProxyCreatorFactories.getClassProxyFactoryCreator();
   }
 
   private void logFieldError( String fieldname, String classname ) {

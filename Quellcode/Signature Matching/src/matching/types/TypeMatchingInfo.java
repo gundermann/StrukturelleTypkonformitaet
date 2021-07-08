@@ -23,10 +23,11 @@ public class TypeMatchingInfo {
    * @param target
    * @param methodMatchingInfos
    */
+  @Deprecated
   public TypeMatchingInfo( Class<?> source, Class<?> target, Collection<MethodMatchingInfo> methodMatchingInfos ) {
     this( source, target, methodMatchingInfos,
         methodMatchingInfos.isEmpty() ? ProxyCreatorFactories.getIdentityFactoryCreator()
-            : ProxyCreatorFactories.getClassFactoryCreator() );
+            : ProxyCreatorFactories.getClassProxyFactoryCreator() );
   }
 
   /**

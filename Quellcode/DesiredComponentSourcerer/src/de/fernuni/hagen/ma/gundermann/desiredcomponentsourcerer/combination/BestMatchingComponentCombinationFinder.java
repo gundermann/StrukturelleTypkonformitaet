@@ -12,8 +12,8 @@ import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.Combi
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.NoneSelector;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.SingleSelector;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.Logger;
+import matching.MatchingInfo;
 import matching.methods.MethodMatchingInfo;
-import matching.types.PartlyTypeMatchingInfo;
 
 public class BestMatchingComponentCombinationFinder {
 
@@ -21,12 +21,12 @@ public class BestMatchingComponentCombinationFinder {
 
   private int currentSelectorIndex = 0;
 
-  private final List<PartlyTypeMatchingInfo> quantitativeSortedInfos;
+  private final List<MatchingInfo> quantitativeSortedInfos;
 
   private Optional<CombinationInfo> nextCombinationInfo = Optional.empty();
 
   public BestMatchingComponentCombinationFinder(
-      Map<Class<?>, PartlyTypeMatchingInfo> componentInterface2PartlyMatchingInfos, Collection<Heuristic> usedHeuristics ) {
+      Map<Class<?>, MatchingInfo> componentInterface2PartlyMatchingInfos, Collection<Heuristic> usedHeuristics ) {
     quantitativeSortedInfos = new ArrayList<>(
         componentInterface2PartlyMatchingInfos.values() );
     this.selectors[0] = new SingleSelector( quantitativeSortedInfos, usedHeuristics );

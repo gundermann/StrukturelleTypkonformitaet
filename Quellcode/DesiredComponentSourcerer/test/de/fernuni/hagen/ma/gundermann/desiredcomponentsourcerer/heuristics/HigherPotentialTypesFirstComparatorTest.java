@@ -13,22 +13,21 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import matching.types.PartlyTypeMatchingInfo;
-import matching.types.PartlyTypeMatchingInfoFactory;
+import matching.MatchingInfo;
 
 public class HigherPotentialTypesFirstComparatorTest {
 
-  private List<Collection<PartlyTypeMatchingInfo>> list;
+  private List<Collection<MatchingInfo>> list;
 
   @Before
   public void setup() {
     list = new ArrayList<>();
 
-    list.add( Arrays.asList( mockPartlyTypeMatchingInfo( Object.class ) ) );
-    list.add( Arrays.asList( mockPartlyTypeMatchingInfo( Boolean.class ) ) );
-    list.add( Arrays.asList( mockPartlyTypeMatchingInfo( String.class ), mockPartlyTypeMatchingInfo( Object.class ) ) );
-    list.add( Arrays.asList( mockPartlyTypeMatchingInfo( String.class ) ) );
-    list.add( Arrays.asList( mockPartlyTypeMatchingInfo( Integer.class ) ) );
+    list.add( Arrays.asList( mockMatchingInfo( Object.class ) ) );
+    list.add( Arrays.asList( mockMatchingInfo( Boolean.class ) ) );
+    list.add( Arrays.asList( mockMatchingInfo( String.class ), mockMatchingInfo( Object.class ) ) );
+    list.add( Arrays.asList( mockMatchingInfo( String.class ) ) );
+    list.add( Arrays.asList( mockMatchingInfo( Integer.class ) ) );
   }
 
   @Test
@@ -37,21 +36,21 @@ public class HigherPotentialTypesFirstComparatorTest {
         new ArrayList<Class<?>>() );
     Collections.sort( list, comparator );
     assertThat( list.get( 0 ).size(), equalTo( 1 ) );
-    assertThat( list.get( 0 ).iterator().next().getCheckType(), equalTo( Object.class ) );
+    assertThat( list.get( 0 ).iterator().next().getTarget(), equalTo( Object.class ) );
 
     assertThat( list.get( 1 ).size(), equalTo( 1 ) );
-    assertThat( list.get( 1 ).iterator().next().getCheckType(), equalTo( Boolean.class ) );
+    assertThat( list.get( 1 ).iterator().next().getTarget(), equalTo( Boolean.class ) );
 
     assertThat( list.get( 2 ).size(), equalTo( 2 ) );
-    Iterator<PartlyTypeMatchingInfo> iterator = list.get( 2 ).iterator();
-    assertThat( iterator.next().getCheckType(), equalTo( String.class ) );
-    assertThat( iterator.next().getCheckType(), equalTo( Object.class ) );
+    Iterator<MatchingInfo> iterator = list.get( 2 ).iterator();
+    assertThat( iterator.next().getTarget(), equalTo( String.class ) );
+    assertThat( iterator.next().getTarget(), equalTo( Object.class ) );
 
     assertThat( list.get( 3 ).size(), equalTo( 1 ) );
-    assertThat( list.get( 3 ).iterator().next().getCheckType(), equalTo( String.class ) );
+    assertThat( list.get( 3 ).iterator().next().getTarget(), equalTo( String.class ) );
 
     assertThat( list.get( 4 ).size(), equalTo( 1 ) );
-    assertThat( list.get( 4 ).iterator().next().getCheckType(), equalTo( Integer.class ) );
+    assertThat( list.get( 4 ).iterator().next().getTarget(), equalTo( Integer.class ) );
   }
 
   @Test
@@ -61,12 +60,12 @@ public class HigherPotentialTypesFirstComparatorTest {
 
     Collections.sort( list, comparator );
     assertThat( list.get( 0 ).size(), equalTo( 2 ) );
-    Iterator<PartlyTypeMatchingInfo> iterator = list.get( 0 ).iterator();
-    assertThat( iterator.next().getCheckType(), equalTo( String.class ) );
-    assertThat( iterator.next().getCheckType(), equalTo( Object.class ) );
+    Iterator<MatchingInfo> iterator = list.get( 0 ).iterator();
+    assertThat( iterator.next().getTarget(), equalTo( String.class ) );
+    assertThat( iterator.next().getTarget(), equalTo( Object.class ) );
 
     assertThat( list.get( 1 ).size(), equalTo( 1 ) );
-    assertThat( list.get( 1 ).iterator().next().getCheckType(), equalTo( String.class ) );
+    assertThat( list.get( 1 ).iterator().next().getTarget(), equalTo( String.class ) );
   }
 
   @Test
@@ -76,19 +75,19 @@ public class HigherPotentialTypesFirstComparatorTest {
 
     Collections.sort( list, comparator );
     assertThat( list.get( 0 ).size(), equalTo( 2 ) );
-    Iterator<PartlyTypeMatchingInfo> iterator = list.get( 0 ).iterator();
-    assertThat( iterator.next().getCheckType(), equalTo( String.class ) );
-    assertThat( iterator.next().getCheckType(), equalTo( Object.class ) );
+    Iterator<MatchingInfo> iterator = list.get( 0 ).iterator();
+    assertThat( iterator.next().getTarget(), equalTo( String.class ) );
+    assertThat( iterator.next().getTarget(), equalTo( Object.class ) );
 
     assertThat( list.get( 1 ).size(), equalTo( 1 ) );
-    assertThat( list.get( 1 ).iterator().next().getCheckType(), equalTo( String.class ) );
+    assertThat( list.get( 1 ).iterator().next().getTarget(), equalTo( String.class ) );
 
     assertThat( list.get( 2 ).size(), equalTo( 1 ) );
-    assertThat( list.get( 2 ).iterator().next().getCheckType(), equalTo( Integer.class ) );
+    assertThat( list.get( 2 ).iterator().next().getTarget(), equalTo( Integer.class ) );
   }
 
-  private PartlyTypeMatchingInfo mockPartlyTypeMatchingInfo( Class<?> checkType ) {
-    return new PartlyTypeMatchingInfoFactory( checkType ).create();
+  private MatchingInfo mockMatchingInfo( Class<?> checkType ) {
+    return new MatchingInfo.Builder( null, checkType, null ).build();
   }
 
 }

@@ -9,10 +9,10 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import matching.MatcherRate;
+import matching.MatchingInfo;
 import matching.Setting;
 import matching.methods.MethodMatchingInfo.ParamPosition;
 import matching.types.TypeMatcher;
-import matching.types.TypeMatchingInfo;
 
 public class CommonMethodMatcher implements MethodMatcher {
 
@@ -37,9 +37,9 @@ public class CommonMethodMatcher implements MethodMatcher {
     MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( checkMethod, queryMethod );
     MethodStructure checkStruct = MethodStructure.createFromDeclaredMethod( checkMethod );
     MethodStructure queryStruct = MethodStructure.createFromDeclaredMethod( queryMethod );
-    Collection<TypeMatchingInfo> returnTypeMatchingInfos = typeMatcherSupplier.get().calculateTypeMatchingInfos(
+    Collection<MatchingInfo> returnTypeMatchingInfos = typeMatcherSupplier.get().calculateTypeMatchingInfos(
         queryStruct.getReturnType(), checkStruct.getReturnType() );
-    Map<ParamPosition, Collection<TypeMatchingInfo>> argumentTypesMatchingInfos = calculateArgumentTypesMatchingInfos(
+    Map<ParamPosition, Collection<MatchingInfo>> argumentTypesMatchingInfos = calculateArgumentTypesMatchingInfos(
         checkStruct.getSortedArgumentTypes(), queryStruct.getSortedArgumentTypes() );
     return factory.createFromTypeMatchingInfos( returnTypeMatchingInfos,
         Collections.singletonList( argumentTypesMatchingInfos ) );
@@ -61,13 +61,13 @@ public class CommonMethodMatcher implements MethodMatcher {
     return true;
   }
 
-  private Map<ParamPosition, Collection<TypeMatchingInfo>> calculateArgumentTypesMatchingInfos(
+  private Map<ParamPosition, Collection<MatchingInfo>> calculateArgumentTypesMatchingInfos(
       Class<?>[] checkATs, Class<?>[] queryATs ) {
-    Map<ParamPosition, Collection<TypeMatchingInfo>> matchingMap = new HashMap<>();
+    Map<ParamPosition, Collection<MatchingInfo>> matchingMap = new HashMap<>();
     for ( int i = 0; i < checkATs.length; i++ ) {
       Class<?> checkAT = checkATs[i];
       Class<?> queryAT = queryATs[i];
-      Collection<TypeMatchingInfo> infos = typeMatcherSupplier.get().calculateTypeMatchingInfos( checkAT, queryAT );
+      Collection<MatchingInfo> infos = typeMatcherSupplier.get().calculateTypeMatchingInfos( checkAT, queryAT );
       matchingMap.put( new ParamPosition( i, i ), infos );
     }
 

@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.CombinationPartInfo;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.AnalyzationUtils;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.Logger;
-import matching.types.PartlyTypeMatchingInfo;
+import matching.MatchingInfo;
 
 /**
  * H: blacklist if no implementation available
@@ -29,11 +29,11 @@ public final class CheckTypeBlacklistFilter {
     this.info = " " + info;
   }
 
-  public Collection<PartlyTypeMatchingInfo> filter( final List<PartlyTypeMatchingInfo> infos ) {
+  public Collection<MatchingInfo> filter( final List<MatchingInfo> infos ) {
     AnalyzationUtils.filterCount = 0;
-    Collection<PartlyTypeMatchingInfo> filtered = infos.stream()
+    Collection<MatchingInfo> filtered = infos.stream()
         .filter( ptmi -> AnalyzationUtils
-            .filterWithAnalyticalCount( !this.hashCodeBlacklist.contains( ptmi.getCheckType().hashCode() ) ) )
+            .filterWithAnalyticalCount( !this.hashCodeBlacklist.contains( ptmi.getTarget().hashCode() ) ) )
         .collect( Collectors.toList() );
 
     Logger.infoF( "filtered by %s%s: %d", getClass().getSimpleName(), info, AnalyzationUtils.filterCount );

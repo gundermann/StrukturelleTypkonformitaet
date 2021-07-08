@@ -7,8 +7,7 @@ import java.util.Collection;
 
 import org.junit.Test;
 
-import matching.types.ExactTypeMatcher;
-import matching.types.TypeMatchingInfo;
+import matching.MatchingInfo;
 
 public class ExactTypeMatcherTest {
 
@@ -33,7 +32,7 @@ public class ExactTypeMatcherTest {
   @Test
   public void typeMatchingInfos() {
     ExactTypeMatcher matcher = new ExactTypeMatcher();
-    Collection<TypeMatchingInfo> tmi = matcher.calculateTypeMatchingInfos( String.class, String.class );
+    Collection<MatchingInfo> tmi = matcher.calculateTypeMatchingInfos( String.class, String.class );
     assertTrue( tmi.size() == 1 );
     tmi = matcher.calculateTypeMatchingInfos( Object.class, String.class );
     assertTrue( tmi.isEmpty() );

@@ -16,9 +16,8 @@ import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.Comb
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.DefaultTypeMatcherHeuristic;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.Logger;
 import glue.TypeConverter;
+import matching.MatchingInfo;
 import matching.methods.MethodMatchingInfo;
-import matching.types.PartlyTypeMatcher;
-import matching.types.PartlyTypeMatchingInfo;
 import matching.types.TypeMatcher;
 import tester.ComponentTester;
 import tester.TestResult;
@@ -26,7 +25,7 @@ import tester.TestResult.Cause;
 
 public class DesiredComponentFinder {
 
-	private PartlyTypeMatcher[] partlyTypeMatcher = DefaultTypeMatcherHeuristic.getPartlyTypeMatcher();
+	private TypeMatcher[] partlyTypeMatcher = DefaultTypeMatcherHeuristic.getPartlyTypeMatcher();
 
 	private final Class<?>[] registeredComponentInterfaces;
 
@@ -85,17 +84,17 @@ public class DesiredComponentFinder {
 	}
 
 	private <DesiredInterface> Optional<DesiredInterface> findDesiredComponentByPartlyMatcher(
-			Class<DesiredInterface> desiredInterface, PartlyTypeMatcher typeMatcher) {
+			Class<DesiredInterface> desiredInterface, TypeMatcher typeMatcher) {
 		Logger.infoF("start search with matcher: %s", typeMatcher.getClass().getSimpleName());
 
-		Map<Class<?>, PartlyTypeMatchingInfo> componentInterface2PartlyMatchingInfos = findPartlyMatchingComponentInterfaces(
+		Map<Class<?>, MatchingInfo> componentInterface2PartlyMatchingInfos = findPartlyMatchingComponentInterfaces(
 				desiredInterface, typeMatcher);
 
 		// INFO OUTPUT
 		componentInterface2PartlyMatchingInfos.values().forEach(i -> {
-			Logger.toFile("%f;%s;%f;%s;", i.getQualitativeMatchRating().getMatcherRating(),
-					i.getQualitativeMatchRating().toString(), i.getQuantitaiveMatchRating(),
-					i.getCheckType().getSimpleName());
+			Logger.toFile("%f;%s;%b;%s;", i.getQualitativeMatchRating().getMatcherRating(),
+					i.getQualitativeMatchRating().toString(), i.isFullMatching(),
+					i.getTarget().getSimpleName());
 		});
 
 		Optional<DesiredInterface> result = Optional
@@ -104,22 +103,23 @@ public class DesiredComponentFinder {
 		return result;
 	}
 
-	private <DesiredInterface> Map<Class<?>, PartlyTypeMatchingInfo> findPartlyMatchingComponentInterfaces(
-			Class<DesiredInterface> desiredInterface, PartlyTypeMatcher typeMatcher) {
-		Map<Class<?>, PartlyTypeMatchingInfo> matchedBeans = new HashMap<>();
+	private <DesiredInterface> Map<Class<?>, MatchingInfo> findPartlyMatchingComponentInterfaces(
+			Class<DesiredInterface> desiredInterface, TypeMatcher typeMatcher) {
+		Map<Class<?>, MatchingInfo> matchedBeans = new HashMap<>();
 		for (Class<?> beanInterface : getRegisteredComponentInterfaces()) {
-			boolean matchesPartly = typeMatcher.matchesTypePartly(beanInterface, desiredInterface);
+			boolean matchesPartly = typeMatcher.matchesType(beanInterface, desiredInterface);
 			if (!matchesPartly) {
 				continue;
 			}
+			//FIXME Aufruf funktioniert nur mit dem StructuralTypeMatcher
 			matchedBeans.put(beanInterface,
-					typeMatcher.calculatePartlyTypeMatchingInfos(beanInterface, desiredInterface));
+					typeMatcher.calculateTypeMatchingInfos(beanInterface, desiredInterface).iterator().next());
 		}
 		return matchedBeans;
 	}
 
 	private <DesiredInterface> DesiredInterface getCombinedMatchingComponent(Class<DesiredInterface> desiredInterface,
-			Map<Class<?>, PartlyTypeMatchingInfo> componentInterface2PartlyMatchingInfos) {
+			Map<Class<?>, MatchingInfo> componentInterface2PartlyMatchingInfos) {
 		Logger.info("create ComponentInfos");
 		BestMatchingComponentCombinationFinder combinationFinder = new BestMatchingComponentCombinationFinder(
 				componentInterface2PartlyMatchingInfos, this.usedHeuristics);

@@ -12,6 +12,7 @@ import matching.MethodMatchingInfoCombinator;
 import matching.methods.MethodMatchingInfo;
 import util.Logger;
 
+@Deprecated
 public class TypeMatchingInfoFactory {
 
   private final Class<?> targetType;

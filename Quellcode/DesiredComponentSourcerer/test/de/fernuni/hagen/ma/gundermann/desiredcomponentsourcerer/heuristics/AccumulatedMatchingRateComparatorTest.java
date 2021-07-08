@@ -11,23 +11,24 @@ import org.easymock.EasyMock;
 import org.junit.Test;
 
 import matching.MatcherRate;
-import matching.types.PartlyTypeMatchingInfo;
+import matching.MatchingInfo;
 
 public class AccumulatedMatchingRateComparatorTest {
 
-  private Comparator<Collection<PartlyTypeMatchingInfo>> comparator = new AccumulatedMatchingRateComparator();
+  private Comparator<Collection<MatchingInfo>> comparator = new AccumulatedMatchingRateComparator();
 
+  //TODO Der Comparator muss erst noch evaluiert werden (Varianten LMF)
   @Test
   public void test() {
-    PartlyTypeMatchingInfo pi300 = createPartlyTypeMatchingInfo( 300 );
-    PartlyTypeMatchingInfo pi200 = createPartlyTypeMatchingInfo( 200 );
-    PartlyTypeMatchingInfo pi100 = createPartlyTypeMatchingInfo( 100 );
-    Collection<PartlyTypeMatchingInfo> col500 = Arrays.asList( pi300, pi200 );
-    Collection<PartlyTypeMatchingInfo> col400 = Arrays.asList( pi300, pi100 );
-    Collection<PartlyTypeMatchingInfo> col300 = Arrays.asList( pi100, pi200 );
-    Collection<PartlyTypeMatchingInfo> col200_2 = Arrays.asList( pi100, pi100 );
-    Collection<PartlyTypeMatchingInfo> col200 = Arrays.asList( pi200 );
-    Collection<PartlyTypeMatchingInfo> col100 = Arrays.asList( pi100 );
+	  MatchingInfo pi300 = createPartlyTypeMatchingInfo( 300 );
+	  MatchingInfo pi200 = createPartlyTypeMatchingInfo( 200 );
+	  MatchingInfo pi100 = createPartlyTypeMatchingInfo( 100 );
+    Collection<MatchingInfo> col500 = Arrays.asList( pi300, pi200 );
+    Collection<MatchingInfo> col400 = Arrays.asList( pi300, pi100 );
+    Collection<MatchingInfo> col300 = Arrays.asList( pi100, pi200 );
+    Collection<MatchingInfo> col200_2 = Arrays.asList( pi100, pi100 );
+    Collection<MatchingInfo> col200 = Arrays.asList( pi200 );
+    Collection<MatchingInfo> col100 = Arrays.asList( pi100 );
 
     assertThat( comparator.compare( col100, col200_2 ), equalTo( -1 ) );
     assertThat( comparator.compare( col100, col200 ), equalTo( -1 ) );
@@ -39,10 +40,9 @@ public class AccumulatedMatchingRateComparatorTest {
 
   }
 
-  private PartlyTypeMatchingInfo createPartlyTypeMatchingInfo( int rate ) {
-    PartlyTypeMatchingInfo ptmi = EasyMock.createNiceMock( PartlyTypeMatchingInfo.class );
+  private MatchingInfo createPartlyTypeMatchingInfo( int rate) {
+	  MatchingInfo ptmi = EasyMock.createNiceMock( MatchingInfo.class );
     EasyMock.expect( ptmi.getQualitativeMatchRating() ).andReturn( createMatcherRate( rate ) ).anyTimes();
-    EasyMock.expect( ptmi.getQuantitaiveMatchRating() ).andReturn( Double.valueOf( rate ) ).anyTimes();
     EasyMock.replay( ptmi );
     return ptmi;
   }

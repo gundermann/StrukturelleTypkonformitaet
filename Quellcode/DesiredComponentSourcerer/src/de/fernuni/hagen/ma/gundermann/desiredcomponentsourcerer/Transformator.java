@@ -8,15 +8,15 @@ import java.util.Objects;
 import java.util.function.Supplier;
 
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.CombinationPartInfo;
+import matching.MatchingInfo;
 import matching.methods.MethodMatchingInfo;
-import matching.types.PartlyTypeMatchingInfo;
 
 public class Transformator {
 
   public static Collection<CombinationPartInfo> transformTypeInfo2CombinationPartInfos(
-      PartlyTypeMatchingInfo typeInfo ) {
+      MatchingInfo typeInfo ) {
     Collection<CombinationPartInfo> combinationPartInfos = new ArrayList<>();
-    Class<?> componentClass = typeInfo.getCheckType();
+    Class<?> componentClass = typeInfo.getTarget();
     for ( Entry<Method, Supplier<Collection<MethodMatchingInfo>>> entry : typeInfo.getMethodMatchingInfoSupplier()
         .entrySet() ) {
       Method method = entry.getKey();
