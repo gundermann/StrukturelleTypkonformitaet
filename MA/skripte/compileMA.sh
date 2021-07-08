@@ -4,7 +4,7 @@
 echo "Go to /d/MT/Quellcode/Signature\ Matching/bin"
 cd /d/MT/Quellcode/Signature\ Matching/bin
 echo "create jar"
-jar cf sigmang.jar ./*
+$JAVA_HOME/bin/jar cf sigmang.jar ./*
 cp -f sigmang.jar /d/workspace/profilcs/extlib/common/sigmang.jar
 cp -f sigmang.jar /d/workspace/profilcs/dist/jboss/standalone/deployments/deg.ear/lib/sigmang.jar
 rm sigmang.jar
@@ -13,7 +13,7 @@ rm sigmang.jar
 echo "Go to /d/MT/Quellcode/ComponentTester/bin"
 cd /d/MT/Quellcode/ComponentTester/bin
 echo "create jar"
-jar cf ctng.jar ./*
+$JAVA_HOME/bin/jar cf ctng.jar ./*
 cp -f ctng.jar /d/workspace/profilcs/extlib/common/ctng.jar
 cp -f ctng.jar /d/workspace/profilcs/dist/jboss/standalone/deployments/deg.ear/lib/ctng.jar
 rm ctng.jar
@@ -22,7 +22,7 @@ rm ctng.jar
 echo "Go to /d/MT/Quellcode/DesiredComponentSourcerer/bin"
 cd /d/MT/Quellcode/DesiredComponentSourcerer/bin
 echo "create jar"
-jar cf descosng.jar ./*
+$JAVA_HOME/bin/jar cf descosng.jar ./*
 cp -f descosng.jar /d/workspace/profilcs/extlib/common/descosng.jar
 cp -f descosng.jar /d/workspace/profilcs/dist/jboss/standalone/deployments/deg.ear/lib/descosng.jar
 rm descosng.jar
@@ -39,3 +39,6 @@ cp -f /d/MT/Quellcode/EJB-Container-Dummy/lib/easymock-3.0.jar /d/workspace/prof
 echo "copy hamcrest-all-1.3 from EJB-Container-Dummy"
 #cp -f /d/MT/Quellcode/EJB-Container-Dummy/lib/hamcrest-all-1.3.jar /d/workspace/profilcs/extlib/common/hamcrest-all-1.3.jar
 cp -f /d/MT/Quellcode/EJB-Container-Dummy/lib/hamcrest-all-1.3.jar /d/workspace/profilcs/dist/jboss/standalone/deployments/deg.ear/lib/hamcrest-all-1.3.jar
+
+echo "copy cglib-nodep-3.3.0.jar from SignaturMatching"
+cp -f /d/MT/Quellcode/Signature\ Matching/lib/cglib-nodep-3.3.0.jar /d/workspace/profilcs/dist/jboss/standalone/deployments/deg.ear/lib/cglib-nodep-3.3.0.jar
