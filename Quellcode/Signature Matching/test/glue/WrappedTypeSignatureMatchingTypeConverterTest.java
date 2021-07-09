@@ -3,11 +3,8 @@ package glue;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
-import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import org.easymock.EasyMock;
@@ -15,7 +12,6 @@ import org.junit.Test;
 
 import matching.methods.MethodMatchingInfo;
 import matching.types.TypeMatchingInfo;
-import testcomponents.paramperm.Desired1ParameterInterface;
 import testcomponents.wrapped.DesiredWrappedParameterInterface;
 import testcomponents.wrapped.DesiredWrapperParameterInterface;
 import testcomponents.wrapped.OfferedWrappedParameterClass;
