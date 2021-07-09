@@ -26,8 +26,8 @@ public class TypeConverter<T> {
     this.proxyFactory = factoryCreator.createProxyFactory( targetStructure );
   }
 
-  public T convert( Map<Object, Collection<MethodMatchingInfo>> components2MatchingInfo ) {
-    T targetInstance = proxyFactory.createProxy( components2MatchingInfo );
+  public T convert( ConvertableBundle convertable ) {
+    T targetInstance = proxyFactory.createProxy( convertable.getComponentsWithMethodMatchingInfos() );
     return targetInstance;
   }
 

@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -85,9 +86,9 @@ public class BehaviourDelegateInvocationHandler implements MethodInterceptor, In
 		Object[] convertedArgs = convertArgs(args, methodMatchingInfo.getArgumentTypeMatchingInfos());
 		Object returnValue = targetMethod.invoke(component.getComponent(), convertedArgs);
 		MatchingInfo returnTypeMatchingInfo = methodMatchingInfo.getReturnTypeMatchingInfo();
-		if (returnTypeMatchingInfo == null 
+		if (returnTypeMatchingInfo == null
 //				|| returnTypeMatchingInfo.isSubstitutable()
-				) {
+		) {
 			return returnValue;
 		}
 		// Bei einem allgemeineren returnValue des Targets (Target.retrunValue >
@@ -136,7 +137,7 @@ public class BehaviourDelegateInvocationHandler implements MethodInterceptor, In
 		Logger.info(String.format("convert type %s -> %s", moduleMatchingInfo.getSource().getName(),
 				moduleMatchingInfo.getTarget().getName()));
 		// Wenn das zu konvertierende Objekt null ist, dann kann dies auch gleich
-		// zurückgegeben werden, da null-Objekte
+		// zurï¿½ckgegeben werden, da null-Objekte
 		// keinen speziellen Typ haben muessen
 		// if ( sourceType == null ||
 		// moduleMatchingInfo.getMethodMatchingInfos().isEmpty()
@@ -156,8 +157,11 @@ public class BehaviourDelegateInvocationHandler implements MethodInterceptor, In
 		Map<Object, Collection<MethodMatchingInfo>> comp2MatchingInfo = new HashMap<>();
 		comp2MatchingInfo.put(source, moduleMatchingInfo.getMethodMatchingInfoSupplier().values().stream()
 				.map(Supplier::get).flatMap(Collection::stream).collect(Collectors.toList()));
+		List<ConvertableComponent> convertableComponents = comp2MatchingInfo.entrySet().stream().map(e -> new ConvertableComponent(e.getKey(), e.getValue()))
+				.collect(Collectors.toList());
+		ConvertableBundle convertableBundle = ConvertableBundle.createBundle(convertableComponents);
 		return new TypeConverter<>((Class<RT>) moduleMatchingInfo.getTarget(), moduleMatchingInfo.getConverterCreator())
-				.convert(comp2MatchingInfo);
+				.convert(convertableBundle);
 	}
 
 	private Optional<ComponentWithMatchingInfo> getMethodMatchingInfo(Method method) {

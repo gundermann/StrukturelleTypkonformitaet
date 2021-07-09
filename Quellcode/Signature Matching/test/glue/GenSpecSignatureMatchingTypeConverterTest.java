@@ -91,14 +91,16 @@ public class GenSpecSignatureMatchingTypeConverterTest {
 		methodMatchingInfos.add(mmiGetNull);
 
 		MatchingInfo moduleMatchingInfo = EasyMock.createNiceMock(MatchingInfo.class);
-		EasyMock.expect(moduleMatchingInfo.getMethodMatchingInfoSupplier()).andReturn(createMethod2SupplierMap(methodMatchingInfos)).anyTimes();
+		EasyMock.expect(moduleMatchingInfo.getMethodMatchingInfoSupplier())
+				.andReturn(createMethod2SupplierMap(methodMatchingInfos)).anyTimes();
 		EasyMock.replay(moduleMatchingInfo);
 
-		Map<Object, Collection<MethodMatchingInfo>> obj2MatchingInfo = new HashMap<>();
-		obj2MatchingInfo.put(convertationObject, moduleMatchingInfo.getMethodMatchingInfoSupplier().values().stream().map(Supplier::get)
-				.flatMap(Collection::stream).collect(Collectors.toList()));
+		ConvertableComponent convertableComponent = new ConvertableComponent(convertationObject,
+				moduleMatchingInfo.getMethodMatchingInfoSupplier().values().stream().map(Supplier::get)
+						.flatMap(Collection::stream).collect(Collectors.toList()));
 
-		DesiredGenInterface converted = converter.convert(obj2MatchingInfo);
+		DesiredGenInterface converted = converter
+				.convert(ConvertableBundle.createBundle(Collections.singletonList(convertableComponent)));
 		General hello_1_10_Gen = new General("hello", 1, 10L);
 		General world_5_44_Gen = new General("world", 5, 44L);
 		Specific hello_2_Spec = new Specific("hello", 2);
@@ -213,14 +215,16 @@ public class GenSpecSignatureMatchingTypeConverterTest {
 		methodMatchingInfos.add(mmiGetNull);
 
 		MatchingInfo moduleMatchingInfo = EasyMock.createNiceMock(MatchingInfo.class);
-		EasyMock.expect(moduleMatchingInfo.getMethodMatchingInfoSupplier()).andReturn(createMethod2SupplierMap(methodMatchingInfos)).anyTimes();
+		EasyMock.expect(moduleMatchingInfo.getMethodMatchingInfoSupplier())
+				.andReturn(createMethod2SupplierMap(methodMatchingInfos)).anyTimes();
 		EasyMock.replay(moduleMatchingInfo);
 
-		Map<Object, Collection<MethodMatchingInfo>> obj2MatchingInfo = new HashMap<>();
-		obj2MatchingInfo.put(convertationObject, moduleMatchingInfo.getMethodMatchingInfoSupplier().values().stream().map(Supplier::get)
-				.flatMap(Collection::stream).collect(Collectors.toList()));
+		ConvertableComponent convertableComponent = new ConvertableComponent(convertationObject,
+				moduleMatchingInfo.getMethodMatchingInfoSupplier().values().stream().map(Supplier::get)
+						.flatMap(Collection::stream).collect(Collectors.toList()));
 
-		DesiredGenInterface converted = converter.convert(obj2MatchingInfo);
+		DesiredGenInterface converted = converter
+				.convert(ConvertableBundle.createBundle(Collections.singletonList(convertableComponent)));
 		General hello_1_10_Gen = new General("hello", 1, 10L);
 		General world_5_44_Gen = new General("world", 5, 44L);
 		Specific hello_2_Spec = new Specific("hello", 2);
@@ -352,14 +356,17 @@ public class GenSpecSignatureMatchingTypeConverterTest {
 		methodMatchingInfos.add(mmiAnd);
 
 		MatchingInfo moduleMatchingInfo = EasyMock.createNiceMock(MatchingInfo.class);
-		EasyMock.expect(moduleMatchingInfo.getMethodMatchingInfoSupplier()).andReturn(createMethod2SupplierMap(methodMatchingInfos)).anyTimes();
+		EasyMock.expect(moduleMatchingInfo.getMethodMatchingInfoSupplier())
+				.andReturn(createMethod2SupplierMap(methodMatchingInfos)).anyTimes();
 		EasyMock.replay(moduleMatchingInfo);
 
-		Map<Object, Collection<MethodMatchingInfo>> obj2MatchingInfo = new HashMap<>();
-		obj2MatchingInfo.put(convertationObject, moduleMatchingInfo.getMethodMatchingInfoSupplier().values().stream().map(Supplier::get)
-				.flatMap(Collection::stream).collect(Collectors.toList()));
+		ConvertableComponent convertableComponent = new ConvertableComponent(convertationObject,
+				moduleMatchingInfo.getMethodMatchingInfoSupplier().values().stream().map(Supplier::get)
+						.flatMap(Collection::stream).collect(Collectors.toList()));
 
-		DesiredSpecInterface converted = converter.convert(obj2MatchingInfo);
+		DesiredSpecInterface converted = converter
+				.convert(ConvertableBundle.createBundle(Collections.singletonList(convertableComponent)));
+
 		Specific hello_true_Spec = new Specific("hello", true);
 		Specific world_true_Spec = new Specific("world", true);
 		Specific hello_2_false_Spec = new Specific("hello", 2);
@@ -458,14 +465,16 @@ public class GenSpecSignatureMatchingTypeConverterTest {
 		methodMatchingInfos.add(mmiGetNull);
 
 		MatchingInfo moduleMatchingInfo = EasyMock.createNiceMock(MatchingInfo.class);
-		EasyMock.expect(moduleMatchingInfo.getMethodMatchingInfoSupplier()).andReturn(createMethod2SupplierMap(methodMatchingInfos)).anyTimes();
+		EasyMock.expect(moduleMatchingInfo.getMethodMatchingInfoSupplier())
+				.andReturn(createMethod2SupplierMap(methodMatchingInfos)).anyTimes();
 		EasyMock.replay(moduleMatchingInfo);
 
-		Map<Object, Collection<MethodMatchingInfo>> obj2MatchingInfo = new HashMap<>();
-		obj2MatchingInfo.put(convertationObject, moduleMatchingInfo.getMethodMatchingInfoSupplier().values().stream().map(Supplier::get)
-				.flatMap(Collection::stream).collect(Collectors.toList()));
+		ConvertableComponent convertableComponent = new ConvertableComponent(convertationObject,
+				moduleMatchingInfo.getMethodMatchingInfoSupplier().values().stream().map(Supplier::get)
+						.flatMap(Collection::stream).collect(Collectors.toList()));
 
-		DesiredSpecInterface converted = converter.convert(obj2MatchingInfo);
+		DesiredSpecInterface converted = converter
+				.convert(ConvertableBundle.createBundle(Collections.singletonList(convertableComponent)));
 		Specific hello_true_Spec = new Specific("hello", true);
 		Specific world_true_Spec = new Specific("world", true);
 		Specific hello_2_false_Spec = new Specific("hello", 2);
@@ -531,7 +540,8 @@ public class GenSpecSignatureMatchingTypeConverterTest {
 		EasyMock.replay(getLongMethod);
 		methodInfos.add(getLongMethod);
 
-		EasyMock.expect(mmit.getMethodMatchingInfoSupplier()).andReturn(createMethod2SupplierMap(methodInfos)).anyTimes();
+		EasyMock.expect(mmit.getMethodMatchingInfoSupplier()).andReturn(createMethod2SupplierMap(methodInfos))
+				.anyTimes();
 		EasyMock.replay(mmit);
 		return mmit;
 	}

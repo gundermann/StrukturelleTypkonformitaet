@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -14,6 +15,7 @@ import org.junit.Test;
 
 import matching.methods.MethodMatchingInfo;
 import matching.types.TypeMatchingInfo;
+import testcomponents.paramperm.Desired1ParameterInterface;
 import testcomponents.wrapped.DesiredWrappedParameterInterface;
 import testcomponents.wrapped.DesiredWrapperParameterInterface;
 import testcomponents.wrapped.OfferedWrappedParameterClass;
@@ -66,9 +68,12 @@ public class WrappedTypeSignatureMatchingTypeConverterTest {
     EasyMock.expect( moduleMatchingInfo.getMethodMatchingInfos() ).andReturn( methodMatchingInfos ).anyTimes();
     EasyMock.replay( moduleMatchingInfo );
 
-    Map<Object, Collection<MethodMatchingInfo>> obj2MatchingInfo = new HashMap<>();
-    obj2MatchingInfo.put( convertationObject, moduleMatchingInfo.getMethodMatchingInfos() );
-    DesiredWrappedParameterInterface converted = converter.convert( obj2MatchingInfo );
+    
+	ConvertableComponent convertableComponent = new ConvertableComponent(convertationObject,
+			moduleMatchingInfo.getMethodMatchingInfos());
+	DesiredWrappedParameterInterface converted = converter
+			.convert(ConvertableBundle.createBundle(Collections.singletonList(convertableComponent)));
+
     Wrapped wrapped_hello = new Wrapped( "hello" );
     Wrapped wrapped_world = new Wrapped( "world" );
 
@@ -120,10 +125,11 @@ public class WrappedTypeSignatureMatchingTypeConverterTest {
     TypeMatchingInfo moduleMatchingInfo = EasyMock.createNiceMock( TypeMatchingInfo.class );
     EasyMock.expect( moduleMatchingInfo.getMethodMatchingInfos() ).andReturn( methodMatchingInfos ).anyTimes();
     EasyMock.replay( moduleMatchingInfo );
+	ConvertableComponent convertableComponent = new ConvertableComponent(convertationObject,
+			moduleMatchingInfo.getMethodMatchingInfos());
+	DesiredWrapperParameterInterface converted = converter
+			.convert(ConvertableBundle.createBundle(Collections.singletonList(convertableComponent)));
 
-    Map<Object, Collection<MethodMatchingInfo>> obj2MatchingInfo = new HashMap<>();
-    obj2MatchingInfo.put( convertationObject, moduleMatchingInfo.getMethodMatchingInfos() );
-    DesiredWrapperParameterInterface converted = converter.convert( obj2MatchingInfo );
     Wrapped wrapped_hello = new Wrapped( "hello" );
     Wrapped wrapped_world = new Wrapped( "world" );
     Wrapper wrapper_hello = new Wrapper( wrapped_hello );

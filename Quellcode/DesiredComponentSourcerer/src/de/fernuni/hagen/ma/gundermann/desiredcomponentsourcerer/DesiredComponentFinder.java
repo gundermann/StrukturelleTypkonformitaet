@@ -15,6 +15,8 @@ import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.Best
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.CombinationInfo;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.DefaultTypeMatcherHeuristic;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.Logger;
+import glue.ConvertableBundle;
+import glue.ConvertableComponent;
 import glue.TypeConverter;
 import matching.MatchingInfo;
 import matching.methods.MethodMatchingInfo;
@@ -93,8 +95,7 @@ public class DesiredComponentFinder {
 		// INFO OUTPUT
 		componentInterface2PartlyMatchingInfos.values().forEach(i -> {
 			Logger.toFile("%f;%s;%b;%s;", i.getQualitativeMatchRating().getMatcherRating(),
-					i.getQualitativeMatchRating().toString(), i.isFullMatching(),
-					i.getTarget().getSimpleName());
+					i.getQualitativeMatchRating().toString(), i.isFullMatching(), i.getTarget().getSimpleName());
 		});
 
 		Optional<DesiredInterface> result = Optional
@@ -111,7 +112,7 @@ public class DesiredComponentFinder {
 			if (!matchesPartly) {
 				continue;
 			}
-			//FIXME Aufruf funktioniert nur mit dem StructuralTypeMatcher
+			// FIXME Aufruf funktioniert nur mit dem StructuralTypeMatcher
 			matchedBeans.put(beanInterface,
 					typeMatcher.calculateTypeMatchingInfos(beanInterface, desiredInterface).iterator().next());
 		}
@@ -173,10 +174,16 @@ public class DesiredComponentFinder {
 			components2MatchingInfo.put(optComponent.get(), combinationInfos.getModuleMatchingInfo(componentClass));
 		}
 
+		List<ConvertableComponent> convertableComponents = components2MatchingInfo.entrySet().stream()
+				.map(e -> new ConvertableComponent(e.getKey(), e.getValue())).collect(Collectors.toList());
+		if (!ConvertableBundle.canCreateBundle(convertableComponents)) {
+			Logger.infoF("Cannot create convertible bundle");
+			return null;
+		}
 		Logger.infoF("test component: %s",
 				combinationInfos.getComponentClasses().stream().map(c -> c.getName()).collect(Collectors.joining(",")));
 
-		DesiredInterface convertedComponent = converter.convert(components2MatchingInfo);
+		DesiredInterface convertedComponent = converter.convert(ConvertableBundle.createBundle(convertableComponents));
 		TestResult testResult = componentTester.testComponent(convertedComponent);
 		logTestResult(testResult);
 		TestedComponent<DesiredInterface> testedComponent = new TestedComponent<>(convertedComponent, testResult);

@@ -4,10 +4,8 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
 import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import org.easymock.EasyMock;
@@ -56,9 +54,11 @@ public class ParamPermSignatureMatchingTypeConverterTest {
     EasyMock.expect( moduleMatchingInfo.getMethodMatchingInfos() ).andReturn( methodMatchingInfos ).anyTimes();
     EasyMock.replay( moduleMatchingInfo );
 
-    Map<Object, Collection<MethodMatchingInfo>> obj2MatchingInfo = new HashMap<>();
-    obj2MatchingInfo.put( convertationObject, moduleMatchingInfo.getMethodMatchingInfos() );
-    Desired1ParameterInterface converted = converter.convert( obj2MatchingInfo );
+	ConvertableComponent convertableComponent = new ConvertableComponent(convertationObject,
+			moduleMatchingInfo.getMethodMatchingInfos());
+	Desired1ParameterInterface converted = converter
+			.convert(ConvertableBundle.createBundle(Collections.singletonList(convertableComponent)));
+
 
     assertThat( converted.doStuffWith1Param( "helloworld" ), equalTo( "helloworld" ) );
     assertThat( converted.doStuffWith1Param( "hier gibt es keine Permutation" ),
@@ -99,9 +99,10 @@ public class ParamPermSignatureMatchingTypeConverterTest {
     TypeMatchingInfo moduleMatchingInfo = EasyMock.createNiceMock( TypeMatchingInfo.class );
     EasyMock.expect( moduleMatchingInfo.getMethodMatchingInfos() ).andReturn( methodMatchingInfos ).anyTimes();
     EasyMock.replay( moduleMatchingInfo );
-    Map<Object, Collection<MethodMatchingInfo>> obj2MatchingInfo = new HashMap<>();
-    obj2MatchingInfo.put( convertationObject, moduleMatchingInfo.getMethodMatchingInfos() );
-    Desired2ParameterInterface converted = converter.convert( obj2MatchingInfo );
+	ConvertableComponent convertableComponent = new ConvertableComponent(convertationObject,
+			moduleMatchingInfo.getMethodMatchingInfos());
+	Desired2ParameterInterface converted = converter
+			.convert(ConvertableBundle.createBundle(Collections.singletonList(convertableComponent)));
 
     assertThat( converted.doStuffWith2Params( "helloworld", 1 ), equalTo( "1helloworld" ) );
     assertThat( converted.doStuffWith2Params( " Permutation gibt es hier", 2 ),
@@ -148,9 +149,10 @@ public class ParamPermSignatureMatchingTypeConverterTest {
     EasyMock.expect( moduleMatchingInfo.getMethodMatchingInfos() ).andReturn( methodMatchingInfos ).anyTimes();
     EasyMock.replay( moduleMatchingInfo );
 
-    Map<Object, Collection<MethodMatchingInfo>> obj2MatchingInfo = new HashMap<>();
-    obj2MatchingInfo.put( convertationObject, moduleMatchingInfo.getMethodMatchingInfos() );
-    Desired3ParameterInterface converted = converter.convert( obj2MatchingInfo );
+	ConvertableComponent convertableComponent = new ConvertableComponent(convertationObject,
+			moduleMatchingInfo.getMethodMatchingInfos());
+	Desired3ParameterInterface converted = converter
+			.convert(ConvertableBundle.createBundle(Collections.singletonList(convertableComponent)));
 
     assertThat( converted.doStuffWith3Params( "helloworld", 1, false ), equalTo( "1falsehelloworld" ) );
     assertThat( converted.doStuffWith3Params( " Permutation gibt es hier", 6, true ),
