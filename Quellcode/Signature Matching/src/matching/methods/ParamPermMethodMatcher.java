@@ -10,10 +10,11 @@ import java.util.Map.Entry;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
+import de.fernuni.hagen.ma.gundermann.signaturematching.SingleMatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo.ParamPosition;
 import matching.MatcherRate;
-import matching.MatchingInfo;
 import matching.Setting;
-import matching.methods.MethodMatchingInfo.ParamPosition;
 import matching.types.TypeMatcher;
 import util.Permuter;
 
@@ -161,26 +162,26 @@ public class ParamPermMethodMatcher implements MethodMatcher {
       return new ArrayList<>();
     }
     MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory( checkMethod, queryMethod );
-    Collection<MatchingInfo> returnTypeMatchingInfos = innerTypeMatcherSupplier.get()
+    Collection<SingleMatchingInfo> returnTypeMatchingInfos = innerTypeMatcherSupplier.get()
         .calculateTypeMatchingInfos(
             queryMethod.getReturnType(), checkMethod.getReturnType() );
 
-    Collection<Map<ParamPosition, Collection<MatchingInfo>>> argumentTypesMatchingInfos = calculateArgumentMatchingInfos(
+    Collection<Map<ParamPosition, Collection<SingleMatchingInfo>>> argumentTypesMatchingInfos = calculateArgumentMatchingInfos(
         checkMethod.getParameterTypes(), queryMethod.getParameterTypes() );
     return factory.createFromTypeMatchingInfos( returnTypeMatchingInfos, argumentTypesMatchingInfos );
   }
 
-  private Collection<Map<ParamPosition, Collection<MatchingInfo>>> calculateArgumentMatchingInfos(
+  private Collection<Map<ParamPosition, Collection<SingleMatchingInfo>>> calculateArgumentMatchingInfos(
       Class<?>[] checkArgs,
       Class<?>[] queryArgs ) {
 
-    Collection<Map<ParamPosition, Collection<MatchingInfo>>> infos = new ArrayList<>();
+    Collection<Map<ParamPosition, Collection<SingleMatchingInfo>>> infos = new ArrayList<>();
     Map<Integer[], Class<?>[]> permutations = permuteAgruments( checkArgs );
     if ( permutations.isEmpty() ) {
       return infos;
     }
     for ( Entry<Integer[], Class<?>[]> combination : permutations.entrySet() ) {
-      Map<ParamPosition, Collection<MatchingInfo>> infoMap = new HashMap<>();
+      Map<ParamPosition, Collection<SingleMatchingInfo>> infoMap = new HashMap<>();
       for ( int i = 0; i < combination.getValue().length; i++ ) {
         Class<?> checkParameter = combination.getValue()[i];
         Class<?> queryParameter = queryArgs[i];

@@ -3,7 +3,9 @@ package glue;
 import java.lang.reflect.Field;
 import java.util.Collection;
 
-import matching.methods.MethodMatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.ProxyFactory;
+import de.fernuni.hagen.ma.gundermann.signaturematching.ProxyFactoryCreator;
 import util.Logger;
 
 public class WrappedProxyFactory<T> implements ProxyFactory<T> {

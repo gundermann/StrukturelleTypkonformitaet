@@ -1,4 +1,4 @@
-package glue;
+package de.fernuni.hagen.ma.gundermann.signaturematching;
 
 public interface ProxyFactoryCreator {
 

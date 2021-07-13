@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Optional;
 
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.CombinationInfo;
-import matching.methods.MethodMatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo;
 
 public interface Selector {
 

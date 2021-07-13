@@ -5,7 +5,6 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -13,6 +12,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo;
 import glue.ProxyCreatorFactories;
 import matching.MatcherRate;
 import matching.MatchingInfo;
@@ -21,11 +21,10 @@ import matching.MatchingSupplier;
 import matching.Setting;
 import matching.methods.MatchingMethod;
 import matching.methods.MethodMatcher;
-import matching.methods.MethodMatchingInfo;
 import matching.methods.ParamPermMethodMatcher;
 import util.Logger;
 
-public class StructuralTypeMatcher implements TypeMatcher {
+public class StructuralTypeMatcher {
 
 	private final MethodMatcher methodMatcher;
 
@@ -33,7 +32,6 @@ public class StructuralTypeMatcher implements TypeMatcher {
 		this.methodMatcher = new ParamPermMethodMatcher(innerMethodMatcherSupplier);
 	}
 
-	@Override
 	public boolean matchesType(Class<?> checkType, Class<?> queryType) {
 		Logger.info(String.format("%s MATCH? %s", checkType.getSimpleName(), queryType.getSimpleName()));
 		Method[] queryMethods = getQueryMethods(queryType);
@@ -43,15 +41,13 @@ public class StructuralTypeMatcher implements TypeMatcher {
 		return possibleMatches.values().stream().anyMatch(l -> !l.isEmpty());
 	}
 
-	@Override
-	public Collection<MatchingInfo> calculateTypeMatchingInfos(Class<?> targetType, Class<?> sourceType) {
+	public MatchingInfo calculateTypeMatchingInfos(Class<?> targetType, Class<?> sourceType) {
 		  Builder miBuilder = new MatchingInfo.Builder(sourceType, targetType, ProxyCreatorFactories.getInterfaceProxyFactoryCreator());
 //		  PartlyTypeMatchingInfoFactory factory = new PartlyTypeMatchingInfoFactory( targetType );
 	    if ( sourceType.equals( Object.class ) ) {
 	      // Dieser Spezialfall fuehrt ohne diese Sonderregelung in einen Stackoverflow, da Object als Typ immer wieder
 	      // auftaucht. Es ist also eine Abbruchbedingung.
-	    	return Collections.singletonList(miBuilder.build());
-//	      return factory.create();
+	    	return miBuilder.build();
 	    }
 
 	    Method[] queryMethods = getQueryMethods( sourceType );
@@ -73,8 +69,7 @@ public class StructuralTypeMatcher implements TypeMatcher {
 	            e.getKey().getName() ) );
 	    miBuilder.withMatchedSourceMethods(Arrays.asList( queryMethods ));
 	    miBuilder.withMethodMatchingInfoSupplier(matchingInfoSupplier);
-	    return Collections.singletonList(miBuilder.build());
-//	    return factory.create( Arrays.asList( queryMethods ), matchingInfoSupplier, potentialMethods.length );
+	    return miBuilder.build();
 	}
 
 	private void printPossibleMatches(Map<Method, Collection<Method>> possibleMatches) {
@@ -166,16 +161,6 @@ public class StructuralTypeMatcher implements TypeMatcher {
 		}
 
 		return method2MethodCollection;
-	}
-
-	@Override
-	public MatcherRate matchesWithRating(Class<?> checkType, Class<?> queryType) {
-		if (matchesType(checkType, queryType)) {
-			MatcherRate rate = new MatcherRate();
-			rate.add(this.getClass().getSimpleName(), Setting.STRUCTURAL_TYPE_MATCHER_BASE_RATING);
-			return rate;
-		}
-		return null;
 	}
 
 }

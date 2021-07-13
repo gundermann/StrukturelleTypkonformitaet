@@ -7,7 +7,7 @@ import java.util.Collection;
 
 import org.junit.Test;
 
-import matching.MatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.SingleMatchingInfo;
 
 public class ExactTypeMatcherTest {
 
@@ -32,7 +32,7 @@ public class ExactTypeMatcherTest {
   @Test
   public void typeMatchingInfos() {
     ExactTypeMatcher matcher = new ExactTypeMatcher();
-    Collection<MatchingInfo> tmi = matcher.calculateTypeMatchingInfos( String.class, String.class );
+    Collection<SingleMatchingInfo> tmi = matcher.calculateTypeMatchingInfos( String.class, String.class );
     assertTrue( tmi.size() == 1 );
     tmi = matcher.calculateTypeMatchingInfos( Object.class, String.class );
     assertTrue( tmi.isEmpty() );

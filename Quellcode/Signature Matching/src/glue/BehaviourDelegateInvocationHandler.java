@@ -9,12 +9,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import matching.MatchingInfo;
-import matching.methods.MethodMatchingInfo;
-import matching.methods.MethodMatchingInfo.ParamPosition;
+import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo.ParamPosition;
+import de.fernuni.hagen.ma.gundermann.signaturematching.SingleMatchingInfo;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 import util.Logger;
@@ -85,7 +84,7 @@ public class BehaviourDelegateInvocationHandler implements MethodInterceptor, In
 		Method targetMethod = methodMatchingInfo.getTarget();
 		Object[] convertedArgs = convertArgs(args, methodMatchingInfo.getArgumentTypeMatchingInfos());
 		Object returnValue = targetMethod.invoke(component.getComponent(), convertedArgs);
-		MatchingInfo returnTypeMatchingInfo = methodMatchingInfo.getReturnTypeMatchingInfo();
+		SingleMatchingInfo returnTypeMatchingInfo = methodMatchingInfo.getReturnTypeMatchingInfo();
 		if (returnTypeMatchingInfo == null
 //				|| returnTypeMatchingInfo.isSubstitutable()
 		) {
@@ -98,17 +97,17 @@ public class BehaviourDelegateInvocationHandler implements MethodInterceptor, In
 		return convertType(returnValue, returnTypeMatchingInfo);
 	}
 
-	private Object[] convertArgs(Object[] args, Map<ParamPosition, MatchingInfo> argMMI) {
+	private Object[] convertArgs(Object[] args, Map<ParamPosition, SingleMatchingInfo> argMMI) {
 		if (args == null) {
 			return null;
 		}
 		Object[] convertedArgs = new Object[args.length];
 		for (int i = 0; i < args.length; i++) {
-			Entry<ParamPosition, MatchingInfo> moduleMatchingInfoEntry = getParameterWithRepectToPosition(i, argMMI);
+			Entry<ParamPosition, SingleMatchingInfo> moduleMatchingInfoEntry = getParameterWithRepectToPosition(i, argMMI);
 			if (moduleMatchingInfoEntry != null && moduleMatchingInfoEntry.getValue() != null
 					&& moduleMatchingInfoEntry.getKey() != null) {
 				ParamPosition paramPosition = moduleMatchingInfoEntry.getKey();
-				MatchingInfo moduleMatchingInfo = moduleMatchingInfoEntry.getValue();
+				SingleMatchingInfo moduleMatchingInfo = moduleMatchingInfoEntry.getValue();
 				Object convertedArg = convertType(args[paramPosition.getSourceParamPosition()], moduleMatchingInfo);
 				convertedArgs[paramPosition.getTargetParamPosition()] = convertedArg;
 			} else {
@@ -119,8 +118,8 @@ public class BehaviourDelegateInvocationHandler implements MethodInterceptor, In
 		return convertedArgs;
 	}
 
-	private Entry<ParamPosition, MatchingInfo> getParameterWithRepectToPosition(int sourceParamPosition,
-			Map<ParamPosition, MatchingInfo> argMMI) {
+	private Entry<ParamPosition, SingleMatchingInfo> getParameterWithRepectToPosition(int sourceParamPosition,
+			Map<ParamPosition, SingleMatchingInfo> argMMI) {
 		return argMMI.entrySet().stream().filter(e -> e.getKey().getSourceParamPosition().equals(sourceParamPosition))
 				.findFirst().orElse(null);
 	}
@@ -133,7 +132,7 @@ public class BehaviourDelegateInvocationHandler implements MethodInterceptor, In
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	private <RT> RT convertType(Object sourceType, MatchingInfo moduleMatchingInfo) {
+	private <RT> RT convertType(Object sourceType, SingleMatchingInfo moduleMatchingInfo) {
 		Logger.info(String.format("convert type %s -> %s", moduleMatchingInfo.getSource().getName(),
 				moduleMatchingInfo.getTarget().getName()));
 		// Wenn das zu konvertierende Objekt null ist, dann kann dies auch gleich
@@ -155,8 +154,7 @@ public class BehaviourDelegateInvocationHandler implements MethodInterceptor, In
 		// source = moduleMatchingInfo.getSourceDelegate().apply( sourceType );
 		// }
 		Map<Object, Collection<MethodMatchingInfo>> comp2MatchingInfo = new HashMap<>();
-		comp2MatchingInfo.put(source, moduleMatchingInfo.getMethodMatchingInfoSupplier().values().stream()
-				.map(Supplier::get).flatMap(Collection::stream).collect(Collectors.toList()));
+		comp2MatchingInfo.put(source, moduleMatchingInfo.getMethodMatchingInfos().values());
 		List<ConvertableComponent> convertableComponents = comp2MatchingInfo.entrySet().stream().map(e -> new ConvertableComponent(e.getKey(), e.getValue()))
 				.collect(Collectors.toList());
 		ConvertableBundle convertableBundle = ConvertableBundle.createBundle(convertableComponents);
@@ -176,7 +174,7 @@ public class BehaviourDelegateInvocationHandler implements MethodInterceptor, In
 	}
 
 	private boolean argumentsMatches(MethodMatchingInfo mmi, Method method) {
-		for (Entry<ParamPosition, MatchingInfo> argMMIEntry : mmi.getArgumentTypeMatchingInfos().entrySet()) {
+		for (Entry<ParamPosition, SingleMatchingInfo> argMMIEntry : mmi.getArgumentTypeMatchingInfos().entrySet()) {
 			if (method.getParameterCount() <= argMMIEntry.getKey().getSourceParamPosition()) {
 				throw new RuntimeException("wrong parameter count");
 			}

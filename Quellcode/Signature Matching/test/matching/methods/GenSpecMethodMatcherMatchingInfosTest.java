@@ -15,9 +15,10 @@ import java.util.stream.Collectors;
 
 import org.junit.Test;
 
-import matching.MatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.SingleMatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo.ParamPosition;
 import matching.MatchingSupplier;
-import matching.methods.MethodMatchingInfo.ParamPosition;
 import matching.types.GenSpecTypeMatcher;
 import matching.types.TypeMatchingInfo;
 
@@ -96,9 +97,9 @@ public class GenSpecMethodMatcherMatchingInfosTest {
 			assertThat(info.getArgumentTypeMatchingInfos(), notNullValue());
 			assertThat(info.getArgumentTypeMatchingInfos().size(), equalTo(1));
 
-			Iterator<Entry<ParamPosition, MatchingInfo>> iterator = info.getArgumentTypeMatchingInfos().entrySet()
+			Iterator<Entry<ParamPosition, SingleMatchingInfo>> iterator = info.getArgumentTypeMatchingInfos().entrySet()
 					.iterator();
-			Entry<ParamPosition, MatchingInfo> argInfoEntry1 = iterator.next();
+			Entry<ParamPosition, SingleMatchingInfo> argInfoEntry1 = iterator.next();
 			assertThat(argInfoEntry1.getValue().getSource(),
 					equalTo(queryMethod.getParameterTypes()[argInfoEntry1.getKey().getSourceParamPosition()]));
 			assertThat(argInfoEntry1.getValue().getTarget(),
@@ -114,18 +115,18 @@ public class GenSpecMethodMatcherMatchingInfosTest {
 		assertThat(matchingInfos, notNullValue());
 		assertThat(matchingInfos.size(), equalTo(1));
 		matchingInfos.forEach(info -> {
-			MatchingInfo returnTypeMatchingInfo = info.getReturnTypeMatchingInfo();
+			SingleMatchingInfo returnTypeMatchingInfo = info.getReturnTypeMatchingInfo();
 			assertThat(returnTypeMatchingInfo, notNullValue());
 			assertThat(returnTypeMatchingInfo.getSource(), equalTo(checkMethod.getReturnType()));
 			assertThat(returnTypeMatchingInfo.getTarget(), equalTo(queryMethod.getReturnType()));
-			Map<ParamPosition, MatchingInfo> argumentTypeMatchingInfos = info.getArgumentTypeMatchingInfos();
+			Map<ParamPosition, SingleMatchingInfo> argumentTypeMatchingInfos = info.getArgumentTypeMatchingInfos();
 			assertThat(argumentTypeMatchingInfos, notNullValue());
 			assertThat(argumentTypeMatchingInfos.size(), equalTo(2));
 
-			Iterator<Entry<ParamPosition, MatchingInfo>> iterator = info.getArgumentTypeMatchingInfos().entrySet()
+			Iterator<Entry<ParamPosition, SingleMatchingInfo>> iterator = info.getArgumentTypeMatchingInfos().entrySet()
 					.iterator();
 			while (iterator.hasNext()) {
-				Entry<ParamPosition, MatchingInfo> argInfoEntry1 = iterator.next();
+				Entry<ParamPosition, SingleMatchingInfo> argInfoEntry1 = iterator.next();
 				assertThat(argInfoEntry1.getValue().getSource(),
 						equalTo(queryMethod.getParameterTypes()[argInfoEntry1.getKey().getSourceParamPosition()]));
 				assertThat(argInfoEntry1.getValue().getTarget(),
@@ -161,30 +162,30 @@ public class GenSpecMethodMatcherMatchingInfosTest {
 		assertThat(matchingInfos, notNullValue());
 		assertThat(matchingInfos.size() > 0, equalTo(true));
 		for (MethodMatchingInfo info : matchingInfos) {
-			MatchingInfo returnTypeMatchingInfo = info.getReturnTypeMatchingInfo();
+			SingleMatchingInfo returnTypeMatchingInfo = info.getReturnTypeMatchingInfo();
 			assertThat(returnTypeMatchingInfo, notNullValue());
 			assertThat(returnTypeMatchingInfo.getSource(), equalTo(checkMethod.getReturnType()));
 			assertThat(returnTypeMatchingInfo.getTarget(), equalTo(queryMethod.getReturnType()));
-			Map<ParamPosition, MatchingInfo> argumentTypeMatchingInfos = info.getArgumentTypeMatchingInfos();
+			Map<ParamPosition, SingleMatchingInfo> argumentTypeMatchingInfos = info.getArgumentTypeMatchingInfos();
 			assertThat(argumentTypeMatchingInfos, notNullValue());
 			assertThat(argumentTypeMatchingInfos.size(), equalTo(2));
 
 			// Parameter prüfen
-			Iterator<Entry<ParamPosition, MatchingInfo>> iterator = argumentTypeMatchingInfos.entrySet().iterator();
-			Entry<ParamPosition, MatchingInfo> argInfoEntry1 = iterator.next();
+			Iterator<Entry<ParamPosition, SingleMatchingInfo>> iterator = argumentTypeMatchingInfos.entrySet().iterator();
+			Entry<ParamPosition, SingleMatchingInfo> argInfoEntry1 = iterator.next();
 			assertThat(argInfoEntry1.getValue().getSource(),
 					equalTo(queryMethod.getParameterTypes()[argInfoEntry1.getKey().getSourceParamPosition()]));
 			assertThat(argInfoEntry1.getValue().getTarget(),
 					equalTo(checkMethod.getParameterTypes()[argInfoEntry1.getKey().getTargetParamPosition()]));
 
-			Entry<ParamPosition, MatchingInfo> argInfoEntry2 = iterator.next();
+			Entry<ParamPosition, SingleMatchingInfo> argInfoEntry2 = iterator.next();
 			assertThat(argInfoEntry2.getValue().getSource(),
 					equalTo(queryMethod.getParameterTypes()[argInfoEntry2.getKey().getSourceParamPosition()]));
 			assertThat(argInfoEntry2.getValue().getTarget(),
 					equalTo(checkMethod.getParameterTypes()[argInfoEntry2.getKey().getTargetParamPosition()]));
 
-			assertThat(argInfoEntry1.getValue().getMethodMatchingSupplier().isEmpty()
-					^ argInfoEntry2.getValue().getMethodMatchingSupplier().isEmpty(), equalTo(true));
+			assertThat(argInfoEntry1.getValue().getMethodMatchingInfos().isEmpty()
+					^ argInfoEntry2.getValue().getMethodMatchingInfos().isEmpty(), equalTo(true));
 		}
 	}
 
@@ -202,9 +203,9 @@ public class GenSpecMethodMatcherMatchingInfosTest {
 			assertThat(info.getArgumentTypeMatchingInfos(), notNullValue());
 			assertThat(info.getArgumentTypeMatchingInfos().size(), equalTo(1));
 
-			Iterator<Entry<ParamPosition, MatchingInfo>> iterator = info.getArgumentTypeMatchingInfos().entrySet()
+			Iterator<Entry<ParamPosition, SingleMatchingInfo>> iterator = info.getArgumentTypeMatchingInfos().entrySet()
 					.iterator();
-			Entry<ParamPosition, MatchingInfo> argInfoEntry1 = iterator.next();
+			Entry<ParamPosition, SingleMatchingInfo> argInfoEntry1 = iterator.next();
 			assertThat(argInfoEntry1.getValue().getSource(),
 					equalTo(queryMethod.getParameterTypes()[argInfoEntry1.getKey().getSourceParamPosition()]));
 			assertThat(argInfoEntry1.getValue().getTarget(),
@@ -221,24 +222,23 @@ public class GenSpecMethodMatcherMatchingInfosTest {
 		assertThat(matchingInfos.size() > 0, equalTo(true));
 		for (MethodMatchingInfo info : matchingInfos) {
 			// Returntype prüfen
-			MatchingInfo returnTypeMatchingInfo = info.getReturnTypeMatchingInfo();
+			SingleMatchingInfo returnTypeMatchingInfo = info.getReturnTypeMatchingInfo();
 			assertThat(returnTypeMatchingInfo, notNullValue());
 			assertThat(returnTypeMatchingInfo.getSource(), equalTo(checkMethod.getReturnType()));
 			assertThat(returnTypeMatchingInfo.getTarget(), equalTo(queryMethod.getReturnType()));
 			Collection<MethodMatchingInfo> methodMatchingInfosOfReturnType = returnTypeMatchingInfo
-					.getMethodMatchingSupplier().values().stream().map(MatchingSupplier::getMethodMatchingInfosSupplier)
-					.map(Supplier::get).flatMap(Collection::stream).collect(Collectors.toList());
+					.getMethodMatchingInfos().values();
 			assertThat(methodMatchingInfosOfReturnType.isEmpty(), equalTo(true));
 
 			// Parameter prüfen
-			Map<ParamPosition, MatchingInfo> argumentTypeMatchingInfos = info.getArgumentTypeMatchingInfos();
+			Map<ParamPosition, SingleMatchingInfo> argumentTypeMatchingInfos = info.getArgumentTypeMatchingInfos();
 			assertThat(argumentTypeMatchingInfos, notNullValue());
 			assertThat(argumentTypeMatchingInfos.size(), equalTo(2));
 
-			Iterator<Entry<ParamPosition, MatchingInfo>> iterator = info.getArgumentTypeMatchingInfos().entrySet()
+			Iterator<Entry<ParamPosition, SingleMatchingInfo>> iterator = info.getArgumentTypeMatchingInfos().entrySet()
 					.iterator();
 			while (iterator.hasNext()) {
-				Entry<ParamPosition, MatchingInfo> argInfoEntry1 = iterator.next();
+				Entry<ParamPosition, SingleMatchingInfo> argInfoEntry1 = iterator.next();
 				assertThat(argInfoEntry1.getValue().getSource(),
 						equalTo(queryMethod.getParameterTypes()[argInfoEntry1.getKey().getSourceParamPosition()]));
 				assertThat(argInfoEntry1.getValue().getTarget(),
@@ -257,24 +257,23 @@ public class GenSpecMethodMatcherMatchingInfosTest {
 		assertThat(matchingInfos.size() > 0, equalTo(true));
 		for (MethodMatchingInfo info : matchingInfos) {
 			// Returntype prüfen
-			MatchingInfo returnTypeMatchingInfo = info.getReturnTypeMatchingInfo();
+			SingleMatchingInfo returnTypeMatchingInfo = info.getReturnTypeMatchingInfo();
 			assertThat(returnTypeMatchingInfo, notNullValue());
 			assertThat(returnTypeMatchingInfo.getSource(), equalTo(checkMethod.getReturnType()));
 			assertThat(returnTypeMatchingInfo.getTarget(), equalTo(queryMethod.getReturnType()));
 			Collection<MethodMatchingInfo> methodMatchingInfosOfReturnType = returnTypeMatchingInfo
-					.getMethodMatchingSupplier().values().stream().map(MatchingSupplier::getMethodMatchingInfosSupplier)
-					.map(Supplier::get).flatMap(Collection::stream).collect(Collectors.toList());
+					.getMethodMatchingInfos().values();
 			assertThat(methodMatchingInfosOfReturnType.isEmpty(), equalTo(false));
 
 			// Parameter prüfen
-			Map<ParamPosition, MatchingInfo> argumentTypeMatchingInfos = info.getArgumentTypeMatchingInfos();
+			Map<ParamPosition, SingleMatchingInfo> argumentTypeMatchingInfos = info.getArgumentTypeMatchingInfos();
 			assertThat(argumentTypeMatchingInfos, notNullValue());
 			assertThat(argumentTypeMatchingInfos.size(), equalTo(2));
 
-			Iterator<Entry<ParamPosition, MatchingInfo>> iterator = info.getArgumentTypeMatchingInfos().entrySet()
+			Iterator<Entry<ParamPosition, SingleMatchingInfo>> iterator = info.getArgumentTypeMatchingInfos().entrySet()
 					.iterator();
 			while (iterator.hasNext()) {
-				Entry<ParamPosition, MatchingInfo> argInfoEntry1 = iterator.next();
+				Entry<ParamPosition, SingleMatchingInfo> argInfoEntry1 = iterator.next();
 				assertThat(argInfoEntry1.getValue().getSource(),
 						equalTo(queryMethod.getParameterTypes()[argInfoEntry1.getKey().getSourceParamPosition()]));
 				assertThat(argInfoEntry1.getValue().getTarget(),

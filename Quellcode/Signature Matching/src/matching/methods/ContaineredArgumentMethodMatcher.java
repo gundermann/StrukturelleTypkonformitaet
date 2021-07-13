@@ -3,6 +3,7 @@ package matching.methods;
 import java.lang.reflect.Method;
 import java.util.Set;
 
+import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo;
 import matching.MatcherRate;
 
 /**

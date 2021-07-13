@@ -18,7 +18,7 @@ public class StructuralTypeMatcherMatchingTest {
 
   GenSpecTypeMatcher genSpecTypeMatcher = new GenSpecTypeMatcher();
 
-  TypeMatcher matcher = new StructuralTypeMatcher( MatcherCombiner.combine( genSpecTypeMatcher, exactTypeMatcher,
+  StructuralTypeMatcher matcher = new StructuralTypeMatcher( MatcherCombiner.combine( genSpecTypeMatcher, exactTypeMatcher,
       new WrappedTypeMatcher( MatcherCombiner.combine( genSpecTypeMatcher, exactTypeMatcher ) ) ) );
 
   @Test

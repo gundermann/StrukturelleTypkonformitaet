@@ -13,7 +13,8 @@ import java.util.stream.Collectors;
 import org.junit.Before;
 import org.junit.Test;
 
-import matching.MatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.SingleMatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo;
 import matching.types.ExactTypeMatcher;
 import matching.types.TypeMatchingInfo;
 import matching.types.WrappedTypeMatcher;
@@ -63,7 +64,7 @@ public class WrappedTypeMethodMatcherMatchingInfosTest {
     for ( MethodMatchingInfo mmi : matchingInfos ) {
       assertThat( mmi.getSource(), equalTo( queryMethod ) );
       assertThat( mmi.getTarget(), equalTo( checkMethod ) );
-      MatchingInfo rtMatchingInfo = mmi.getReturnTypeMatchingInfo();
+      SingleMatchingInfo rtMatchingInfo = mmi.getReturnTypeMatchingInfo();
       assertThat( rtMatchingInfo, notNullValue() );
       assertThat( rtMatchingInfo.getSource(), notNullValue() );
       assertThat( rtMatchingInfo.getSource(), equalTo( Integer.class ) );
@@ -71,11 +72,7 @@ public class WrappedTypeMethodMatcherMatchingInfosTest {
       assertThat( rtMatchingInfo.getTarget(), notNullValue() );
       assertThat( rtMatchingInfo.getTarget(), equalTo( int.class ) );
       assertThat( rtMatchingInfo.getConverterCreator(), notNullValue() );
-      Collection<MethodMatchingInfo> rtMethodMI = rtMatchingInfo.getMethodMatchingInfoSupplier().values()
-        		.stream()
-          		.map(Supplier::get)
-          		.flatMap(Collection::stream)
-          		.collect(Collectors.toList());
+      Collection<MethodMatchingInfo> rtMethodMI = rtMatchingInfo.getMethodMatchingInfos().values();
       assertThat( rtMethodMI, notNullValue() );
       assertThat( rtMethodMI.size(), equalTo( 0 ) ); // Denn die Typen sind identisch
 
@@ -94,7 +91,7 @@ public class WrappedTypeMethodMatcherMatchingInfosTest {
     for ( MethodMatchingInfo mmi : matchingInfos ) {
       assertThat( mmi.getSource(), equalTo( queryMethod ) );
       assertThat( mmi.getTarget(), equalTo( checkMethod ) );
-      MatchingInfo rtMatchingInfo = mmi.getReturnTypeMatchingInfo();
+      SingleMatchingInfo rtMatchingInfo = mmi.getReturnTypeMatchingInfo();
       assertThat( rtMatchingInfo, notNullValue() );
       assertThat( rtMatchingInfo.getTarget(), notNullValue() );
       assertThat( rtMatchingInfo.getTarget(), equalTo( Integer.class ) );
@@ -102,11 +99,7 @@ public class WrappedTypeMethodMatcherMatchingInfosTest {
       assertThat( rtMatchingInfo.getSource(), notNullValue() );
       assertThat( rtMatchingInfo.getSource(), equalTo( int.class ) );
 
-      Collection<MethodMatchingInfo> rtMethodMI = rtMatchingInfo.getMethodMatchingInfoSupplier().values()
-        		.stream()
-          		.map(Supplier::get)
-          		.flatMap(Collection::stream)
-          		.collect(Collectors.toList());
+      Collection<MethodMatchingInfo> rtMethodMI = rtMatchingInfo.getMethodMatchingInfos().values();
       assertThat( rtMethodMI, notNullValue() );
       assertThat( rtMethodMI.size(), equalTo( 0 ) ); // Denn die Typen sind identisch
 

@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.Selector;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.CombinationInfo;
-import matching.methods.MethodMatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo;
 
 /**
  * Selektor, der gar keine Komponente selektiert

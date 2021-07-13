@@ -12,9 +12,9 @@ import java.util.Set;
 import org.easymock.EasyMock;
 import org.junit.Test;
 
-import matching.MatchingInfo;
-import matching.methods.MethodMatchingInfo;
-import matching.methods.MethodMatchingInfo.ParamPosition;
+import de.fernuni.hagen.ma.gundermann.signaturematching.SingleMatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo.ParamPosition;
 import matching.types.TypeMatchingInfo;
 import matching.types.testtypes.Enum2;
 import matching.types.testtypes.InterfaceWrapper;
@@ -33,28 +33,28 @@ public class ExactSignatureMatchingTypeConverterTest {
 		EasyMock.expect(methodMatchingInfoGetFalse.getTarget()).andReturn(queryType.getMethod("getFalse")).anyTimes();
 		EasyMock.expect(methodMatchingInfoGetFalse.getSource()).andReturn(libType.getMethod("getFalse")).anyTimes();
 		EasyMock.expect(methodMatchingInfoGetFalse.getArgumentTypeMatchingInfos())
-				.andReturn(new HashMap<ParamPosition, MatchingInfo>()).anyTimes();
+				.andReturn(new HashMap<ParamPosition, SingleMatchingInfo>()).anyTimes();
 		methodMatchingInfos.add(methodMatchingInfoGetFalse);
 
 		MethodMatchingInfo methodMatchingInfoGetTrue = EasyMock.createNiceMock(MethodMatchingInfo.class);
 		EasyMock.expect(methodMatchingInfoGetTrue.getTarget()).andReturn(queryType.getMethod("getTrue")).anyTimes();
 		EasyMock.expect(methodMatchingInfoGetTrue.getSource()).andReturn(libType.getMethod("getTrue")).anyTimes();
 		EasyMock.expect(methodMatchingInfoGetTrue.getArgumentTypeMatchingInfos())
-				.andReturn(new HashMap<ParamPosition, MatchingInfo>()).anyTimes();
+				.andReturn(new HashMap<ParamPosition, SingleMatchingInfo>()).anyTimes();
 		methodMatchingInfos.add(methodMatchingInfoGetTrue);
 
 		MethodMatchingInfo methodMatchingInfoGetOne = EasyMock.createNiceMock(MethodMatchingInfo.class);
 		EasyMock.expect(methodMatchingInfoGetOne.getTarget()).andReturn(queryType.getMethod("getOne")).anyTimes();
 		EasyMock.expect(methodMatchingInfoGetOne.getSource()).andReturn(libType.getMethod("getOne")).anyTimes();
 		EasyMock.expect(methodMatchingInfoGetOne.getArgumentTypeMatchingInfos())
-				.andReturn(new HashMap<ParamPosition, MatchingInfo>()).anyTimes();
+				.andReturn(new HashMap<ParamPosition, SingleMatchingInfo>()).anyTimes();
 		methodMatchingInfos.add(methodMatchingInfoGetOne);
 
 		MethodMatchingInfo methodMatchingInfoGetNull = EasyMock.createNiceMock(MethodMatchingInfo.class);
 		EasyMock.expect(methodMatchingInfoGetNull.getTarget()).andReturn(queryType.getMethod("getNull")).anyTimes();
 		EasyMock.expect(methodMatchingInfoGetNull.getSource()).andReturn(libType.getMethod("getNull")).anyTimes();
 		EasyMock.expect(methodMatchingInfoGetNull.getArgumentTypeMatchingInfos())
-				.andReturn(new HashMap<ParamPosition, MatchingInfo>()).anyTimes();
+				.andReturn(new HashMap<ParamPosition, SingleMatchingInfo>()).anyTimes();
 		methodMatchingInfos.add(methodMatchingInfoGetNull);
 
 		TypeMatchingInfo moduleMatchingInfo = EasyMock.createNiceMock(TypeMatchingInfo.class);

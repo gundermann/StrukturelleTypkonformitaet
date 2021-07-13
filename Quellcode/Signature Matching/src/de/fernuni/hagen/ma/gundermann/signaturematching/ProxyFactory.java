@@ -1,9 +1,7 @@
-package glue;
+package de.fernuni.hagen.ma.gundermann.signaturematching;
 
 import java.util.Collection;
 import java.util.Map;
-
-import matching.methods.MethodMatchingInfo;
 
 public interface ProxyFactory<T> {
 

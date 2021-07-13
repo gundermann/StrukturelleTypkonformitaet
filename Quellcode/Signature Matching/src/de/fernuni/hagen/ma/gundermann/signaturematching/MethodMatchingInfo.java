@@ -1,9 +1,7 @@
-package matching.methods;
+package de.fernuni.hagen.ma.gundermann.signaturematching;
 
 import java.lang.reflect.Method;
 import java.util.Map;
-
-import matching.MatchingInfo;
 
 public class MethodMatchingInfo {
 
@@ -11,12 +9,12 @@ public class MethodMatchingInfo {
 
   private final Method target;
 
-  private final MatchingInfo returnTypeMatchingInfo;
+  private final SingleMatchingInfo returnTypeMatchingInfo;
 
-  private final Map<ParamPosition, MatchingInfo> argumentTypeMatchingInfos;
+  private final Map<ParamPosition, SingleMatchingInfo> argumentTypeMatchingInfos;
 
-  public MethodMatchingInfo( Method source, Method target, MatchingInfo returnTypeMatchingInfo,
-      Map<ParamPosition, MatchingInfo> argumentTypeMatchingInfos ) {
+  public MethodMatchingInfo( Method source, Method target, SingleMatchingInfo returnTypeMatchingInfo,
+      Map<ParamPosition, SingleMatchingInfo> argumentTypeMatchingInfos ) {
     this.source = source;
     this.target = target;
     this.returnTypeMatchingInfo = returnTypeMatchingInfo;
@@ -31,11 +29,11 @@ public class MethodMatchingInfo {
     return target;
   }
 
-  public MatchingInfo getReturnTypeMatchingInfo() {
+  public SingleMatchingInfo getReturnTypeMatchingInfo() {
     return returnTypeMatchingInfo;
   }
 
-  public Map<ParamPosition, MatchingInfo> getArgumentTypeMatchingInfos() {
+  public Map<ParamPosition, SingleMatchingInfo> getArgumentTypeMatchingInfos() {
     return argumentTypeMatchingInfos;
   }
 

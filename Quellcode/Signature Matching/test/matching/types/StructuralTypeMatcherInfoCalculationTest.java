@@ -16,9 +16,9 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo;
 import matching.MatcherCombiner;
 import matching.MatchingInfo;
-import matching.methods.MethodMatchingInfo;
 import matching.types.testtypes.Class1;
 import matching.types.testtypes.Class2;
 import matching.types.testtypes.Enum2;
@@ -33,7 +33,7 @@ public class StructuralTypeMatcherInfoCalculationTest {
 
 	GenSpecTypeMatcher genSpecTypeMatcher = new GenSpecTypeMatcher();
 
-	TypeMatcher matcher = new StructuralTypeMatcher(MatcherCombiner.combine(genSpecTypeMatcher, exactTypeMatcher,
+	StructuralTypeMatcher matcher = new StructuralTypeMatcher(MatcherCombiner.combine(genSpecTypeMatcher, exactTypeMatcher,
 			new WrappedTypeMatcher(MatcherCombiner.combine(genSpecTypeMatcher, exactTypeMatcher))));
 
 	@BeforeClass
@@ -48,11 +48,7 @@ public class StructuralTypeMatcherInfoCalculationTest {
 
 	@Test
 	public void interface2interface_full_calculation() {
-		Collection<MatchingInfo> mi = matcher.calculateTypeMatchingInfos(Interface1.class, InterfaceWrapper.class);
-		assertNotNull(mi);
-		assertThat(mi.size(), equalTo(1));
-
-		MatchingInfo partlyTypeMatchingInfos = mi.iterator().next();
+		MatchingInfo partlyTypeMatchingInfos = matcher.calculateTypeMatchingInfos(Interface1.class, InterfaceWrapper.class);
 		assertThat(partlyTypeMatchingInfos, notNullValue());
 		assertThat(partlyTypeMatchingInfos.getTarget(), equalTo(Interface1.class));
 		assertThat(partlyTypeMatchingInfos.getMatchedSourceMethods().size(), equalTo(4));
@@ -80,13 +76,9 @@ public class StructuralTypeMatcherInfoCalculationTest {
 
 	@Test
 	public void enum2interface_full_match() {
-		Collection<MatchingInfo> matchingInfos = matcher.calculateTypeMatchingInfos(EnumNative.class,
+		MatchingInfo partlyTypeMatchingInfos = matcher.calculateTypeMatchingInfos(EnumNative.class,
 				InterfaceWrapper.class);
-		assertNotNull(matchingInfos);
-		assertTrue(!matchingInfos.isEmpty());
-		assertThat(matchingInfos.size(), equalTo(1));
 
-		MatchingInfo partlyTypeMatchingInfos = matchingInfos.iterator().next();
 		assertThat(partlyTypeMatchingInfos, notNullValue());
 		assertThat(partlyTypeMatchingInfos.getTarget(), equalTo(EnumNative.class));
 		assertThat(partlyTypeMatchingInfos.getMatchedSourceMethods().size(), equalTo(4));
@@ -113,12 +105,8 @@ public class StructuralTypeMatcherInfoCalculationTest {
 
 	@Test
 	public void interface2interface_partly_match() {
-		Collection<MatchingInfo> matchingInfos = matcher.calculateTypeMatchingInfos(InterfaceWrapper.class, Interface1.class);
-		assertNotNull(matchingInfos);
-		assertThat(matchingInfos.size(), equalTo(1));
-		
-		
-		MatchingInfo partlyTypeMatchingInfos = matchingInfos.iterator().next();
+		MatchingInfo partlyTypeMatchingInfos = matcher.calculateTypeMatchingInfos(InterfaceWrapper.class, Interface1.class);
+
 		assertThat(partlyTypeMatchingInfos, notNullValue());
 		assertThat(partlyTypeMatchingInfos.getTarget(), equalTo(InterfaceWrapper.class));
 		assertThat(partlyTypeMatchingInfos.getMatchedSourceMethods().size(), equalTo(7));
@@ -139,11 +127,8 @@ public class StructuralTypeMatcherInfoCalculationTest {
 			}
 		}
 
-		matchingInfos = matcher.calculateTypeMatchingInfos(Interface1.class, InterfaceWrapper.class);
-		assertNotNull(matchingInfos);
-		assertThat(matchingInfos.size(), equalTo(1));
-		
-		partlyTypeMatchingInfos =  matchingInfos.iterator().next();
+		partlyTypeMatchingInfos = matcher.calculateTypeMatchingInfos(Interface1.class, InterfaceWrapper.class);
+
 		assertThat(partlyTypeMatchingInfos, notNullValue());
 		assertThat(partlyTypeMatchingInfos.getTarget(), equalTo(Interface1.class));
 		assertThat(partlyTypeMatchingInfos.getMatchedSourceMethods().size(), equalTo(4));
@@ -171,12 +156,8 @@ public class StructuralTypeMatcherInfoCalculationTest {
 
 	@Test
 	public void enum2interface_partly_match() {
-		Collection<MatchingInfo> matchingInfos = matcher.calculateTypeMatchingInfos(EnumNative.class,
+		MatchingInfo partlyTypeMatchingInfos = matcher.calculateTypeMatchingInfos(EnumNative.class,
 				Interface1.class);
-		assertNotNull(matchingInfos);
-		assertThat(matchingInfos.size(), equalTo(1));
-		
-		MatchingInfo partlyTypeMatchingInfos = matchingInfos.iterator().next();
 		assertThat(partlyTypeMatchingInfos, notNullValue());
 		assertThat(partlyTypeMatchingInfos.getTarget(), equalTo(EnumNative.class));
 		assertThat(partlyTypeMatchingInfos.getMatchedSourceMethods().size(), equalTo(7));
@@ -197,12 +178,8 @@ public class StructuralTypeMatcherInfoCalculationTest {
 			}
 		}
 		
-		matchingInfos = matcher.calculateTypeMatchingInfos(Enum2.class,
+		partlyTypeMatchingInfos = matcher.calculateTypeMatchingInfos(Enum2.class,
 				Interface1.class);
-		assertNotNull(matchingInfos);
-		assertThat(matchingInfos.size(), equalTo(1));
-		
-		partlyTypeMatchingInfos = matchingInfos.iterator().next();
 
 		assertThat(partlyTypeMatchingInfos, notNullValue());
 		assertThat(partlyTypeMatchingInfos.getTarget(), equalTo(Enum2.class));
@@ -232,12 +209,8 @@ public class StructuralTypeMatcherInfoCalculationTest {
 			}
 		}
 		
-		matchingInfos = matcher.calculateTypeMatchingInfos(EnumNative.class,
+		partlyTypeMatchingInfos = matcher.calculateTypeMatchingInfos(EnumNative.class,
 				InterfaceWrapper.class);
-		assertNotNull(matchingInfos);
-		assertThat(matchingInfos.size(), equalTo(1));
-		
-		partlyTypeMatchingInfos = matchingInfos.iterator().next();
 
 		assertThat(partlyTypeMatchingInfos, notNullValue());
 		assertThat(partlyTypeMatchingInfos.getTarget(), equalTo(EnumNative.class));
@@ -262,12 +235,8 @@ public class StructuralTypeMatcherInfoCalculationTest {
 			}
 		}
 
-		matchingInfos = matcher.calculateTypeMatchingInfos(Enum2.class,
+		partlyTypeMatchingInfos = matcher.calculateTypeMatchingInfos(Enum2.class,
 				InterfaceWrapper.class);
-		assertNotNull(matchingInfos);
-		assertThat(matchingInfos.size(), equalTo(1));
-		
-		partlyTypeMatchingInfos = matchingInfos.iterator().next();
 		
 		assertThat(partlyTypeMatchingInfos, notNullValue());
 		assertThat(partlyTypeMatchingInfos.getTarget(), equalTo(Enum2.class));
@@ -295,13 +264,8 @@ public class StructuralTypeMatcherInfoCalculationTest {
 
 	@Test
 	public void class2interface_partly_match() {
-		Collection<MatchingInfo> matchingInfos = matcher.calculateTypeMatchingInfos(Class1.class,
+		MatchingInfo partlyTypeMatchingInfos = matcher.calculateTypeMatchingInfos(Class1.class,
 				Interface1.class);
-		assertNotNull(matchingInfos);
-		assertThat(matchingInfos.size(), equalTo(1));
-		
-		
-		MatchingInfo partlyTypeMatchingInfos = matchingInfos.iterator().next();
 		assertThat(partlyTypeMatchingInfos, notNullValue());
 		assertThat(partlyTypeMatchingInfos.getTarget(), equalTo(Class1.class));
 		assertThat(partlyTypeMatchingInfos.getMatchedSourceMethods().size(), equalTo(7));
@@ -330,14 +294,8 @@ public class StructuralTypeMatcherInfoCalculationTest {
 			}
 		}
 		
-		matchingInfos = matcher.calculateTypeMatchingInfos(Class2.class,
+		partlyTypeMatchingInfos = matcher.calculateTypeMatchingInfos(Class2.class,
 				Interface1.class);
-		assertNotNull(matchingInfos);
-		assertThat(matchingInfos.size(), equalTo(1));
-		
-		
-		partlyTypeMatchingInfos = matchingInfos.iterator().next();
-
 		assertThat(partlyTypeMatchingInfos, notNullValue());
 		assertThat(partlyTypeMatchingInfos.getTarget(), equalTo(Class2.class));
 		assertThat(partlyTypeMatchingInfos.getMatchedSourceMethods().size(), equalTo(7));
@@ -366,15 +324,8 @@ public class StructuralTypeMatcherInfoCalculationTest {
 			}
 		}
 		
-		matchingInfos = matcher.calculateTypeMatchingInfos(Class1.class,
+		partlyTypeMatchingInfos = matcher.calculateTypeMatchingInfos(Class1.class,
 				InterfaceWrapper.class);
-		assertNotNull(matchingInfos);
-		assertThat(matchingInfos.size(), equalTo(1));
-		
-		
-		partlyTypeMatchingInfos = matchingInfos.iterator().next();
-
-
 		assertThat(partlyTypeMatchingInfos, notNullValue());
 		assertThat(partlyTypeMatchingInfos.getTarget(), equalTo(Class1.class));
 		assertThat(partlyTypeMatchingInfos.getMatchedSourceMethods().size(), equalTo(4));
@@ -394,14 +345,8 @@ public class StructuralTypeMatcherInfoCalculationTest {
 			}
 		}
 
-		matchingInfos = matcher.calculateTypeMatchingInfos(Class2.class,
+		partlyTypeMatchingInfos = matcher.calculateTypeMatchingInfos(Class2.class,
 				InterfaceWrapper.class);
-		assertNotNull(matchingInfos);
-		assertThat(matchingInfos.size(), equalTo(1));
-		
-		
-		partlyTypeMatchingInfos = matchingInfos.iterator().next();
-
 		
 		assertThat(partlyTypeMatchingInfos, notNullValue());
 		assertThat(partlyTypeMatchingInfos.getTarget(), equalTo(Class2.class));

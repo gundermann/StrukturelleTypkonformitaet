@@ -9,7 +9,7 @@ import java.util.Collection;
 
 import org.junit.Test;
 
-import matching.MatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.SingleMatchingInfo;
 import matching.types.ExactTypeMatcher;
 import matching.types.TypeMatchingInfo;
 import matching.types.WrappedTypeMatcher;
@@ -39,9 +39,9 @@ public class WrappedTypeMethodMatcherTest {
   @Test
   public void matchingInfos() {
     WrappedTypeMatcher matcher = new WrappedTypeMatcher( () -> new ExactTypeMatcher() );
-    Collection<MatchingInfo> mis = matcher.calculateTypeMatchingInfos( Wrapped.class, Wrapper.class );
+    Collection<SingleMatchingInfo> mis = matcher.calculateTypeMatchingInfos( Wrapped.class, Wrapper.class );
     assertTrue( mis.size() == 1 );
-    MatchingInfo mi = mis.iterator().next();
+    SingleMatchingInfo mi = mis.iterator().next();
     assertThat(mi.getSource(), equalTo(Wrapper.class));
     assertThat(mi.getTarget(), equalTo(Wrapped.class));
     mis = matcher.calculateTypeMatchingInfos( Wrapper.class, Wrapped.class );

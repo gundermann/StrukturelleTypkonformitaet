@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import matching.methods.MethodMatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo;
 
 public class ConvertableBundle {
 	private Collection<ConvertableComponent> components;

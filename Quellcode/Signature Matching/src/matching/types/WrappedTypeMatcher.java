@@ -12,9 +12,9 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import de.fernuni.hagen.ma.gundermann.signaturematching.SingleMatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.SingleMatchingInfo.Builder;
 import glue.ProxyCreatorFactories;
-import matching.MatchingInfo;
-import matching.MatchingInfo.Builder;
 import matching.Setting;
 
 /**
@@ -153,29 +153,29 @@ public class WrappedTypeMatcher implements CombinableTypeMatcher {
 	}
 
 	@Override
-	public Collection<MatchingInfo> calculateTypeMatchingInfos(Class<?> checkType, Class<?> queryType) {
-		Collection<MatchingInfo> allMatchingInfos = new ArrayList<>();
+	public Collection<SingleMatchingInfo> calculateTypeMatchingInfos(Class<?> checkType, Class<?> queryType) {
+		Collection<SingleMatchingInfo> allMatchingInfos = new ArrayList<>();
 
 		TypeMatcher innerMethodMatcher = innerMethodMatcherSupplier.get();
 		if (innerMethodMatcher.matchesType(checkType, queryType)) {
-			Collection<MatchingInfo> matchingInfos = innerMethodMatcher.calculateTypeMatchingInfos(checkType,
+			Collection<SingleMatchingInfo> matchingInfos = innerMethodMatcher.calculateTypeMatchingInfos(checkType,
 					queryType);
 			allMatchingInfos.addAll(matchingInfos);
 		}
 		if (isWrappedIn(checkType, queryType)) {
-			Collection<MatchingInfo> matchingInfos = calculateWrappedTypeMatchingInfos(queryType, checkType, false);
+			Collection<SingleMatchingInfo> matchingInfos = calculateWrappedTypeMatchingInfos(queryType, checkType, false);
 			allMatchingInfos.addAll(matchingInfos);
 		}
 		if (isWrappedIn(queryType, checkType)) {
-			Collection<MatchingInfo> matchingInfos = calculateWrappedTypeMatchingInfos(checkType, queryType, true);
+			Collection<SingleMatchingInfo> matchingInfos = calculateWrappedTypeMatchingInfos(checkType, queryType, true);
 			allMatchingInfos.addAll(matchingInfos);
 		}
 		return allMatchingInfos;
 	}
 
-	private Collection<MatchingInfo> calculateWrappedTypeMatchingInfos(Class<?> wrapperClass, Class<?> wrappedType,
+	private Collection<SingleMatchingInfo> calculateWrappedTypeMatchingInfos(Class<?> wrapperClass, Class<?> wrappedType,
 			boolean isTargetWrapper) {
-		Collection<MatchingInfo> allMatchingInfos = new ArrayList<>();
+		Collection<SingleMatchingInfo> allMatchingInfos = new ArrayList<>();
 		Field[] fieldsOfWrapper = filterStaticFields(wrapperClass.getDeclaredFields());
 		for (Field field : fieldsOfWrapper) {
 			// TODO hier wird nur auf der ersten Ebene gepr�ft. Eine tiefere
@@ -184,8 +184,8 @@ public class WrappedTypeMatcher implements CombinableTypeMatcher {
 			// Matchings wird nur auf der obersten Ebene
 			// gepr�ft.
 
-			Collection<MatchingInfo> infosFromInnerMatcher = new ArrayList<>();
-			MatchingInfo.Builder mibuilder = null;
+			Collection<SingleMatchingInfo> infosFromInnerMatcher = new ArrayList<>();
+			SingleMatchingInfo.Builder mibuilder = null;
 //			TypeMatchingInfoFactory factory = null;
 
 			if (isTargetWrapper) {
@@ -205,7 +205,7 @@ public class WrappedTypeMatcher implements CombinableTypeMatcher {
 		return allMatchingInfos;
 	}
 
-	private Collection<MatchingInfo> calcInnerMatchingInfos(Class<?> checkType, Class<?> queryType) {
+	private Collection<SingleMatchingInfo> calcInnerMatchingInfos(Class<?> checkType, Class<?> queryType) {
 		TypeMatcher innerMethodMatcher = innerMethodMatcherSupplier.get();
 		if (innerMethodMatcher.matchesType(checkType, queryType)) {
 			return innerMethodMatcher.calculateTypeMatchingInfos(checkType, queryType);
@@ -224,12 +224,10 @@ public class WrappedTypeMatcher implements CombinableTypeMatcher {
 				.toArray(new Field[] {});
 	}
 
-	private Collection<MatchingInfo> enhanceInfosWithDelegate(Collection<MatchingInfo> infos, Builder builder) {
-		Collection<MatchingInfo> enhancedInfos = new ArrayList<>();
-		for (MatchingInfo mmi : infos) {
-			builder.withMethodMatchingInfoSupplier(mmi.getMethodMatchingSupplier());
-
-//			TypeMatchingInfo enhancedInfo = factory.c<reate(mmi.getMethodMatchingInfos());
+	private Collection<SingleMatchingInfo> enhanceInfosWithDelegate(Collection<SingleMatchingInfo> infos, Builder builder) {
+		Collection<SingleMatchingInfo> enhancedInfos = new ArrayList<>();
+		for (SingleMatchingInfo mmi : infos) {
+			builder.withMethodMatchingInfos(mmi.getMethodMatchingInfos());
 			enhancedInfos.add(builder.build());
 		}
 		return enhancedInfos;

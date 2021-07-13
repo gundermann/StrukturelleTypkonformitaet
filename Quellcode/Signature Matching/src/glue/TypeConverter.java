@@ -1,5 +1,8 @@
 package glue;
 
+import de.fernuni.hagen.ma.gundermann.signaturematching.ProxyFactory;
+import de.fernuni.hagen.ma.gundermann.signaturematching.ProxyFactoryCreator;
+
 public class TypeConverter<T> {
 
   private final ProxyFactory<T> proxyFactory;

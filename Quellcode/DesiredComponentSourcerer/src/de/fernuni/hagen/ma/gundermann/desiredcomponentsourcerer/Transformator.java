@@ -8,13 +8,13 @@ import java.util.Objects;
 import java.util.function.Supplier;
 
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.CombinationPartInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo;
 import matching.MatchingInfo;
-import matching.methods.MethodMatchingInfo;
 
 public class Transformator {
 
   public static Collection<CombinationPartInfo> transformTypeInfo2CombinationPartInfos(
-      MatchingInfo typeInfo ) {
+		  MatchingInfo typeInfo ) {
     Collection<CombinationPartInfo> combinationPartInfos = new ArrayList<>();
     Class<?> componentClass = typeInfo.getTarget();
     for ( Entry<Method, Supplier<Collection<MethodMatchingInfo>>> entry : typeInfo.getMethodMatchingInfoSupplier()

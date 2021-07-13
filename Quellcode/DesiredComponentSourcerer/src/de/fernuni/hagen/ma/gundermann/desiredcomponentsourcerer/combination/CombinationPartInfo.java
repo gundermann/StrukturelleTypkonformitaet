@@ -2,7 +2,7 @@ package de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination;
 
 import java.lang.reflect.Method;
 
-import matching.methods.MethodMatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo;
 
 public class CombinationPartInfo {
 

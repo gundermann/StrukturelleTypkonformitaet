@@ -2,9 +2,9 @@ package matching.types;
 
 import java.util.Collection;
 
+import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.ProxyFactoryCreator;
 import glue.ProxyCreatorFactories;
-import glue.ProxyFactoryCreator;
-import matching.methods.MethodMatchingInfo;
 
 public class TypeMatchingInfo {
 

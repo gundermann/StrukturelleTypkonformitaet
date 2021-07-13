@@ -2,8 +2,8 @@ package matching.types;
 
 import java.util.Collection;
 
+import de.fernuni.hagen.ma.gundermann.signaturematching.SingleMatchingInfo;
 import matching.MatcherRate;
-import matching.MatchingInfo;
 
 public interface TypeMatcher {
 
@@ -20,7 +20,7 @@ public interface TypeMatcher {
    */
   boolean matchesType( Class<?> checkType, Class<?> queryType );
 
-  Collection<MatchingInfo> calculateTypeMatchingInfos( Class<?> checkType, Class<?> queryType );
+  Collection<SingleMatchingInfo> calculateTypeMatchingInfos( Class<?> checkType, Class<?> queryType );
 
   MatcherRate matchesWithRating( Class<?> checkType, Class<?> queryType );
 

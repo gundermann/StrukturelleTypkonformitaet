@@ -12,15 +12,13 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo.ParamPosition;
+import de.fernuni.hagen.ma.gundermann.signaturematching.SingleMatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.SingleMatchingInfo.Builder;
 import glue.ProxyCreatorFactories;
-import matching.MatcherRate;
-import matching.MatchingInfo;
-import matching.MatchingInfo.Builder;
-import matching.MatchingSupplier;
 import matching.MethodMatchingInfoCombinator;
 import matching.Setting;
-import matching.methods.MethodMatchingInfo;
-import matching.methods.MethodMatchingInfo.ParamPosition;
 import matching.methods.MethodMatchingInfoFactory;
 import util.Logger;
 
@@ -98,16 +96,16 @@ public class GenSpecTypeMatcher implements CombinableTypeMatcher {
 	}
 
 	@Override
-	public Collection<MatchingInfo> calculateTypeMatchingInfos(Class<?> targetType, Class<?> sourceType) {
+	public Collection<SingleMatchingInfo> calculateTypeMatchingInfos(Class<?> targetType, Class<?> sourceType) {
 		Logger.infoF("calculate TypeMatchingInfos: %s -> %s", sourceType, targetType);
 		int c = ++counter;
 		Logger.infoF("start calculation: %d", c);
-		Collection<MatchingInfo> result = new ArrayList<>();
+		Collection<SingleMatchingInfo> result = new ArrayList<>();
 //    TypeMatchingInfoFactory factory = new TypeMatchingInfoFactory( targetType, sourceType );
 		if (targetType.equals(sourceType)) {
 			Logger.infoF("assumtion: %s == %s", sourceType, targetType);
 			Logger.infoF("finish calculation: %d", c);
-			Builder mibuilder = new MatchingInfo.Builder(sourceType, targetType,
+			Builder mibuilder = new SingleMatchingInfo.Builder(sourceType, targetType,
 					ProxyCreatorFactories.getIdentityFactoryCreator());
 			result = Collections.singletonList(mibuilder.build());
 //      result = Collections.singletonList( factory.create() );
@@ -118,7 +116,7 @@ public class GenSpecTypeMatcher implements CombinableTypeMatcher {
 			Logger.infoF("assumtion: Object > primitiv");
 			Logger.infoF("finish calculation: %d", c);
 
-			Builder mibuilder = new MatchingInfo.Builder(sourceType, targetType,
+			Builder mibuilder = new SingleMatchingInfo.Builder(sourceType, targetType,
 					ProxyCreatorFactories.getIdentityFactoryCreator());
 			result = Collections.singletonList(mibuilder.build());
 //	      result = Collections.singletonList( factory.create() );
@@ -144,7 +142,7 @@ public class GenSpecTypeMatcher implements CombinableTypeMatcher {
 			Map<Method, Collection<MethodMatchingInfo>> methodMatchingInfos = createMethodMatchingInfoForGen2SpecMapping(
 					sourceType, targetType);
 
-			Builder mibuilder = new MatchingInfo.Builder(sourceType, targetType,
+			Builder mibuilder = new SingleMatchingInfo.Builder(sourceType, targetType,
 					ProxyCreatorFactories.getClassProxyFactoryCreator());
 			if (methodMatchingInfos.isEmpty()) {
 				result.add(mibuilder.build());
@@ -157,16 +155,12 @@ public class GenSpecTypeMatcher implements CombinableTypeMatcher {
 			Logger.infoF("MethodMatches permuted: %d", permutedMethodMatches.size());
 
 			for (Collection<MethodMatchingInfo> combi : permutedMethodMatches) {
-				Map<Method, MatchingSupplier> m = combi.stream()
-						.collect(Collectors.toMap(MethodMatchingInfo::getSource,
-								mmi -> new MatchingSupplier(() -> Collections.singletonList(mmi),
-										new MatcherRate(this.getClass().getSimpleName(), getTypeMatcherRate()))));
-				mibuilder.withMethodMatchingInfoSupplier(m);
+				Map<Method, MethodMatchingInfo> m = combi.stream()
+						.collect(Collectors.toMap(MethodMatchingInfo::getSource,mmi -> mmi));
+				mibuilder.withMethodMatchingInfos(m);
 				result.add(mibuilder.build());
 			}
 
-//			result = factory.createFromMethodMatchingInfos(methodMatchingInfos);
-//			result = factory.createFromMethodMatchingInfos(methodMatchingInfos);
 		} else if (targetType.isAssignableFrom(sourceType)
 
 		// Wurde nur f�r native Typen gemacht
@@ -178,7 +172,7 @@ public class GenSpecTypeMatcher implements CombinableTypeMatcher {
 
 			Logger.infoF("assumtion: %s < %s", sourceType, targetType);
 
-			Builder mibuilder = new MatchingInfo.Builder(sourceType, targetType,
+			Builder mibuilder = new SingleMatchingInfo.Builder(sourceType, targetType,
 					ProxyCreatorFactories.getIdentityFactoryCreator());
 			result = Collections.singletonList(mibuilder.build());
 //			result = Collections.singletonList(factory.create());
@@ -212,12 +206,12 @@ public class GenSpecTypeMatcher implements CombinableTypeMatcher {
 				// gelten.
 				// Regel 1: Der Returntype kann spezieller werden. Liskov l�sst gr��en.
 				// (Kovarianz)
-				MatchingInfo returnTypeMatchingInfo = calculateTypeMatchingInfos(genM.getReturnType(),
+				SingleMatchingInfo returnTypeMatchingInfo = calculateTypeMatchingInfos(genM.getReturnType(),
 						specM.getReturnType()).iterator().next();
 
 				// Regel 2: Die Argumente k�nnen allgemeiner werden. Liskov l�sst gr��en
 				// (Kontravarianz)
-				Map<ParamPosition, Collection<MatchingInfo>> argumentTypeMatchingInfos = calculateArgumentTypesMatchingInfos(
+				Map<ParamPosition, Collection<SingleMatchingInfo>> argumentTypeMatchingInfos = calculateArgumentTypesMatchingInfos(
 						specM.getParameterTypes(), genM.getParameterTypes());
 				matchingInfos.put(genM,
 
@@ -234,13 +228,13 @@ public class GenSpecTypeMatcher implements CombinableTypeMatcher {
 		return matchingInfos;
 	}
 
-	private Map<ParamPosition, Collection<MatchingInfo>> calculateArgumentTypesMatchingInfos(Class<?>[] checkATs,
+	private Map<ParamPosition, Collection<SingleMatchingInfo>> calculateArgumentTypesMatchingInfos(Class<?>[] checkATs,
 			Class<?>[] queryATs) {
-		Map<ParamPosition, Collection<MatchingInfo>> matchingMap = new HashMap<>();
+		Map<ParamPosition, Collection<SingleMatchingInfo>> matchingMap = new HashMap<>();
 		for (int i = 0; i < checkATs.length; i++) {
 			Class<?> checkAT = checkATs[i];
 			Class<?> queryAT = queryATs[i];
-			Collection<MatchingInfo> infos = calculateTypeMatchingInfos(checkAT, queryAT);
+			Collection<SingleMatchingInfo> infos = calculateTypeMatchingInfos(checkAT, queryAT);
 			matchingMap.put(new ParamPosition(i, i), infos);
 		}
 

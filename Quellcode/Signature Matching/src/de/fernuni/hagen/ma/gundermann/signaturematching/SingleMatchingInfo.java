@@ -1,4 +1,4 @@
-package matching;
+package de.fernuni.hagen.ma.gundermann.signaturematching;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -8,10 +8,11 @@ import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo;
-import de.fernuni.hagen.ma.gundermann.signaturematching.ProxyFactoryCreator;
+import matching.MatcherRate;
+import matching.MatchingSupplier;
+import matching.Setting;
 
-public class MatchingInfo {
+public class SingleMatchingInfo {
 
 	// Hier stehen nur Methoden drin, bei deren Aufruf auch an ein anderes Objekt
 	// delegiert werden muss. Methoden, die von dem Objekt selbst ausgefuehrt werden
@@ -19,7 +20,7 @@ public class MatchingInfo {
 	// Liste leer.
 	private final Collection<Method> matchedSourceMethods;
 
-	private final Map<Method, MatchingSupplier> methodMatchingSupplier;
+	private final Map<Method, MethodMatchingInfo> methodMatchingInfos;
 
 	private final Class<?> source;
 
@@ -27,11 +28,11 @@ public class MatchingInfo {
 
 	private final ProxyFactoryCreator converterCreator;
 
-	private MatchingInfo(Class<?> source, Class<?> target, ProxyFactoryCreator converterCreator) {
+	private SingleMatchingInfo(Class<?> source, Class<?> target, ProxyFactoryCreator converterCreator) {
 		this.source = source;
 		this.target = target;
 		this.converterCreator = converterCreator;
-		this.methodMatchingSupplier = new HashMap<Method, MatchingSupplier>();
+		this.methodMatchingInfos = new HashMap<Method, MethodMatchingInfo>();
 		this.matchedSourceMethods = new ArrayList<Method>();
 
 	}
@@ -52,26 +53,17 @@ public class MatchingInfo {
 		return matchedSourceMethods;
 	}
 
-	public Map<Method, MatchingSupplier> getMethodMatchingSupplier() {
-		return methodMatchingSupplier;
-	}
 
-	public Map<Method, Supplier<Collection<MethodMatchingInfo>>> getMethodMatchingInfoSupplier() {
-		return methodMatchingSupplier.entrySet().stream()
-				.collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().getMethodMatchingInfosSupplier()));
-	}
-
-	public MatcherRate getQualitativeMatchRating() {
-		return Setting.QUALITATIVE_COMPONENT_MATCH_RATE_CUMULATION
-				.apply(methodMatchingSupplier.values().stream().map(MatchingSupplier::getMatcherRating));
+	public Map<Method, MethodMatchingInfo> getMethodMatchingInfos() {
+		return methodMatchingInfos;
 	}
 
 	public static class Builder {
 
-		private final MatchingInfo info;
+		private final SingleMatchingInfo info;
 
 		public Builder(Class<?> source, Class<?> target, ProxyFactoryCreator converterCreator) {
-			this.info = new MatchingInfo(source, target, converterCreator);
+			this.info = new SingleMatchingInfo(source, target, converterCreator);
 		}
 
 		public Builder withMatchedSourceMethods(Collection<Method> matchedSourceMethods) {
@@ -80,20 +72,20 @@ public class MatchingInfo {
 			return this;
 		}
 
-		public Builder withMethodMatchingInfoSupplier(Map<Method, MatchingSupplier> methodMatchingInfoSupplier) {
-			this.info.methodMatchingSupplier.clear();
-			this.info.methodMatchingSupplier.putAll(methodMatchingInfoSupplier);
+		public Builder withMethodMatchingInfos(Map<Method, MethodMatchingInfo> methodMatchingInfos) {
+			this.info.methodMatchingInfos.clear();
+			this.info.methodMatchingInfos.putAll(methodMatchingInfos);
 			return this;
 		}
 
-		public MatchingInfo build() {
+		public SingleMatchingInfo build() {
 			return info;
 		}
 	}
 
 	public boolean isFullMatching() {
-		return matchedSourceMethods.size() == methodMatchingSupplier.keySet().size()
-				&& methodMatchingSupplier.keySet().containsAll(matchedSourceMethods);
+		return matchedSourceMethods.size() == methodMatchingInfos.keySet().size()
+				&& methodMatchingInfos.keySet().containsAll(matchedSourceMethods);
 	}
 
 }

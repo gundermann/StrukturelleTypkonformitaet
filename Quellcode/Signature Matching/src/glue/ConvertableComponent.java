@@ -2,7 +2,7 @@ package glue;
 
 import java.util.Collection;
 
-import matching.methods.MethodMatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo;
 
 public class ConvertableComponent {
 

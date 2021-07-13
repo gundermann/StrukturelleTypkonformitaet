@@ -11,7 +11,7 @@ import java.util.Set;
 import org.easymock.EasyMock;
 import org.junit.Test;
 
-import matching.methods.MethodMatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo;
 import matching.types.TypeMatchingInfo;
 import testcomponents.paramperm.Desired1ParameterInterface;
 import testcomponents.paramperm.Desired2ParameterInterface;

@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.CollectionUtil;
-import matching.methods.MethodMatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo;
 
 public class CombinationInfo {
 

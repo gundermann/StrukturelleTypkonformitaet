@@ -15,6 +15,7 @@ import org.junit.Test;
 
 import matching.MatchingInfo;
 
+
 public class HigherPotentialTypesFirstComparatorTest {
 
   private List<Collection<MatchingInfo>> list;

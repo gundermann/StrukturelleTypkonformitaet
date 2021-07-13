@@ -9,7 +9,7 @@ import java.util.Collection;
 
 import org.junit.Test;
 
-import matching.MatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.SingleMatchingInfo;
 import testcomponents.genspec.General;
 import testcomponents.genspec.OfferedGenClass;
 import testcomponents.genspec.Specific;
@@ -35,18 +35,18 @@ public class GenSpecTypeMatcherTest {
   @Test
   public void typeMatchingInfos() {
     GenSpecTypeMatcher matcher = new GenSpecTypeMatcher();
-    Collection<MatchingInfo> mis = matcher.calculateTypeMatchingInfos( String.class, String.class );
+    Collection<SingleMatchingInfo> mis = matcher.calculateTypeMatchingInfos( String.class, String.class );
     assertTrue( mis.size() == 1 );
-    MatchingInfo mi = mis.iterator().next();
-    assertThat( mi.getMethodMatchingInfoSupplier().size(), equalTo( 0 ) );
+    SingleMatchingInfo mi = mis.iterator().next();
+    assertThat( mi.getMethodMatchingInfos().size(), equalTo( 0 ) );
     mis = matcher.calculateTypeMatchingInfos( General.class, Specific.class );
     assertTrue( mis.size() == 1 );
     mi = mis.iterator().next();
-    assertThat( mi.getMethodMatchingInfoSupplier().size(), equalTo( 0 ) );
+    assertThat( mi.getMethodMatchingInfos().size(), equalTo( 0 ) );
     mis = matcher.calculateTypeMatchingInfos( Specific.class, General.class );
     assertThat( mis.size(), equalTo( 1 ) );
     mi = mis.iterator().next();
-    assertThat( mi.getMethodMatchingInfoSupplier().size(), equalTo( 3 ) );
+    assertThat( mi.getMethodMatchingInfos().size(), equalTo( 3 ) );
   }
 
 }

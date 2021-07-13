@@ -3,7 +3,7 @@ package matching;
 import java.util.Collection;
 import java.util.function.Supplier;
 
-import matching.methods.MethodMatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo;
 
 public class MatchingSupplier {
 

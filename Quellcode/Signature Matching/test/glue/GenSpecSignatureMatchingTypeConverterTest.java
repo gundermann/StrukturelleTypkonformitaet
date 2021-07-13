@@ -17,8 +17,8 @@ import java.util.stream.Collectors;
 import org.easymock.EasyMock;
 import org.junit.Test;
 
-import matching.MatchingInfo;
-import matching.methods.MethodMatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.SingleMatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo;
 import testcomponents.genspec.DesiredGenInterface;
 import testcomponents.genspec.DesiredSpecInterface;
 import testcomponents.genspec.General;
@@ -90,14 +90,13 @@ public class GenSpecSignatureMatchingTypeConverterTest {
 		methodMatchingInfos.add(mmiGetLong);
 		methodMatchingInfos.add(mmiGetNull);
 
-		MatchingInfo moduleMatchingInfo = EasyMock.createNiceMock(MatchingInfo.class);
-		EasyMock.expect(moduleMatchingInfo.getMethodMatchingInfoSupplier())
-				.andReturn(createMethod2SupplierMap(methodMatchingInfos)).anyTimes();
+		SingleMatchingInfo moduleMatchingInfo = EasyMock.createNiceMock(SingleMatchingInfo.class);
+		EasyMock.expect(moduleMatchingInfo.getMethodMatchingInfos())
+				.andReturn(createMethod2MethodMatchingInfo(methodMatchingInfos)).anyTimes();
 		EasyMock.replay(moduleMatchingInfo);
 
 		ConvertableComponent convertableComponent = new ConvertableComponent(convertationObject,
-				moduleMatchingInfo.getMethodMatchingInfoSupplier().values().stream().map(Supplier::get)
-						.flatMap(Collection::stream).collect(Collectors.toList()));
+				moduleMatchingInfo.getMethodMatchingInfos().values());
 
 		DesiredGenInterface converted = converter
 				.convert(ConvertableBundle.createBundle(Collections.singletonList(convertableComponent)));
@@ -214,14 +213,13 @@ public class GenSpecSignatureMatchingTypeConverterTest {
 		methodMatchingInfos.add(mmiGetLong);
 		methodMatchingInfos.add(mmiGetNull);
 
-		MatchingInfo moduleMatchingInfo = EasyMock.createNiceMock(MatchingInfo.class);
-		EasyMock.expect(moduleMatchingInfo.getMethodMatchingInfoSupplier())
-				.andReturn(createMethod2SupplierMap(methodMatchingInfos)).anyTimes();
+		SingleMatchingInfo moduleMatchingInfo = EasyMock.createNiceMock(SingleMatchingInfo.class);
+		EasyMock.expect(moduleMatchingInfo.getMethodMatchingInfos())
+				.andReturn(createMethod2MethodMatchingInfo(methodMatchingInfos)).anyTimes();
 		EasyMock.replay(moduleMatchingInfo);
 
 		ConvertableComponent convertableComponent = new ConvertableComponent(convertationObject,
-				moduleMatchingInfo.getMethodMatchingInfoSupplier().values().stream().map(Supplier::get)
-						.flatMap(Collection::stream).collect(Collectors.toList()));
+				moduleMatchingInfo.getMethodMatchingInfos().values());
 
 		DesiredGenInterface converted = converter
 				.convert(ConvertableBundle.createBundle(Collections.singletonList(convertableComponent)));
@@ -355,14 +353,13 @@ public class GenSpecSignatureMatchingTypeConverterTest {
 		methodMatchingInfos.add(mmiGetNull);
 		methodMatchingInfos.add(mmiAnd);
 
-		MatchingInfo moduleMatchingInfo = EasyMock.createNiceMock(MatchingInfo.class);
-		EasyMock.expect(moduleMatchingInfo.getMethodMatchingInfoSupplier())
-				.andReturn(createMethod2SupplierMap(methodMatchingInfos)).anyTimes();
+		SingleMatchingInfo moduleMatchingInfo = EasyMock.createNiceMock(SingleMatchingInfo.class);
+		EasyMock.expect(moduleMatchingInfo.getMethodMatchingInfos())
+				.andReturn(createMethod2MethodMatchingInfo(methodMatchingInfos)).anyTimes();
 		EasyMock.replay(moduleMatchingInfo);
 
 		ConvertableComponent convertableComponent = new ConvertableComponent(convertationObject,
-				moduleMatchingInfo.getMethodMatchingInfoSupplier().values().stream().map(Supplier::get)
-						.flatMap(Collection::stream).collect(Collectors.toList()));
+				moduleMatchingInfo.getMethodMatchingInfos().values());
 
 		DesiredSpecInterface converted = converter
 				.convert(ConvertableBundle.createBundle(Collections.singletonList(convertableComponent)));
@@ -464,14 +461,13 @@ public class GenSpecSignatureMatchingTypeConverterTest {
 		methodMatchingInfos.add(mmiGetLong);
 		methodMatchingInfos.add(mmiGetNull);
 
-		MatchingInfo moduleMatchingInfo = EasyMock.createNiceMock(MatchingInfo.class);
-		EasyMock.expect(moduleMatchingInfo.getMethodMatchingInfoSupplier())
-				.andReturn(createMethod2SupplierMap(methodMatchingInfos)).anyTimes();
+		SingleMatchingInfo moduleMatchingInfo = EasyMock.createNiceMock(SingleMatchingInfo.class);
+		EasyMock.expect(moduleMatchingInfo.getMethodMatchingInfos())
+				.andReturn(createMethod2MethodMatchingInfo(methodMatchingInfos)).anyTimes();
 		EasyMock.replay(moduleMatchingInfo);
 
 		ConvertableComponent convertableComponent = new ConvertableComponent(convertationObject,
-				moduleMatchingInfo.getMethodMatchingInfoSupplier().values().stream().map(Supplier::get)
-						.flatMap(Collection::stream).collect(Collectors.toList()));
+				moduleMatchingInfo.getMethodMatchingInfos().values());
 
 		DesiredSpecInterface converted = converter
 				.convert(ConvertableBundle.createBundle(Collections.singletonList(convertableComponent)));
@@ -506,8 +502,8 @@ public class GenSpecSignatureMatchingTypeConverterTest {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private MatchingInfo createMMI_G2S() throws NoSuchMethodException, SecurityException {
-		MatchingInfo mmit = EasyMock.createNiceMock(MatchingInfo.class);
+	private SingleMatchingInfo createMMI_G2S() throws NoSuchMethodException, SecurityException {
+		SingleMatchingInfo mmit = EasyMock.createNiceMock(SingleMatchingInfo.class);
 		EasyMock.expect(mmit.getTarget()).andReturn((Class) Specific.class).anyTimes();
 		EasyMock.expect(mmit.getSource()).andReturn((Class) General.class).anyTimes();
 		EasyMock.expect(mmit.getConverterCreator()).andReturn(ProxyCreatorFactories.getClassProxyFactoryCreator())
@@ -540,15 +536,15 @@ public class GenSpecSignatureMatchingTypeConverterTest {
 		EasyMock.replay(getLongMethod);
 		methodInfos.add(getLongMethod);
 
-		EasyMock.expect(mmit.getMethodMatchingInfoSupplier()).andReturn(createMethod2SupplierMap(methodInfos))
+		EasyMock.expect(mmit.getMethodMatchingInfos()).andReturn(createMethod2MethodMatchingInfo(methodInfos))
 				.anyTimes();
 		EasyMock.replay(mmit);
 		return mmit;
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private MatchingInfo createMMI_S2G() throws NoSuchMethodException, SecurityException {
-		MatchingInfo mmit = EasyMock.createNiceMock(MatchingInfo.class);
+	private SingleMatchingInfo createMMI_S2G() throws NoSuchMethodException, SecurityException {
+		SingleMatchingInfo mmit = EasyMock.createNiceMock(SingleMatchingInfo.class);
 		EasyMock.expect(mmit.getTarget()).andReturn((Class) General.class).anyTimes();
 		EasyMock.expect(mmit.getSource()).andReturn((Class) Specific.class).anyTimes();
 		EasyMock.expect(mmit.getConverterCreator()).andReturn(ProxyCreatorFactories.getClassProxyFactoryCreator())
@@ -583,16 +579,16 @@ public class GenSpecSignatureMatchingTypeConverterTest {
 		EasyMock.replay(getLongMethod);
 		methodInfos.add(getLongMethod);
 
-		EasyMock.expect(mmit.getMethodMatchingInfoSupplier()).andReturn(createMethod2SupplierMap(methodInfos))
+		EasyMock.expect(mmit.getMethodMatchingInfos()).andReturn(createMethod2MethodMatchingInfo(methodInfos))
 				.anyTimes();
 		EasyMock.replay(mmit);
 		return mmit;
 	}
 
-	private Map<Method, Supplier<Collection<MethodMatchingInfo>>> createMethod2SupplierMap(
+	private Map<Method, MethodMatchingInfo> createMethod2MethodMatchingInfo(
 			Set<MethodMatchingInfo> methodInfos) {
 		return methodInfos.stream()
-				.collect(Collectors.toMap(MethodMatchingInfo::getSource, mmi -> () -> Collections.singletonList(mmi)));
+				.collect(Collectors.toMap(MethodMatchingInfo::getSource, mmi -> mmi));
 	}
 
 	private void checkInvokationOfAllNonParametrizedMethods(Object converted) throws IllegalArgumentException {

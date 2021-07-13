@@ -39,18 +39,18 @@ public enum DefaultTypeMatcherHeuristic {
 
   private final Long combinedWrappedGenSpecExactPrio = 400L;
 
-  private final TypeMatcher structExactTM = new StructuralTypeMatcher( () -> exactTM );
+//  private final StructuralTypeMatcher structExactTM = new StructuralTypeMatcher( () -> exactTM );
+//
+//  private final Long structExactTMPrio = 500L;
+//
+//  private final StructuralTypeMatcher structGenSpecExactTM = new StructuralTypeMatcher( () -> combinedGenSpecExactTM );
+//
+//  private final Long structGenSpecExactTMPrio = 600L;
 
-  private final Long structExactTMPrio = 500L;
-
-  private final TypeMatcher structGenSpecExactTM = new StructuralTypeMatcher( () -> combinedGenSpecExactTM );
-
-  private final Long structGenSpecExactTMPrio = 600L;
-
-  private final TypeMatcher structWrappedGenSpecExactTM = new StructuralTypeMatcher(
+  private final StructuralTypeMatcher structWrappedGenSpecExactTM = new StructuralTypeMatcher(
       () -> combinedWrappedGenSpecExact );
 
-  private final Long structWrappedGenSpecExactTMPrio = 700L;
+//  private final Long structWrappedGenSpecExactTMPrio = 700L;
 
   private final Map<TypeMatcher, Long> fullTypeMatcherWithPrio = initFullTypeMatcher();
 
@@ -59,12 +59,9 @@ public enum DefaultTypeMatcherHeuristic {
       this.genSpecTM,
       this.combinedGenSpecExactTM,
       this.wrappedTM,
-      this.combinedWrappedGenSpecExact,
-      this.structExactTM,
-      this.structGenSpecExactTM,
-      this.structWrappedGenSpecExactTM };
+      this.combinedWrappedGenSpecExact};
 
-  private TypeMatcher[] typeMatchers = new TypeMatcher[] {
+  private StructuralTypeMatcher[] typeMatchers = new StructuralTypeMatcher[] {
       // Werden ohne die ersten beiden bessere Ergebnisse erzielt? => scheinbar ja.
       // TODO Die Frage ist, wie es sich mit vielen Beans verhaelt
       // this.structExactTM,
@@ -86,9 +83,9 @@ public enum DefaultTypeMatcherHeuristic {
     fullTypeMatcher.put( genSpecTM, genSpecTMPrio );
     fullTypeMatcher.put( wrappedTM, wrappedTMPrio );
     fullTypeMatcher.put( combinedWrappedGenSpecExact, combinedWrappedGenSpecExactPrio );
-    fullTypeMatcher.put( structExactTM, structExactTMPrio );
-    fullTypeMatcher.put( structGenSpecExactTM, structGenSpecExactTMPrio );
-    fullTypeMatcher.put( structWrappedGenSpecExactTM, structWrappedGenSpecExactTMPrio );
+//    fullTypeMatcher.put( structExactTM, structExactTMPrio );
+//    fullTypeMatcher.put( structGenSpecExactTM, structGenSpecExactTMPrio );
+//    fullTypeMatcher.put( structWrappedGenSpecExactTM, structWrappedGenSpecExactTMPrio );
     return fullTypeMatcher;
   }
 
@@ -96,8 +93,8 @@ public enum DefaultTypeMatcherHeuristic {
     return INSTANCE.getMatcherArray();
   }
 
-  public static TypeMatcher[] getPartlyTypeMatcher() {
-    return INSTANCE.getPartlyMatcherArray();
+  public static StructuralTypeMatcher[] getMainTypeMatcher() {
+    return INSTANCE.getMainMatcherArray();
   }
 
   public static void addFullTypeMatcher( long prio, TypeMatcher matcher ) {
@@ -124,7 +121,7 @@ public enum DefaultTypeMatcherHeuristic {
         .min( ( e1, e2 ) -> Long.compare( e1.getValue(), e2.getValue() ) ).map( Entry::getKey ).get();
   }
 
-  private TypeMatcher[] getPartlyMatcherArray() {
+  private StructuralTypeMatcher[] getMainMatcherArray() {
     return this.typeMatchers;
   }
 
@@ -132,14 +129,14 @@ public enum DefaultTypeMatcherHeuristic {
     return rankedTypeMatcher;
   }
 
-  public static TypeMatcher[] createTypeMatcher( TypeMatcher[] fullTypeMatcher ) {
+  public static StructuralTypeMatcher[] createMainMatcher( TypeMatcher[] fullTypeMatcher ) {
     INSTANCE.reorgansizeMatchers( fullTypeMatcher );
-    return INSTANCE.getPartlyMatcherArray();
+    return INSTANCE.getMainMatcherArray();
   }
 
   private void reorgansizeMatchers( TypeMatcher[] fullTypeMatcher ) {
     this.typeMatchers = Stream.of( fullTypeMatcher ).map( m -> new StructuralTypeMatcher( () -> m ) )
-        .collect( Collectors.toList() ).toArray( new TypeMatcher[] {} );
+        .collect( Collectors.toList() ).toArray( new StructuralTypeMatcher[] {} );
   }
 
 }

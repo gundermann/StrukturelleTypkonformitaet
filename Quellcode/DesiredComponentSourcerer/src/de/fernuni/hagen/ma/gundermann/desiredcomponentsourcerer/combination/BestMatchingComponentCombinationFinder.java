@@ -12,8 +12,8 @@ import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.Combi
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.NoneSelector;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.SingleSelector;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.Logger;
+import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo;
 import matching.MatchingInfo;
-import matching.methods.MethodMatchingInfo;
 
 public class BestMatchingComponentCombinationFinder {
 

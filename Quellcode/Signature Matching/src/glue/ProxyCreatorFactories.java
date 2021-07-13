@@ -2,7 +2,9 @@ package glue;
 
 import java.util.Collection;
 
-import matching.methods.MethodMatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.ProxyFactory;
+import de.fernuni.hagen.ma.gundermann.signaturematching.ProxyFactoryCreator;
 
 public final class ProxyCreatorFactories {
 

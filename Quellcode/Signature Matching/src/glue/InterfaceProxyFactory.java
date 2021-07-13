@@ -6,7 +6,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import matching.methods.MethodMatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.ProxyFactory;
+import de.fernuni.hagen.ma.gundermann.signaturematching.ProxyFactoryCreator;
 
 public class InterfaceProxyFactory<T> implements ProxyFactory<T> {
 
