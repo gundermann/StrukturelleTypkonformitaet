@@ -1,10 +1,5 @@
 package glue;
 
-import java.util.Collection;
-import java.util.Map;
-
-import matching.methods.MethodMatchingInfo;
-
 public class TypeConverter<T> {
 
   private final ProxyFactory<T> proxyFactory;
@@ -22,7 +17,7 @@ public class TypeConverter<T> {
     }
   }
 
-  public TypeConverter( Class<T> targetStructure, ProxyFactoryCreator factoryCreator ) {
+  TypeConverter( Class<T> targetStructure, ProxyFactoryCreator factoryCreator ) {
     this.proxyFactory = factoryCreator.createProxyFactory( targetStructure );
   }
 
