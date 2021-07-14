@@ -18,6 +18,10 @@ import org.easymock.EasyMock;
 import org.junit.Test;
 
 import de.fernuni.hagen.ma.gundermann.signaturematching.SingleMatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.glue.ConvertableBundle;
+import de.fernuni.hagen.ma.gundermann.signaturematching.glue.ConvertableComponent;
+import de.fernuni.hagen.ma.gundermann.signaturematching.glue.ProxyCreatorFactories;
+import de.fernuni.hagen.ma.gundermann.signaturematching.glue.TypeConverter;
 import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo;
 import testcomponents.genspec.DesiredGenInterface;
 import testcomponents.genspec.DesiredSpecInterface;

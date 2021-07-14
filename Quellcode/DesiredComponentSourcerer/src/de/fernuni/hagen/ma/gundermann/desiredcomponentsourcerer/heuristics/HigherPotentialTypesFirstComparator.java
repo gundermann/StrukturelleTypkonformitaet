@@ -3,7 +3,7 @@ package de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics;
 import java.util.Collection;
 import java.util.Comparator;
 
-import matching.MatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.MatchingInfo;
 
 public class HigherPotentialTypesFirstComparator implements Comparator<Collection<MatchingInfo>> {
 

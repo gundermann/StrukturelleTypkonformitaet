@@ -19,8 +19,8 @@ import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.Comb
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.AnalyzationUtils;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.CollectionUtil;
 import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo;
-import matching.MatchingInfo;
-import util.Logger;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.MatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.util.Logger;
 
 /**
  * Selektor für die Kombination von Komponenten, sodass alle erwarteten Methoden

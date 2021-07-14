@@ -15,8 +15,10 @@ import org.junit.Test;
 import de.fernuni.hagen.ma.gundermann.signaturematching.SingleMatchingInfo;
 import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo;
 import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo.ParamPosition;
-import matching.types.ExactTypeMatcher;
-import matching.types.TypeMatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.methods.CommonMethodMatcher;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.methods.MethodMatcher;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.ExactTypeMatcher;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.TypeMatchingInfo;
 
 public class ExactMethodMatcherMatchingInfosTest {
 

@@ -16,7 +16,9 @@ import org.junit.Test;
 import de.fernuni.hagen.ma.gundermann.signaturematching.SingleMatchingInfo;
 import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo;
 import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo.ParamPosition;
-import matching.types.ExactTypeMatcher;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.methods.MethodMatcher;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.methods.ParamPermMethodMatcher;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.ExactTypeMatcher;
 
 public class ParamPermMethodMatcherMatchingInfosTest {
 

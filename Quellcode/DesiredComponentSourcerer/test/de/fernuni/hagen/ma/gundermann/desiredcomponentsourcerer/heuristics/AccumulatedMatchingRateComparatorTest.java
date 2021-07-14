@@ -10,8 +10,8 @@ import java.util.Comparator;
 import org.easymock.EasyMock;
 import org.junit.Test;
 
-import matching.MatcherRate;
-import matching.MatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.MatcherRate;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.MatchingInfo;
 
 public class AccumulatedMatchingRateComparatorTest {
 

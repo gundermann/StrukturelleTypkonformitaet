@@ -6,7 +6,9 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import matching.types.ExactTypeMatcher;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.methods.MethodMatcher;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.methods.ParamPermMethodMatcher;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.ExactTypeMatcher;
 
 public class ParamPermMethodMatcherTest {
 

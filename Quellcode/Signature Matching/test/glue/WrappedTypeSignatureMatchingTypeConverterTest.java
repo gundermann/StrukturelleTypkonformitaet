@@ -11,7 +11,10 @@ import org.easymock.EasyMock;
 import org.junit.Test;
 
 import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo;
-import matching.types.TypeMatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.glue.ConvertableBundle;
+import de.fernuni.hagen.ma.gundermann.signaturematching.glue.ConvertableComponent;
+import de.fernuni.hagen.ma.gundermann.signaturematching.glue.TypeConverter;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.TypeMatchingInfo;
 import testcomponents.wrapped.DesiredWrappedParameterInterface;
 import testcomponents.wrapped.DesiredWrapperParameterInterface;
 import testcomponents.wrapped.OfferedWrappedParameterClass;

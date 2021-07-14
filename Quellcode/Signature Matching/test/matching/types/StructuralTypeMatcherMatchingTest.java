@@ -4,7 +4,11 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import matching.MatcherCombiner;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.MatcherCombiner;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.ExactTypeMatcher;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.GenSpecTypeMatcher;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.StructuralTypeMatcher;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.WrappedTypeMatcher;
 import matching.types.testtypes.Class1;
 import matching.types.testtypes.Class2;
 import matching.types.testtypes.Enum2;

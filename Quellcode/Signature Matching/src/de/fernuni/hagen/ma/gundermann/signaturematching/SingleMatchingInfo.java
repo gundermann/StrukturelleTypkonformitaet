@@ -8,9 +8,9 @@ import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import matching.MatcherRate;
-import matching.MatchingSupplier;
-import matching.Setting;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.MatcherRate;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.MatchingSupplier;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.Setting;
 
 public class SingleMatchingInfo {
 

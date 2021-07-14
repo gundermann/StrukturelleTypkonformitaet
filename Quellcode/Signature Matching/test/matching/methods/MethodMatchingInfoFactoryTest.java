@@ -18,6 +18,7 @@ import org.junit.Test;
 import de.fernuni.hagen.ma.gundermann.signaturematching.SingleMatchingInfo;
 import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo;
 import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo.ParamPosition;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.methods.MethodMatchingInfoFactory;
 import matching.methods.testmethods.MethodPool;
 
 public class MethodMatchingInfoFactoryTest {

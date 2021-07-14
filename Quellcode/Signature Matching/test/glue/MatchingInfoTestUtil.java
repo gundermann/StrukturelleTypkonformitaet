@@ -9,6 +9,7 @@ import org.easymock.EasyMock;
 
 import de.fernuni.hagen.ma.gundermann.signaturematching.SingleMatchingInfo;
 import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo.ParamPosition;
+import de.fernuni.hagen.ma.gundermann.signaturematching.glue.ProxyCreatorFactories;
 import testcomponents.wrapped.Wrapped;
 import testcomponents.wrapped.Wrapper;
 

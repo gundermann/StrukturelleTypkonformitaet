@@ -13,7 +13,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import matching.MatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.MatchingInfo;
 
 
 public class HigherPotentialTypesFirstComparatorTest {

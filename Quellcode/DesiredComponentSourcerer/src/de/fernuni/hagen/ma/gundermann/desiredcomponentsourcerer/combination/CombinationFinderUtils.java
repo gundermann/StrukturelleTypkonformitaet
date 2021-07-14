@@ -12,7 +12,7 @@ import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.Transformator;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.MMICombiBlacklistFilter;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.AnalyzationUtils;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.Logger;
-import matching.MatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.MatchingInfo;
 
 public abstract class CombinationFinderUtils {
 

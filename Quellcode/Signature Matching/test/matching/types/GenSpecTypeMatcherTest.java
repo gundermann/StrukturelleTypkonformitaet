@@ -10,6 +10,7 @@ import java.util.Collection;
 import org.junit.Test;
 
 import de.fernuni.hagen.ma.gundermann.signaturematching.SingleMatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.GenSpecTypeMatcher;
 import testcomponents.genspec.General;
 import testcomponents.genspec.OfferedGenClass;
 import testcomponents.genspec.Specific;

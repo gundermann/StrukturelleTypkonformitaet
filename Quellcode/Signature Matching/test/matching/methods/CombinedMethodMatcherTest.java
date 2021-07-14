@@ -6,6 +6,9 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.methods.CombinedMethodMatcher;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.methods.MethodMatcher;
+
 public class CombinedMethodMatcherTest {
 
   MethodMatcher matcher = new CombinedMethodMatcher();

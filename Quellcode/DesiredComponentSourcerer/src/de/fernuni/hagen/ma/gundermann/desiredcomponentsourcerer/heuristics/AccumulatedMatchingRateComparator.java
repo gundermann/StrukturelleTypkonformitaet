@@ -5,9 +5,9 @@ import java.util.Comparator;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import matching.MatcherRate;
-import matching.MatchingInfo;
-import matching.Setting;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.MatcherRate;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.MatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.Setting;
 
 /**
  * This Comparator is responsable of the following heuristic:</br>

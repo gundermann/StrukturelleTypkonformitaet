@@ -8,6 +8,7 @@ import java.util.Collection;
 import org.junit.Test;
 
 import de.fernuni.hagen.ma.gundermann.signaturematching.SingleMatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.ExactTypeMatcher;
 
 public class ExactTypeMatcherTest {
 

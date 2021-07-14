@@ -6,7 +6,9 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import matching.types.GenSpecTypeMatcher;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.methods.CommonMethodMatcher;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.methods.MethodMatcher;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.GenSpecTypeMatcher;
 
 public class GenSpecMethodMatcherTest {
 

@@ -14,10 +14,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.fernuni.hagen.ma.gundermann.signaturematching.SingleMatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.methods.CommonMethodMatcher;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.methods.MethodMatcher;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.ExactTypeMatcher;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.TypeMatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.WrappedTypeMatcher;
 import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo;
-import matching.types.ExactTypeMatcher;
-import matching.types.TypeMatchingInfo;
-import matching.types.WrappedTypeMatcher;
 
 public class WrappedTypeMethodMatcherMatchingInfosTest {
   MethodMatcher matcher;

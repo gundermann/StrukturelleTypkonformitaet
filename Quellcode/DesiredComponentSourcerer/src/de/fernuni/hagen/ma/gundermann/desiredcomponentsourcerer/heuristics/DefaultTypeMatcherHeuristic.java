@@ -6,13 +6,13 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import matching.MatcherCombiner;
-import matching.types.CombinableTypeMatcher;
-import matching.types.ExactTypeMatcher;
-import matching.types.GenSpecTypeMatcher;
-import matching.types.StructuralTypeMatcher;
-import matching.types.TypeMatcher;
-import matching.types.WrappedTypeMatcher;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.MatcherCombiner;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.CombinableTypeMatcher;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.ExactTypeMatcher;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.GenSpecTypeMatcher;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.StructuralTypeMatcher;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.TypeMatcher;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.WrappedTypeMatcher;
 
 // Exact > ParamPerm + Exact > GenSpec > ParamPerm + GenSpec > Wrapped > ParamPerm + Wrapped
 public enum DefaultTypeMatcherHeuristic {

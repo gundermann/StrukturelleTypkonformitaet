@@ -10,7 +10,7 @@ import org.junit.After;
 import org.junit.Before;
 
 import api.RequiredTypeTest;
-import glue.SigMaGlueException;
+import de.fernuni.hagen.ma.gundermann.signaturematching.glue.SigMaGlueException;
 import spi.TriedMethodCallsInfo;
 
 public class TestEvaluator {
