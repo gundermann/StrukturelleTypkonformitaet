@@ -24,7 +24,7 @@ public class ConvertableBundle {
 		for (ConvertableComponent comp : components) {
 			tempComponents.remove(comp);
 			boolean hasDoubleDelegate = comp.getMethodMatchingInfos().stream().map(MethodMatchingInfo::getSource)
-					.noneMatch(m -> methodInOtherComponent(tempComponents, m));
+					.anyMatch(m -> methodInOtherComponent(tempComponents, m));
 			if (hasDoubleDelegate) {
 				return false;
 			}

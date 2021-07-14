@@ -134,7 +134,6 @@ public class DesiredComponentFinder {
 						return testedComponent.getComponent();
 					}
 					if (usedHeuristics.contains(Heuristic.PTTF)
-//							HeuristicSetting.COMBINE_COMPOMENTS_WITH_PASSED_TESTS_FIRST
 							&& testedComponent.anyTestPassed()) {
 						// H: combinate passed tests components first
 						combinationFinder.optimizeForCurrentCombination();
