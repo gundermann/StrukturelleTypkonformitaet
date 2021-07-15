@@ -11,27 +11,24 @@ import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import org.junit.Test;
 
-import de.fernuni.hagen.ma.gundermann.signaturematching.SingleMatchingInfo;
 import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo;
 import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo.ParamPosition;
+import de.fernuni.hagen.ma.gundermann.signaturematching.SingleMatchingInfo;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.MatcherCombiner;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.methods.CommonMethodMatcher;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.methods.MethodMatcher;
-import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.CombinableTypeMatcher;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.ExactTypeMatcher;
-import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.TypeMatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.TypeMatcher;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.WrappedTypeMatcher;
 
 public class WrappedAndExactTypeMethodMatcherMatchingInfosTest {
 
-	private CombinableTypeMatcher exactTypeMatcher = new ExactTypeMatcher();
+	private TypeMatcher exactTypeMatcher = new ExactTypeMatcher();
 
-	private CombinableTypeMatcher wrappedTypeMatcher = new WrappedTypeMatcher(() -> exactTypeMatcher);
+	private TypeMatcher wrappedTypeMatcher = new WrappedTypeMatcher(() -> exactTypeMatcher);
 
 	private MethodMatcher matcher = new CommonMethodMatcher(
 			MatcherCombiner.combine(wrappedTypeMatcher, exactTypeMatcher));

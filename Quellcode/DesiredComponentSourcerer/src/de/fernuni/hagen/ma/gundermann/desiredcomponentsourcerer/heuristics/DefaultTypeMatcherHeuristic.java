@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.MatcherCombiner;
-import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.CombinableTypeMatcher;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.ExactTypeMatcher;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.GenSpecTypeMatcher;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.StructuralTypeMatcher;
@@ -18,11 +17,11 @@ import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.WrappedTy
 public enum DefaultTypeMatcherHeuristic {
   INSTANCE;
 
-  private final CombinableTypeMatcher exactTM = new ExactTypeMatcher();
+  private final TypeMatcher exactTM = new ExactTypeMatcher();
 
   private final Long exactTMPrio = 0L;
 
-  private final CombinableTypeMatcher genSpecTM = new GenSpecTypeMatcher();
+  private final TypeMatcher genSpecTM = new GenSpecTypeMatcher();
 
   private final Long genSpecTMPrio = 100L;
 
@@ -30,7 +29,7 @@ public enum DefaultTypeMatcherHeuristic {
 
   private final Long combinedGenSpecExactPrio = 200L;
 
-  private final CombinableTypeMatcher wrappedTM = new WrappedTypeMatcher( () -> combinedGenSpecExactTM );
+  private final TypeMatcher wrappedTM = new WrappedTypeMatcher( () -> combinedGenSpecExactTM );
 
   private final Long wrappedTMPrio = 300L;
 
@@ -77,6 +76,7 @@ public enum DefaultTypeMatcherHeuristic {
   }
 
   private Map<TypeMatcher, Long> initFullTypeMatcher() {
+	  //TODO einer muss reichen
     Map<TypeMatcher, Long> fullTypeMatcher = new HashMap<>();
     fullTypeMatcher.put( combinedGenSpecExactTM, combinedGenSpecExactPrio );
     fullTypeMatcher.put( exactTM, exactTMPrio );
@@ -97,6 +97,7 @@ public enum DefaultTypeMatcherHeuristic {
     return INSTANCE.getMainMatcherArray();
   }
 
+  @Deprecated
   public static void addFullTypeMatcher( long prio, TypeMatcher matcher ) {
     INSTANCE.addTypeMatcher( prio, matcher );
   }

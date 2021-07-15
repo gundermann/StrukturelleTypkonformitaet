@@ -9,15 +9,15 @@ import org.junit.Test;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.MatcherCombiner;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.methods.CommonMethodMatcher;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.methods.MethodMatcher;
-import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.CombinableTypeMatcher;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.ExactTypeMatcher;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.TypeMatcher;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.WrappedTypeMatcher;
 
 public class WrappedAndExactTypeMethodMatcherTest {
 
-  private CombinableTypeMatcher exactTypeMatcher = new ExactTypeMatcher();
+  private TypeMatcher exactTypeMatcher = new ExactTypeMatcher();
 
-  private CombinableTypeMatcher wrappedTypeMatcher = new WrappedTypeMatcher( () -> exactTypeMatcher );
+  private TypeMatcher wrappedTypeMatcher = new WrappedTypeMatcher( () -> exactTypeMatcher );
 
   private MethodMatcher matcher = new CommonMethodMatcher(
       MatcherCombiner.combine( wrappedTypeMatcher, exactTypeMatcher ) );

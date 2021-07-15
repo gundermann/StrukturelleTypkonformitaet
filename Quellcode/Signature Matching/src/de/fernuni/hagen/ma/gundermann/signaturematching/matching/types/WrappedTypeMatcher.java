@@ -22,7 +22,7 @@ import de.fernuni.hagen.ma.gundermann.signaturematching.matching.Setting;
  * beiden Methoden in einem Typ der anderen Methode enthalten sein k�nnen
  * (Wrapper).
  */
-public class WrappedTypeMatcher implements CombinableTypeMatcher {
+public class WrappedTypeMatcher implements TypeMatcher {
 
 	// Versuch: Cache der Wrapped-Pr�fungen
 	// Grund: Bei der Wrapped-Pr�fung von boolean und Boolean �ber den

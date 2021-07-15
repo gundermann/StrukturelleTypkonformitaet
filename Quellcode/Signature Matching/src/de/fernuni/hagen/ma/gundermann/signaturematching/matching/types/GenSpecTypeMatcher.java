@@ -32,7 +32,7 @@ import de.fernuni.hagen.ma.gundermann.signaturematching.util.Logger;
 // Zumindest, wenn ich Gen2Spec matchen m�chte. Dann kann es passieren, dass der Gen nur teilweise die Methoden des
 // Spec
 // erf�llt.
-public class GenSpecTypeMatcher implements CombinableTypeMatcher {
+public class GenSpecTypeMatcher implements TypeMatcher {
 
 	static int counter = 0;
 

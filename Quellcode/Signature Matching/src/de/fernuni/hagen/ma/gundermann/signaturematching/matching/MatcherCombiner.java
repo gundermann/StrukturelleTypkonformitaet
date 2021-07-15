@@ -8,20 +8,19 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import de.fernuni.hagen.ma.gundermann.signaturematching.SingleMatchingInfo;
-import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.CombinableTypeMatcher;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.TypeMatcher;
 
 public final class MatcherCombiner {
   private MatcherCombiner() {
   }
 
-  public static Supplier<TypeMatcher> combine( CombinableTypeMatcher... matcher ) {
+  public static Supplier<TypeMatcher> combine( TypeMatcher... matcher ) {
     return () -> new TypeMatcher() {
 
       @Override
       public boolean matchesType( Class<?> checkType, Class<?> queryType ) {
 
-        for ( CombinableTypeMatcher m : getSortedMatcher() ) {
+        for ( TypeMatcher m : getSortedMatcher() ) {
           if ( m.matchesType( checkType, queryType ) ) {
             return true;
           }
@@ -29,8 +28,8 @@ public final class MatcherCombiner {
         return false;
       }
 
-      private Collection<CombinableTypeMatcher> getSortedMatcher() {
-        List<CombinableTypeMatcher> matcherList = Arrays.asList( matcher );
+      private Collection<TypeMatcher> getSortedMatcher() {
+        List<TypeMatcher> matcherList = Arrays.asList( matcher );
         Collections.sort( matcherList,
             ( l1, l2 ) -> Double.compare( l1.getTypeMatcherRate(), l2.getTypeMatcherRate() ) );
         return matcherList;
@@ -38,7 +37,7 @@ public final class MatcherCombiner {
 
       @Override
       public Collection<SingleMatchingInfo> calculateTypeMatchingInfos( Class<?> checkType, Class<?> queryType ) {
-        for ( CombinableTypeMatcher m : getSortedMatcher() ) {
+        for ( TypeMatcher m : getSortedMatcher() ) {
           if ( m.matchesType( checkType, queryType ) ) {
             return m.calculateTypeMatchingInfos( checkType, queryType );
           }
@@ -48,7 +47,7 @@ public final class MatcherCombiner {
 
       @Override
       public MatcherRate matchesWithRating( Class<?> checkType, Class<?> queryType ) {
-        for ( CombinableTypeMatcher m : getSortedMatcher() ) {
+        for ( TypeMatcher m : getSortedMatcher() ) {
           MatcherRate rating = m.matchesWithRating( checkType, queryType );
           if ( rating != null ) {
             return rating;
@@ -56,6 +55,12 @@ public final class MatcherCombiner {
         }
         return null;
       }
+
+	@Override
+	public double getTypeMatcherRate() {
+		//irrelevant, weil matchesWithRating ueberschrieben wurde.
+		return -0;
+	}
 
     };
   }

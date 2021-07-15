@@ -7,7 +7,7 @@ import de.fernuni.hagen.ma.gundermann.signaturematching.SingleMatchingInfo;
 import de.fernuni.hagen.ma.gundermann.signaturematching.glue.ProxyCreatorFactories;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.Setting;
 
-public class ExactTypeMatcher implements CombinableTypeMatcher {
+public class ExactTypeMatcher implements TypeMatcher {
 
   @Override
   public boolean matchesType( Class<?> checkType, Class<?> queryType ) {
