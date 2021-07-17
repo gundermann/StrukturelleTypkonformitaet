@@ -6,6 +6,7 @@ import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo;
 import de.fernuni.hagen.ma.gundermann.signaturematching.ProxyFactoryCreator;
 import de.fernuni.hagen.ma.gundermann.signaturematching.glue.ProxyCreatorFactories;
 
+@Deprecated
 public class TypeMatchingInfo {
 
   private final Class<?> source;
