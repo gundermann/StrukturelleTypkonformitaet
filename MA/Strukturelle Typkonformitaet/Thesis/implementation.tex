@@ -12,65 +12,85 @@ Darüber hinaus, werden folgende externe Bibliotheken verwendet:
 \end{itemize}
 Auf die konkrete Verwendung der externen Bibliotheken wird in den detaillierteren Beschreibungen der einzelnen Module in den folgenden Abschnitten eingegangen. Im Anschluss an die Beschreibung der Module wird auf die Nutzung der Schnittstelle zur Einbindung der Explorationskomponente in beliebige Java-Projekt eingegangen.
 \section{Modul: SignatureMatching}
-\begin{figure}
+\begin{figure}[h!]
 \includegraphics[scale=0.5]{cd_SigMa.png}
 \caption{Modul: SignatureMatching}
 \label{fig_cdSigMa}
 \end{figure}
-\begin{figure}
-\includegraphics[scale=0.5]{cd_TypeMatcher.png}
-\caption{TypeMatcher-Interfaces}
-\label{fig_cdTypeMatcher}
-\end{figure}
-In diesem Modul befinden sich zum Einen die Implementierungen der Matcher, die in Abschnitt \ref{sec_matcher} formal beschrieben wurden und zum Anderen die Implementierung der Generatoren für die Proxies. In Abbildung \ref{fig_cdSigMa) sind die wichtigsten Klassen und Interfaces dieses Moduls mit ihren Abhängigkeiten zueinander aufgeführt. Die Matcher befinden sich dabei im Package \emph{matching} und die Generatoren für die Proxies im Package \emph{glue}.
+\noindent
+In diesem Modul befinden sich zum Einen die Implementierungen der Matcher, die in Abschnitt \ref{sec_matcher} formal beschrieben wurden und zum Anderen die Implementierung der Generatoren für die Proxies. In Abbildung \ref{fig_cdSigMa} sind die wichtigsten Klassen und Interfaces dieses Moduls mit ihren Abhängigkeiten zueinander aufgeführt. Die Matcher befinden sich dabei im Package \emph{matching} und die Generatoren für die Proxies in Form der Implememtierungen des des Interfaces $\texttt{ProxyFactory}$ im Package \emph{glue}.
 \\\\
-Die in Abschnitt \ref{sec_matcher} beschriebenen Matcher wurden teilweise in einer Klasse zusammengefasst. Tabelle \ref{tab_matcher2impl} zeigt die Zuordnung von Matchern zu den jeweiligen Klassen.
+Die in Abschnitt \ref{sec_matcher} beschriebenen Matcher und Generatoren wurden teilweise in einer Klasse zusammengefasst. Tabelle \ref{tab_matcher2impl} zeigt die Zuordnung von Matchern zu den jeweiligen Klassen, die die Implementierung dieser darstellen, und den Klassen, die die Implementierung des Generators für den Proxy, der auf Basis des Matchers Anwendung findet, dargestellt.
 \begin{table}[h!]
 \centering
-\begin{tabular}{|l|l|}
+\begin{tabular}{|l|l|l|}
 \hline
 \hline
-\textbf{Matcher} & \textbf{Implementierung (Klasse)} \\
+\textbf{Matcher} & \textbf{Matcher-Implementierung} & \textbf{Generator-Implementierung}\\
 \hline
-ExactTypeMatcher & $\texttt{ExactTypeMatcher}$ \\
+ExactTypeMatcher & $\texttt{ExactTypeMatcher}$ & $\texttt{ClassProxyFactory}$ \\
 \hline
-GenTypeMatcher & $\texttt{GenSpecTypeMatcher}$ \\
+GenTypeMatcher & $\texttt{GenSpecTypeMatcher}$ & $\texttt{ClassProxyFactory}$\\
 \hline
-SpecTypeMatcher & $\texttt{GenSpecTypeMatcher}$ \\
+SpecTypeMatcher & $\texttt{GenSpecTypeMatcher}$ & $\texttt{ClassProxyFactory}$\\
 \hline
-ContentTypeMatcher & $\texttt{WrappedTypeMatcher}$ \\
+ContentTypeMatcher & $\texttt{ContainerTypeMatcher}$ & $\texttt{ContentProxyFactory}$\\
 \hline
-ContainerTypeMatcher & $\texttt{WrappedTypeMatcher}$ \\
+ContainerTypeMatcher & $\texttt{ContainerTypeMatcher}$ & $\texttt{ContainerProxyFactory}$\\
 \hline
-StructuralTypeMatcher & $\texttt{StructuralTypeMatcher}$ \\
+StructuralTypeMatcher & $\texttt{StructuralTypeMatcher}$ & $\texttt{InterfaceProxyFactory}$\\
 \hline
 \hline
 \end{tabular}
-\caption{Zuordnung der Matcher zu den Klassen, in denen sie implementiert sind}
+\caption{Zuordnung der Matcher zu den Matcher- und Generator-Implementierungen}
 \end{table}\label{tab_matcher2impl}
 \noindent
-Die Klasse $\texttt{StructuralTypeMatcher}$ nimmt dabei eine Sonderstellung ein. Dies ist daran zu erkennen, dass dieser nicht das Interface $\texttt{TypeMatcher}$ implementiert. Dies wird damit begründet, dass es sich bei diesem Matcher um den Einstiegspunkt der strukturellen Evaluation handelt. Analog zum StructuralTypeMatcher aus Abschnitt \ref{sec_matcher} wird in der Klasse $\texttt{StructuralTypeMatcher}$ nämlich auf die anderen Matcher bzw. Matcher-Implementierungen zugegriffen, was in Abbildung \ref{fig_cdSigMa) durch die Komposition zwischen der Klasse $\texttt{StructuralTypeMatcher}$ und dem Interface $\texttt{TypeMatcher}$ angedeutet wird.
+Die Klasse $\texttt{StructuralTypeMatcher}$ nimmt dabei eine Sonderstellung ein. Dies ist daran zu erkennen, dass dieser nicht das Interface $\texttt{TypeMatcher}$ implementiert. Dies wird damit begründet, dass es sich bei diesem Matcher um den Einstiegspunkt der strukturellen Evaluation handelt. Analog zum StructuralTypeMatcher aus Abschnitt \ref{sec_matcher} wird in der Klasse $\texttt{StructuralTypeMatcher}$ auf die anderen Matcher bzw. Matcher-Implementierungen zugegriffen, was in Abbildung \ref{fig_cdSigMa} durch die Aggregation zwischen der Klasse $\texttt{StructuralTypeMatcher}$ und dem Interface $\texttt{TypeMatcher}$ angedeutet wird.
 \\\\
-Die übrigen Matcher implementieren das Interface $\texttt{TypeMatcher}$ und können über die Methoden aus der Klasse $\texttt{MatcherCombinator}$ miteinander kombiniert werden\footnote{Ein Beispiel für die Kombination von Matchern ist im Anhang \ref{app_matchercombination} zu finden.}. 
+Die übrigen Matcher-Klassen implementieren das Interface $\texttt{TypeMatcher}$ und können über die Methode $\texttt{combine}$ aus der Klasse $\texttt{MatcherCombinator}$ miteinander kombiniert werden\footnote{Ein Beispiel für die Kombination von Matchern ist im Anhang \ref{app_matchercombination} zu finden.}. 
 %TODO ANHANG: Kombination (siehe unten)
-So kann eine Kombination mehrerer $\texttt{TypeMatcher}$, die wiederum von Type $\texttt{TypeMatcher}$ ist, in der Klasse $\texttt{StructuralTypeMatcher}$ verwendet werden. Die konkrete $\texttt{TypeMatcher}$-Kombination, die im $\texttt{StructuralTypeMatcher}$ instanziiert wird, orientiert sich an den Ausführungen in Abschnitt \ref{sec_matcher}. Es ist aber zu erwähnen, dass die Verwendung weitere Matcher, die in dieser Arbeit nicht definiert wurden, denkbar ist. Eine solche Erweiterung ließe sich leicht in dieses Modul über die Implementierung des Interfaces $\texttt{TypeMatcher}$ und den $\texttt{MatcherCombiner}$ bewerkstelligen.
+So kann eine Kombination mehrerer $\texttt{TypeMatcher}$, die wiederum von Typ $\texttt{TypeMatcher}$ ist, in der Klasse $\texttt{StructuralTypeMatcher}$ verwendet werden. Die konkrete $\texttt{TypeMatcher}$-Kombination, die im $\texttt{StructuralTypeMatcher}$ instanziiert wird, orientiert sich an den Ausführungen in Abschnitt \ref{sec_matcher}. Es ist aber zu erwähnen, dass die Verwendung weitere Matcher, die in dieser Arbeit nicht definiert wurden, denkbar ist. Eine solche Erweiterung ließe sich leicht in dieses Modul über die Implementierung des Interfaces $\texttt{TypeMatcher}$ und die Verwendung der Klasse $\texttt{MatcherCombiner}$ bewerkstelligen.
 \\\\
-Alle Matcher-Implementierungen bieten die Möglichkeit, zu ermitteln, ob ein Matching zwischen zwei Typen besteht. Dies erfolgt jeweils über die Methode $\texttt{matchesType}$. Darüber hinaus werden über die Methoden $\texttt{calculateMatchingInfos}$ (in den Implementierung des Interface $\texttt{TypeMatcher}$) bzw. $\texttt{calculateMatchingInfo}$ (in der Klasse $\texttt{StructuralTypeMatcher}$) Informationen bzgl. der Methodendelegationen zwischen den beiden gemachten Typen ermittelt. Diese Informationen werden in einem Objekt der Klasse $\texttt{SingleMatchingInfo}$ bzw. $\texttt{MatchingInfo}$ zusammengetragen. 
+Alle Matcher-Implementierungen bieten die Möglichkeit, zu ermitteln, ob ein Matching zwischen zwei Typen besteht (siehe Klassendiagramme in Abbildungen \ref{fig_cdMatchingInfo} und \ref{fig_cdSingleMatchingInfo}). Dies erfolgt jeweils über die Methode $\texttt{matchesType}$. Darüber hinaus werden über die Methoden $\texttt{calculateMatchingInfos}$ bzw. $\texttt{calculateMatchingInfo}$ Informationen bzgl. der Methodendelegationen zwischen den beiden gemachten Typen ermittelt. Diese Informationen werden in einem Objekt der Klasse $\texttt{SingleMatchingInfo}$ bzw. $\texttt{MatchingInfo}$ zusammengetragen, welche in Abbildung \ref{fig_cdMatchingInfo} und \ref{fig_cdMatchingInfo} detailliert dargestellt werden.
+\begin{figure}[h!]
+\includegraphics[scale=0.8]{cd_matchinginfo.png}
+\caption{Klassendiagramm: $\texttt{StructuralTypeMatcher}$ und $\texttt{MatchingInfos}$}
+\label{fig_cdMatchingInfo}
+\end{figure}
+\begin{figure}[h!]
+\includegraphics[scale=0.7]{cd_singlematchinginfo.png}
+\caption{Klassendiagramm: $\texttt{TypeMatcher}$ und $\texttt{SingleMatchingInfo}$}
+\label{fig_cdSingleMatchingInfo}
+\end{figure}
+\noindent
+Diese beiden Klassen unterscheiden sich lediglich bzgl. des Attributs in dem die Delegationsmethoden hinterlegt sind. Dabei handelt es sich auf Seiten der $\texttt{SingleMatchingInfo}$ um das Attribut $\texttt{methodMatchingInfos}$ und auf Seiten der $\texttt{MatchingInfo}$ um das Attribut $\texttt{methodMatchingSupplier}$. 
 \\\\
-Diese beiden Klassen unterscheiden sich lediglich bzgl. der Anzahl von Methoden, an denen die aufgerufene Methode des \emph{Source}-Typ (Attribut $\texttt{source}$) delegiert werden kann (siehe Attribut: $\texttt{methodDelegationSupplier}$). Während ein Objekt der Klasse $\texttt{MatchingInfo}$ mehrere Delegationsmethoden zu einer aufgerufenen Methoden enthalten kann, darf ein Objekt der Klasse $\texttt{SingleMatchingInfo}$ lediglich eine Delegationsmethode zu einer aufgerufenen Methode enthalten (vgl. auch Abschnitt \ref{sec_matcher}). Zusätzlich zu erwähnen ist, dass die Informationen über die Delegationsmethoden aus einer $\texttt{MatchingInfo}$ über in einem $\texttt{MethodSupplier}$ überliefert wird.
+Während ein Objekt der Klasse $\texttt{MatchingInfo}$ mehrere Delegationsmethoden zu einer aufgerufenen Methoden enthalten kann, darf ein Objekt der Klasse $\texttt{SingleMatchingInfo}$ lediglich eine Delegationsmethode zu einer aufgerufenen Methode enthalten (vgl. auch Abschnitt \ref{sec_matcher}). Zusätzlich zu erwähnen ist, dass die Informationen über die Delegationsmethoden aus einer $\texttt{MatchingInfo}$ über in einem $\texttt{MethodSupplier}$ überliefert wird.
 \\\\
-Eine Instanz der Klasse $\texttt{MethodSupplier}$ enthält zum Einen ein $\texttt{MatcherRating}$ welches Informationen bzgl. des in Abschnitt skjfdkhaksg beschriebenen Matcher-Ratings beinhaltet. Zum Anderen werden im Attribut $\texttt{methodMatchingInfo}$ in einem Objekt der Klasse $\texttt{MethodMatchingInfo}$ die Informationen bzgl. der Delegation der aufgerufenen Methode an die Delegationsmethode hinterlegt. 
+Eine Instanz der Klasse $\texttt{MethodSupplier}$ enthält zum Einen ein $\texttt{MatcherRating}$ welches Informationen bzgl. des in Abschnitt \ref{sec_lmf} beschriebenen Matcher-Ratings beinhaltet. Zum Anderen werden im Attribut $\texttt{methodMatchingInfo}$ in einem Objekt der Klasse $\texttt{MethodMatchingInfo}$ (siehe Abbildung \ref{cd_methodMatchingInfo}) die Informationen bzgl. der Delegation der aufgerufenen Methode an die Delegationsmethode hinterlegt. 
 \\\\
-Bezüglich der Klasse $\texttt{SingleMatchingInfo}$ ist noch das Attribut $\texttt{proxyFactoryCreator}$ zu beschreiben. Darin werden Informationen bzgl. der strukturellen Verbindung von zwischen den gematchten Typen gehalten. Für den \emph{ExactTypeMatcher}, den \emph{GenTypeMatcher} und den \emph{SpecTypeMatcher} wird dabei ein $\texttt{ProxyFactoryCreator}$ erzeugt, der in der Lage ist, eine $\texttt{ProxyFactory}$ für Typen zu erzeugen, die in einer nominalen Beziehung \footnote{Identität, Generalisierung, Spezialisierung} stehen. Für den \emph{ContentTypeMatcher} und den \emph{ContainedTypeMatcher} hingegen, wird ein $\texttt{ProxyFactoryCreator}$ erzeugt, der in der Lage ist, eine $\texttt{ProxyFactory}$ für Typen zu erzeugen, bei denen der eine Typ ein Attribut von Typ des anderen enthält. Die erzeugten Objekte vom Typ $\texttt{ProxyFactory}$ werden bei der Generierung der Proxies unter der Zuhilfenahme der Bibliotheken \emph{cglib} und \emph{objenesis} verwendet\footnote{Diese beiden Frameworks wurden verwendet, da die Erzeugung der Proxies mit ihnen komfortabler ist, als mit den Mitteln die das JKD zur Verfügung steht. Dies gilt insbesondere für die Erzeugung von Proxies für Klassen, die mit dem Schlüsselwort $\texttt{final}$ versehen sind.}.
-\\\
-Der $\texttt{ProxyFactoryCreator}$ stellt damit eines der Bindeglieder zwischen der Package \emph{matching} und dem Package \emph{glue} innerhalb des Moduls her. Das zweite Artefakt, welches als Bindeglied fungiert, ist die oben bereits erwähnt Klasse $\texttt{MethodMatchingInfo}$.
+Bezüglich der Klasse $\texttt{SingleMatchingInfo}$ ist noch das Attribut $\texttt{proxyFactoryCreator}$ zu beschreiben. Darin werden Informationen bzgl. der strukturellen Verbindung von zwischen den gematchten Typen gehalten. Für den \emph{ExactTypeMatcher}, den \emph{GenTypeMatcher} und den \emph{SpecTypeMatcher} wird dabei ein $\texttt{ProxyFactoryCreator}$ erzeugt, der in der Lage ist, eine $\texttt{ProxyFactory}$ für Typen zu erzeugen, die in einer nominalen Beziehung \footnote{Identität, Generalisierung, Spezialisierung} stehen. Für den \emph{ContentTypeMatcher} und den \emph{ContainedTypeMatcher} hingegen, wird ein $\texttt{ProxyFactoryCreator}$ erzeugt, der in der Lage ist, eine $\texttt{ProxyFactory}$ für Typen zu erzeugen, bei denen der eine Typ ein Attribut von Typ des anderen enthält (vgl. mit Tabelle \ref{tab_matcher2impl}). Die erzeugten Objekte vom Typ $\texttt{ProxyFactory}$ werden bei der Generierung der Proxies unter der Zuhilfenahme der Bibliotheken \emph{cglib} und \emph{objenesis} verwendet\footnote{Diese beiden Frameworks wurden verwendet, da die Erzeugung der Proxies mit ihnen komfortabler ist, als mit den Mitteln die das JKD zur Verfügung steht. Dies gilt insbesondere für die Erzeugung von Proxies für Klassen, die mit dem Schlüsselwort $\texttt{final}$ versehen sind.}.
 \\\\
-Ein Objekt der Klasse $\texttt{MethodMatchingInfo}$ enthält in den Attributen $\texttt{source}$ und $\texttt{target}$ je eine Methode. Dabei ist im Attribut $\texttt{source}$ die aufgerufene Methode der Methoden-Delegation und im Attribut $\texttt{target}$ die Delegationsmethode enthalten. Darüber hinaus wird im Attribut $\texttt{returnTypeMatchingInfo}$ ein Objekt der Klasse $\texttt{ModuleMatchingInfo}$ gehalten , welches alle notwendigen Informationen für das Erzeugen eines Proxies des Rückgabetyp der aufgerufenen Methode aus dem Rückgabetyp der Delegationsmethode. Analog dazu wird im Attribut $\texttt{argumentTypeMatchingInfos}$ eine Map, bestehend aus weiteren Objekten der Klasse $\texttt{ModuleMatchingInfo}$ und jeweils einem Objekt der Klasse $\texttt{ParamPosition}$, gehalten. Diese Map enthält alle notwendigen Information für das Erzeugen eines Proxies für die Parametertypen der Delegationsmethoden aus den Parametertypen der aufgerufenen Methode, sowie der Anpassung der Übergabeposition bei der Delegation der aufgerufenen Methode (siehe auch Abschnitt \ref{sec:proxygram}).
+Der $\texttt{ProxyFactoryCreator}$ stellt damit eines der Bindeglieder zwischen der Package \emph{matching} und dem Package \emph{glue} innerhalb des Moduls her. Das zweite Artefakt, welches als Bindeglied fungiert, ist die oben bereits erwähnt Klasse $\texttt{MethodMatchingInfo}$, deren Aufbau dem Klassendiagramm aus Abbildung \ref{cd_methodMatchingInfo} zu entnehmen ist.
+\begin{figure}[h!]
+\includegraphics[scale=1.0]{cd_methodmatchinginfo.png}
+\caption{Klassendiagramm: $\texttt{MethodMatchingInfo}$}
+\label{cd_methodMatchingInfo}
+\end{figure}
+\noindent
 \\\\
-Um die Methoden-Delegationen zu koordieren, wird bei der Erzeugung des Proxies in der jeweiligen $\texttt{ProxyFactory}$ für das Proxy-Objekt ein $\texttt{InvocationHandler}$ instanziiert (vgl. \cite{invocationhandler}. Dieses Interface wird im \emph{glue}-Package durch die Klasse $\texttt{BehaviourDelegateInvocationHandler}$ implementiert, in der letztendlich die Koordination der Methoden-Delegationen auf Basis der jeweiligen $\texttt{MethodMatchingInfo}$ spezifiziert ist.
+Ein Objekt der Klasse $\texttt{MethodMatchingInfo}$ enthält in den Attributen $\texttt{source}$ und $\texttt{target}$ je eine Methode. Dabei ist im Attribut $\texttt{source}$ die aufgerufene Methode der Methoden-Delegation und im Attribut $\texttt{target}$ die Delegationsmethode enthalten. Darüber hinaus wird im Attribut $\texttt{returnTypeMatchingInfo}$ ein Objekt der Klasse $\texttt{SingleMatchingInfo}$ gehalten , welches alle notwendigen Informationen für das Erzeugen eines Proxies des Rückgabetyp der aufgerufenen Methode aus dem Rückgabetyp der Delegationsmethode.
 \\\\
-Um einen Proxy basierend auf dem Matching zweier Typen zu erzeugen steht die Klasse $\texttt{TypeConverter}$ zur Verfügung. Die Zugriffe innerhalb des Packages \emph{glue} als auch die Zugriff von außerhalb benötigen jeweils ein Objekt der Klasse $\texttt{ConvertableBundle}$. Diese Klasse beschreibt eine Kombination mehrerer Objekte vom Typ $\texttt{ConvertableComponent}$, die als Delegationsziele des zu erzeugenden Proxy-Objektes fungieren sollen. Ein Objekt der Klasse $\texttt{ConvertableComponent}$ enthält eine Liste von Objekten vom Typ $\texttt{ModuleMatchingInfo}$, die wie bereits erwähnt beschreiben, am welche Methode die Delegation erfolgen soll. Das Objekt im Attribut $\texttt{convertableObject}$ der $\texttt{ModuleMatchingInfo}$ beinhaltet das Objekt, auf dem die Delegationsmethode aufgerufen werden soll.
-
+Analog dazu wird im Attribut $\texttt{argumentTypeMatchingInfos}$ eine Map, bestehend aus weiteren Objekten der Klasse $\texttt{SingleMatchingInfo}$ und jeweils einem Objekt der Klasse $\texttt{ParamPosition}$, gehalten. Diese Map enthält alle notwendigen Information für das Erzeugen eines Proxies für die Parametertypen der Delegationsmethoden aus den Parametertypen der aufgerufenen Methode, sowie der Anpassung der Übergabeposition bei der Delegation der aufgerufenen Methode (siehe auch Abschnitt \ref{sec:proxygram}).
+\\\\
+Um die Methoden-Delegationen zu koordinieren, wird bei der Erzeugung des Proxies in der jeweiligen $\texttt{ProxyFactory}$ für das Proxy-Objekt ein $\texttt{InvocationHandler}$ instanziiert (vgl. \cite{invocationhandler}). Dieses Interface wird im \emph{glue}-Package durch die Klasse $\texttt{BehaviourDelegateInvocationHandler}$ implementiert, in der letztendlich die Koordination der Methoden-Delegationen auf Basis der jeweiligen $\texttt{MethodMatchingInfo}$ spezifiziert ist.
+\\\\
+Um einen Proxy basierend auf dem Matching zweier Typen zu erzeugen steht die Klasse $\texttt{TypeConverter}$ zur Verfügung (siehe Abbildung \ref{cd_typeconverter}). Die Zugriffe innerhalb des Packages \emph{glue} als auch die Zugriff von außerhalb benötigen jeweils ein Objekt der Klasse $\texttt{ConvertableBundle}$. Diese Klasse beschreibt eine Kombination mehrerer Objekte vom Typ $\texttt{ConvertableComponent}$, die als Delegationsziele des zu erzeugenden Proxy-Objektes fungieren sollen. Ein Objekt der Klasse $\texttt{ConvertableComponent}$ enthält eine Liste von Objekten vom Typ $\texttt{SingleMatchingInfo}$, die wie bereits erwähnt beschreiben, am welche Methode die Delegation erfolgen soll. Das Objekt im Attribut $\texttt{convertableObject}$ der $\texttt{ModuleMatchingInfo}$ beinhaltet das Objekt, auf dem die Delegationsmethode aufgerufen werden soll.
+\begin{figure}[h!]
+\includegraphics[scale=0.7]{cd_typeconverter.png}
+\caption{Klassendiagramm: $\texttt{TypeConverter}$}
+\label{cd_typeconverter}
+\end{figure}
 %TODO ANHANG: Kombination (siehe unten)
 %Die Matcher-Klassen $\texttt{ExactTypeMatcher}$, $\texttt{GenSpecTypeMatcher}$ und $\texttt{WrappedTypeMatcher}$ implementieren auch das von $\texttt{TypeMatcher}$ erbende Interfaces $\texttt{CombinalbeTypeMatcher}$. Klassen, die dieses Interface implementieren können über die Klasse $\texttt{MatcherCombiner}$ zu einem neuen $\texttt{TypeMatcher}$-Objekt kombiniert werden. Ein solcher kombinierte $\texttt{TypeMatcher}$ versucht beim Aufruf der Methode $\texttt{matchesType(S,T)}$ die beiden Typen $S$ und $T$ über einen der kombinierten Matcher zu matchen. Abbildung \ref{sd_matchercombiner} zeigt das Sequenzdiagramm für diesen Aufruf. Dabei liefert die Methode $\texttt{getSortedMatcher}$ eine sortiert Liste der kombinierten Matcher. Die Sortierung wird aufsteigend entsprechend dem Matcherrating der kombinierten Matcher vorgenommen.
 %\begin{figure}
@@ -115,7 +135,7 @@ Die Exploration wird nach der Erzeugung des \emph{Finders} über den Aufruf der 
 \\\\
 Hierzu wird ein Objekt vom $\texttt{StructuralTypeMatcher}$ aus dem \emph{SignatureMatching}-Modul verwendet\footnote{Dieses Objekt wird beim Instanziieren des \emph{Finders} erzeugt.} und versucht die \emph{provided Interfaces} mit dem \emph{desiredInterface} zu matchen (siehe Abbildung \ref{sd_descos_structeval}).
 \begin{figure}
-\includegraphics[scale=0.5]{sd_descos_structeval}
+%\includegraphics[scale=0.5]{sd_descos_structeval}
 \caption{Koordination der strukturellen Evaluation}
 \label{sd_descos_structeval}
 \end{figure}
