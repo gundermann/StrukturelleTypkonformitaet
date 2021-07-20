@@ -1,7 +1,13 @@
 \chapter{Implementierung}
 Die Implementierung der Explorationskomponente besteht aus drei Hauptbestandteilen, die jeweils als separates Java-Projekt umgesetzt wurden. Im weiteren Verlauf werden diese Java-Projekte als Module bezeichnet.
-\\\\
-In Abbildung \ref{fig_arch} ist die Architektur der Explorationskomponente aufgeführt. Die das Modul \emph{DesiredComponentSourcerer} stellt eine Schnittstelle nach Außen bereit, über die die Explorationskomponenten in ein beliebiges Projekt eingebunden werden kann. Weiterhin ist das Modul \emph{DesiredComponentSourcerer} von den Modulen \emph{ComponentTester} und \emph{SignatureMatching} abhängig, die selbst keine Abhängigkeiten zueinander haben.
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.8]{cd_arch.png}
+\caption{Architektur}
+\label{cd_arch}
+\end{figure}
+\noindent
+In Abbildung \ref{cd_arch} ist die Architektur der Explorationskomponente aufgeführt. Dieser ist zu entnehmen, dass die Explorationskomponente aus drei Modulen besteht, die im weiteren Verlauf dieses Kapitels beschrieben werden. Das Modul \emph{DesiredComponentSourcerer} ist dabei von den Modulen \emph{ComponentTester} und \emph{SignatureMatching} abhängig, während das Modul \emph{ComponentTester} lediglich vom Modul \emph{SignatureMatching} abhängig ist.
 \\\\
 Darüber hinaus, werden folgende externe Bibliotheken verwendet:
 \begin{itemize}
@@ -10,7 +16,7 @@ Darüber hinaus, werden folgende externe Bibliotheken verwendet:
 \item objenesis 3.1 \cite{objenesis}
 \item junit 4.13.0 \cite{junit}
 \end{itemize}
-Auf die konkrete Verwendung der externen Bibliotheken wird in den detaillierteren Beschreibungen der einzelnen Module in den folgenden Abschnitten eingegangen. Im Anschluss an die Beschreibung der Module wird auf die Nutzung der Schnittstelle zur Einbindung der Explorationskomponente in beliebige Java-Projekt eingegangen.
+Auf die konkrete Verwendung der externen Bibliotheken wird in den detaillierteren Beschreibungen der einzelnen Module in den folgenden Abschnitten eingegangen.
 \section{Modul: SignatureMatching}
 \begin{figure}[h!]
 \includegraphics[scale=0.5]{cd_SigMa.png}
@@ -51,7 +57,7 @@ Die übrigen Matcher-Klassen implementieren das Interface $\texttt{TypeMatcher}$
 %TODO ANHANG: Kombination (siehe unten)
 So kann eine Kombination mehrerer $\texttt{TypeMatcher}$, die wiederum von Typ $\texttt{TypeMatcher}$ ist, in der Klasse $\texttt{StructuralTypeMatcher}$ verwendet werden. Die konkrete $\texttt{TypeMatcher}$-Kombination, die im $\texttt{StructuralTypeMatcher}$ instanziiert wird, orientiert sich an den Ausführungen in Abschnitt \ref{sec_matcher}. Es ist aber zu erwähnen, dass die Verwendung weitere Matcher, die in dieser Arbeit nicht definiert wurden, denkbar ist. Eine solche Erweiterung ließe sich leicht in dieses Modul über die Implementierung des Interfaces $\texttt{TypeMatcher}$ und die Verwendung der Klasse $\texttt{MatcherCombiner}$ bewerkstelligen.
 \\\\
-Alle Matcher-Implementierungen bieten die Möglichkeit, zu ermitteln, ob ein Matching zwischen zwei Typen besteht (siehe Klassendiagramme in Abbildungen \ref{fig_cdMatchingInfo} und \ref{fig_cdSingleMatchingInfo}). Dies erfolgt jeweils über die Methode $\texttt{matchesType}$. Darüber hinaus werden über die Methoden $\texttt{calculateMatchingInfos}$ bzw. $\texttt{calculateMatchingInfo}$ Informationen bzgl. der Methodendelegationen zwischen den beiden gemachten Typen ermittelt. Diese Informationen werden in einem Objekt der Klasse $\texttt{SingleMatchingInfo}$ bzw. $\texttt{MatchingInfo}$ zusammengetragen, welche in Abbildung \ref{fig_cdMatchingInfo} und \ref{fig_cdMatchingInfo} detailliert dargestellt werden.
+Alle Matcher-Implementierungen bieten die Möglichkeit, zu ermitteln, ob ein Matching zwischen zwei Typen besteht (siehe Klassendiagramme in Abbildungen \ref{fig_cdMatchingInfo} und \ref{fig_cdSingleMatchingInfo}). Dies erfolgt jeweils über die Methode $\texttt{matchesType}$. Über die Methoden $\texttt{calculateMatchingInfos}$ bzw. $\texttt{calculateMatchingInfo}$ werden die Informationen bzgl. der Methodendelegationen zwischen den beiden gemachten Typen ermittelt. Diese Informationen werden in einem Objekt der Klasse $\texttt{SingleMatchingInfo}$ bzw. $\texttt{MatchingInfo}$ zusammengetragen, welche in Abbildung \ref{fig_cdMatchingInfo} und \ref{fig_cdMatchingInfo} detailliert dargestellt werden.
 \begin{figure}[h!]
 \includegraphics[scale=0.8]{cd_matchinginfo.png}
 \caption{Klassendiagramm: $\texttt{StructuralTypeMatcher}$ und $\texttt{MatchingInfos}$}
@@ -99,50 +105,42 @@ Um einen Proxy basierend auf dem Matching zweier Typen zu erzeugen steht die Kla
 %Darüber hinaus gibt es noch das von $\texttt{TypeMatcher}$ erbende Interface $\texttt{PartlyTypeMatcher}$. Dieses Interface wird nur von dem $\texttt{StructuralTypeMatcher}$ implementiert, welcher u.a. als Schnittstelle zwischen dem Modul \emph{SignatureMatching} und \emph{DesiredComponentSourcerer} fungiert. Wie der Name des Interfaces bereits impliziert, bieten die Implementierungen des Interfaces $\texttt{PartlyTypeMatcher}$ die Möglichkeit, zwei Typen nur teilweise zu Matchen. Das bildet die Grundlage für die Ermittlung der Typen, aus denen die Proxies für die semantische Evaluation erzeugt werden können (vgl. Abschnitt \ref{sec_ergStructEval}). So stellen die Objekte, die über die Methode $\texttt{calculatePartlyTypeMatchingInfos}$ erzeugten wurden, auf formaler Ebene die Elemente der Mengen, die in Abschnitt \ref{sec_ergStructEval} über Funktion $\texttt{cover}$ beschrieben wurden, dar.
 
 \section{Modul: ComponentTester}
-Dieses Modul ist für die Definition und Ausführung der vordefinierten Tests zuständig. Dabei sei davon auszugehen, dass ein required Typ $R$ in Form eines Interfaces existiert. Um Tests für $R$ zu definieren, können eine oder mehrere Testklassen implementiert werden. Die Testklassen werden dabei in dem Interface $R$ über das Attribut $\texttt{testClasses}$ der Annotation $\texttt{RequiredTypeTestReference}$ angegeben (siehe Abbildung \ref{fig_cdCompTester} Package: \emph{API}). Ein Beispiel für die Deklaration eines required Typ in Form eines Java-Interfaces und den dazugehörigen Testklassen ist im Anhang zu finden.
+Dieses Modul ist für die Ausführung der vordefinierten Tests zuständig. Darüber hinaus bietet es die Möglichkeit, die vordefinierten Tests mit den Interfaces, die den dazugehörigen required Typdarstellen, zu Verbinden. Dabei sei davon auszugehen, dass ein required Typ $R$ in Form eines Interfaces existiert. Um Tests für $R$ zu definieren, können eine oder mehrere Testklassen implementiert werden. Die Testklassen werden dabei in dem Interface $R$ über das Attribut $\texttt{testClasses}$ der Annotation $\texttt{RequiredTypeTestReference}$ angegeben (siehe Abbildung \ref{fig_cdCompTester} Package: \emph{API}). Ein Beispiel für die Deklaration eines required Typ in Form eines Java-Interfaces und den dazugehörigen Testklassen ist im Anhang zu finden.
+%TODO beispiel im Anhang
 \\\\
-Damit die Testmethoden in den Testklassen, den in Abschnitt \ref{sec_testanforderungen} beschriebenen Eigenschaften genügen und durch das ComponentTester-Modul ausfindig gemacht werden können, stehen mehrere Artefakte in dem API- und dem SPI-Package des ComponentTester-Moduls bereit (siehe Abbildung \ref{fig_cdCompTester}).
+Damit die Testmethoden in den Testklassen die in Abschnitt \ref{sec_testanforderungen} beschriebenen Eigenschaften aufweisen und durch das \emph{ComponentTester}-Modul ausfindig gemacht werden können, stehen mehrere Artefakte in dem \emph{API}- und dem \emph{SPI}-Package des \emph{ComponentTester}-Moduls bereit (siehe Abbildung \ref{fig_cdCompTester}).
 \\\\
-So muss jede Testklasse eine Methode bereitstellen, über die ein Objekt vom Typ $R$ in die Instanz der Testklasse injiziert werden kann. Diese Methode wird von dem ComponentTester-Modul über die Annotation $\texttt{RequiredTypeInstanceSetter}$ gefunden. Von daher muss die Methode mit eben dieser Annotation markiert werden.
-\begin{figure}
+So muss jede Testklasse eine Methode bereitstellen, über die ein Objekt vom Typ $R$ in die Instanz der Testklasse injiziert werden kann.\footnote{auch genannt: Setter-Injection (vgl. \cite{setterinfjection})} Diese Methode wird von dem \emph{ComponentTester}-Modul über die Annotation $\texttt{RequiredTypeInstanceSetter}$ gefunden. Von daher muss die Methode mit eben dieser Annotation markiert werden.
+\begin{figure}[h!]
 \centering
-\includegraphics[scale=0.5]{pics/cd_ComponentTester.png}
+\includegraphics[scale=0.6]{pics/cd_ComponentTester.png}
 \caption{Modul: ComponentTester}
 \label{fig_cdCompTester}
 \end{figure}
+\noindent
+Die Testmethoden müssen von der Sichtbarkeit her öffentlich ($\texttt{public}$) sein. Weiterhin dürfen die Testmethoden keine Parameter erwarten und müssen mit der Annotation $\texttt{RequiredTypeTest}$ markiert sein. Die Erwartungen innerhalb der Testmethoden müssen über die in JUnit 4 zur Verfügung stehenden Methoden aus der Klasse $\texttt{Assert}$ (vgl. \cite{junit_api}) deklariert werden. Testdaten, die für alle Testmethoden innerhalb einer Testklasse zur Verfügung stehen sollen, können diese innerhalb von Methoden erzeugt werden, die mit den in JUnit 4 bereitgestellten Annotationen $\texttt{Before}$ und $\texttt{After}$ (vgl. \cite{junit_api}) markiert wurden.
 \\\\
-Die Testmethoden müssen von der Sichtbarkeit her öffentlich ($\texttt{public}$) sein. Weiterhin dürfen die Testmethoden keine Parameter erwarten und müssen mit der Annotation $\texttt{RequiredTypeTest}$ markiert sein. Die Erwartungen innerhalb der Testmethoden müssen über die in JUnit 4 zur Verfügung stehenden Methoden aus der Klasse $\texttt{Assert}$ (vgl. \cite{junit_api}) deklariert werden. Testdaten, die für alle Testmethoden innerhalb einer Testklasse zur Verfügung stehen sollen, können diese innerhalb von Methoden erzeugt werden, die über die in JUnit 4 bereitgestellten Annotationen $\texttt{Before}$ und $\texttt{After}$ (vgl. \cite{junit_api}) versehen werden.
-\\\\
-Um die Reihenfolge der versuchten Aufrufe der Methoden, die von $R$ angeboten werden, zu verwalten, muss die Testklasse das Interface $\texttt{TriedMethodCallsInfo}$ implementieren (siehe Abbildung \ref{fig_cdCompTester} Package: \emph{SPI}). Dadurch wird die Implementierung der Methoden $\texttt{addTriedMethodCall}$ und $\texttt{getTriedMethodCalls}$ erzwungen. Die Methode $\texttt{getMethod}$ kann mit der default-Implementierung übernommen werden, sofern die in $R$ deklarierten Methoden über den Namen identifiziert werden können.
+Um die Reihenfolge der versuchten Aufrufe der Methoden, die von $R$ angeboten werden, zu verwalten, muss die Testklasse das Interface $\texttt{TriedMethodCallsInfo}$ implementieren (siehe Abbildung \ref{fig_cdCompTester} Package: \emph{SPI}). Dadurch wird die Implementierung der Methoden $\texttt{addTriedMethodCall}$ und $\texttt{getTriedMethodCalls}$ erzwungen. Die Methode $\texttt{getMethod}$ kann mit der Defaultimplementierung übernommen werden, sofern die in $R$ deklarierten Methoden über den Namen identifiziert werden können.
 \\\\
 Die Implementierung der Methoden $\texttt{addTriedMethodCall}$ und $\texttt{getTriedMethodCalls}$ hat so zu erfolgen, dass bei einem Aufruf der Methode $\texttt{addTriedMethodCall}$ der übergebene Parameter an eine Liste angefügt wird. Der Aufruf der Methode $\texttt{getTriedMethodCalls}$ liefert eben diese Liste als Rückgabewert. Weiterhin ist sicherzustellen, dass vor dem Aufruf einer Methode $m$ aus $R$ die Methode $\texttt{addTriedMethodCall}$ mit $m$ als Parameter aufgerufen wird. Im Anhang ist ein Beispiel für die korrekte Implementierung einer Testklasse zu finden.
+%TODO Beispiel im Anhang
 \\\\
-Der Test eines Proxies für $R$ wird über eine Instanz der Klasse $\texttt{ComponentTester}$ angestoßen (siehe Abbildung \ref{fig_cdCompTester} Package: \emph{Tester}). In Abhängigkeit der in $R$ deklarierten Testklassen werden alle darin befindlichen Testmethoden durchgeführt, bis einer dieser Testfälle fehlschlägt. Der Aufrufer erhält dabei ein der Klasse $\texttt{TestResult}$ zurück (siehe Abbildung \ref{fig_cdCompTester}). In diesem Objekt sind die für die Auswertung des Testergebnisses relevanten Informationen vorhanden, auf die die Heuristiken \emph{PTTF} (siehe Abschnitt \ref{sec_pttf}) und \emph{BL\_NMC} (siehe Abschnitt \ref{sec_bl_nmc}) angewiesen sind.
+Der Test eines Proxies für $R$ wird über eine Instanz der Klasse $\texttt{ComponentTester}$ gestartet (siehe Abbildung \ref{fig_cdCompTester} Package: \emph{Tester}). In Abhängigkeit der in $R$ deklarierten Testklassen werden alle darin befindlichen Testmethoden durchgeführt, bis einer dieser Testfälle fehlschlägt. Der Aufrufer erhält dabei ein Objekt der Klasse $\texttt{TestResult}$ zurück (siehe Abbildung \ref{fig_cdCompTester}). In diesem Objekt sind die für die Auswertung des Testergebnisses relevanten Informationen vorhanden, auf die die Heuristiken \emph{PTTF} (siehe Abschnitt \ref{sec_pttf}) und \emph{BL\_NMC} (siehe Abschnitt \ref{sec_bl_nmc}) angewiesen sind.
 \section{Modul: DesiredComponentSourcerer}
-In diesem Modul wird die Exploration koordiniert. Zum Starten der Exploration für ein \emph{desired Interface} muss zuerst eine Instanz der Klasse $\texttt{DesiredComponentFinder}$ erzeugt werden (genannt: \emph{Finder}). Dies erfolgt über einen Konstruktor, der ein Objekt der Klasse $\texttt{DesiredComponentFinderConfig}$ (genannt: \emph{Konfig}) erwartet (siehe Abbildung \ref{cd_finderCreation}). 
+In diesem Modul ist die Implementierung der Exploration zu finden. Zum Starten der Exploration für ein \emph{desired Typ} $R$ in Form eines Interfaces muss zuerst eine Instanz der Klasse $\texttt{DesiredComponentFinder}$ erzeugt werden (genannt: \emph{Finder}). Dies erfolgt über einen Konstruktor, der ein Objekt der Klasse $\texttt{DesiredComponentFinderConfig}$ (genannt: \emph{Konfig}) erwartet (siehe Abbildung \ref{cd_descos}). 
 \begin{figure}[h!]
 \centering
-\includegraphics[scale=0.5]{cd_finderCreation.png}
-\caption{Schnittstellen des Moduls: DesiredComponentSourcerer}
-\label{cd_finderCreation}
+\includegraphics[scale=0.5]{cd_descos.png}
+\caption{Modul: DesiredComponentSourcerer}
+\label{cd_descos}
 \end{figure}
 \noindent
 Die Erzeugung einer solchen \emph{Konfig} erfolgt über einen Builder. Dabei müssen zum Einen die Angabe aller provided Typen in Form einer Liste von Interfaces. Zum Anderen wird eine Funktion ($\texttt{java.util.Function}$) gefordert, über die die Implementierungen der im Parameter übergebenen Interfaces ermittelt werden können.
 \\\\
 Zum Zweck der gezielten Evaluation der Heuristiken in Kapitel \ref{chap_evaluation} kann über die \emph{Konfig} gesteuert werden, welche der in Abschnitt \ref{sec_heuristics} beschriebenen Heuristiken bei der Exploration verwendet werden sollen. Dies erfolgt über die in Abbildung \ref{cd_finderCreation} ersichtlichen Methoden mit den Präfix $\texttt{useHeuristic*}$.
 \\\\
-Die Exploration wird nach der Erzeugung des \emph{Finders} über den Aufruf der Methode $\texttt{getDesiredComponent}$ mit der Übergabe des \emph{desired Interface} $R$ als Parameter. Im Anschluss wird die syntaktische Evaluation für alle \emph{provided Interfaces} durchgeführt. Auf formaler ebene gleicht dieser Schritt der Ausführung der Funktion $\mathit{cover(R,L)}$, wobei die in $L$ befindlichen \emph{provided Typen} auf die an der \emph{Finder} übergebenen \emph{provided Interfaces} beschränkt sind.
+Nach der Erzeugung des \emph{Finders} kann die Exploration über die Methode $\texttt{getDesiredComponent}$ mit der Übergabe des \emph{desired Interface} $R$ als Parameter gestartet werden. Im Anschluss wird die syntaktische Evaluation für alle \emph{provided Interfaces} durchgeführt. Auf formaler ebene gleicht dieser Schritt der Ausführung der Funktion $\mathit{cover(R,L)}$, wobei die in $L$ befindlichen \emph{provided Typen} auf die an der \emph{Finder} übergebenen \emph{provided Interfaces} beschränkt sind.
 \\\\
 Hierzu wird ein Objekt vom $\texttt{StructuralTypeMatcher}$ aus dem \emph{SignatureMatching}-Modul verwendet\footnote{Dieses Objekt wird beim Instanziieren des \emph{Finders} erzeugt.} und versucht die \emph{provided Interfaces} mit dem \emph{desiredInterface} zu matchen (siehe Abbildung \ref{sd_descos_structeval}).
-\begin{figure}
-%\includegraphics[scale=0.5]{sd_descos_structeval}
-\caption{Koordination der strukturellen Evaluation}
-\label{sd_descos_structeval}
-\end{figure}
-
-Nach der syntaktischen Evaluation, wird gemäß Abschnitt \ref{sev_semEval} die semantische Evaluation durchgeführt. Dabei werden zuerst die Proxies aus den Kombinationen der gematchten \emph{provided Interfaces}\footnote{Diese Kombinationen sind mit den Elementen der Mengen aus $\mathit{cover(R,L)}$ gleichzusetzen.} erzeugt, welche im Anschluss hinsichtlich der vordefinierten Tests zum \emph{desired Interface} evaluiert werden. Dabei werden die Heuristiken, die in der \emph{Konfig} hinterlegt wurden, angewendet. Sofern bei der Exploration ein Proxy erfolgreich evaluiert wurde, wird dieser als Ergebnis des Aufrufs der Methode $\texttt{getDesiredComponent}$ zurückgegeben. 
 \\\\
-Das Sequenzdiagramm in Abbildung \ref{sd_exploration} zeigt dabei die Interaktionen der drei vorgestellten Module bei der Durchführung der Exploration.
-\begin{figure}
-\end{figure}\label{sd_exploration}
-\noindent
+Nach der syntaktischen Evaluation, wird gemäß Abschnitt \ref{sev_semEval} die semantische Evaluation durchgeführt. Dabei werden zuerst die Proxies aus den Kombinationen der gematchten \emph{provided Interfaces}\footnote{Diese Kombinationen sind mit den Elementen der Mengen aus $\mathit{cover(R,L)}$ gleichzusetzen.} erzeugt, welche im Anschluss hinsichtlich der vordefinierten Tests zum \emph{desired Interface} evaluiert werden. Dabei werden die Heuristiken, die in der \emph{Konfig} hinterlegt wurden, angewendet. Sofern bei der Exploration ein Proxy erfolgreich evaluiert wurde, wird dieser als Ergebnis des Aufrufs der Methode $\texttt{getDesiredComponent}$ zurückgegeben. 
