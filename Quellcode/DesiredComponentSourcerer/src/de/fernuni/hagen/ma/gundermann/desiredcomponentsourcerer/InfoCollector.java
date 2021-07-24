@@ -2,7 +2,6 @@ package de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.Logger;
 
