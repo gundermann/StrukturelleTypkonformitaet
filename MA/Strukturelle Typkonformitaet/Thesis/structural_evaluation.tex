@@ -52,11 +52,8 @@ Darüber hinaus seien folgende Funktionen definiert:
 					T' & T' \texttt{ }\mathit{f}\text{ ist Felddeklatation von }T
 				\end{array}              
 \end{gather*}
-
-\subsubsection{Beispiel-Bibliothek}
-
-
-
+\noindent
+Listing \ref{lst:libEx} zeigt ein Beispiel für eine Bibilothek mit \emph{required} und \emph{provided Typen}.
 \begin{lstlisting}[style = dsl]
 provided Fire extends Object{}
 \end{lstlisting}
@@ -122,12 +119,12 @@ required PatientMedicalFireFighter {
 }
 \end{lstlisting}
 
-\begin{lstlisting}[caption={Bibliothek \emph{ExampLe} von Typen},captionpos=b, style = dsl]
+\begin{lstlisting}[caption={Bibliothek \emph{ExampLe} von Typen},captionpos=b, style = dsl, label=lst:libEx]
 required MedicalFireFighter {
 	void heal( Injured injured, MedCabinet med )
 	boolean extinguishFire( ExtFire fire )	
 }
-\end{lstlisting}\label{lst:libEx}
+\end{lstlisting}
 
 \newpage
 
