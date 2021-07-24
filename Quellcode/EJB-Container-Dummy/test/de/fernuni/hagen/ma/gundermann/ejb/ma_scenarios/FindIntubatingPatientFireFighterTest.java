@@ -6,15 +6,20 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 
+import DE.data_experts.profi.profilcs.antrag2015.eler.ft.stammdaten.ejb.ElerFTStammdatenAuskunftService;
+import DE.data_experts.profi.profilcs.antrag2015.stammdaten.ejb.StammdatenAuskunftService;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.DesiredComponentFinder;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.DesiredComponentFinderConfig;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.Logger;
 import de.fernuni.hagen.ma.gundermann.ejb.EJBContainer;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.desired.IntubatingPatientFireFighter;
+import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.beans.Doctor;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.beans.FireFighter;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.beans.Intubator;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.beans.impl.EmergencyDoctor;
 import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.beans.impl.VolunteerFireFighter;
+import de.fernuni.hagen.ma.gundermann.ejb.pcs_scenarios.provided.beans.impl.EftSTDAuskunftImpl;
+import de.fernuni.hagen.ma.gundermann.ejb.pcs_scenarios.provided.beans.impl.STDAuskunftImpl;
 
 /**
  * TODO Auch dieser Test benoetigt relativ viel Zeit. (Siehe Kommentar in
@@ -46,7 +51,10 @@ public class FindIntubatingPatientFireFighterTest {
 	public void findCombined() {
 		Class<IntubatingPatientFireFighter> desiredInterface = IntubatingPatientFireFighter.class;
 		// EJBContainer.CONTAINER.reset();
+		EJBContainer.CONTAINER.registerBean(ElerFTStammdatenAuskunftService.class, new EftSTDAuskunftImpl());
+		EJBContainer.CONTAINER.registerBean(StammdatenAuskunftService.class, new STDAuskunftImpl());
 		EJBContainer.CONTAINER.registerBean(FireFighter.class, new VolunteerFireFighter());
+		EJBContainer.CONTAINER.registerBean(Doctor.class, new EmergencyDoctor());
 		EJBContainer.CONTAINER.registerBean(Intubator.class, new EmergencyDoctor());
 		DesiredComponentFinderConfig config = new DesiredComponentFinderConfig.Builder(
 				EJBContainer.CONTAINER.getRegisteredBeanInterfaces(), EJBContainer.CONTAINER::getOptBean)

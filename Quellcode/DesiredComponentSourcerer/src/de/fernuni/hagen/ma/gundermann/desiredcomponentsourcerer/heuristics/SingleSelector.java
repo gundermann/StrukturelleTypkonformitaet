@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.Heuristic;
+import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.InfoCollector;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.Selector;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.CombinationFinderUtils;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.CombinationInfo;
@@ -47,6 +48,7 @@ public class SingleSelector implements Selector {
 			stream = stream.sorted(new AccumulatedMatchingRateComparator());
 		}
 		this.infos = stream.collect(Collectors.toList());
+		InfoCollector.addCominationCountInIteration(this.infos.size(), 1);
 	}
 
 	@Override
@@ -56,6 +58,7 @@ public class SingleSelector implements Selector {
 
 	@Override
 	public Optional<CombinationInfo> getNext() {
+		InfoCollector.incrementCreatedProxiesInIterationStep(1);
 		if (cachedCalculatedInfos.isEmpty()) {
 			selectedIndex++;
 			MatchingInfo info = infos.get(selectedIndex).iterator().next();

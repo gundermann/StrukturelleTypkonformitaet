@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.Heuristic;
+import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.InfoCollector;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.Selector;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.CombinationFinderUtils;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.CombinationInfo;
@@ -76,6 +77,7 @@ public class CombinationSelector implements Selector {
 				return getNext();
 			}
 		}
+		InfoCollector.incrementCreatedProxiesInIterationStep(combinatiedComponentCount);
 		return Optional.of(new CombinationInfo(CollectionUtil.pop(cachedCalculatedInfos)));
 	}
 
@@ -100,6 +102,7 @@ public class CombinationSelector implements Selector {
 			Collections.sort(cachedMatchingInfoCombinations,
 					new HigherPotentialTypesFirstComparator(higherPotentialTypes));
 		}
+		InfoCollector.addCominationCountInIteration(this.cachedMatchingInfoCombinations.size(), combinatiedComponentCount );
 	}
 
 	private Map<Method, Collection<MatchingInfo>> collectRelevantInfosPerMethod() {

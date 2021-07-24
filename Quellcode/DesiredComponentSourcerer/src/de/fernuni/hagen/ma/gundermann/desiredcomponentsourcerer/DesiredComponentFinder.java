@@ -34,8 +34,6 @@ public class DesiredComponentFinder {
 
 	private final Function<Class<?>, Optional<?>> optComponentGetter;
 
-	private int testedComponentVariations = 0;
-
 	private Collection<Heuristic> usedHeuristics = new ArrayList<Heuristic>();
 
 	public DesiredComponentFinder(DesiredComponentFinderConfig config) {
@@ -71,28 +69,28 @@ public class DesiredComponentFinder {
 
 	public <DesiredInterface> DesiredInterface getDesiredComponent(Class<DesiredInterface> desiredInterface) {
 		Logger.info("search component by partly match: " + desiredInterface.getName());
+		InfoCollector.reset();
 		for (int i = 0; i < mainTypeMatcher.length; i++) {
-			Optional<DesiredInterface> optDesiredBean = findDesiredComponentByPartlyMatcher(desiredInterface,
-					mainTypeMatcher[i]);
+			Optional<DesiredInterface> optDesiredBean = findProxyByMatcher(desiredInterface, mainTypeMatcher[i]);
 			if (optDesiredBean.isPresent()) {
 				Logger.info("component found");
-				Logger.infoF("Tested Components variations: %d", testedComponentVariations);
+				InfoCollector.logInfos();
 				return optDesiredBean.get();
 			}
 			Logger.info("component not found");
 		}
-
-		Logger.infoF("Tested Components variations: %d", testedComponentVariations);
+		InfoCollector.logInfos();
 		return null;
 	}
 
-	private <DesiredInterface> Optional<DesiredInterface> findDesiredComponentByPartlyMatcher(
-			Class<DesiredInterface> desiredInterface, StructuralTypeMatcher typeMatcher) {
+	private <DesiredInterface> Optional<DesiredInterface> findProxyByMatcher(Class<DesiredInterface> desiredInterface,
+			StructuralTypeMatcher typeMatcher) {
 		Logger.infoF("start search with matcher: %s", typeMatcher.getClass().getSimpleName());
 
-		Map<Class<?>, MatchingInfo> componentInterface2PartlyMatchingInfos = findPartlyMatchingComponentInterfaces(
+		Map<Class<?>, MatchingInfo> componentInterface2PartlyMatchingInfos = getMatchingInfosByProvidedType(
 				desiredInterface, typeMatcher);
 
+		InfoCollector.setMatchingProvidedTypeCount(componentInterface2PartlyMatchingInfos.keySet().size());
 		// INFO OUTPUT
 		componentInterface2PartlyMatchingInfos.values().forEach(i -> {
 			Logger.toFile("%f;%s;%b;%s;", i.getQualitativeMatchRating().getMatcherRating(),
@@ -100,12 +98,12 @@ public class DesiredComponentFinder {
 		});
 
 		Optional<DesiredInterface> result = Optional
-				.ofNullable(getCombinedMatchingComponent(desiredInterface, componentInterface2PartlyMatchingInfos));
+				.ofNullable(findProxyWithProvidedTypes(desiredInterface, componentInterface2PartlyMatchingInfos));
 		Logger.infoF("finish search with matcher: %s", typeMatcher.getClass().getSimpleName());
 		return result;
 	}
 
-	private <DesiredInterface> Map<Class<?>, MatchingInfo> findPartlyMatchingComponentInterfaces(
+	private <DesiredInterface> Map<Class<?>, MatchingInfo> getMatchingInfosByProvidedType(
 			Class<DesiredInterface> desiredInterface, StructuralTypeMatcher typeMatcher) {
 		Map<Class<?>, MatchingInfo> matchedBeans = new HashMap<>();
 		for (Class<?> beanInterface : getRegisteredComponentInterfaces()) {
@@ -118,7 +116,7 @@ public class DesiredComponentFinder {
 		return matchedBeans;
 	}
 
-	private <DesiredInterface> DesiredInterface getCombinedMatchingComponent(Class<DesiredInterface> desiredInterface,
+	private <DesiredInterface> DesiredInterface findProxyWithProvidedTypes(Class<DesiredInterface> desiredInterface,
 			Map<Class<?>, MatchingInfo> componentInterface2PartlyMatchingInfos) {
 		Logger.info("create ComponentInfos");
 		BestMatchingComponentCombinationFinder combinationFinder = new BestMatchingComponentCombinationFinder(
@@ -127,14 +125,12 @@ public class DesiredComponentFinder {
 		while (combinationFinder.hasNextCombination()) {
 			CombinationInfo combinationInfos = combinationFinder.getNextCombination();
 			try {
-				TestedComponent<DesiredInterface> testedComponent = getPartlyMatchedTestedComponent(combinationInfos,
-						desiredInterface);
+				TestedComponent<DesiredInterface> testedComponent = getTestedProxy(combinationInfos, desiredInterface);
 				if (testedComponent != null) {
 					if (testedComponent.allTestsPassed()) {
 						return testedComponent.getComponent();
 					}
-					if (usedHeuristics.contains(Heuristic.PTTF)
-							&& testedComponent.anyTestPassed()) {
+					if (usedHeuristics.contains(Heuristic.PTTF) && testedComponent.anyTestPassed()) {
 						// H: combinate passed tests components first
 						combinationFinder.optimizeForCurrentCombination();
 					}
@@ -146,19 +142,22 @@ public class DesiredComponentFinder {
 				}
 			} catch (NoComponentImplementationFoundException e) {
 				// H: blacklist if no implementation available
-				combinationFinder.optimizeCheckTypeBlacklist(e.getComponentInterface());
+				// die Heuristik ist für das Test-System sinnvoll, aber man die provided Typen,
+				// die keine Implementierung haben, sollten gar nicht erst in den Sourcerer
+				// reinkommen.
+				// Außerdem verfaelscht die Heuristik die Evaluationsergebnisse.
+//				combinationFinder.optimizeCheckTypeBlacklist(e.getComponentInterface());
 			}
 		}
 		return null;
 	}
 
-	private <DesiredInterface> TestedComponent<DesiredInterface> getPartlyMatchedTestedComponent(
-			CombinationInfo combinationInfos, Class<DesiredInterface> desiredInterface)
-			throws NoComponentImplementationFoundException {
+	private <DesiredInterface> TestedComponent<DesiredInterface> getTestedProxy(CombinationInfo combinationInfos,
+			Class<DesiredInterface> desiredInterface) throws NoComponentImplementationFoundException {
 		Logger.infoF("find components for combination: %s", combinationInfos.getComponentClasses().stream()
 				.map(c -> c.toString()).collect(Collectors.joining(" + ")));
 
-		testedComponentVariations++;
+		InfoCollector.incrementTestedProxies();
 		TypeConverter<DesiredInterface> converter = new TypeConverter<>(desiredInterface);
 		ComponentTester<DesiredInterface> componentTester = new ComponentTester<>(desiredInterface);
 
