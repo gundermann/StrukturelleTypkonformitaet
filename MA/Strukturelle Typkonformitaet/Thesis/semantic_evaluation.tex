@@ -49,25 +49,18 @@ Ausgehend von einer Bibliothek $L$ kann der Algorithmus für die semantische Eva
 passedTests = 0
 
 function semanticEval( R, T, tests ){
-	for( i = 1; i <= $\mathit{maxTargets( R )}$; i++ ){
-		relProxies = relevantProxies( R, T, i )
-		proxy = evalProxies( relProxies, tests )	
-		if( proxy != null ){
-			// passenden Proxy gefunden
-			return proxy
+	for( anzahl = 1; anzahl <= $\mathit{maxTargets( R )}$; i++ ){
+		for( targets : $\mathit{targetSets( T, anzahl )}$ ){
+			relProxies = $\mathit{proxies( R, targets )}$
+			proxy = evalProxies( relProxies, tests )	
+			if( proxy != null ){
+				// passenden Proxy gefunden
+				return proxy
+			}
 		}
 	}
 	// kein passenden Proxy gefunden
 	return null;
-}
-
-function relevantProxies(R, T, anzahl){
-	proxies = []
-	targetSets = $\mathit{targetSets( T, anzahl )}$
-	for( targets : targetSets ){
-		proxies.addAll( $\mathit{proxies( R, targets )}$ )
-	}
-	return proxies;
 }
 
 function evalProxies(proxies, tests){
@@ -99,125 +92,159 @@ Die Dauer der Laufzeit der in Listing \ref{lst_semEval} definierten Funktionen h
 
 \section{Heuristiken}\label{sec_heuristics}
 Die Heuristiken werden an unterschiedlichen Stellen des Algorithmus aus Listing \ref{lst_semEval} eingebaut. Teilweise ist es für die Verwendung einer Heuristik notwendig, weitere Information während der semantischen Evaluation zu ermitteln und diese zu speichern. In den folgenden Abschnitten werden die Heuristiken und die dafür notwendigen Anpassungen an den jeweiligen Funktionen beschrieben.
-
+\\\\
 %\subsection{Heuristiken für die Optimierung der Reihenfolge}
 Die folgenden Heuristiken haben zum Ziel, die Reihenfolge, in der die Proxies hinsichtlich der vordefinierten Tests geprüft werden, so anzupassen, dass ein passender Proxy möglichst früh geprüft wird.
 
 
 \subsection{Beachtung des Matcherratings (LMF)}\label{sec_lmf}
-Bei dieser Heuristik, welche den Namen\emph{low matcherrating first} (kurz: LMF) trägt, werden die Proxies auf der Basis eines so genannten Matcherratings bewertet. Bei dem Matcherrating eines Proxies handelt es sich um einen numerischen Wert. Um diesen Wert zu ermitteln, wird für jede Matchingrelation bzw. für jeden Matcher aus Abschnitt \ref{sec_matcher} ein Basisrating vergeben. Folgende Funktion beschreibt das Basisrating für das Matching zweier Typen $S$ und $T$:
+Bei dieser Heuristik, welche den Namen \emph{low matcherrating first} (kurz: LMF) trägt, werden die Mengen von Target-Typen, aus denen die Proxies erzeugt werden, auf der Basis eines so genannten Matcherratings bewertet. Bei dem Matcherrating einer solchen Menge handelt es sich um einen numerischen Wert, auf dessen Basis entschieden werden kann, für welche Menge von Target-Typ die Generierung und Evaluation der Proxies vollzogen werden soll.
+\\\\
+Um das Matcherrating zu ermitteln, wird für jede Matchingrelation bzw. für jeden Matcher aus Abschnitt \ref{sec_matcher} ein Basisrating vergeben. Folgende Funktion beschreibt das Basisrating für das Matching zweier Typen $S$ und $T$:
 \begin{gather*}
 \mathit{base(S,T)} :=  \left\{ 
 				\begin{array}{l}
-					100 | S \Rightarrow_{exact}  T  \\
-					200 | S \Rightarrow_{gen}  T  \\
-					200 | S \Rightarrow_{spec}  T  \\
-					300 | S \Rightarrow_{contained}  T   \\
-					300 | S \Rightarrow_{container}  T  				
+					100 \text{ wenn } S \Rightarrow_{exact}  T  \\
+					200 \text{ wenn } S \Rightarrow_{gen}  T  \\
+					200 \text{ wenn } S \Rightarrow_{spec}  T  \\
+					300 \text{ wenn } S \Rightarrow_{contained}  T   \\
+					300 \text{ wenn } S \Rightarrow_{container}  T  				
 				\end{array}             
 	\right.
 \end{gather*}
 \noindent
-Dabei ist zu erwähnen, dass einige der o.g. Matcher über dasselbe Basisrating erfügen. Das liegt daran, dass sie technisch jeweils gemeinsam umgesetzt wurden.\footnote{Der \emph{GenTypeMatcher} und der \emph{SpecTypeMatcher} wurden gemeinsam in der Klasse $\texttt{GenSpecTypeMatcher}$ umgesetzt. Der \emph{ContentTypeMatcher} und der \emph{ContainerTypeMatcher} wurden gemeinsam in der Klasse $\texttt{WrappedTypeMatcher}$ umgesetzt. (siehe angehängter Quellcode)}
+Dabei ist zu erwähnen, dass einige der o.g. Matcher über dasselbe Basisrating verfügen. Das liegt daran, dass sie technisch jeweils gemeinsam umgesetzt wurden.\footnote{Der \emph{GenTypeMatcher} und der \emph{SpecTypeMatcher} wurden gemeinsam in der Klasse $\texttt{GenSpecTypeMatcher}$ umgesetzt. Der \emph{ContentTypeMatcher} und der \emph{ContainerTypeMatcher} wurden gemeinsam in der Klasse $\texttt{WrappedTypeMatcher}$ umgesetzt. (siehe angehängter Quellcode)}
 \\\\
-Das Matcherrating eines Proxies $P$ wird über die Funktion $\mathit{rating}$ beschrieben. Dieses ist von dem Matcherrating der Methoden-Delegation innerhalb von $P$ abhängig. Das Matcherrating einer Methoden-Delegation ist von den Basisratings der Matcher abhängig, über die die Parameter- und Rückgabe-Typen der aufgerufenen Methode und der Delegationsmethoden gematcht werden können. 
-\\\\
-Für die Definition von Funktionen gelten im weiteren Verlauf folgende verkürzte Schreibweise in Bezug auf eine Methoden-Delegation $\mathit{MD}$:
+Wie an der Funktion $\mathit{base}$ zu erkennen ist, wird das Matcherrating für Typen, die über den \emph{StructuralTypeMatcher} gematcht wurden, nicht spezifiziert. Dieses muss berechnet werden. Die Basis dafür bildet ein Matcherrating, welches für die gematchten Methoden ermittelt wird. Hierzu sei die Funktion $\mathit{bases_{method}}$ für zwei Methoden $\mathit{mR}$ und $\mathit{mT}$ mit $\mathit{mR} \Rightarrow_{method} \mathit{mT}$ wie folgt definiert:
 \begin{gather*}
-	\mathit{pc} := \mathit{MD.call.paramCount}
-	\\
-	\mathit{cRT} := \mathit{MD.call.returnType}
-	\\
-	\mathit{dRT} := \mathit{MD.del.returnType}
-	\\
-	\mathit{cPT} := \mathit{MD.call.paramTypes}
-	\\
-	\mathit{dPT} := \mathit{MD.del.paramTypes}
-	\\
-	\mathit{pos} := \mathit{MD.call.posModi}
+\mathit{bases_{method}(mR,mT)} := \begin{array}{l|l}
+\mathit{base(ret(mR), ret(mT))} \cup \mathit{ }
+&
+\{\mathit{pR_1,...,pR_n}\} = \mathit{params(mR)} \wedge \mathit{ }
+\\
+\bigcup\limits_{i=1}^{n} \mathit{base(pR_i,pT_i)}
+&
+\{\mathit{pT_1,...,pT_n}\} = \mathit{params(mT)}
+\end{array} 
 \end{gather*}
 \noindent
-Darauf aufbauend sei die Menge der Matcherratings der Paare von Parameter- und Rückgabetypen aus der aufgerufenen Methode und den Delegationsmethode einer Methoden-Delegation $\mathit{MD}$ wie folgt definiert:
+Darauf aufbauend kann die Funktion $\mathit{mRating}$ für die beiden Methoden $\mathit{mR}$ und $\mathit{mT}$ definiert werden. Hierzu seien folgende Hilfsfunktionen definiert:
 \begin{gather*}
-\mathit{bases_{MD}(MD)} :=  \mathit{base(dRT, cRT)} \cup \bigcup\limits_{i=0}^{pc-1} \mathit{base(cPT[i],dPT[pos[i]])}
+\mathit{sum(\{v_1,...v_n\})} = \sum_{i=1}^{n}v_i
+\\
+\mathit{max(\{v_1,...,v_n\})} = v_{m}| 1 \leq m \leq n  \wedge \forall i \in  \{1,...,n\}: v_i \leq v_{m}
+\\    
+\mathit{min(\{v_1,...,v_n\})} = v_{m}| 1 \leq m \leq n  \wedge \forall i \in  \{1,...,n\}: v_i \geq v_{m}   
 \end{gather*}
 \noindent
-Das Matcherrating einer Methoden-Delegation $\mathit{MD}$ sei über die Funktion $\mathit{mdRating}$ beschrieben. Für die Definition der beiden Funktionen $\mathit{rating}$ und $\mathit{mdRating}$ gibt es unterschiedliche Möglichkeiten. In dieser Arbeit werden 4 Varianten als Definitionen vorgeschlagen, die in Kapitel \ref{chap_evaluation} untersucht werden.
-\\\\
-Dazu seien die folgenden Hilfsfunktionen definiert:
-\begin{gather*}    
-\mathit{sum(v_1,...v_n)} = \sum_{i=1}^{n}v_i
-\\\\
-\mathit{max(v_1,...,v_n)} = v_{m}| 1 \leq m \leq n  \wedge \forall i \in  \{1,...,n\}: v_i \leq v_{m}
-\\\\       
-\mathit{min(v_1,...,v_n)} = v_{m}| 1 \leq m \leq n  \wedge \forall i \in  \{1,...,n\}: v_i \geq v_{m}   
-\end{gather*}
-Für die folgenden Vorschläge zur Definition von $\mathit{rating}$ und $\mathit{mdRating}$ sei $P$ ein struktureller Proxy mit $n$ Methoden-Delegation.
-\paragraph{Variante 1: Durchschnitt}
+In dieser Arbeit werden vier Varianten für diese Definition von $\mathit{mRating}$ vorgeschlagen, die in Abschnitt \ref{chap_eval} evaluiert werden sollen.
+\paragraph{Variante 1: Durchschnitt ($\mathit{mRating}$)}
 
 \begin{gather*}
-\mathit{mdRating(MD)} = \frac{\mathit{sum(bases_{MD}(MD))}}{\mathit{pc} + 1}
-\\\\
-\mathit{rating(P)} = \frac{ \mathit{sum(mdRating(P.dels[0]),...,mdRating(P.dels[n-1]))}}{n}
+\mathit{mRating(mR,mT)} := \frac{\mathit{sum(base_{method}(mR,mT)}}{|\mathit{params(mR)}|+1}
 \end{gather*}
 
-
-
-\paragraph{Variante 2: Maximum}
+\paragraph{Variante 2: Maximum ($\mathit{mRating}$)}
 
 \begin{gather*}
-\mathit{mdRating(MD)} = \mathit{max(bases_{MD}(MD))}
-\\\\
-\mathit{rating(P)} = \frac{\mathit{max(mdRating(P.dels[0]),...,mdRating(P.dels[n-1]))}}{n}
+\mathit{mRating(mR,mT)} = \mathit{max(bases_{method}(mR,mT))}
 \end{gather*}
 
-
-
-\paragraph{Variante 3: Minimum}
+\paragraph{Variante 3: Minimum ($\mathit{mRating}$)}
 
 \begin{gather*}
-\mathit{mdRating(MD)} = \mathit{min(bases_{MD}(MD))}
-\\\\
-\mathit{rating(P)} = \frac{\mathit{min(mdRating(P.dels[0]),...,mdRating(P.dels[n-1]))}}{n}
+\mathit{mRating(mR,mT)} = \mathit{min(bases_{method}(mR,mT))}
 \end{gather*}
 
-\paragraph{Variante 4: Durchschnitt aus Minimum und Maximum}
+\paragraph{Variante 4: Durchschnitt aus Minimum und Maximum ($\mathit{mRating}$)}
 
 \begin{gather*}
-\mathit{mdRating(MD)} = \frac{\mathit{max(bases_{MD}(MD))}+\mathit{min(bases_{MD}(MD))}}{2}
-\\\\
-\mathit{rating(P)} = \frac{\splitfrac{ \mathit{max(mdRating(P.dels[0]),...,mdRating(P.dels[n-1]))}}{+\mathit{min(mdRating(P.dels[0]),...,mdRating(P.dels[n-1]))}}}{2}
+\mathit{mRating(mR,mT)} = \frac{\mathit{max(bases_{method}(mR,mT))}+\mathit{min(bases_{method}(mR,mT))}}{2}
 \end{gather*}
 \noindent
-Da die Funktion $\mathit{rating}$ von $\mathit{mdRating}$ abhängt und für $\mathit{mdRating}$ 4 Variante vorgeschlagen wurden, ergeben sich für jede vorgeschlagene Variante für die Definition von $\mathit{rating}$ weitere 4 Varianten. Dadurch sind insgesamt 16 Varianten für die Definition von $\mathit{rating}$ gegeben.
+In einem \emph{provided Typ} $P$ sind mitunter mehrere Methoden deklariert, die ein Matching zu einer Methode $m$ aufweisen. Für die Bestimmung des Matcherratings sei hierbei nur das kleinste Matcherrating jener Methoden aus $P$ relevant. Das minimale Matcherrating einer solchen Methode wird durch folgende Funktion beschrieben:
+\begin{gather*}
+\mathit{minMRating(m, P)} := 
+	\begin{array}{l|l}
+\mathit{min(mRating(m'_1),}
+&
+\{\mathit{m'_1,...,m'_n}\} =
+\\
+\mathit{...,mRating(m'_n))}
+&
+\mathit{structM_{target}(m, T)}
+\end{array}
+\end{gather*}
+\noindent
+Für einen \emph{required Typ} $R$ und einem \emph{provided Typ} $P$ wird die Menge dieser minimalen Matcherratings je Methode $m \in \mathit{structM(R)}$ über folgende Funktion definiert:
+\begin{gather*}
+\mathit{minMRatings(R,P)} := \left\{
+\begin{array}{l|l}
+	\mathit{minMRating(m,P)}
+	& 
+	m \in \mathit{structM(R,P)}
+\end{array}
+\right\}
+\end{gather*}
+\noindent
+In einer Bibliothek $L$ wird die Ermittlung des Matcherratings eines \emph{required Typs} $R$ und einer Menge von \emph{provided Typen} $\{T_1,...,T_n\}$ mit $\{T_1,...,T_n\} \in \mathit{cover(R,L)}$ über die Funktion $\mathit{rating}$ beschrieben. Auch hierfür werden in dieser Arbeit insgesamt 4 Varianten vorgeschlagen, die in Abschnitt \ref{chap_eval} evaluiert werden sollen.
+\paragraph{Variante 1: Durchschnitt ($\mathit{rating}$)}
+
+\begin{gather*}
+\mathit{rating(R,\{T_1,...,T_n\})} := \frac{\mathit{sum(minMRatings(R,T_1),...,minMRatings(R,T_1))}}{\sum_{i=1}^{n}|\mathit{structM(R,T_i)}|}
+\end{gather*}
+
+\paragraph{Variante 2: Maximum ($\mathit{rating}$)}
+
+\begin{gather*}
+\mathit{rating(R,\{T_1,...,T_n\})} := \mathit{max(minMRatings(R,T_1),...,minMRatings(R,T_1))}
+\end{gather*}
+
+\paragraph{Variante 3: Minimum ($\mathit{rating}$)}
+
+\begin{gather*}
+\mathit{rating(R,\{T_1,...,T_n\})} := \mathit{min(minMRatings(R,T_1),...,minMRatings(R,T_1))}\end{gather*}
+
+\paragraph{Variante 4: Durchschnitt aus Minimum und Maximum ($\mathit{rating}$)}
+
+\begin{gather*}
+\mathit{rating(R,\{T_1,...,T_n\})} := 
+	\frac{\splitfrac{\mathit{min(minMRatings(R,T_1),...,minMRatings(R,T_1))}}
+	{+ \mathit{max(minMRatings(R,T_1),...,minMRatings(R,T_1))}}}{2}	
+\end{gather*}
+\noindent
+Da die Funktion $\mathit{rating}$ von $\mathit{mRating}$ abhängt und für $\mathit{mRating}$ 4 Varianten vorgeschlagen wurden, ergeben sich insgesamt 16 Varianten für die Definition von $\mathit{rating}$ gegeben.
 \\\\
-Zur Anwendung der Heuristik muss das Matcherrating bei der Iteration über die erzeugten Proxies beachtet werden. Dabei sollte die Liste der Proxies, über die in der Methode $\texttt{evalProxies}$ iteriert wird, entsprechend dem Matcherrating sortiert werden. Eine Sortierung ist nur vor dem Beginn der Iteration in der Methode $\texttt{evalProxies}$  sinnvoll. Listing \ref{lst_lmf} zeigt die Anpassungen der Methode $\texttt{evalProxies}$ auf Basis der Implementierung der semantischen Evaluation aus Listing \ref{lst_semEval}. Für die Sortierung der Liste von Proxies wurde in der Methode $\texttt{LMF}$ exemplarisch das Bubble-Sort-Verfahren verwendet.
+Zur Anwendung der Heuristik muss das Matcherrating bei der Erzeugung der Proxies aus den jeweiligen Mengen von \emph{provided Typen} beachtet werden. Dabei sollte die Liste der Mengen von \emph{provided Typen}, die über die Funktion $\mathit{targetSets}$ abgebildet wird und über die in der Methode $\texttt{semanticEval}$ iteriert wird, entsprechend dem Matcherrating sortiert werden. Dadurch werden in der Methode $\texttt{evalProxies}$ zuerst die Proxies evaluiert, die auf Basis einer Menge von \emph{provided Typen} mit dem kleinsten Matcherrating erzeugt wurde. Listing \ref{lst_lmf} zeigt die Anpassungen der Methode $\texttt{relevantProxies}$ auf Basis der Implementierung der semantischen Evaluation aus Listing \ref{lst_semEval}. Für die Sortierung der Liste von Proxies wurde in der Methode $\texttt{LMF}$ exemplarisch das Bubble-Sort-Verfahren verwendet.
 \begin{lstlisting}[style = pseudo, caption=Semantische Evaluation mit Heuristik LMF, captionpos=b, label=lst_lmf]
-function evalProxies(proxies, tests){
-	sorted = LMF( proxies )
-	for( proxy : sorted ){
-		passedTests = 0
-		evalProxy(proxy, tests)
-		if( passedTests == tests.size ){
-			// passenden Proxy gefunden
-			return proxy
+function semanticEval( R, T, tests ){
+	for( anzahl = 1; anzahl <= $\mathit{maxTargets( R )}$; i++ ){
+		targetSets = $\mathit{targetSets( T, anzahl )}$
+		sortedSets = LMF( R, targetSets )		
+		for( targets : sorted ){
+			relProxies = $\mathit{proxies( R, targets )}$
+			proxy = evalProxies( relProxies, tests )	
+			if( proxy != null ){
+				// passenden Proxy gefunden
+				return proxy
+			}
 		}
 	}
 	// kein passenden Proxy gefunden
-	return null
+	return null;
 }
 
-function LMF( proxies ){
-	for	( n=proxies.size(); n>1; n--){
+function LMF( R, targets ){
+	for	( n=targets.size(); n>1; n--){
 		for( i=0; i<n-1; i++){
-			if( $\mathit{rating(}$ proxies[i] $)$ < $\mathit{rating(}$ proxies[i+1] $)$ ){
-				tmp = proxies[i]
-				proxies[i] = proxies[i+1]
-				proxies[i+1] = tmp
+			if( $\mathit{rating(R,}$ targets[i] $)$ < $\mathit{rating(R,}$ proxies[i+1] $)$ ){
+				tmp = targets[i]
+				targets[i] = targets[i+1]
+				targets[i+1] = tmp
 			}
 		}
 	}	
-	return proxies
+	return targets
 }
 \end{lstlisting}
 

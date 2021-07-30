@@ -19,7 +19,7 @@ $\mathit{RD} ::= \texttt{required } T \texttt{ \{}\mathit{MD}\text{*}\texttt{\}}
 \hline
 $\mathit{FD} ::= T \texttt{ }\mathit{f}$ & Eine Felddeklaration besteht aus dem Namen des Feldes \emph{f} und dem Namen seines Typs \emph{T}.\\
 \hline
-$\mathit{MD} ::= \mathit{T'}\texttt{ }\mathit{m(T)}$ & Eine Methodendeklaration besteht aus dem Namen der Methode \emph{m}, dem Namen des Parameter-Typs \emph{T} und dem Namen des Rückgabe-Typs \emph{T'}.\\
+$\mathit{MD} ::= \mathit{T'}\texttt{ }\mathit{m(T_1,...,T_n)}$ & Eine Methodendeklaration besteht aus dem Namen der Methode \emph{m}, $n$ Namen der Parameter-Typen $T_1$ bis $T_n$ und dem Namen des Rückgabe-Typs \emph{T'}.\\
 \hline
 \hline
 \end{tabular}
@@ -41,16 +41,23 @@ Darüber hinaus seien folgende Funktionen definiert:
 				\begin{array}{l|l}
 					T \texttt{ }\mathit{f} & T \texttt{ }\mathit{f}\text{ ist Felddeklaration von }T
 				\end{array}
-              \right\}\\
-\mathit{methoden(T)} := \left\{ 
-				\begin{array}{l|l}
-					T'' \text{ }m(T') & T'' \text{ }m(T') \text{ ist Methodendeklaration von }T
-				\end{array}
-              \right\}\\
+              \right\}
+\\
 \mathit{feldTyp(f,T)} := 
 				\begin{array}{l|l}
 					T' & T' \texttt{ }\mathit{f}\text{ ist Felddeklatation von }T
-				\end{array}              
+				\end{array}   
+\\
+\mathit{ret(T'\text{ }m(T''_1,...T''_n))} := T'
+\\
+\mathit{params(T''\text{ }m(T'_1,...T'_n))} := \{ T'_1,...,T'_n \}
+\\   
+\mathit{methoden(T)} := \left\{ 
+				\begin{array}{l|l}
+					T'' \text{ }m(T'_1,...,T'_n) & T'' \text{ }m(T'_1,...,T'_n) \text{ ist Methodendeklaration von }T
+				\end{array}
+              \right\}
+\\        
 \end{gather*}
 \noindent
 Listing \ref{lst:libEx} zeigt ein Beispiel für eine Bibilothek mit \emph{required} und \emph{provided Typen}.
@@ -185,16 +192,41 @@ Der \emph{StructuralTypeMatcher} matcht einen \emph{required Typ} $R$ auf einen 
 \\\\
 Somit soll bspw. der Typ $\texttt{MedicalFireFighter}$ auf den Typ $\texttt{FireFighter}$ (siehe Listing 1) gematcht werden. Als ein weiteres Beispiel, bezogen auf die Typen aus Listing 1, kann das Matching des Typs $\texttt{MedicalFireFighter}$ auf den Typ $\texttt{Doctor}$ angebracht werden.
 \\\\
-Damit ein required Typ $R$ auf einen provided Typ $P$ über den \emph{StrukturalTypeMatcher} gematcht werden kann, muss mindestens eine Methode aus $R$ zu einer Methode aus $P$ gematcht werden. Die Menge der gematchten Methoden aus $R$ in $P$ wird wie folgt beschrieben:
+Damit ein required Typ $R$ auf einen provided Typ $P$ über den \emph{StrukturalTypeMatcher} gematcht werden kann, muss mindestens eine Methode aus $R$ zu einer Methode aus $P$ gematcht werden. Die Reihenfolge, in der die Parameter in der jeweiligen Methode deklariert sind, soll dabei keine Rolle spielen. Von daher wird das Matching der Parameter zweier Methoden $m$ und $m'$ wie folgt beschrieben:
+\begin{gather*}
+\mathit{matchingParams(m, m')} :=
+\left\{
+\begin{array}{l|l}
+	&
+	\{\mathit{P_1,...,P_n}\} = \mathit{params(m)} \wedge \mathit{ }
+	\\
+	\{\mathit{mP_1,...,mP_n}\}
+	&
+	\forall i \in \{1,...,n\}: \mathit{mP_i} \in \mathit{params(m'}) \wedge \mathit{ }
+	\\
+	&
+	\mathit{mP_i} \Rightarrow_{internStruct} \mathit{P_i}
+\end{array}
+\right\}
+\end{gather*}
+\noindent
+Das strutkurelle Matching zweier Methoden $m$ und $m'$ wird durch folgende Regel beschrieben:
+\begin{gather*}
+\frac{\mathit{ret(m)} \Rightarrow_{internStruct} \mathit{ret(m')} \wedge \mathit{matchingParams(m,m')}}{m \Rightarrow_{method} m'}
+\end{gather*}
+\noindent
+Die Menge der gematchten Methoden aus $R$ in $P$ wird darauf aufbauend durch folgende Funktion beschrieben:
 \begin{gather*}
 structM(R,P) := \left\{ 
 				\begin{array}{l|l}
-				& \mathit{T'\text{ }m(T)} \in \mathit{methoden(R)} \wedge \mathit{ }\\
-T'\text{ }m(T)	& \exists \mathit{S'\text{ }n(S)} \in \mathit{methoden(P)} :\\								 				&  S\Rightarrow_{internStruct}T \wedge T' \Rightarrow_{internStruct}S' 
+m	& \mathit{m} \in \mathit{methoden(R)} \wedge \mathit{ }
+\\
+	& \exists \mathit{m'} \in \mathit{methoden(P)} : m \Rightarrow_{method} m'
 				\end{array}
               \right\}
 \end{gather*}
-Da die Notation es nicht hergibt, ist zusätzlich zu erwähnen, dass, sofern in $m$ und $n$ mehrere Parameter verwendet werden, deren Reihenfolge irrelevant ist.\\\\
+\noindent
+
 Die Matchingrelation für die \emph{StructuralTypeMatcher} wird durch folgende Regel beschrieben:
 \begin{gather*}
 \frac{structM(R,P) \neq \emptyset}{R \Rightarrow_{struct}P}
