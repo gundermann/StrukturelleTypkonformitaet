@@ -9,19 +9,19 @@ public class MatchingSupplier {
 
   private Supplier<Collection<MethodMatchingInfo>> methodMatchInfosSupplier;
 
-  private MatcherRate matcherRating;
+  private  Collection<MatcherRate> matcherRatings;
 
-  public MatchingSupplier( Supplier<Collection<MethodMatchingInfo>> supplier, MatcherRate matcherRating ) {
+  public MatchingSupplier( Supplier<Collection<MethodMatchingInfo>> supplier, Collection<MatcherRate> matcherRatings ) {
     methodMatchInfosSupplier = supplier;
-    this.matcherRating = matcherRating;
+    this.matcherRatings = matcherRatings;
   }
 
   public Supplier<Collection<MethodMatchingInfo>> getMethodMatchingInfosSupplier() {
     return methodMatchInfosSupplier;
   }
 
-  public MatcherRate getMatcherRating() {
-    return matcherRating;
+  public Collection<MatcherRate> getMatcherRating() {
+    return matcherRatings;
   }
 
 }

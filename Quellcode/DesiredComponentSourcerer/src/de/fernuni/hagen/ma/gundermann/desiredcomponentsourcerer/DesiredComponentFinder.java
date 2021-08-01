@@ -3,6 +3,7 @@ package de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,7 @@ import java.util.stream.Stream;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.BestMatchingComponentCombinationFinder;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.CombinationInfo;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.DefaultTypeMatcherHeuristic;
+import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.MatcherratingFunctions;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.Logger;
 import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo;
 import de.fernuni.hagen.ma.gundermann.signaturematching.glue.ConvertableBundle;
@@ -93,8 +95,8 @@ public class DesiredComponentFinder {
 		InfoCollector.setMatchingProvidedTypeCount(componentInterface2PartlyMatchingInfos.keySet().size());
 		// INFO OUTPUT
 		componentInterface2PartlyMatchingInfos.values().forEach(i -> {
-			Logger.toFile("%f;%s;%b;%s;", i.getQualitativeMatchRating().getMatcherRating(),
-					i.getQualitativeMatchRating().toString(), i.isFullMatching(), i.getTarget().getSimpleName());
+			Logger.toFile("%f;%b;%s;", MatcherratingFunctions.rating(Collections.singletonList(i)),
+					 i.isFullMatching(), i.getTarget().getSimpleName());
 		});
 
 		Optional<DesiredInterface> result = Optional

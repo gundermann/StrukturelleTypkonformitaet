@@ -10,11 +10,10 @@ import java.util.Map.Entry;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
-import de.fernuni.hagen.ma.gundermann.signaturematching.SingleMatchingInfo;
 import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo;
 import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo.ParamPosition;
+import de.fernuni.hagen.ma.gundermann.signaturematching.SingleMatchingInfo;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.MatcherRate;
-import de.fernuni.hagen.ma.gundermann.signaturematching.matching.Setting;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.TypeMatcher;
 import de.fernuni.hagen.ma.gundermann.signaturematching.util.Permuter;
 
@@ -47,19 +46,15 @@ public class ParamPermMethodMatcher implements MethodMatcher {
       return null;
     }
 
-    Collection<MatcherRate> rates = getMatchRatingWithPermutedArguments( ms1.getSortedArgumentTypes(),
+    Collection<MatcherRate> rates = getMatcherRatingWithPermutedArguments( ms1.getSortedArgumentTypes(),
         ms2.getSortedArgumentTypes(),
         this::getMatchRatingWithArgumentTypes );
 
     if ( ms1.getSortedArgumentTypes().length > 0 && rates.isEmpty() ) {
       return null;
     }
-
     rates.add( returnTypeRating );
-    MatcherRate resultingRate = new MatcherRate();
-    resultingRate.add( this.getClass().getSimpleName(), Setting.PARAM_PERM_METHOD_TYPE_MATCHER_BASE_RATING );
-    resultingRate.add( Setting.QUALITATIVE_COMPONENT_METHOD_MATCH_RATE_CUMULATION
-        .apply( rates.stream() ) );
+    MatcherRate resultingRate = new MatcherRate(this.getClass().getSimpleName(), MethodDelegationRatingFunctions.mdRating(rates));
     return resultingRate;
   }
 
@@ -77,7 +72,7 @@ public class ParamPermMethodMatcher implements MethodMatcher {
     return rates;
   }
 
-  private Collection<MatcherRate> getMatchRatingWithPermutedArguments( Class<?>[] sortedArgumentTypes1,
+  private Collection<MatcherRate> getMatcherRatingWithPermutedArguments( Class<?>[] sortedArgumentTypes1,
       Class<?>[] sortedArgumentTypes2,
       BiFunction<Class<?>[], Class<?>[], Collection<MatcherRate>> matchingFunction ) {
     Collection<Class<?>[]> permutations = permuteAgruments( sortedArgumentTypes1 ).values();

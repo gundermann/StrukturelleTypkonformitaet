@@ -26,8 +26,8 @@ public class FindMinimalFoerderprogrammeProviderTest {
 	@Before
 	public void setup() {
 		Logger.setOutputFile("tmp_" + this.getClass().getSimpleName() + ".csv");
-
 		Logger.setLogFile("tmp_" + this.getClass().getSimpleName() + ".log");
+		EJBContainer.CONTAINER.reInit();
 	}
 
 	@Test
@@ -39,8 +39,11 @@ public class FindMinimalFoerderprogrammeProviderTest {
 		EJBContainer.CONTAINER.registerBean(Doctor.class, new EmergencyDoctor());
 		EJBContainer.CONTAINER.registerBean(Intubator.class, new EmergencyDoctor());
 		DesiredComponentFinderConfig config = new DesiredComponentFinderConfig.Builder(
-				EJBContainer.CONTAINER.getRegisteredBeanInterfaces(), EJBContainer.CONTAINER::getOptBean)
-						.useHeuristicBL_NMC().useHeuristicLMF().useHeuristicPTTF().build();
+				EJBContainer.CONTAINER.getRegisteredBeanInterfaces(), EJBContainer.CONTAINER::getOptBean)//
+						.useHeuristicLMF()//
+//						.useHeuristicPTTF()//
+//						.useHeuristicBL_NMC()//
+						.build();
 		MinimalFoerderprogrammeProvider desiredBean = new DesiredComponentFinder(config)
 				.getDesiredComponent(desiredInterface);
 		assertThat(desiredBean, notNullValue());

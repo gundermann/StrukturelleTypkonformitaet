@@ -61,9 +61,11 @@ public class MatchingInfo {
 				.collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().getMethodMatchingInfosSupplier()));
 	}
 
-	public MatcherRate getQualitativeMatchRating() {
-		return Setting.QUALITATIVE_COMPONENT_MATCH_RATE_CUMULATION
-				.apply(methodMatchingSupplier.values().stream().map(MatchingSupplier::getMatcherRating));
+	public Collection<MatcherRate> getQualitativeMatchRating() {
+		return methodMatchingSupplier.values().stream().map(MatchingSupplier::getMatcherRating)
+				.flatMap(Collection::stream).collect(Collectors.toList());
+//		return Setting.QUALITATIVE_COMPONENT_MATCH_RATE_CUMULATION
+//				.apply(methodMatchingSupplier.values().stream().map(MatchingSupplier::getMatcherRating));
 	}
 
 	public static class Builder {

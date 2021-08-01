@@ -86,6 +86,8 @@ public class CombinationSelector implements Selector {
 		// werden, weil die fehlende Implementierungen ohnehin heruasgefiltert werden.
 		Collection<MatchingInfo> relevantInfos = new CheckTypeBlacklistFilter(this.checkTypeHCBlacklist)
 				.filter(infos);
+		
+		
 
 		cachedMatchingInfoCombinations = new ArrayList<>(
 				Combinator.generateCombis(relevantInfos, combinatiedComponentCount));
@@ -93,7 +95,7 @@ public class CombinationSelector implements Selector {
 		// H: combinate low matcher rating first
 		// sort by matcher rate
 		if (usedHeuristics.contains(Heuristic.LMF)) {
-			Collections.sort(cachedMatchingInfoCombinations, new AccumulatedMatchingRateComparator());
+			Collections.sort(cachedMatchingInfoCombinations, new MatcherratingComparator());
 		}
 
 		// H: combinate passed tests components first

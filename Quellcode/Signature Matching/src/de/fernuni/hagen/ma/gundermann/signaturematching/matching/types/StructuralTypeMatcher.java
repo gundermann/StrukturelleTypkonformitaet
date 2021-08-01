@@ -42,34 +42,34 @@ public class StructuralTypeMatcher {
 	}
 
 	public MatchingInfo calculateTypeMatchingInfos(Class<?> targetType, Class<?> sourceType) {
-		  Builder miBuilder = new MatchingInfo.Builder(sourceType, targetType, ProxyCreatorFactories.getInterfaceProxyFactoryCreator());
+		Builder miBuilder = new MatchingInfo.Builder(sourceType, targetType,
+				ProxyCreatorFactories.getInterfaceProxyFactoryCreator());
 //		  PartlyTypeMatchingInfoFactory factory = new PartlyTypeMatchingInfoFactory( targetType );
-	    if ( sourceType.equals( Object.class ) ) {
-	      // Dieser Spezialfall fuehrt ohne diese Sonderregelung in einen Stackoverflow, da Object als Typ immer wieder
-	      // auftaucht. Es ist also eine Abbruchbedingung.
-	    	return miBuilder.build();
-	    }
+		if (sourceType.equals(Object.class)) {
+			// Dieser Spezialfall fuehrt ohne diese Sonderregelung in einen Stackoverflow,
+			// da Object als Typ immer wieder
+			// auftaucht. Es ist also eine Abbruchbedingung.
+			return miBuilder.build();
+		}
 
-	    Method[] queryMethods = getQueryMethods( sourceType );
-	    Logger.infoF( "QueryMethods: %s",
-	        Stream.of( queryMethods ).map( m -> m.getName() ).collect( Collectors.joining( ", " ) ) );
+		Method[] queryMethods = getQueryMethods(sourceType);
+		Logger.infoF("QueryMethods: %s",
+				Stream.of(queryMethods).map(m -> m.getName()).collect(Collectors.joining(", ")));
 
-	    // gleicht nur die nicht statischen public-Methods ab
-	    Method[] potentialMethods = getPotentialDelegateMethods( targetType.getMethods() );
-	    Map<Method, Collection<MatchingMethod>> possibleMatches = collectPossibleMatches( queryMethods,
-	        potentialMethods );
-	    Map<Method, MatchingSupplier> matchingInfoSupplier = new HashMap<>();
-	    for ( Entry<Method, Collection<MatchingMethod>> qM2tM : possibleMatches.entrySet() ) {
-	      MatchingSupplier supplier = getSupplierOfMultipleMatchingMethods( qM2tM.getKey(),
-	          qM2tM.getValue() );
-	      matchingInfoSupplier.put( qM2tM.getKey(), supplier );
-	    }
-	    matchingInfoSupplier.entrySet()
-	        .forEach( e -> Logger.infoF( "Supplier for MethodMatchingInfos collected - Method: %s",
-	            e.getKey().getName() ) );
-	    miBuilder.withMatchedSourceMethods(Arrays.asList( queryMethods ));
-	    miBuilder.withMethodMatchingInfoSupplier(matchingInfoSupplier);
-	    return miBuilder.build();
+		// gleicht nur die nicht statischen public-Methods ab
+		Method[] potentialMethods = getPotentialDelegateMethods(targetType.getMethods());
+		Map<Method, Collection<MatchingMethod>> possibleMatches = collectPossibleMatches(queryMethods,
+				potentialMethods);
+		Map<Method, MatchingSupplier> matchingInfoSupplier = new HashMap<>();
+		for (Entry<Method, Collection<MatchingMethod>> qM2tM : possibleMatches.entrySet()) {
+			MatchingSupplier supplier = getSupplierOfMultipleMatchingMethods(qM2tM.getKey(), qM2tM.getValue());
+			matchingInfoSupplier.put(qM2tM.getKey(), supplier);
+		}
+		matchingInfoSupplier.entrySet().forEach(
+				e -> Logger.infoF("Supplier for MethodMatchingInfos collected - Method: %s", e.getKey().getName()));
+		miBuilder.withMatchedSourceMethods(Arrays.asList(queryMethods));
+		miBuilder.withMethodMatchingInfoSupplier(matchingInfoSupplier);
+		return miBuilder.build();
 	}
 
 	private void printPossibleMatches(Map<Method, Collection<Method>> possibleMatches) {
@@ -133,7 +133,6 @@ public class StructuralTypeMatcher {
 		return queryMethods;
 	}
 
-
 	private Method[] getPotentialDelegateMethods(Method[] methods) {
 		return Stream.of(methods).filter(m -> !Modifier.isStatic(m.getModifiers())).collect(Collectors.toList())
 				.toArray(new Method[] {});
@@ -148,8 +147,7 @@ public class StructuralTypeMatcher {
 			}
 			return metMIs;
 		};
-		return new MatchingSupplier(supplier, Setting.QUALITATIVE_COMPONENT_METHOD_MATCH_RATE_CUMULATION
-				.apply(matchingMethods.stream().map(MatchingMethod::getRate)));
+		return new MatchingSupplier(supplier,matchingMethods.stream().map(MatchingMethod::getRate).collect(Collectors.toList()));
 	}
 
 	private static Map<Method, Collection<Method>> convertMethod2MethodCollection(

@@ -42,7 +42,7 @@ public class AccumulatedMatchingRateComparatorTest {
 
 	private MatchingInfo createPartlyTypeMatchingInfo(int rate) {
 		MatchingInfo ptmi = EasyMock.createNiceMock(MatchingInfo.class);
-		EasyMock.expect(ptmi.getQualitativeMatchRating()).andReturn(createMatcherRate(rate)).anyTimes();
+//		EasyMock.expect(ptmi.getQualitativeMatchRating()).andReturn(createMatcherRate(rate)).anyTimes();
 		EasyMock.replay(ptmi);
 		return ptmi;
 	}

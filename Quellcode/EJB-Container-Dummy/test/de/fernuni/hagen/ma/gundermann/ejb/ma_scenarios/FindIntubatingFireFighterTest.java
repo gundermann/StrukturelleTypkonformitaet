@@ -27,6 +27,7 @@ public class FindIntubatingFireFighterTest {
 	public void setup() {
 		Logger.setOutputFile("tmp_" + this.getClass().getSimpleName() + ".csv");
 		Logger.setLogFile("tmp_" + this.getClass().getSimpleName() + ".log");
+		EJBContainer.CONTAINER.reInit();
 	}
 
 	/**
@@ -53,10 +54,13 @@ public class FindIntubatingFireFighterTest {
 		EJBContainer.CONTAINER.registerBean(FireFighter.class, new VolunteerFireFighter());
 		EJBContainer.CONTAINER.registerBean(Doctor.class, new EmergencyDoctor());
 		EJBContainer.CONTAINER.registerBean(Intubator.class, new EmergencyDoctor());
-		
+
 		DesiredComponentFinderConfig config = new DesiredComponentFinderConfig.Builder(
-				EJBContainer.CONTAINER.getRegisteredBeanInterfaces(), EJBContainer.CONTAINER::getOptBean)
-						.useHeuristicBL_NMC().useHeuristicLMF().useHeuristicPTTF().build();
+				EJBContainer.CONTAINER.getRegisteredBeanInterfaces(), EJBContainer.CONTAINER::getOptBean)//
+						.useHeuristicLMF()//
+//						.useHeuristicBL_NMC()//
+//						.useHeuristicPTTF()//
+						.build();
 		IntubatingFireFighter desiredBean = new DesiredComponentFinder(config).getDesiredComponent(desiredInterface);
 		assertThat(desiredBean, notNullValue());
 	}

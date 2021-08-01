@@ -45,7 +45,7 @@ public class SingleSelector implements Selector {
 				.filter(CombinationFinderUtils::isFullMatchingComponent).map(i -> Collections.singletonList(i));
 		if (usedHeuristics.contains(Heuristic.LMF)) {
 			// H: respect to Matching Rate
-			stream = stream.sorted(new AccumulatedMatchingRateComparator());
+			stream = stream.sorted(new MatcherratingComparator());
 		}
 		this.infos = stream.collect(Collectors.toList());
 		InfoCollector.addCominationCountInIteration(this.infos.size(), 1);
