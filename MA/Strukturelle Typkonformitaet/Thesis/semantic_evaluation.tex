@@ -213,8 +213,56 @@ In einer Bibliothek $L$ wird die Ermittlung des Matcherratings eines \emph{requi
 	{+ \mathit{max(minMRatings(R,T_1),...,minMRatings(R,T_1))}}}{2}	
 \end{gather*}
 \noindent
-Da die Funktion $\mathit{rating}$ von $\mathit{mRating}$ abhängt und für $\mathit{mRating}$ 4 Varianten vorgeschlagen wurden, ergeben sich insgesamt 16 Varianten für die Definition von $\mathit{rating}$ gegeben.
-\\\\
+Da die Funktion $\mathit{rating}$ von $\mathit{mRating}$ abhängt und für $\mathit{mRating}$ 4 Varianten vorgeschlagen wurden, ergeben sich insgesamt 16 Varianten für die Definition von $\mathit{rating}$ gegeben. Diese Varianten (1.1 - 4.4) sind in der Tabelle \ref{tab_matcherratingvarianten} mit den Kombinationen der Varianten für $\mathit{mRating}$ und $\mathit{rating}$ aufgeführt.
+\begin{table}[h!]
+\centering
+\small
+\begin{tabular}{|c|c|c|}
+\hline
+\hline
+\textbf{Variante} & Variante für $\mathit{rating}$ & Variante für $\mathit{mRating}$
+\\
+\hline
+\hline
+\textbf{1.1} & 1 & 1 \\
+\hline
+\textbf{1.2} & 1 & 2 \\
+\hline
+\textbf{1.3} & 1 & 3 \\
+\hline
+\textbf{1.4} & 1 & 4 \\
+\hline
+\textbf{2.1} & 2 & 1 \\
+\hline
+\textbf{2.2} & 2 & 2 \\
+\hline
+\textbf{2.3} & 2 & 3 \\
+\hline
+\textbf{2.4} & 2 & 4 \\
+\hline
+\textbf{3.1} & 3 & 1 \\
+\hline
+\textbf{3.2} & 3 &2 \\
+\hline
+\textbf{3.3} & 3 & 3 \\
+\hline
+\textbf{3.4} & 3 & 4 \\
+\hline
+\textbf{4.1} & 4 & 1 \\
+\hline
+\textbf{4.2} & 4 & 2 \\
+\hline
+\textbf{4.3} & 4 & 3 \\
+\hline
+\textbf{4.4} & 4 & 4 \\
+\hline
+\hline
+\end{tabular}
+\caption{Varianten für die Ermittlung des Matcherratings einer Menge von \emph{provided Typen}}
+ \label{tab_matcherratingvarianten}
+\end{table}
+\noindent
+\\
 Zur Anwendung der Heuristik muss das Matcherrating bei der Erzeugung der Proxies aus den jeweiligen Mengen von \emph{provided Typen} beachtet werden. Dabei sollte die Liste der Mengen von \emph{provided Typen}, die über die Funktion $\mathit{targetSets}$ abgebildet wird und über die in der Methode $\texttt{semanticEval}$ iteriert wird, entsprechend dem Matcherrating sortiert werden. Dadurch werden in der Methode $\texttt{evalProxies}$ zuerst die Proxies evaluiert, die auf Basis einer Menge von \emph{provided Typen} mit dem kleinsten Matcherrating erzeugt wurde. Listing \ref{lst_lmf} zeigt die Anpassungen der Methode $\texttt{relevantProxies}$ auf Basis der Implementierung der semantischen Evaluation aus Listing \ref{lst_semEval}. Für die Sortierung der Liste von Proxies wurde in der Methode $\texttt{LMF}$ exemplarisch das Bubble-Sort-Verfahren verwendet.
 \begin{lstlisting}[style = pseudo, caption=Semantische Evaluation mit Heuristik LMF, captionpos=b, label=lst_lmf]
 function semanticEval( R, T, tests ){

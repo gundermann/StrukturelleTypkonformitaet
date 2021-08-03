@@ -31,225 +31,62 @@ Für ein \emph{reqiured Typ} können mehrere \emph{provided Typen} gefunden werd
 \noindent
 Die \tabsrefs{tmr_start_tei1}{tmr_start_tei6_2} zeigen die Vier-Felder-Tafeln, in denen die Ergebnisse der benötigten Iterationen innerhalb des Explorationsalgorithmus für jeden der \emph{required Typen} aus \tabref{amountMatchedInterfaces}. Dabei wurden keine Heuristiken verwendet. Somit stellt dies den Ausgangspunkt für die weitere Evaluation im Test-System dar.
 \begin{multicols}{3}
-\vft{1}{$p(29)-1$}{0}{1}{0}{Ausgangspunkt Test-System TMR für TEI1}{tmr_start_tei1}\columnbreak
-\vft{1}{$p(22)-1$}{0}{1}{0}{Ausgangspunkt Test-System TMR für TEI2}{tmr_start_tei2}\columnbreak
-\vft{1}{$p(23)-1$}{0}{1}{0}{Ausgangspunkt Test-System TMR für TEI3}{tmr_start_tei3}
+\vft{1}{$p(29)-1$}{0}{1}{0}{Ausgangspunkt im Test-System für TEI1}{tmr_start_tei1}\columnbreak
+\vft{1}{$p(22)-1$}{0}{1}{0}{Ausgangspunkt im Test-System für TEI2}{tmr_start_tei2}\columnbreak
+\vft{1}{$p(23)-1$}{0}{1}{0}{Ausgangspunkt im Test-System für TEI3}{tmr_start_tei3}
 \end{multicols}
 \begin{multicols}{3}
-\vft{1}{$p(27)$}{0}{0}{0}{Ausgangspunkt Test-System TMR für TEI4 \\1. Durchlauf}{tmr_start_tei4_1}\columnbreak
-\vft{1}{$p(56)$}{0}{0}{0}{Ausgangspunkt Test-System TMR für TEI5 \\1. Durchlauf}{tmr_start_tei5_1}\columnbreak
-\vft{1}{$p(27)$}{0}{0}{0}{Ausgangspunkt Test-System TMR für TEI6 \\1. Durchlauf}{tmr_start_tei6_1}
+\vft{1}{$p(27)$}{0}{0}{0}{Ausgangspunkt im Test-System für TEI4 \\1. Durchlauf}{tmr_start_tei4_1}\columnbreak
+\vft{1}{$p(56)$}{0}{0}{0}{Ausgangspunkt im Test-System für TEI5 \\1. Durchlauf}{tmr_start_tei5_1}\columnbreak
+\vft{1}{$p(27)$}{0}{0}{0}{Ausgangspunkt im Test-System für TEI6 \\1. Durchlauf}{tmr_start_tei6_1}
 \end{multicols}
 \begin{multicols}{3}
-\vft{2}{$p(1711)-1$}{0}{1}{0}{Ausgangspunkt Test-System TMR für TEI4 \\2. Durchlauf}{tmr_start_tei4_2}\columnbreak
-\vft{2}{$p(1540)-1$}{0}{1}{0}{Ausgangspunkt Test-System TMR für TEI5 \\2. Durchlauf}{tmr_start_tei5_2}\columnbreak
-\vft{2}{$p(528)-1$}{0}{1}{0}{Ausgangspunkt Test-System TMR für TEI6 \\2. Durchlauf}{tmr_start_tei6_2}
+\vft{2}{$p(1711)-1$}{0}{1}{0}{Ausgangspunkt im Test-System für TEI4 \\2. Durchlauf}{tmr_start_tei4_2}\columnbreak
+\vft{2}{$p(1540)-1$}{0}{1}{0}{Ausgangspunkt im Test-System für TEI5 \\2. Durchlauf}{tmr_start_tei5_2}\columnbreak
+\vft{2}{$p(528)-1$}{0}{1}{0}{Ausgangspunkt im Test-System für TEI6 \\2. Durchlauf}{tmr_start_tei6_2}
 \end{multicols}
 \noindent
 Für die \emph{required Typen} \emph{TEI4}-\emph{TEI6} werden zwei Durchläufe benötigt, da die semantischen Test nur von einem Proxy bestanden werden, der aus einer Kombination zweier \emph{provided Typen} erzeugt wurde.
 
-\subsection{Evaluierung}
+\subsection{Evaluierung}\label{sec_evalLMF}
 In Bezug auf die Heuristik \emph{LMF} gilt es nicht nur zu evaluieren, ob die Suche nach einem Proxy, der die vordefinierten Tests besteht, beschleunigt werden kann, sondern auch, mit welcher Variante zur Bestimmung des Matcherratings (vgl. Abschnitt \ref{sec_lmf}) die besten Ergebnisse erzielt werden können. 
 \\\\
-Hierzu wird die Exploration für alle der oben genannten \emph{required Typen} für jede Variante zur Bestimmung der Matcherratings durchgeführt. Im folgenden Verlauf wird lediglich auf die Variante eingegangen, die die besten Ergebnisse hervorgebracht hat. Die Ergebnisse unter Verwendung der übrigen Varianten sind im Anhang \ref{} zu finden.
-
-%TODO hier geht es Montag weiter
-\myparagraph{Ergebnisse TMR\_Quant}
-Durch die Verwendung der Heuristik TMR\_Quant kann für die ersten 3 erwarteten Interfaces (TEI1 - TEI3) eine Verbesserung erzielt werden. Der Grund dafür ist, dass die benötigte Komponente, die letztendlich alle semantischen Tests besteht auf der Basis genau einer Typ-Konvertierungsvariante erzeugt wurde. Damit benötigt der Explorationsalgorithmus lediglich einen Durchlauf. TMR\_Quant sorgt dennoch dafür, dass die erzeugten Kombinationen von Typ-Konvertierungsvarianten im 2. Schritt reduziert werden, da solche, die ein quantitatives Type-Matcher Rating von < 100\% aufweisen nicht in die Ergebnismenge des 2. Schrittes einfließen. Die unten aufgeführten Tafeln zeigen die Auswirkung auf die ersten drei erwarteten Interfaces.\newpage
+Hierzu wird die Exploration für alle der oben genannten \emph{required Typen} für jede Variante zur Bestimmung der Matcherratings durchgeführt (siehe Abschnitt \ref{sec_lmf} Tabelle \ref{tab_matcherratingvarianten}). Im folgenden Verlauf wird lediglich auf die Variante eingegangen, die die besten Ergebnisse hervorgebracht hat. Die Ergebnisse unter Verwendung der übrigen Varianten sind im Anhang \ref{app_matcherratingEval} zu finden.
+\\\\
+Die Variante \emph{1.1} (vgl. Tabelle \ref{tab_matcherratingvarianten}) erbrachte die besten Ergebnisse. Die folgenden Vier-Felder-Tafeln zeigen die Ergebnisse mit dieser Variante zur Bestimmung der Matcherratings für die \emph{required Typen} \emph{TEI1}-\emph{TEI3} auf.
 \begin{multicols}{3}
-\vft{1}{$mk(29)$}{$mk(140)$}{1}{0}{TMR\_Quant Test-System TMR für TEI1}{tmr_quant_tei1}\columnbreak
-\vft{1}{$mk(22)$}{$mk(157)$}{1}{0}{TMR\_Quant Test-System TMR für TEI2}{tmr_quant_tei2}\columnbreak
-\vft{1}{$mk(24)$}{$mk(163)$}{1}{0}{TMR\_Quant Test-System TMR für TEI3}{tmr_quant_tei3}
+\vft{1}{4}{$p(29)-5$}{1}{0}{Ergebnisse \emph{LMF} mit Variante 1.1 im Test-System für TEI1}{lmf11_tei1}\columnbreak
+\vft{1}{8}{$p(22)-9$}{1}{0}{Ergebnisse \emph{LMF} mit Variante 1.1 im Test-System für TEI2}{lmf11_tei2}\columnbreak
+\vft{1}{22}{$p(23)-23$}{1}{0}{Ergebnisse \emph{LMF} mit Variante 1.1 im Test-System für TEI3}{lmf11_tei3}
 \end{multicols}
 \noindent
-Für die anderen erwarteten Interfaces (TEI4 - TEI6) kann durch diese Heuristik höchstens für den ersten Durchlauf eine eine Verbesserung erzielen. Die unteren Tafeln zeigen, dass sich diese Verbesserung nur auf die Ergebnisse bzgl. der erwarteten Interfaces TEI4 und TEI6 auswirkt.
+Die Ergebnisse für die \emph{required Typen} \emph{TEI4}-\emph{TEI6} zeigen die folgenden Vier-Felder-Tafeln. 
 \begin{multicols}{3}
-\vft{1}{$mk(30)$}{$mk(32)$}{0}{0}{TMR\_Quant Test-System TMR für TEI4}{tmr_quant_tei4}\columnbreak
-\vft{1}{$mk(30)$}{0}{0}{0}{TMR\_Quant Test-System TMR für TEI5}{tmr_quant_tei5}\columnbreak
-\vft{1}{$mk(31)$}{$mk(2)$}{0}{0}{TMR\_Quant Test-System TMR für TEI6}{tmr_quant_tei6}
+\vft{1}{$p(27)$}{0}{0}{0}{Ergebnisse \emph{LMF} mit Variante 1.1 im Test-System für TEI4 \\1. Durchlauf}{lmf11_tei4_1}\columnbreak
+\vft{1}{$p(56)$}{0}{0}{0}{Ergebnisse \emph{LMF} mit Variante 1.1 im Test-System für TEI5 \\1. Durchlauf}{lmf11_tei5_1}\columnbreak
+\vft{1}{$p(27)$}{0}{0}{0}{Ergebnisse \emph{LMF} mit Variante 1.1 im Test-System für TEI6 \\1. Durchlauf}{lmf11_tei6_1}
 \end{multicols}
-\myparagraph{Ergebnisse TMR\_Qual}
-Für die Heuristik TMR\_Qual gibt es drei Aspekte, deren Konfiguration zu unterschiedlichen Ergebnissen führen kann (siehe auch \ref{tmr_qual}):
-\myparagraph{Auswahl der Basiswerte} 
-Die Basiswerte wurden bei den Untersuchungen konstant gelassen und sind der \tabref{basevalues} zu entnehmen. 
-\begin{table}[H]
-\centering
-\small
-			\begin{tabular}[c]{|c|c|}
-			\hline
-			\hline
-				 \textbf{Type-Matcher} & \textbf{Basiswert} \\
-				\hline\hline
-				ExactTypeMatcher & 100 \\
-				\hline
-				ExactTypeMatcher & 200\\
-				\hline
-				WrappedTypeMatcher & 300\\
-				\hline
-				StructuralTypeMatcher & 400\\
-				\hline
-				\hline
-			\end{tabular} 
- \caption{Type-Matcher mit Basiswerten
-}
- \label{tab:basevalues}
-\end{table}
-%\noindent
-%Die Werte bilden meiner Meinung nach die Wertigkeit der einzelnen Type-Matcher in Hinblick auf die Typisierung innerhalb der Sprache Java ab. So ist der ExactTypeMatcher, der nur zwei identische Typen als übereinstimmend bewertet, mit dem niedrigsten Wert und damit der höchsten Qualität hinsichtlich TMR\_Qual zu verwenden. Gleich dahinter folgt der GenSpecTypeMatcher, der Typen als übereinstimmend bewertet, wenn sie innerhalb der Sprache auch miteinander substituiert werden können. An dritter Stelle kommt meiner Meinung nach der WrappedTypeMatcher, da dieser immerhin eine hinsichtlich der Methoden vollständige Übereinstimmung von Typen fordert (auch wenn ein Typen innerhalb eines anderes enthalten ist), während der StructuralTypeMatcher lediglich einen Teil der deklarierten Methoden für eine Übereinstimmung fordert.
-\myparagraph{Auswahl der Akkumulationsverfahren}
-Das Akkumulationsverfahren für das qualitative Type-Matcher Rating einer Typ-Konvertierungsvariante  $TMR_{TK}$ ist von dem Type-Matcher Rating der verwendeten Type-Matcher abhängig. Das Akkumulationsverfahren für das qualitative Type-Matcher Rating einer Methoden-Konvertierungsvariante  $TMR_{MK}$ ist von dem qualitativen Type-Matcher Rating der verwendeten Type-Matcher für den Rückgabe- und den Parametertypen der Methode abhängig abhängig. Somit kann das qualitative Type-Matcher Rating als Funktion von einer Typ- bzw. Methoden-Konvertierungsvariante $tmr_{Qual}(v)$ beschrieben werden.
-Das Type-Matcher Rating der verwendeten Type-Matcher wird als Funktion $tmr_{Base}(m)$ beschrieben. Dabei stellt $m$ den jeweiligen Type-Matcher dar. Die Funktion $tmr_{Base}(m)$ ist durch die \tabref{basevalues} definiert.\\\\
-Für einen Menge von Type-Matcher $m_1, m_2, ..., m_i$, die zur Erzeugung einer Typ-Konvertierungsvariante bzw. Methoden-Konvertierungsvariante $v$ verwendet wurden, werden folgende Akkumulationsverfahren für das Type-Matcher Rating der Typ-Konvertierungsvariante bzw. Methoden-Konvertierungsvariante im weiteren Verlauf evaluiert:
+\begin{multicols}{3}
+\vft{2}{0}{$p(1711)-1$}{1}{0}{Ergebnisse \emph{LMF} mit Variante 1.1 im Test-System für TEI4 \\2. Durchlauf}{lmf11_tei4_2}\columnbreak
+\vft{2}{0}{$p(1540)-1$}{1}{0}{Ergebnisse \emph{LMF} mit Variante 1.1 im Test-System für TEI5 \\2. Durchlauf}{lmf11_tei5_2}\columnbreak
+\vft{2}{0}{$p(528)-1$}{1}{0}{Ergebnisse \emph{LMF} mit Variante 1.1 im Test-System für TEI6 \\2. Durchlauf}{lmf11_tei6_2}
+\end{multicols}
+\noindent
+Folgendes kann aus diesen Ergebnissen abgeleitet werden:
 \begin{enumerate}
-\item Wahl des Durchschnitts
-\begin{equation*}
-tmr_{Qual}(v) = \frac{ \sum_{n=1}^{i} tmr_{Base}(m_n)}{i}
-\end{equation*}
-\item Wahl des Maximums
-\begin{equation*}
-tmr_{Qual}(v) = max(tmr_{Base}(m_1), ..., tmr_{Base}(m_i))
-\end{equation*}
-\item Wahl des Minimums
-\begin{equation*}
-tmr_{Qual}(v) = min(tmr_{Base}(m_1), ..., tmr_{Base}(m_i))
-\end{equation*}
-\item Wahl des Durchschnitts aus Minimum und Maximum
-\begin{equation*}
-tmr_{Qual}(v) = \frac{min(tmr_{Base}(m_1), ..., tmr_{Base}(m_i)) +  max(tmr_{Base}(m_1), ..., tmr_{Base}(m_i))}{2}
-\end{equation*}
+\item Die Heuristik \emph{LMF} erzielt eine Reduktion der zu erzeugenden Proxies. Dies wird durch einen Vergleich der Spalte ``positiv'' innerhalb der Vier-Felder-Tafeln zum jeweiligen \emph{required Typ} belegt.
 
+\item Die Heuristik \emph{LMF} hat keine Auswirkung auf einen Durchlauf, in dem kein Proxy erzeugt wird, mit dem die semantischen Tests erfolgreich durchgeführt werden können. Dies kann durch einen Vergleich des ersten Durchlaufs für die \emph{required Typen} \emph{TEI4}-\emph{TEI6} im Ausgangspunkt (Tabellen \ref{tab:tmr_start_tei4_1} - \ref{tab:tmr_start_tei6_1}) mit dem ersten Durchlauf unter Anwendung der Heuristik (Tabellen \ref{tab:lmf11_tei4_1} - \ref{tab:lmf11_tei6_1}) festgestellt werden.
 \end{enumerate}
-\noindent
-Die folgenden Abschnitte stellen eine Auswahl der Ergebnisse hinsichtlich der Kombinationen der oben genannten Akkumulationsverfahren dar. Die Ergebnisse von Kombinationen, die nicht dargestellt wurden, sind mit den Ergebnissen einer der dargestellten Kombinationen gleichzusetzen. An entsprechender Stelle wird darauf verwiesen.\\\\
-An den Überschriften der folgenden Abschnitte ist abzulesen, welche Akkumulationsverfahren miteinander kombiniert wurden. Dabei haben die Überschriften die Form ``Typ: T Methoden: M''. ``T'' steht für die Nummer des Akkumulationsverfahrens, welches für die Typ-Konvertierungsvarianten verwendet wurde. ``M'' steht für die Nummer des Akkumulationsverfahrens, welches für die Methoden-Konvertierungsvarianten zum Einsatz kam.\newpage
-\mysubparagraph{Typ: 1 Methoden: 2}\label{tmrquant_1-2}
-\begin{multicols}{3}
-\vft{1}{$mk(48)$}{$mk(121)$}{1}{0}{TMR\_Qual Test-System TMR für TEI1 mit 1-2}{tmr_qual_2_2_tei1}\columnbreak
-
-\vft{1}{$mk(47)$}{$mk(132)$}{1}{0}{TMR\_Qual Test-System TMR für TEI2 mit 1-2}{tmr_qual_2_2_tei2}\columnbreak
-\vft{1}{$mk(46)$}{$mk(141)$}{1}{0}{TMR\_Qual Test-System TMR für TEI3 mit 1-2}{tmr_qual_2_2_tei3}
-\end{multicols}
-
-\begin{multicols}{3}
-\vft{1}{$mk(62)$}{0}{0}{0}{TMR\_Qual Test-System TMR für TEI4 mit 1-2 1. Durchlauf}{tmr_qual_2_2_tei4_1}\columnbreak
-\vft{1}{$mk(60)$}{0}{0}{0}{TMR\_Qual Test-System TMR für TEI5 mit 1-2 1. Durchlauf}{tmr_qual_2_2_tei5_1}\columnbreak
-\vft{1}{$mk(33)$}{0}{1}{0}{TMR\_Qual Test-System TMR für TEI6 mit 1-2 1. Durchlauf}{tmr_qual_2_2_tei6_1}
-\end{multicols}
-
-\begin{multicols}{3}
-\vft{2}{$mk(1)$}{$mk(1890)$}{1}{0}{TMR\_Qual Test-System TMR für TEI4 mit 1-2 2. Durchlauf}{tmr_qual_2_2_tei4_2}\columnbreak
-\vft{2}{$mk(1)$}{$mk(1769)$}{1}{0}{TMR\_Qual Test-System TMR für TEI5 mit 1-2 2. Durchlauf}{tmr_qual_2_2_tei5_2}\columnbreak
-\vft{2}{$mk(1)$}{$mk(527)$}{1}{0}{TMR\_Qual Test-System TMR für TEI6 mit 1-2 2. Durchlauf}{tmr_qual_2_2_tei6_2}
-\end{multicols}
 
 
-\mysubparagraph{Typ: 3 Methoden: 2}\label{tmrquant_3-2}
-\begin{multicols}{3}
-\vft{1}{$mk(49)$}{$mk(120)$}{1}{0}{TMR\_Qual Test-System TMR für TEI1 mit 3-2}{tmr_qual_3_2_tei1}\columnbreak
-\vft{1}{$mk(49)$}{$mk(130)$}{1}{0}{TMR\_Qual Test-System TMR für TEI2 mit 3-2}{tmr_qual_3_2_tei2}\columnbreak
-\vft{1}{$mk(48)$}{$mk(139)$}{1}{0}{TMR\_Qual Test-System TMR für TEI3 mit 3-2}{tmr_qual_3_2_tei3}
-\end{multicols}
 
-
-\begin{multicols}{3}
-\vft{1}{$mk(62)$}{0}{0}{0}{TMR\_Qual Test-System TMR für TEI4 mit 3-2 1. Durchlauf}{tmr_qual_3_2_tei4_1}\columnbreak
-\vft{1}{$mk(60)$}{0}{0}{0}{TMR\_Qual Test-System TMR für TEI5 mit 3-2 1. Durchlauf}{tmr_qual_3_2_tei5_1}\columnbreak
-\vft{1}{$mk(33)$}{0}{1}{0}{TMR\_Qual Test-System TMR für TEI6 mit 3-2 1. Durchlauf}{tmr_qual_3_2_tei6_1}
-\end{multicols}
-
-\begin{multicols}{3}
-\vft{2}{$mk(1)$}{$mk(1890)$}{1}{0}{TMR\_Qual Test-System TMR für TEI4 mit 3-2 2. Durchlauf}{tmr_qual_3_2_tei4_2}\columnbreak
-\vft{2}{$mk(1)$}{$mk(1769)$}{1}{0}{TMR\_Qual Test-System TMR für TEI5 mit 3-2 2. Durchlauf}{tmr_qual_3_2_tei5_2}\columnbreak
-\vft{2}{$mk(1)$}{$mk(527)$}{1}{0}{TMR\_Qual Test-System TMR für TEI6 mit 3-2 2. Durchlauf}{tmr_qual_3_2_tei6_2}
-\end{multicols}
-\newpage
-\mysubparagraph{Typ: 4 Methoden: 3}\label{tmrquant_4-3}
-\begin{multicols}{3}
-\vft{1}{$mk(52)$}{$mk(117)$}{1}{0}{TMR\_Qual Test-System TMR für TEI1 mit 4-3}{tmr_qual_4_3_tei1}\columnbreak
-\vft{1}{$mk(62)$}{$mk(117)$}{1}{0}{TMR\_Qual Test-System TMR für TEI2 mit 4-3}{tmr_qual_4_3_tei2}\columnbreak
-\vft{1}{$mk(62)$}{$mk(125)$}{1}{0}{TMR\_Qual Test-System TMR für TEI3 mit 4-3}{tmr_qual_4_3_tei3}
-\end{multicols}
-
-\begin{multicols}{3}
-\vft{1}{$mk(62)$}{0}{0}{0}{TMR\_Qual Test-System TMR für TEI4 mit 4-3 1. Durchlauf}{tmr_qual_4_3_tei4_1}\columnbreak
-\vft{1}{$mk(60)$}{0}{0}{0}{TMR\_Qual Test-System TMR für TEI5 mit 4-3 1. Durchlauf}{tmr_qual_4_3_tei5_1}\columnbreak
-\vft{1}{$mk(33)$}{0}{1}{0}{TMR\_Qual Test-System TMR für TEI6 mit 4-3 1. Durchlauf}{tmr_qual_4_3_tei6_1}
-\end{multicols}
-
-\begin{multicols}{3}
-\vft{2}{$mk(1891)$}{0}{1}{0}{TMR\_Qual Test-System TMR für TEI4 mit 4-3 2. Durchlauf}{tmr_qual_4_3_tei4_2}\columnbreak
-\vft{2}{$mk(1770)$}{0}{1}{0}{TMR\_Qual Test-System TMR für TEI5 mit 4-3 2. Durchlauf}{tmr_qual_4_3_tei5_2}\columnbreak
-\vft{2}{$mk(528)$}{0}{1}{0}{TMR\_Qual Test-System TMR für TEI6 mit 4-3 2. Durchlauf}{tmr_qual_4_3_tei6_2}
-\end{multicols}
-\noindent
-Die \tabref{akkuverfahren} zeigt durch die Markierung mit einem ``x'', welche Kombinationen der Akkumulationsverfahren hinsichtlich der Testergebnisse mit denen gleichzusetzen sind, die oben ausführlich aufgeführt wurden. Die Kombinationen werden in der Tabelle ähnlich wie in den vorherigen Überschriften beschrieben. Die Notation ``1-4'' beschreibt die Kombination des 1. Akkumulationsverfahrens für die Typ-Konvertierungsvarianten und den 4. Akkumulationsverfahrens für die Methoden-Konvertierungsvarianten.
-\begin{table}[H]
-\centering
-\begin{tabular}[c]{|c|c|c|c|}
-\hline\hline
-\textbf{Kombination} & \textbf{1-2} & \textbf{3-2} & \textbf{4-3} \\
-\hline
-1-1 & x& & \\
-\hline
-1-3 & & & x\\
-\hline
-1-4 & x& & \\
-\hline
-2-1 & x& & \\
-\hline
-2-2 & x& & \\
-\hline
-2-3 & & &x \\
-\hline
-2-4 & x& & \\
-\hline
-3-1 & &x & \\
-\hline
-3-3 & & & x\\
-\hline
-3-4 & &x & \\
-\hline
-4-1 & x& & \\
-\hline
-4-2 & x& & \\
-\hline
-4-4 & x& & \\
-\hline\hline
-\end{tabular}
-\caption{Kombinationen von Akkumulationsverfahren mit gleichen Ergebnissen}
-\label{tab:akkuverfahren}
-\end{table}
-
-Aus diesen Ergebnissen lässt sich folgendes ableiten:
-\begin{enumerate}
-\item Das Akkumulationsverfahren Nummer 3. (Minimum) führt sowohl für die Typ- und Methoden-Konvertierungsvarianten zu schlechteren Ergebnissen als die anderen drei Akkumulationsverfahren. Es sollte daher für die Heuristik TMR\_Quant nicht verwendet werden.
-\item Die Ergebnisse von 1-2 und 3-2 unterscheiden sich nur geringfügig, obwohl bei 3-2 das Akkumulationsverfahren Nummer 3. zum Einsatz kam. Dies konnte auch bei anderen Kombinationen festgestellt werden, bei denen das 3. Akkumulationsverfahren für die Akkumulation des Type-Matcher Ratings der Typ-Konvertierungsvariante verwendet wurde. Das lässt vermuten, dass die Beachtung des Type-Matcher Ratings einer ganzen Typ-Konvertierungsvariante weitgehend unerheblich für die Heuristik TMR\_Quant ist.
+%Aus diesen Ergebnissen lässt sich folgendes ableiten:
+%\begin{enumerate}
+%\item Das Akkumulationsverfahren Nummer 3. (Minimum) führt sowohl für die Typ- und Methoden-Konvertierungsvarianten zu schlechteren Ergebnissen als die anderen drei Akkumulationsverfahren. Es sollte daher für die Heuristik TMR\_Quant nicht verwendet werden.
+%\item Die Ergebnisse von 1-2 und 3-2 unterscheiden sich nur geringfügig, obwohl bei 3-2 das Akkumulationsverfahren Nummer 3. zum Einsatz kam. Dies konnte auch bei anderen Kombinationen festgestellt werden, bei denen das 3. Akkumulationsverfahren für die Akkumulation des Type-Matcher Ratings der Typ-Konvertierungsvariante verwendet wurde. Das lässt vermuten, dass die Beachtung des Type-Matcher Ratings einer ganzen Typ-Konvertierungsvariante weitgehend unerheblich für die Heuristik TMR\_Quant ist.
 %, wenn das Type-Matcher Rating je Methoden-Konvertierungsvarianten über ein entsprechend gutes Akkumulationsverfahren ermittelt wurde. 
-Dies ist jedoch darauf zurückzuführen, dass das Type-Matcher Rating je Methoden-Konvertierungsvariante die Parameter für die Ermittlung des Type-Matcher Ratings einer Typ-Konvertierungsvariante darstellen.
-\item An den Ergebnissen zu den erwarteten Interfaces TEI4-TEI6 ist zu erkennen, dass die Heuristik TMR\_Quant keinen Einfluss auf den 1. Durchlauf hat. Daraus kann geschlussfolgert werden, dass die Heuristik nur in dem Durchlauf einen Gewinn bringt, in dem auch eine passende benötigte Komponente gefunden werden kann. 
-\end{enumerate}
-Aufgrund der Ergebnisse stehen für die weitere Verwendung der Heuristik TMR\_Qual mehrere Kombinationen von Akkumulationsverfahren zur Auswahl. Die Entscheidung fällt aufgrund der etwas geringeren Komplexität auf die Kombination 1-2. 
-
-\myparagraph{TMR\_Quant und TMR\_Qual in Kombination}
-Bei der Kombination der beiden Heuristiken TMR\_Quant und TMR\_Qual ist vor allem für die erwarteten Interfaces TEI4-TEI6 zu erwarten, dass ein gegenseitiger positiver Einfluss der Heuristiken zu erkennen ist. Der Grund dafür ist, dass die Heuristik TMR\_Qual keinen Einfluss auf den ersten Durchlauf des Explorationsalgorithmus für diese erwarteten Interfaces hat, die Heuristik TMR\_Quant hingegen schon. Die \tabsrefs{tmr_quantqual_tei1}{tmr_quantqual_tei6_2} zeigen wiederum die bekannten Vier-Felder-Tafeln für den jeweiligen Durchlauf und dem jeweiligen erwarteten Interface.
-\begin{multicols}{3}
-\vft{1}{$mk(2)$}{$mk(167)$}{1}{0}{TMR\_Quant + TMR\_Qual Test-System TMR für TEI1}{tmr_quantqual_tei1}\columnbreak
-\vft{1}{$mk(2)$}{$mk(177)$}{1}{0}{TMR\_Quant + TMR\_Qual Test-System TMR für TEI2}{tmr_quantqual:tei2}\columnbreak
-\vft{1}{$mk(1)$}{$mk(186)$}{1}{0}{TMR\_Quant + TMR\_Qual Test-System TMR für TEI3}{tmr_quantqual:tei3}
-\end{multicols}
-
-\begin{multicols}{3}
-\vft{1}{$mk(30)$}{$mk(32)$}{0}{0}{TMR\_Quant + TMR\_Qual Test-System TMR für TEI4 1. Durchlauf}{tmr_quantqual:tei4_1}\columnbreak
-\vft{1}{$mk(60)$}{0}{0}{0}{TMR\_Quant + TMR\_Qual Test-System TMR für TEI5 1. Durchlauf}{tmr_quantqual:te5_1}\columnbreak
-\vft{1}{$mk(31)$}{$mk(2)$}{0}{0}{TMR\_Quant + TMR\_Qual Test-System TMR für TEI6 1. Durchlauf}{tmr_quantqual:tei6_1}
-\end{multicols}
-
-\begin{multicols}{3}
-\vft{1}{$mk(1)$}{$mk(1890)$}{1}{0}{TMR\_Quant + TMR\_Qual Test-System TMR für TEI4 2. Durchlauf}{tmr_quantqual:tei4_2}\columnbreak
-\vft{1}{$mk(1)$}{$mk(1769)$}{1}{0}{TMR\_Quant + TMR\_Qual Test-System TMR für TEI5 2. Durchlauf}{tmr_quantqual:te5_2}\columnbreak
-\vft{1}{$mk(1)$}{$mk(527)$}{1}{0}{TMR\_Quant + TMR\_Qual Test-System TMR für TEI6 2. Durchlauf}{tmr_quantqual_tei6_2}
-\end{multicols}
-\noindent
-Wie an diesen Ergebnissen zu erkennen ist, wird der Explorationsalgorithmus für eine Suche nach einer passenden benötigten Komponente für TEI1 und TEI2 lediglich für zwei angebotene Interfaces bzw. Typ-Konvertierungsvarianten durchlaufen. In Bezug auf TEI3 ist es sogar nur noch eine Typ-Konvertierungsvariante.\\\\
-Bei der Betrachtung der Ergebnisse für die erwarteten Interfaces TEI4-TEI6 zeigt sich gut, wie sich die beiden Heuristiken gegenseitig ergänzen. So wirkt die Heuritik TMR\_Quant grundsätzlich nur auf den ersten Durchlauf des Explorationsalgorithmus aus. Die Heuristik TMR\_Qual hingegen erweist ihre Stärke erst in dem Durchlauf, in dem auch eine passende benötigte Komponente gefunden wird.\\\\
-Im Allgemeinen kann festgehalten werden, dass die passenden benötigten Komponenten trotz der Kombination der beiden Heuristiken gefunden werden konnten. Die Reduktion der notwendigen Durchläufe des Explorationsalgorithmus ist jedoch hauptsächlich auf die Heuristik TMR\_Qual zurückzuführen. 
+%Dies ist jedoch darauf zurückzuführen, dass das Type-Matcher Rating je Methoden-Konvertierungsvariante die Parameter für die Ermittlung des Type-Matcher Ratings einer Typ-Konvertierungsvariante darstellen.
+%\item An den Ergebnissen zu den erwarteten Interfaces TEI4-TEI6 ist zu erkennen, dass die Heuristik TMR\_Quant keinen Einfluss auf den 1. Durchlauf hat. Daraus kann geschlussfolgert werden, dass die Heuristik nur in dem Durchlauf einen Gewinn bringt, in dem auch eine passende benötigte Komponente gefunden werden kann. 
+%\end{enumerate}
+%Aufgrund der Ergebnisse stehen für die weitere Verwendung der Heuristik TMR\_Qual mehrere Kombinationen von Akkumulationsverfahren zur Auswahl. Die Entscheidung fällt aufgrund der etwas geringeren Komplexität auf die Kombination 1-2. 
