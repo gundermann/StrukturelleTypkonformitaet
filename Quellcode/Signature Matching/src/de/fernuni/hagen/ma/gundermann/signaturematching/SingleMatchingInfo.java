@@ -5,12 +5,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
-import de.fernuni.hagen.ma.gundermann.signaturematching.matching.MatcherRate;
-import de.fernuni.hagen.ma.gundermann.signaturematching.matching.MatchingSupplier;
-import de.fernuni.hagen.ma.gundermann.signaturematching.matching.Setting;
 
 public class SingleMatchingInfo {
 
@@ -53,9 +47,27 @@ public class SingleMatchingInfo {
 		return matchedSourceMethods;
 	}
 
-
 	public Map<Method, MethodMatchingInfo> getMethodMatchingInfos() {
 		return methodMatchingInfos;
+	}
+
+	@Override
+	public int hashCode() {
+		int prime = 37;
+		int hash = source.hashCode() * prime;
+		hash += target.hashCode() * prime;
+		hash += converterCreator.getClass().hashCode() * prime;
+		return hash;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof SingleMatchingInfo) {
+			SingleMatchingInfo smi = SingleMatchingInfo.class.cast(obj);
+			return source.equals(smi.source) && target.equals(smi.target)
+					&& converterCreator.getClass().equals(smi.converterCreator.getClass());
+		}
+		return false;
 	}
 
 	public static class Builder {

@@ -21,7 +21,6 @@ import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.Comb
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.Combinator;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.AnalyzationUtils;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.CollectionUtil;
-import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.MatchingInfo;
 import de.fernuni.hagen.ma.gundermann.signaturematching.util.Logger;
 
@@ -36,9 +35,6 @@ public class SingleSelector implements Selector {
 
 	private Collection<Collection<CombinationPartInfo>> cachedCalculatedInfos = new ArrayList<>();
 
-	// H: blacklist by pivot test calls
-	private final Collection<Collection<Integer>> methodMatchingInfoHCBlacklist = new ArrayList<>();
-	
 
 	public SingleSelector(List<MatchingInfo> infos, Collection<Heuristic> usedHeuristics) {
 		Stream<List<MatchingInfo>> stream = infos.stream()
@@ -48,7 +44,7 @@ public class SingleSelector implements Selector {
 			stream = stream.sorted(new MatcherratingComparator());
 		}
 		this.infos = stream.collect(Collectors.toList());
-		InfoCollector.addCominationCountInIteration(this.infos.size(), 1);
+		InfoCollector.addCombinationCountInIteration(this.infos.size(), 1);
 	}
 
 	@Override
@@ -66,12 +62,13 @@ public class SingleSelector implements Selector {
 			fillCachedComponent2MatchingInfo(relevantTypeMatchingInfos);
 		}
 		return Optional.of(new CombinationInfo(CollectionUtil.pop(cachedCalculatedInfos)));
+		
 	}
 
 	private void fillCachedComponent2MatchingInfo(Map<Method, Collection<MatchingInfo>> typeMatchingInfos) {
 		Map<Method, Collection<CombinationPartInfo>> combiPartInfos = CombinationFinderUtils
-				.transformToCombinationPartInfosPerMethod(typeMatchingInfos, this.methodMatchingInfoHCBlacklist);
-		this.cachedCalculatedInfos = new Combinator<Method, CombinationPartInfo>().generateCombis(combiPartInfos, this.methodMatchingInfoHCBlacklist);
+				.transformToCombinationPartInfosPerMethod(typeMatchingInfos, new ArrayList<>());
+		this.cachedCalculatedInfos = new Combinator<Method, CombinationPartInfo>().generateCombis(combiPartInfos, new ArrayList<>());
 		Logger.infoF("COMBIFILTER: filtered combinations > %d", AnalyzationUtils.filterCount);
 	}
 
@@ -89,20 +86,7 @@ public class SingleSelector implements Selector {
 		// irrelevant fuer diesen Selector
 
 	}
-
-	@Override
-	public void addToBlacklist(Collection<Collection<MethodMatchingInfo>> mmiCombis) {
-		// H: blacklist by pivot test calls
-		// H: blacklist failed single methods tested
-
-		for (Collection<MethodMatchingInfo> mmiCombi : mmiCombis) {
-			List<Integer> hcCol = mmiCombi.stream().map(mmi -> mmi.hashCode()).collect(Collectors.toList());
-			this.methodMatchingInfoHCBlacklist.add(hcCol);
-		}
-		cachedCalculatedInfos = new MMICombiBlacklistFilter(this.methodMatchingInfoHCBlacklist, "update")
-				.filterWithNestedCriteria(cachedCalculatedInfos);
-	}
-
+	
 	@Override
 	public void addToBlacklist(Class<?> componentInterface) {
 		// H: blacklist if no implementation available
@@ -110,5 +94,17 @@ public class SingleSelector implements Selector {
 		cachedCalculatedInfos = new CheckTypeBlacklistFilter(Arrays.asList(componentInterface.hashCode()), "update")
 				.filterWithNestedCriteria(cachedCalculatedInfos);
 	}
+
+	@Override
+	public void updateByBlacklist(Collection<Integer> combiParts, Collection<Collection<Integer>> methodMatchingInfoHCBlacklist) {
+		cachedCalculatedInfos = new MMICombiBlacklistFilter(methodMatchingInfoHCBlacklist, "update")
+				.filterWithNestedCriteria(cachedCalculatedInfos);		
+	}
+
+	@Override
+	public void setBlacklist(Map<Integer, Collection<Collection<Integer>>> component2methodMatchingInfoHCBlacklist) {
+		// do nothing
+	}
+
 
 }

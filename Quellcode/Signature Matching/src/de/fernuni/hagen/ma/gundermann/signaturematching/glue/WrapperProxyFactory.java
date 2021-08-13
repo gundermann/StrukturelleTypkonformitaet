@@ -61,7 +61,6 @@ public class WrapperProxyFactory<T> implements ProxyFactory<T> {
           createProxyOfWrappedComponent( wrappedField.getType(), component, matchingInfos ) );
     }
     catch ( IllegalArgumentException | IllegalAccessException e ) {
-      Logger.switchOn();
       logFieldError( targetDelegationAttribute, targetStrcture.getName() );
     }
     return (T) proxyInstance;

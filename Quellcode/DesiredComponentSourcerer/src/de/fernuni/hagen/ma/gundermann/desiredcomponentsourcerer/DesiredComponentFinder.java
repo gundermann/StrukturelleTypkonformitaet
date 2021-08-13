@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -52,15 +53,6 @@ public class DesiredComponentFinder {
 		}
 	}
 
-	@Deprecated
-	public DesiredComponentFinder(Class<?>[] registeredComponentInterfaces,
-			Function<Class<?>, Optional<?>> optComponentGetter) {
-		this.registeredComponentInterfaces = Stream.of(registeredComponentInterfaces).distinct()
-				.collect(Collectors.toList()).toArray(new Class[] {});
-		this.optComponentGetter = optComponentGetter;
-
-	}
-
 	public void setFullTypeMatcher(TypeMatcher[] fullTypeMatcher) {
 		this.mainTypeMatcher = DefaultTypeMatcherHeuristic.createMainMatcher(fullTypeMatcher);
 	}
@@ -95,8 +87,8 @@ public class DesiredComponentFinder {
 		InfoCollector.setMatchingProvidedTypeCount(componentInterface2PartlyMatchingInfos.keySet().size());
 		// INFO OUTPUT
 		componentInterface2PartlyMatchingInfos.values().forEach(i -> {
-			Logger.toFile("%f;%b;%s;", MatcherratingFunctions.rating(Collections.singletonList(i)),
-					 i.isFullMatching(), i.getTarget().getSimpleName());
+			Logger.toFile("%f;%b;%s;", MatcherratingFunctions.rating(Collections.singletonList(i)), i.isFullMatching(),
+					i.getTarget().getSimpleName());
 		});
 
 		Optional<DesiredInterface> result = Optional
@@ -139,16 +131,17 @@ public class DesiredComponentFinder {
 					if (testedComponent.foundBlacklistedMMICombi()) {
 						// H: blacklist by pivot test calls
 						// H: blacklist failed single methods tested
-						combinationFinder.optimizeMatchingInfoBlacklist(testedComponent.getBlacklistedMMICombis());
+						combinationFinder.optimizeMatchingInfoBlacklist(combinationInfos.getComponentClasses(),
+								testedComponent.getBlacklistedMMICombis());
 					}
 				}
 			} catch (NoComponentImplementationFoundException e) {
-				// H: blacklist if no implementation available
-				// die Heuristik ist für das Test-System sinnvoll, aber man die provided Typen,
-				// die keine Implementierung haben, sollten gar nicht erst in den Sourcerer
-				// reinkommen.
+//				 H: blacklist if no implementation available
+//				 die Heuristik ist für das Test-System sinnvoll, aber man die provided Typen,
+//				 die keine Implementierung haben, sollten gar nicht erst in den Sourcerer
+//				 reinkommen.
 				// Außerdem verfaelscht die Heuristik die Evaluationsergebnisse.
-//				combinationFinder.optimizeCheckTypeBlacklist(e.getComponentInterface());
+				combinationFinder.optimizeCheckTypeBlacklist(e.getComponentInterface());
 			}
 		}
 		return null;
@@ -188,8 +181,7 @@ public class DesiredComponentFinder {
 		TestedComponent<DesiredInterface> testedComponent = new TestedComponent<>(convertedComponent, testResult);
 
 		// H: blacklist failed method calls
-		if (usedHeuristics.contains(Heuristic.BL_NMC)
-//				HeuristicSetting.BLACKLIST_FAILED_TRIED_METHOD_CALLS
+		if (usedHeuristics.contains(Heuristic.BL_NMC) && Objects.equals(testResult.getCause(), Cause.FAILED_DELEGATION)
 		) {
 			Collection<Method> failedMethodCombi = new ArrayList<Method>(testResult.getTriedMethodCalls());
 			Logger.infoF("blacklist by failed method combination: %s",
@@ -211,10 +203,10 @@ public class DesiredComponentFinder {
 		case FAILED:
 			Logger.infoF("called Methods: %s",
 					testResult.getTriedMethodCalls().stream().map(Method::getName).collect(Collectors.joining(",")));
-//			Logger.infoF("test interpretation: %s",
-//					testResult.getTriedMethodCalls().size() == 1 ? "Single-Method-Test" : "Multi-Method-Test");
 			break;
 		case CANCELED:
+//			Logger.infoF("test canceled: caused by %s\n%s", testResult.getCause(),
+//					testResult.getException().getMessage());
 			Logger.infoF("test canceled: caused by %s\n%s\n%s", testResult.getCause(),
 					testResult.getException().getMessage(), Stream.of(testResult.getException().getStackTrace())
 							.map(StackTraceElement::toString).map(s -> "\t\t\t" + s).collect(Collectors.joining("\n")));

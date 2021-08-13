@@ -45,7 +45,7 @@ public enum InfoCollector {
 						e.getKey(), e.getValue(), INSTANCE.iteration2CreateProxyCount.get(e.getKey())));
 	}
 
-	public static void addCominationCountInIteration(double count, int iteration) {
+	public static void addCombinationCountInIteration(double count, int iteration) {
 		INSTANCE.iteration2CombinationCount.put(iteration, count);
 	}
 

@@ -59,9 +59,9 @@ public class FindIntubatingPatientFireFighterTest {
 		EJBContainer.CONTAINER.registerBean(Intubator.class, new EmergencyDoctor());
 		DesiredComponentFinderConfig config = new DesiredComponentFinderConfig.Builder(
 				EJBContainer.CONTAINER.getRegisteredBeanInterfaces(), EJBContainer.CONTAINER::getOptBean)//
-						.useHeuristicLMF() //
+//						.useHeuristicLMF() //
 //						.useHeuristicPTTF()//
-//						.useHeuristicBL_NMC()//
+						.useHeuristicBL_NMC()//
 						.build();
 		IntubatingPatientFireFighter desiredBean = new DesiredComponentFinder(config)
 				.getDesiredComponent(desiredInterface);

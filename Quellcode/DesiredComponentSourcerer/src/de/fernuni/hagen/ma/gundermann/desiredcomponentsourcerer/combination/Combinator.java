@@ -35,11 +35,10 @@ public class Combinator<K, V> {
 		return result;
 
 	}
-	
-	public Combinator(){
+
+	public Combinator() {
 		AnalyzationUtils.filterCount = 0;
 	}
-	
 
 	public Collection<Collection<CombinationPartInfo>> generateCombis(
 			Map<K, Collection<CombinationPartInfo>> possibleMethodMatches,

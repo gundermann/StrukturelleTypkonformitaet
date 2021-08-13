@@ -62,6 +62,10 @@ public class Logger {
       throw new RuntimeException( e );
     }
   }
+  
+  public static void clearAppendedLogger() {
+	  appendedLogger.clear();
+  }
 
   public static void appendLogger( AppendableLogger logger ) {
     if ( !appendedLogger.contains( logger ) ) {
