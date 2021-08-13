@@ -20,10 +20,10 @@ public class MatcherratingFunctions {
 
 		List<Double> ratings = mis.stream().map(MatchingInfo::getQualitativeMatchRating).flatMap(Collection::stream)
 			.map(MatcherRate::getMatcherRating).collect(Collectors.toList());
-//		return rating1(ratings);
+		return rating1(ratings);
 //		return rating2(ratings);
 //		return rating3(ratings);
-		return rating4(ratings);
+//		return rating4(ratings);
 	}
 
 	private static double rating1(Collection<Double> ratings) {

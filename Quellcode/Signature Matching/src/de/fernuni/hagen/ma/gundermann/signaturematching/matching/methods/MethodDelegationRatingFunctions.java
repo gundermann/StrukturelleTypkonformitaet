@@ -17,10 +17,10 @@ public final class MethodDelegationRatingFunctions {
 			throw new UndefinedMatcherRatingException("found zero matcherrateings");
 		}
 		List<Double> ratings = rates.stream().map(MatcherRate::getMatcherRating).collect(Collectors.toList());
-//		return mdRating1(ratings);
+		return mdRating1(ratings);
 //		return mdRating2(ratings);
 //		return mdRating3(ratings);
-		return mdRating4(ratings);
+//		return mdRating4(ratings);
 	}
 
 	
