@@ -5,28 +5,37 @@ Hierzu wird die Exploration für alle der oben genannten \emph{required Typen} f
 \\\\
 Die Variante \emph{1.1} (vgl. Tabelle \ref{tab_matcherratingvarianten}) erbrachte die besten Ergebnisse. Die folgenden Vier-Felder-Tafeln zeigen die Ergebnisse mit dieser Variante zur Bestimmung der Matcherratings für die \emph{required Typen} \emph{TEI1}-\emph{TEI3} auf.
 \begin{multicols}{3}
-\vft{1}{4}{$p(29)-5$}{1}{0}{Ergebnisse \emph{LMF} mit Variante 1.1 im Test-System für TEI1}{lmf11_tei1}\columnbreak
-\vft{1}{8}{$p(22)-9$}{1}{0}{Ergebnisse \emph{LMF} mit Variante 1.1 im Test-System für TEI2}{lmf11_tei2}\columnbreak
-\vft{1}{22}{$p(23)-23$}{1}{0}{Ergebnisse \emph{LMF} mit Variante 1.1 im Test-System für TEI3}{lmf11_tei3}
+\vft{1}{5}{$p(44)-6$}{1}{0}{Ergebnisse \emph{LMF} mit Variante 1.1 für TEI1 \\1. Durchlauf}{lmf11_TEI1_1}
+\vft{1}{1889}{$p(55)-1890$}{1}{0}{Ergebnisse \emph{LMF} mit Variante 1.1 für TEI2 \\1. Durchlauf}{lmf11_TEI2_1}
+\vft{1}{1463}{$p(50)-1464$}{1}{0}{Ergebnisse \emph{LMF} mit Variante 1.1 für TEI3 \\1. Durchlauf}{lmf11_TEI3_1}
 \end{multicols}
 \noindent
-Die Ergebnisse für die \emph{required Typen} \emph{TEI4}-\emph{TEI6} zeigen die folgenden Vier-Felder-Tafeln. 
-\begin{multicols}{3}
-\vft{1}{$p(27)$}{0}{0}{0}{Ergebnisse \emph{LMF} mit Variante 1.1 im Test-System für TEI4 \\1. Durchlauf}{lmf11_tei4_1}\columnbreak
-\vft{1}{$p(56)$}{0}{0}{0}{Ergebnisse \emph{LMF} mit Variante 1.1 im Test-System für TEI5 \\1. Durchlauf}{lmf11_tei5_1}\columnbreak
-\vft{1}{$p(27)$}{0}{0}{0}{Ergebnisse \emph{LMF} mit Variante 1.1 im Test-System für TEI6 \\1. Durchlauf}{lmf11_tei6_1}
+Die Ergebnisse für die \emph{required Typen} \emph{TEI4}-\emph{TEI7} zeigen die folgenden Vier-Felder-Tafeln. 
+\begin{multicols}{2}
+\vft{1}{$p(42)$}{0}{0}{0}{Ergebnisse \emph{LMF} mit Variante 1.1 für TEI4 \\1. Durchlauf}{lmf11_TEI4_1}
+\vft{2}{2}{$p(2247)-3$}{1}{0}{Ergebnisse \emph{LMF} mit Variante 1.1 für TEI4 \\2. Durchlauf}{lmf11_TEI4_2}
 \end{multicols}
-\begin{multicols}{3}
-\vft{2}{0}{$p(1711)-1$}{1}{0}{Ergebnisse \emph{LMF} mit Variante 1.1 im Test-System für TEI4 \\2. Durchlauf}{lmf11_tei4_2}\columnbreak
-\vft{2}{0}{$p(1540)-1$}{1}{0}{Ergebnisse \emph{LMF} mit Variante 1.1 im Test-System für TEI5 \\2. Durchlauf}{lmf11_tei5_2}\columnbreak
-\vft{2}{0}{$p(528)-1$}{1}{0}{Ergebnisse \emph{LMF} mit Variante 1.1 im Test-System für TEI6 \\2. Durchlauf}{lmf11_tei6_2}
+
+\begin{multicols}{2}
+\vft{1}{$p(75)$}{0}{0}{0}{Ergebnisse \emph{LMF} mit Variante 1.1 für TEI5 \\1. Durchlauf}{lmf11_TEI5_1}
+\vft{2}{32}{$p(2775)-33$}{1}{0}{Ergebnisse \emph{LMF} mit Variante 1.1 für TEI5 \\2. Durchlauf}{lmf11_TEI5_2}
+\end{multicols}
+
+\begin{multicols}{2}
+\vft{1}{$p(41)$}{0}{0}{0}{Ergebnisse \emph{LMF} mit Variante 1.1 für TEI6 \\1. Durchlauf}{lmf11_TEI6_1}
+\vft{2}{0}{$p(1323)-1$}{1}{0}{Ergebnisse \emph{LMF} mit Variante 1.1 für TEI6 \\2. Durchlauf}{lmf11_TEI6_2}
+\end{multicols}
+
+\begin{multicols}{2}
+\vft{1}{$p(174)$}{0}{0}{0}{Ergebnisse \emph{LMF} mit Variante 1.1 für TEI7 \\1. Durchlauf}{lmf11_TEI7_1}
+\vft{2}{7641}{$p(52150)-7642$}{1}{0}{Ergebnisse \emph{LMF} mit Variante 1.1 für TEI7 \\2. Durchlauf}{lmf11_TEI7_2}
 \end{multicols}
 \noindent
 Folgendes kann aus diesen Ergebnissen abgeleitet werden:
 \begin{enumerate}
 \item Die Heuristik \emph{LMF} erzielt eine Reduktion der zu erzeugenden Proxies. Dies wird durch einen Vergleich der Spalte ``positiv'' innerhalb der Vier-Felder-Tafeln zum jeweiligen \emph{required Typ} belegt.
 
-\item Die Heuristik \emph{LMF} hat keine Auswirkung auf einen Durchlauf, in dem kein Proxy erzeugt wird, mit dem die semantischen Tests erfolgreich durchgeführt werden können. Dies kann durch einen Vergleich des ersten Durchlaufs für die \emph{required Typen} \emph{TEI4}-\emph{TEI6} im Ausgangspunkt (Tabellen \ref{tab:tmr_start_tei4_1} - \ref{tab:tmr_start_tei6_1}) mit dem ersten Durchlauf unter Anwendung der Heuristik (Tabellen \ref{tab:lmf11_tei4_1} - \ref{tab:lmf11_tei6_1}) festgestellt werden.
+\item Die Heuristik \emph{LMF} hat keine Auswirkung auf einen Durchlauf, in dem kein Proxy erzeugt wird, mit dem die semantischen Tests erfolgreich durchgeführt werden können. Dies kann durch einen Vergleich des ersten Durchlaufs für die \emph{required Typen} \emph{TEI4}-\emph{TEI7} im Ausgangspunkt (Tabellen \ref{tab:tmr_start_tei4_1}, \ref{tab:tmr_start_tei5_1}, \ref{tab:tmr_start_tei6_1} und \ref{tab:tmr_start_tei6_1}) mit dem ersten Durchlauf unter Anwendung der Heuristik (Tabellen \ref{tab:lmf11_TEI4_1}, \ref{tab:lmf11_TEI5_1}, \ref{tab:lmf11_TEI6_1} und \ref{tab:lmf11_TEI7_1}) festgestellt werden.
 \end{enumerate}
 
 
