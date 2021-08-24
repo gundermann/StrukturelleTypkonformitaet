@@ -1,15 +1,36 @@
 \section{Ergebnisse für die Heuristik BL\_NMC}\label{sec_evalBLNMC}
-Für die Heuristik \emph{BL\_NMC} gilt es zu evaluieren, ob die Suche nach einem Proxy, der die vordefinierten Tests besteht, beschleunigt werden kann. Hierzu wird die Exploration für alle der oben genannten \emph{required Typen} unter der Verwendung der in Abschnitt \ref{sec_pttf} beschriebenen Heuristik durchgeführt.
+Für die Heuristik \emph{BL\_NMC} gilt es zu evaluieren, ob die Suche nach einem Proxy, der die vordefinierten Tests besteht, beschleunigt werden kann. Hierzu wird die Exploration für alle der oben genannten \emph{required Typen} unter der Verwendung der in Abschnitt \ref{sec_bl_nmc} beschriebenen Heuristik durchgeführt.
 \\\\
-Die folgenden Vier-Felder-Tafeln zeigen die Ergebnisse mit für die \emph{required Typen} \emph{TEI1}-\emph{TEI4} auf.
+Die folgenden Vier-Felder-Tafeln zeigen die Ergebnisse mit für die \emph{required Typen} \emph{TEI1}-\emph{TEI7} auf.
 \begin{multicols}{3}
+\vft{1}{105}{$p(44)-106$}{1}{0}{Ergebnisse \emph{BL\_NMC} für TEI1 \\1. Durchlauf}{blnmc_TEI1_1}
+\vft{1}{342}{$p(55)-343$}{1}{0}{Ergebnisse \emph{BL\_NMC} für TEI2 \\1. Durchlauf}{blnmc_TEI2_1}
+\vft{1}{357}{$p(50)-358$}{1}{0}{Ergebnisse \emph{BL\_NMC} für TEI3 \\1. Durchlauf}{blnmc_TEI3_1}
+\end{multicols}
 
-\end{multicols}
 \begin{multicols}{2}
+\vft{1}{120}{$p(42)-120$}{0}{0}{Ergebnisse \emph{BL\_NMC} für TEI4 \\1. Durchlauf}{blnmc_TEI4_1}
+\vft{2}{442}{$p(2247)-443$}{1}{0}{Ergebnisse \emph{BL\_NMC} für TEI4 \\2. Durchlauf}{blnmc_TEI4_2}
 \end{multicols}
+
+\begin{multicols}{2}
+\vft{1}{550}{$p(75)-550$}{0}{0}{Ergebnisse \emph{BL\_NMC} für TEI5 \\1. Durchlauf}{blnmc_TEI5_1}
+\vft{2}{1304}{$p(2775)-1305$}{1}{0}{Ergebnisse \emph{BL\_NMC} für TEI5 \\2. Durchlauf}{blnmc_TEI5_2}
+\end{multicols}
+\pagebreak
+\begin{multicols}{2}
+\vft{1}{366}{$p(41)-366$}{0}{0}{Ergebnisse \emph{BL\_NMC} für TEI6 \\1. Durchlauf}{blnmc_TEI6_1}
+\vft{2}{204}{$p(1323)-205$}{1}{0}{Ergebnisse \emph{BL\_NMC} für TEI6 \\2. Durchlauf}{blnmc_TEI6_2}
+\end{multicols}
+
+\begin{multicols}{2}
+\vft{1}{1051}{$p(174)-1051$}{0}{0}{Ergebnisse \emph{BL\_NMC} für TEI7 \\1. Durchlauf}{blnmc_TEI7_1}
+\vft{2}{135089}{$p(52150)-135090$}{1}{0}{Ergebnisse \emph{BL\_NMC} für TEI7 \\2. Durchlauf}{blnmc_TEI7_2}
+\end{multicols}
+
 Folgendes kann aus diesen Ergebnissen abgeleitet werden:
 \begin{enumerate}
 \item Die Heuristik \emph{BL\_NMC} erzielt eine Reduktion der zu evaluierenden Proxies. Dies wird durch einen Vergleich der Spalte ``positiv'' innerhalb der Vier-Felder-Tafeln zum jeweiligen \emph{required Typ} belegt.
 
-\item Die Heuristik \emph{BL\_NMC} hat das Potential jeden Durchlauf innerhalb der semantischen Evaluation zu beschleunigen. Für den jeweils ersten Durchlauf kann dies durch einen Vergleich des der Tabellen \ref{hs_start_tei1}-\ref{hs_start_tei4_1} im Ausgangspunkt mit den Tabellen festgestellt werden. Ein Vergleich der Tabelle \ref{hs_start_tei4_2} im Ausgangspunkt mit den Tabelle \ref{blnmc_tei4_2} zeigt diesen Fakt für den zweiten Durchlauf auf.
+\item Die Heuristik \emph{BL\_NMC} hat das Potential jeden Durchlauf innerhalb der semantischen Evaluation zu beschleunigen. Für den jeweils ersten Durchlauf kann dies durch einen Vergleich der Tabellen \ref{tab:tmr_start_tei1}, \ref{tab:tmr_start_tei2}, \ref{tab:tmr_start_tei3}, \ref{tab:tmr_start_tei4_1}, \ref{tab:tmr_start_tei5_1}, \ref{tab:tmr_start_tei6_1} und \ref{tab:tmr_start_tei7_1} im Ausgangspunkt mit den Tabellen \ref{tab:blnmc_TEI1_1}, \ref{tab:blnmc_TEI2_1}, \ref{tab:blnmc_TEI3_1}, \ref{tab:blnmc_TEI4_1}, \ref{tab:blnmc_TEI5_1}, \ref{tab:blnmc_TEI6_1} und \ref{tab:blnmc_TEI7_1} festgestellt werden. Ein Vergleich der Tabelle \ref{tab:tmr_start_tei4_2}, \ref{tab:tmr_start_tei5_2}, \ref{tab:tmr_start_tei6_2} und \ref{tab:tmr_start_tei7_2} im Ausgangspunkt mit den Tabellen \ref{tab:blnmc_TEI4_2}, \ref{tab:blnmc_TEI5_2}, \ref{tab:blnmc_TEI6_2} und \ref{tab:blnmc_TEI7_2} zeigt diesen Fakt für den zweiten Durchlauf auf.
 \end{enumerate}
