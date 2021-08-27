@@ -132,7 +132,7 @@ Für die \emph{required Typen} \emph{TEI4}-\emph{TEI7} werden zwei Durchläufe b
 Nachdem gezeigt wurde, dass die Exploration durch jede der beschriebenen Heuristiken beschleunigt werden kann. Dabei wurden Exploration mit jeweils einer der Heuristiken durchgeführt. In den folgenden Abschnitten soll evaluiert werden, ob die Verwendung einer Kombination der einzelnen Heuristiken bei der Exploration einen zusätzlichen Vorteil bringt.
 \\\\
 Hierzu werden die Ergebnisse aller Kombinationen der einzelnen Heuristiken aufgeführt und im Anschluss bewertet.
-\subsection{Kombination: LMF + PTTF}
+\subsection{Kombination: LMF + PTTF}\label{sec_evalLMFPTTF}
 Die folgenden Vier-Felder Tafeln zeigen die Ergebnisse mit der Kombination der Heuristiken \emph{LMF} und \emph{PTTF}.
 \begin{multicols}{3}
 \vft{1}{5}{$p(44)-6$}{1}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} für TEI1}{lmfpttf_TEI1_1}\columnbreak
@@ -166,7 +166,7 @@ Aus diesen Ergebnisse lässt sich folgenden Ableiten:
 \item Für den zweiten Durchlauf während der Exploration ist eine Verbesserung zu erkennen. Diese bezieht sich jedoch nur auf die Exploration für \emph{TEI7} (vergleiche Tabelle \ref{tab:lmf11_TEI7_2} aus Abschnitt \ref{sec_evalLMF} mit Tabelle \ref{tab:lmfpttf_TEI7_2}).
 \end{enumerate}
 
-\subsection{Kombination: LMF + BL\_NMC}
+\subsection{Kombination: LMF + BL\_NMC}\label{sec_evalLMFBLNMC}
 Die folgenden Vier-Felder Tafeln zeigen die Ergebnisse mit der Kombination der Heuristiken \emph{LMF} und \emph{BL\_NMC}.
 \begin{multicols}{3}
 \vft{1}{0}{$p(44)-1$}{1}{0}{Ergebnisse \emph{LMF} + \emph{BL\_NMC} für TEI1}{lmfbl_TEI1_1}\columnbreak
@@ -200,5 +200,76 @@ Aus diesen Ergebnisse lässt sich folgenden Ableiten:
 \item Für den zweiten Durchlauf während der Exploration ist ebenfalls eine Verbesserung zu erkennen. Diese bezieht sich jedoch nur auf die Exploration für \emph{TEI7} (vergleiche Tabelle \ref{tab:lmf11_TEI7_2} aus Abschnitt \ref{sec_evalLMF} mit Tabelle \ref{tab:lmfbl_TEI7_2}).
 \end{enumerate}
 
-\subsection{Kombination: PTTF + BL\_NMC}
+\subsection{Kombination: PTTF + BL\_NMC}\label{sec_evalPTTFBLNMC}
+Die folgenden Vier-Felder Tafeln zeigen die Ergebnisse mit der Kombination der Heuristiken \emph{PTTF} und \emph{BL\_NMC}.
+\begin{multicols}{3}
+\vft{1}{104}{$p(44)-105$}{1}{0}{Ergebnisse \emph{PTTF} + \emph{BL\_NMC} für TEI1}{pttfbl_TEI1_1}\columnbreak
+\vft{1}{337}{$p(55)-338$}{1}{0}{Ergebnisse \emph{PTTF} + \emph{BL\_NMC} für TEI2 1. Durchlauf}{pttfbl_TEI2_1}\columnbreak
+\vft{1}{357}{$p(50)-358$}{1}{0}{Ergebnisse \emph{PTTF} + \emph{BL\_NMC} für TEI3 1. Durchlauf}{pttfbl_TEI3_1}
+\end{multicols}
+
+\begin{multicols}{2}
+\vft{1}{120}{$p(42)-120$}{0}{0}{Ergebnisse \emph{PTTF} + \emph{BL\_NMC} für TEI4 1. Durchlauf}{pttfbl_TEI4_1}\columnbreak
+\vft{2}{47}{$p(2247)-48$}{1}{0}{Ergebnisse \emph{PTTF} + \emph{BL\_NMC} für TEI4 2. Durchlauf}{pttfbl_TEI4_2}
+\end{multicols}
+
+\begin{multicols}{2}
+\vft{1}{550}{$p(75)-550$}{0}{0}{Ergebnisse \emph{PTTF} + \emph{BL\_NMC} für TEI5 1. Durchlauf}{pttfbl_TEI5_1}\columnbreak
+\vft{2}{219}{$p(2346)-220$}{1}{0}{Ergebnisse \emph{PTTF} + \emph{BL\_NMC} für TEI5 2. Durchlauf}{pttfbl_TEI5_2}
+\end{multicols}
+
+\begin{multicols}{2}
+\vft{1}{366}{$p(41)-366$}{0}{0}{Ergebnisse \emph{PTTF} + \emph{PTTF} für TEI6 1. Durchlauf}{pttfbl_TEI6_1}\columnbreak
+\vft{2}{204}{$p(1323)-205$}{1}{0}{Ergebnisse \emph{PTTF} + \emph{PTTF} für TEI6 2. Durchlauf}{pttfbl_TEI6_2}
+\end{multicols}
+
+\begin{multicols}{2}
+\vft{1}{1036}{$p(174)-1036$}{0}{0}{Ergebnisse \emph{PTTF} + \emph{BL\_NMC} für TEI7 1. Durchlauf}{pttfbl_TEI7_1}\columnbreak
+\vft{2}{6015}{$p(52150)-6016$}{1}{0}{Ergebnisse \emph{PTTF} + \emph{BL\_NMC} für TEI7 2. Durchlauf}{pttfbl_TEI7_2}
+\end{multicols}
+\noindent
+Aus diesen Ergebnisse lässt sich folgenden Ableiten:
+\begin{enumerate}
+\item Auf den ersten Durchlauf während der Exploration hat die Kombination der der Heuristiken \emph{PTTF} und \emph{BL\_NMC} keine Auswirkung. Die Ergebnisse sind nahezu identisch mit denen der Exploration mit der Heuristik \emph{BL\_NMC} aus Abschnitt \ref{sec_evalBLNMC}. (Vergleiche Tabellen \ref{tab:pttfbl_TEI1_1}, \ref{tab:pttfbl_TEI2_1}, \ref{tab:pttfbl_TEI3_1}, \ref{tab:pttfbl_TEI4_1}, \ref{tab:pttfbl_TEI5_1}, \ref{tab:lmfbl_TEI6_1} und  \ref{tab:pttfbl_TEI7_1} mit den Tabellen \ref{tab:blnmc_TEI1_1}, \ref{tab:blnmc_TEI2_1}, \ref{tab:blnmc_TEI3_1}, \ref{tab:blnmc_TEI4_1}, \ref{tab:blnmc_TEI5_1}, \ref{tab:blnmc_TEI6_1} und \ref{tab:blnmc_TEI7_1}.
+\item Für den zweiten Durchlauf während der Exploration ist eine Verbesserung  zu erkennen. Da mit der Heuristik \emph{BL\_NMC} bessere Ergebnisse erzielt wurden als mit der Heuristik \emph{PTTF} (vergleiche Ergebnisse aus Abschnitt \ref{sec_evalBLNMC} mit den Ergebnissen aus Abschnitt \ref{sec_evalPTTF}) kann dies durch den Vergleich der Tabellen \ref{tab:pttfbl_TEI4_2}, \ref{tab:pttfbl_TEI5_2}, \ref{tab:lmfbl_TEI6_2} und  \ref{tab:pttfbl_TEI7_2} mit den Tabellen \ref{tab:blnmc_TEI4_2}, \ref{tab:blnmc_TEI5_2}, \ref{tab:blnmc_TEI6_2} und \ref{tab:blnmc_TEI7_2} belegt werden.
+\end{enumerate}
+
+
 \subsection{Kombination: LMF + PTTF + BL\_NMC}
+Die folgenden Vier-Felder Tafeln zeigen die Ergebnisse mit der Kombination der Heuristiken \emph{LMF}, \emph{PTTF} und \emph{BL\_NMC}.
+\begin{multicols}{3}
+\vft{1}{2}{$p(44)-3$}{1}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} + \emph{BL\_NMC} für TEI1}{lmfpttfbl_TEI1_1}\columnbreak
+\vft{1}{79}{$p(55)-80$}{1}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} + \emph{BL\_NMC} für TEI2 1. Durchlauf}{lmfpttfbl_TEI2_1}\columnbreak
+\vft{1}{86}{$p(50)-87$}{1}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} + \emph{BL\_NMC} für TEI3 1. Durchlauf}{lmfpttfbl_TEI3_1}
+\end{multicols}
+
+\begin{multicols}{2}
+\vft{1}{120}{$p(42)-120$}{0}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} + \emph{BL\_NMC} für TEI4 1. Durchlauf}{lmfpttfbl_TEI4_1}\columnbreak
+\vft{2}{4}{$p(2247)-5$}{1}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} + \emph{BL\_NMC} für TEI4 2. Durchlauf}{lmfpttfbl_TEI4_2}
+\end{multicols}
+
+\begin{multicols}{2}
+\vft{1}{550}{$p(75)-550$}{0}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} + \emph{BL\_NMC} für TEI5 1. Durchlauf}{lmfpttfbl_TEI5_1}\columnbreak
+\vft{2}{34}{$p(2346)-35$}{1}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} + \emph{BL\_NMC} für TEI5 2. Durchlauf}{lmfpttfbl_TEI5_2}
+\end{multicols}
+
+\begin{multicols}{2}
+\vft{1}{115}{$p(41)-115$}{0}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} + \emph{PTTF} für TEI6 1. Durchlauf}{lmfpttfbl_TEI6_1}\columnbreak
+\vft{2}{0}{$p(1323)-1$}{1}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} + \emph{PTTF} für TEI6 2. Durchlauf}{lmfpttfbl_TEI6_2}
+\end{multicols}
+
+\begin{multicols}{2}
+\vft{1}{2448}{$p(174)-2448$}{0}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} + \emph{BL\_NMC} für TEI7 1. Durchlauf}{lmfpttfbl_TEI7_1}\columnbreak
+\vft{2}{12}{$p(52150)-13$}{1}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} + \emph{BL\_NMC} für TEI7 2. Durchlauf}{lmfpttfbl_TEI7_2}
+\end{multicols}
+\noindent
+Aus diesen Ergebnisse lässt sich folgenden Ableiten:
+\begin{enumerate}
+\item Auf den ersten Durchlauf während der Exploration wirkt sich die Kombination der Heuristiken \emph{LMF}, \emph{PTTF} und \emph{BL\_NMC} nicht besser aus, als die Kombination der Heuristiken \emph{LMF} und \emph{BL\_NMC} (siehe Abschnitt \ref{sec_evalLMFBLNMC}). Die Ergebnisse sind nahezu identisch.
+\item Für den zweiten Durchlauf während der Exploration gilt zumindest für die \emph{required Typen} \emph{TEI4}-\emph{TEI6} dasselbe, wie für den ersten Durchlauf. Für den \emph{required Typ} \emph{TEI7} ist hingegen nochmals eine Verbesserung im Vergleich zu den 2er-Kombinationen (siehe Abschnitte \ref{sec_evalLMFPTTF}-\ref{sec_evalPTTFBLNMC}) zu erkennen.
+\end{enumerate}
+\noindent
+%Das ist schon Diskussion!!!!!
+Zusammenfassend ist zu Ergebnissen bzgl. der Kombination der Heuristiken zu sagen, dass sich zwischen den Heuristiken Synergien ergeben, wodurch im Allgemeinen weniger Proxies evaluiert werden müssen, als wenn die Exploration mit lediglich einer der Heuristiken durchgeführt wurde. 
+\\\\
+Allerdings gibt es auch Fälle, in denen sich die Kombination negativ auswirkt.   Hierzu ist die Exploration für \emph{TEI7} anzumerken, die im ersten Durchlauf  bei den Kombinationen der Heuristiken 2448 Proxies erzeugte und evaluiert, sofern die Heuristik \emph{LMF} in Kombination mit einer oder mehrerer anderer Heuristiken verwendet wurde. Die Ergebnisse zur Exploration mit der Heuristik \emph{BL\_NMC} zeigen hingegen, dass im ersten Durchlauf für \emph{TEI7} lediglich 1051 Proxies erzeugt und evaluiert wurden. 
