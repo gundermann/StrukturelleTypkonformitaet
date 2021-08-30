@@ -1,0 +1,376 @@
+\chapter{Interfaces und Test-Implementierungen}\label{app_interfacesAndTests}
+Im Folgenden werden zum Einen die Interfaces, die sich aus den Deklarationen der \emph{required Typen} aus dem Anhang \ref{app_evalTypes} ableiten lassen, aufgeführt. Zum Anderen werden die Implementierungen der Testklassen, auf die die oben genannten Interfaces über die Annotation $\texttt{RequiredTypeTestReference}$ verweisen, dargelegt. 
+\\\\
+Die Listings \ref{lst_interfaces_tei1} - \ref{lst_interfaces_tei7} zeigen dabei die Deklarationen der Java-Interfaces\footnote{Auf die Import-Anweisungen wurde verzichtet.} für die \emph{required Typen} aus Tabelle \ref{tab:eIShort} aus Kapitel \ref{chap_evaluation}.
+\begin{lstlisting}[style = java, caption = Interface ElerFTFoerderprogrammeProvider, captionpos = b, label = lst_interfaces_tei1]
+@RequiredTypeTestReference( testClasses = ElerFTFoerderprogrammProviderTest.class )
+public interface ElerFTFoerderprogrammeProvider {
+
+  Collection<ElerFTFoerderprogramm> getAlleFreigegebenenFPs();
+
+  ElerFTFoerderprogramm getElerFTFoerderprogramm( DvAntragsJahr jahr, DvFoerderprogramm fp, Date date );
+  
+}
+\end{lstlisting}
+\begin{lstlisting}[style = java, caption = Interface FoerderprogrammeProvider, captionpos = b, label = lst_interfaces_tei2]
+@RequiredTypeTestReference( testClasses = FoerderprogrammProviderTest.class )
+public interface FoerderprogrammeProvider {
+
+ Collection<Foerderprogramm> getAlleFreigegebenenFPs();
+
+   Foerderprogramm getFoerderprogramm( DvFoerderprogramm fp, DvAntragsJahr jahr, Date date );
+   
+}
+\end{lstlisting}
+\begin{lstlisting}[style = java, caption = Interface MinimalFoerderprogrammeProvider, captionpos = b, label = lst_interfaces_tei3]
+@RequiredTypeTestReference( testClasses = MinimalFoerderprogrammProviderTest.class )
+public interface MinimalFoerderprogrammeProvider {
+
+  Collection<String> getAlleFreigegebenenFPs();
+
+  Foerderprogramm getFoerderprogramm( String fp, int jahr, Date date );
+  
+}
+\end{lstlisting}
+\begin{lstlisting}[style = java, caption = Interface IntubatingFireFighter, captionpos = b, label = lst_interfaces_tei4]
+@RequiredTypeTestReference( testClasses = IntubatingFireFighterTest.class )
+public interface IntubatingFireFighter {
+
+  public void intubate( Injured injured );
+
+  public FireState extinguishFire( Fire fire );
+  
+}
+\end{lstlisting}
+\begin{lstlisting}[style = java, caption = Interface IntubatingFreeing, captionpos = b, label = lst_interfaces_tei5]
+@RequiredTypeTestReference( testClasses = IntubatingFreeingTest.class )
+public interface IntubatingFreeing {
+
+  public void intubate( Injured injured );
+
+  public void free( Injured injured );
+  
+}
+\end{lstlisting}
+\begin{lstlisting}[style = java, caption = Interface IntubatingPatientFireFighter, captionpos = b, label = lst_interfaces_tei6]
+@RequiredTypeTestReference( testClasses = IntubatingPatientFireFighterTest.class )
+public interface IntubatingPatientFireFighter {
+
+  public void intubate( IntubationPartient patient );
+
+  public FireState extinguishFire( Fire fire );
+  
+}
+\end{lstlisting}
+\begin{lstlisting}[style = java, caption = Interface KOFGPCProvider, captionpos = b, label = lst_interfaces_tei7]
+@RequiredTypeTestReference( testClasses = KOFGPCProviderTest.class )
+public interface KOFGPCProvider {
+
+  Collection<ElerFTKoFoerdergegenstand> getKOFGsVonFP( DvFoerderprogramm fp );
+ 
+  Collection<Produktcode> getPCsZuKOFG( DvFoerdergegenstand fg, DvAntragsJahr aj ); 
+  
+}
+\end{lstlisting}
+Zu erkennen ist, dass jedes Interfaces, wie in Abschnitt \ref{sec_Impl_CT} beschrieben, mit der Annotation $\texttt{RequiredTypeTestReference}$ versehen ist, über die auf eine Java-Klasse verwiesen wird, in der die Tests zu dem jeweiligen \emph{required Typ} implementiert sind.
+\\\\
+Die Listings \ref{lst_testklassen_tei1} - \ref{lst_testklassen_tei7} zeigen die Implementierungen dieser Testklassen\footnote{Auf die Import-Anweisungen wurde verzichtet.}.
+\begin{lstlisting}[style = java, caption = Interface ElerFTFoerderprogrammProviderTest, captionpos = b, label = lst_testklassen_tei1]
+public class ElerFTFoerderprogrammProviderTest implements TriedMethodCallsInfo {
+
+  private ElerFTFoerderprogrammeProvider provider;
+  private Collection<Method> calledMethods = new ArrayList<Method>();
+  
+  @RequiredTypeInstanceSetter
+  public void setProvider( ElerFTFoerderprogrammeProvider provider ) {
+    this.provider = provider;
+  }
+
+  @RequiredTypeTest
+  public void testEmptyCollection() {
+    addTriedMethodCall( getMethod( "getAlleFreigegebenenFPs", ElerFTFoerderprogrammeProvider.class ) );
+    Collection<ElerFTFoerderprogramm> alleFreigegebenenFPs = provider.getAlleFreigegebenenFPs();
+    assertThat( alleFreigegebenenFPs, notNullValue() );
+  }
+
+  @RequiredTypeTest
+  public void testMockedFPCollection() {
+    DvFoerderprogramm fp = DvFoerderprogramm.Factory.valueOf( DvFoerderprogramm.FP215 );
+    addTriedMethodCall( getMethod( "getElerFTFoerderprogramm", ElerFTFoerderprogrammeProvider.class ) );
+    ElerFTFoerderprogramm alleFreigegebenenFPs = provider.getElerFTFoerderprogramm( DvAntragsJahr.AJ2020,
+        fp, new Date() );
+    assertThat( alleFreigegebenenFPs, nullValue() );
+  }
+
+  @Override
+  public void addTriedMethodCall( Method method ) {
+    calledMethods.add( method );
+  }
+
+  @Override
+  public Collection<Method> getTriedMethodCalls() {
+    return calledMethods;
+  }
+
+}
+\end{lstlisting}
+\begin{lstlisting}[style = java, caption = Interface FoerderprogrammProviderTest, captionpos = b, label = lst_testklassen_tei2]
+public class FoerderprogrammProviderTest implements TriedMethodCallsInfo {
+
+  private FoerderprogrammeProvider provider;
+
+  private Collection<Method> calledMethods = new ArrayList<Method>();
+
+  @RequiredTypeInstanceSetter
+  public void setProvider( FoerderprogrammeProvider provider ) {
+    this.provider = provider;
+  }
+
+  @RequiredTypeTest
+  public void testEmptyCollection() {
+    addTriedMethodCall( getMethod( "getAlleFreigegebenenFPs", FoerderprogrammeProvider.class ) );
+    Collection<Foerderprogramm> alleFreigegebenenFPs = provider.getAlleFreigegebenenFPs();
+    assertThat( alleFreigegebenenFPs, notNullValue() );
+  }
+
+  @RequiredTypeTest
+  public void testMockedFPCollection() {
+    DvFoerderprogramm fp = DvFoerderprogramm.Factory.valueOf( DvFoerderprogramm.FP508 );
+    addTriedMethodCall( getMethod( "getFoerderprogramm", FoerderprogrammeProvider.class ) );
+    Foerderprogramm relevantFP = provider.getFoerderprogramm( fp, DvAntragsJahr.AJ2020,
+        new Date() );
+    assertThat( relevantFP, notNullValue() );
+  }
+
+  @RequiredTypeTest
+  public void testDZFPCollection() {
+    DvFoerderprogramm fp = DvFoerderprogramm.Factory.valueOf( DvFoerderprogramm.FP215 );
+    addTriedMethodCall( getMethod( "getFoerderprogramm", FoerderprogrammeProvider.class ) );
+    Foerderprogramm relevantFP = provider.getFoerderprogramm( fp, DvAntragsJahr.AJ2020,
+        new Date() );
+    assertThat( relevantFP, notNullValue() );
+  }
+
+  @Override
+  public void addTriedMethodCall( Method method ) {
+    calledMethods.add( method );
+  }
+
+  @Override
+  public Collection<Method> getTriedMethodCalls() {
+    return calledMethods;
+  }
+
+}
+\end{lstlisting}
+\begin{lstlisting}[style = java, caption = Interface MinimalFoerderprogrammProviderTest, captionpos = b, label = lst_testklassen_tei3]
+public class MinimalFoerderprogrammProviderTest implements TriedMethodCallsInfo {
+
+  private MinimalFoerderprogrammeProvider provider;
+  private Collection<Method> calledMethods = new ArrayList<Method>();
+
+  @RequiredTypeInstanceSetter
+  public void setProvider( MinimalFoerderprogrammeProvider provider ) {
+    this.provider = provider;
+  }
+
+  @RequiredTypeTest
+  public void testEmptyCollection() {
+    addTriedMethodCall( getMethod( "getAlleFreigegebenenFPs", MinimalFoerderprogrammeProvider.class) );
+    Collection<String> alleFreigegebenenFPs = provider.getAlleFreigegebenenFPs();
+    assertThat( alleFreigegebenenFPs, notNullValue() );
+  }
+
+  @RequiredTypeTest
+  public void testGetFoerderprogramm() {
+    String fpCode = "215";
+    addTriedMethodCall( getMethod( "getFoerderprogramm", MinimalFoerderprogrammeProvider.class) );
+    Foerderprogramm fp = provider.getFoerderprogramm( fpCode, 2015, new Date() );
+    assertThat( fp, notNullValue() );
+    DvFoerderprogramm dvFP = fp.getFoerderprogramm();
+    assertThat( dvFP, notNullValue() );
+
+    String code = dvFP.getCode();
+    assertThat( fpCode, equalTo( code ) );
+
+  }
+
+  @Override
+  public void addTriedMethodCall( Method method ) {
+    calledMethods.add( method );
+  }
+
+  @Override
+  public Collection<Method> getTriedMethodCalls() {
+    return calledMethods ;
+  }
+
+}
+\end{lstlisting}
+\begin{lstlisting}[style = java, caption = Interface IntubatingFireFighterTest, captionpos = b, label = lst_testklassen_tei4]
+public class IntubatingFireFighterTest implements TriedMethodCallsInfo {
+
+	private IntubatingFireFighter intubatingFireFighter;
+	private Collection<Method> calledMethods = new ArrayList<Method>();
+
+	@RequiredTypeInstanceSetter
+	public void setProvider(IntubatingFireFighter intubatingFireFighter) {
+		this.intubatingFireFighter = intubatingFireFighter;
+	}
+
+	@RequiredTypeTest
+	public void free() {
+		Fire fire = new Fire();
+		addTriedMethodCall(getMethod("extinguishFire", IntubatingFireFighter.class));
+		FireState fireState = intubatingFireFighter.extinguishFire(fire);
+		assertTrue(Objects.equals(fireState.isActive(), fire.isActive()));
+		assertFalse(fire.isActive());
+	}
+
+	@RequiredTypeTest
+	public void intubate() {
+		Collection<Suffer> suffer = Arrays.asList(Suffer.BREATH_PROBLEMS);
+		Injured patient = new Injured(suffer);
+		addTriedMethodCall(getMethod("intubate", IntubatingFireFighter.class));
+		intubatingFireFighter.intubate(patient);
+		assertTrue(patient.isStabilized());
+	}
+
+	@Override
+	public void addTriedMethodCall(Method m) {
+		calledMethods.add(m);
+	}
+
+	@Override
+	public Collection<Method> getTriedMethodCalls() {
+		return calledMethods;
+	}
+
+}
+\end{lstlisting}
+\begin{lstlisting}[style = java, caption = Interface IntubatingFreeingTest, captionpos = b, label = lst_testklassen_tei5]
+public class IntubatingFreeingTest implements TriedMethodCallsInfo {
+
+	private IntubatingFreeing intubatingFreeing;
+	private Collection<Method> calledMethods = new ArrayList<Method>();
+
+	@RequiredTypeInstanceSetter
+	public void setProvider(IntubatingFreeing intubatingFireFighter) {
+		this.intubatingFreeing = intubatingFireFighter;
+	}
+
+	@RequiredTypeTest
+	public void free() {
+		Collection<Suffer> suffer = Arrays.asList(Suffer.LOCKED);
+		Injured patient = new Injured(suffer);
+		addTriedMethodCall(getMethod("free", IntubatingFreeing.class));
+		intubatingFreeing.free(patient);
+		assertTrue(patient.isStabilized());
+	}
+
+	@RequiredTypeTest
+	public void intubate() {
+		Collection<Suffer> suffer = Arrays.asList(Suffer.BREATH_PROBLEMS);
+		Injured patient = new Injured(suffer);
+		addTriedMethodCall(getMethod("intubate", IntubatingFreeing.class));
+		intubatingFreeing.intubate(patient);
+		assertTrue(patient.isStabilized());
+	}
+
+	@Override
+	public void addTriedMethodCall(Method m) {
+		calledMethods.add(m);
+	}
+
+	@Override
+	public Collection<Method> getTriedMethodCalls() {
+		return calledMethods;
+	}
+	
+}
+\end{lstlisting}
+\begin{lstlisting}[style = java, caption = Interface IntubatingPatientFireFighterTest, captionpos = b, label = lst_testklassen_tei6]
+public class IntubatingPatientFireFighterTest implements TriedMethodCallsInfo {
+
+	private IntubatingPatientFireFighter intubatingPatientFireFighter;
+	private Collection<Method> calledMethods = new ArrayList<Method>();
+
+	@RequiredTypeInstanceSetter
+	public void setProvider(IntubatingPatientFireFighter intubatingFireFighter) {
+		this.intubatingPatientFireFighter = intubatingFireFighter;
+	}
+
+	@RequiredTypeTest
+	public void extinguishFire() {
+		Fire fire = new Fire();
+		addTriedMethodCall(getMethod("extinguishFire", IntubatingPatientFireFighter.class));
+		FireState fireState = intubatingPatientFireFighter.extinguishFire(fire);
+		assertTrue(Objects.equals(fireState.isActive(), fire.isActive()));
+		assertFalse(fire.isActive());
+	}
+
+	@RequiredTypeTest
+	public void intubate() {
+		IntubationPartient patient = new IntubationPartient();
+		addTriedMethodCall(getMethod("intubate", IntubatingPatientFireFighter.class));
+		intubatingPatientFireFighter.intubate(patient);
+		assertTrue(patient.isIntubated());
+	}
+
+	@Override
+	public void addTriedMethodCall(Method m) {
+		calledMethods.add(m);
+	}
+
+	@Override
+	public Collection<Method> getTriedMethodCalls() {
+		return calledMethods;
+	}
+
+}
+\end{lstlisting}
+\begin{lstlisting}[style = java, caption = Interface KOFGPCProviderTest, captionpos = b, label = lst_testklassen_tei7]
+public class KOFGPCProviderTest implements TriedMethodCallsInfo {
+
+  private KOFGPCProvider provider;
+
+  private Collection<Method> calledMethods = new ArrayList<Method>();
+
+  @RequiredTypeInstanceSetter
+  public void setProvider( KOFGPCProvider provider ) {
+    this.provider = provider;
+  }
+
+  @RequiredTypeTest
+  public void testKOFGsCollection() {
+    DvFoerderprogramm fp = DvFoerderprogramm.Factory.valueOf( DvFoerderprogramm.FP508 );
+    addTriedMethodCall( getMethod( "getKOFGsVonFP", KOFGPCProvider.class ) );
+    Collection<ElerFTKoFoerdergegenstand> kofGsVonFP = provider.getKOFGsVonFP( fp );
+    assertThat( kofGsVonFP, notNullValue() );
+    assertThat( kofGsVonFP.isEmpty(), equalTo( false ) );
+    assertThat( kofGsVonFP.stream().anyMatch( fg -> fg.getCode().equals( "KO508" ) ), equalTo( true ) );
+  }
+
+  @RequiredTypeTest
+  public void testPCsCollection() {
+    DvFoerdergegenstand fg = DvFoerdergegenstand.Factory.valueOf( 20155080025L );
+    addTriedMethodCall( getMethod( "getPCsZuKOFG", KOFGPCProvider.class ) );
+    Collection<Produktcode> pcs = provider.getPCsZuKOFG( fg, DvAntragsJahr.AJ2020 );
+    assertThat( pcs, notNullValue() );
+    assertThat( pcs.isEmpty(), equalTo( false ) );
+  }
+
+  @Override
+  public void addTriedMethodCall( Method m ) {
+    this.calledMethods.add( m );
+  }
+
+  @Override
+  public Collection<Method> getTriedMethodCalls() {
+    return calledMethods;
+  }
+
+}
+\end{lstlisting}
+\noindent
+Hier ist zu erkennen, dass die Testklassen alle das Interfaces $\texttt{TriedMethodCallsInfo}$ implementieren, über das die für die Heuristik \emph{BL\_NMC} benötigten Informationen (siehe Abschnitt \ref{sec_bl_nmc}) ermittelt werden. Ebenso ist die Implementierung dieses Interfaces in den oben genannten Listings zu erkennen.
