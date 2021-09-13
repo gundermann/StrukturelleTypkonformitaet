@@ -1,4 +1,10 @@
 \section{Auswertung der Untersuchungsergebnisse}
 \subsection{Synergien}
-%\subsection{Erhöhte Komplexität}
-%schlecter Name. Es geht um die Frage, ob die benötigte Zeit für die Anwendung einer Heuristik den positiven Effekt dieser bei der Exploration wieder wet macht.
+\subsection{Erhöhte Komplexität}
+Die vorliegende Untersuchung zweigt zwar, dass die Anzahl der zu evaluierungen Proxies in dem verwendeten System mit den vorgeschlagenen Heuristiken reduziert werden können. Allerdings wurden negative Auswirkungen wie bspw. Speichernutzung (Speicherkomplexität) oder die benötigte Zeit  (Zeitkomplexität) für die Evaluation nicht untersucht.
+\\\\
+Die Anwendung der Heuristiken hängt, wie in Abschnitt \ref{sec_heuristics} beschrieben, von Informationen ab, die teilweise aus den für die Proxies verwendeten \emph{provided Typen} ermittelt werden müssen (Matcherrating) bzw. nach der Ausführung der Tests über die gesamte restliche Laufzeit der Exploration verwaltet werden müssen. Von daher ist davon auszugehen, dass sich die Anwendung der Heuristiken durchaus auf den Speicherverbrauch auswirkt.
+\\\\
+Da die benötigte Zeit für die Verwaltung von Listen, wie sie bei den Heuristiken vorgenommen wird, mit der Anzahl der zu verwaltenden Elemente wächst, kann davon ausgegangen werden, dass die Anwendung der Heuristiken ebenfalls mehr Zeit in Anspruch nimmt, je weiter fortgeschritten die Exploration ist. Die gilt insbesondere für die Heuristiken \emph{PTTF} und \emph{BL\_NMC}. 
+\\\\
+Aufgrunddessen, dass in dieser Arbeit lediglich die Anzahl der zu evaluierenden Proxies während der Exploration untersucht wurden, ist es auch nicht auszuschließen, dass die verwendete Implementierung kein Optimierungspotential besitzt.

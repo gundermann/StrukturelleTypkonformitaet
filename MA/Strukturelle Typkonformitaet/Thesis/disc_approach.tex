@@ -1,5 +1,28 @@
-\section{Vor- und Nachteile des Ansatzes}
+\section{Kritik am Ansatz}
 %formale Ermittlung des Matcherratings
 %Die Aussagekraft der Ergebnisse ist aufgrund der gewählten required Typen eher gering. Hier spielt auch der Abstraktionsgrad der Typen mit rein, die in den Methoden als Parameter- oder Rückgabetypen verwendet werden. Eine These ist, dass die Anzahl der zu evaluierenden Proxies steigt, je weiter der Abstraktionsgrad der in den required Typen und den provided Typen verwendeten Parameter- und Rückgabetypen auseinandergeht. Weiterhin ist der Entwickler als kreative Komponente nicht wegzudenken. Dieser hat bei der Gestaltung der required Typen einen großen Freiraum, was die Wahl der Parameter- und Rückgabetypen angeht. These: Je schlechter er das vorliegende System kennt, desto eher wird der o.g. Abstraktionsgrad abweichen. Dies ließe sich mitunter durch eine Umfrage mehrere Mitarbeiter unterschiedlicher Betriebsangehörigkeit in Erfahrung bringen.
-%Tests zur Laufzeit können zu Problemen im System führen, da die Semantik der provided Typen ausgeführt wird und im Fehlerfall mitunter zu schiefen Datenständen führt
+\subsection{Seiteneffekte durch Testevaluation}
+Die Exploration erfordert die Ausführung der vordefinierten Testfälle zur Laufzeit. Sofern diese Testfälle eine Änderung des Zustands bestimmter Objekte bewirken, kann dies auch Auswirkungen auf die Funktionsweise des Systems haben. 
+\\\\
+Um dieses Problem zu beheben könnte man sicherstellen, dass die Generierung der Proxies nur auf Basis von \emph{provided Typen} erfolgt, die solche Seiteneffekte nicht aufweise. Diese Eigenschaft kann jedoch nur durch den Entwickler festgestellt werden und entsprechend markiert werden (bspw. über Annotationen). Während der Exploration könnten solche \emph{provided Typen} über solche Markierungen erkannt werden. Dieser Ansatz reduziert jedoch die Anzahl der \emph{provided Typen}, die für die Generierung eines Proxies verwendet werden können. Dadurch sinkt auch die Wahrscheinlichkeit, dass ein passender Proxy gefunden wird.
+\subsection{Auswirkung durch Änderungen am System}
+An einem System könne vielfältige Änderungen vorgenommen werden. Im folgenden wird zum Einen die Erweiterung vom zusätzliche \emph{provided Typen} und zum Anderen die Entfernung von \emph{provided Typen} betrachtet. Dabei sei angenommen, dass die \emph{required Typen}, zu denen ein passender Proxy gefunden werden soll, nicht verändert werden.
+\\\\
+Die Erweiterung von Systemen geht in Bezug auf den beschriebenen Ansatz zur testgetriebenen Exploration zur Laufzeit damit einher, dass sich die Anzahl der \emph{provided Typen} verändert. Wie in Abschnitt \ref{sec_anzahlProxies} beschrieben, wächst damit auch die der möglichen Proxies. Mehrere mögliche Proxies haben wiederum einen Einfluss auf die Laufzeit und das Ergebnis der Exploration.
+\\\\
+So kann nicht davon ausgegangen werden, dass ein passender Proxy zu einem bestimmten \emph{required Typ} genauso schnell oder überhaupt gefunden wird, nachdem das System neu gestartet wurde.
+
 %Wenn die Anzahl der provided Typen größer wird, wächst die Anzahl der zu evaluierenden Proxies im schlimmsten Fall (fakultativ/exponentiell??)
+\subsection{Auswirkung auf die Stablilität des Systems}
+Ein System gilt als stabil, wenn die enthaltenen Komponenten problemlos zusammenarbeiten \cite{}. Da der Ansatz darauf abzielt, bestimmte Komponenten (EJBs) zur Laufzeit zu kombinieren, hat der vorgestellte Ansatz durchaus eine Auswirkung auf die Stabilität des Systems.
+\\\\
+Die Auswirkung des Ansatzes auf die Stabilität des Systems wird maßgeblich durch die Güte der vordefinierten Testfälle bestimmt. Sofern die durch die Testfälle sichergestellte Semantik der gefundenen Proxies ausreichend gut spezifiziert wurde, ist es möglich, dass das System auch dann noch stabil ist, wenn Komponenten entfernt wurden.
+\\\\
+Sofern die Testfälle nicht ausreichend die Semantik sicherstellen, können zwar immer noch passende Komponenten gefunden werden, jedoch muss in Frage gestellt werden, ob das System unter der Verwendung dieser immer noch korrekt arbeitet. Somit hängt die Auswirkung des Ansatzen auf die Stabilität des Systems direkt mit der Sorgfalt des Entwicklers, der dieses Ansatz verwendet, zusammen.
+
+\subsection{Verwantwortung des Entwicklers}
+Aus dem oben genannten ergibt sich, dass der Entwickler bei der Verwendung dieses Ansatzen eine grgoße Verantwortung trägt. Dieser kann er meiner Meinung nach umso besser gerecht werden, je besser er das System, in dem der Ansatz verwendet werden soll, kennt. Darauf ergibt sich die Frage nach der Aussagekraft der vorliegenden Untersuchungsergebnisse.
+\\\\
+Weiterhin kann festgehalten werden, dass ein Entwickler, der das System gut kennt und somit weiß, welche Komponenten innerhalb dessen verwendet werden, diesen Ansatz wohl kaum benötigt. Vielmehr ist es ihm möglich die passenden Komponenten aufgrund seines Wissens explizit zu benennen, wie es im EJB-Framework grundlegend der Fall ist.
+\\\\
+Ist dem Entwickler das System unbekannt, wird es schwerfallen zum Einen ein \emph{required Typ} so zu definieren, dass die Anzahl der möglichen Proxies nicht zu hoch wird. Und zum Anderen werden sich auch Probleme bei der ausreichenden Spezifikation von Testfällen ergeben. Wobei der zweite Punkt direkt mit der Kopplung der \emph{provided Typen} zusammenhängt. Eine zu starke Kopplung könnte die Gefahr für unerwünschte Seiteneffekte erhöhen \cite{}.
