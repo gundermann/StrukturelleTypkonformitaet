@@ -1,5 +1,19 @@
 \section{Erweiterungsmöglichkeiten}
-\subsection{Weitere Matcher}
-%Coercions 
+\subsection{Zusätzliche Matcher}
+Eine mögliche Erweiterung des Ansatzes wäre die Definition und Implementierung zusätzlicher Matcher. Diese würde es ermöglichen, dass der Abstraktionsgrad zwischen den Typen, die in den Methoden der required und provided Typen verwendet werden, noch weiter auseinandergeht, als es bei den vorgestellten Matchern in Abschnitt \ref{sec_matcher} der Fall ist (Identität, Vererbung, Container).
+\\\\
+Die vorgestellten Matcher beachten beispielsweise keine impliziten Typumwandlungen (Coercions). Diese können je nach Programmiersprache abweichen, was eine formale allgemeine Beschreibung wie in Abschnitt \ref{sec_matcher} eines solchen Matchers (CoercionMatcher) erschwert. So müsste ein CoercionMatcher für jede Programmiersprache explizit spezifiziert werden.
+\\\\
+Die Programmiersprache Java bietet eine Vielzahl solcher impliziten Typumwandlungen an \cite{conversions_and_promotions}. Dabei ist zu beachten, dass es implizite Typumwandlungen gibt, die ohne Informationsverlust vonstatten gehen\footnote{bspw. \emph{Identity Conversion} oder \emph{Widening Primitive Conversion} \cite{conversions_and_promotions}} und solche, bei denen ein Informationsverlust nicht auszuschließen ist\footnote{bspw. \emph{Narrowing Primitive Conversion} \cite{conversions_and_promotions}}. 
+\\\\
+Typumwandlungen ohne Informationsverlust sind in Bezug auf die weitere Verwendung innerhalb eines Proxies unbedenklich. Diese sind hinsichtlich des Informationsverlustes mit dem GenTypeMatcher vergleichbar, welcher in Abschnitt \ref{sec_matcher} beschrieben wurde. In der Spezifikation des darauf aufbauenden Proxy-Generators sind dementsprechend keine Methodendelegationen zu finden, die zu einem Fehler führen.
+\\\\
+Anders ist es bei Typumwandlungen mit Informationsverlust. Diese sind mit dem SpecTypeMatcher vergleichbar (siehe Abschnitt \ref{sec_matcher}). In der Spezifikation des darauf aufbauenden Proxy-Generators ist zu erkennen, dass durch eine solche Typumwandlung bestimmte Methodendelegationen in einen Fehler münden. Da sich der SpecTypeMatcher direkt auf die Vererbungsbeziehung der beiden Typen bezieht, kann die Ursache solcher Fehler auf die Methoden zurückgeführt werden, die zwar im Subtyp jedoch nicht im Supertyp implementiert sind. Bei einem CoercionMatcher, der in Abhängigkeit der Programmiersprache spezifiziert wird, kann es weitere Fehlerursachen geben.
+\\\\
+Aus diesem Grund wäre es sinnvoll, nicht einen einzigen Matcher zu spezifizieren, der alle impliziten Typumwandlungen abdeckt. Vielmehr sollten die in der Programmiersprache definierten Coercions nach dem möglichem Informationsverlust kategorisiert werden und dann je Kategorie ein Matcher spezifiziert werden.
+\\\\
+Darüber hinaus ist zu beachten, dass die Spezifikation eines Matchers alleine nicht ausreicht, um diesen zu integrieren. Da die Heuristik LMF auf dem Matcherrating aufbaut, ist es ebenso notwendig, den zusätzlichen Matchern ein Basisrating zuzuweisen. Wie in Abschnitt \ref{impl_sigma} beschrieben, wird dieses Basisrating von der Implementierung des Matchers geliefert. Dabei gilt es jedoch zu beachten, dass das Basisrating eines zusätzlichen Matchers im korrekten Verhältnis zu den bestehenden Matchern steht.
+\\\\
+In Bezug auf den/die CoercionMatcher gibt es hierbei mehrere sinnvolle Möglichkeiten. Beispielsweise könnte man begründen, dass für den/die CoercionMatcher ein Basisrating zwischen 100 und 200 verwendet werden muss. Die untere Schrank von 100 wird darauch begründet, dass es kein besseres Matching gibt, als die Identität, welche durch den ExactTypeMatcher mit einem Basisrating von 100 beschrieben wird. Die obere Schranke von 200 könnte damit begründet werden, dass es sich um Typumwandlungen handelt, die über die Programmiersprache definiert sind und diese somit sicherer sind als Upcasts, die durch den SpecTypeMatcher mit einem Basisrating von 200 abgedeckt werden.
 \subsection{Markierung seiteneffektfreier EJBs}
 \subsection{Default-Implementierungen in required Typen}
