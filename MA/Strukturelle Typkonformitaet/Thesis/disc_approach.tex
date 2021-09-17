@@ -1,17 +1,23 @@
 \section{Kritik am Ansatz}
-%formale Ermittlung des Matcherratings
 %Die Aussagekraft der Ergebnisse ist aufgrund der gewählten required Typen eher gering. Hier spielt auch der Abstraktionsgrad der Typen mit rein, die in den Methoden als Parameter- oder Rückgabetypen verwendet werden. Eine These ist, dass die Anzahl der zu evaluierenden Proxies steigt, je weiter der Abstraktionsgrad der in den required Typen und den provided Typen verwendeten Parameter- und Rückgabetypen auseinandergeht.
 
-\subsection{Seiteneffekte durch Testevaluation}
+\subsection{Seiteneffekte durch Testevaluation}\label{sec_sideeffects}
 Die Exploration erfordert die Ausführung der vordefinierten Testfälle zur Laufzeit. Sofern diese Testfälle eine Änderung des Zustands bestimmter Objekte bewirken, kann dies auch Auswirkungen auf die Funktionsweise des Systems haben. 
 \\\\
 Um dieses Problem zu beheben könnte man sicherstellen, dass die Generierung der Proxies nur auf Basis von \emph{provided Typen} erfolgt, die solche Seiteneffekte nicht aufweise. Diese Eigenschaft kann jedoch nur durch den Entwickler festgestellt werden und entsprechend markiert werden (bspw. über Annotationen). Während der Exploration könnten solche \emph{provided Typen} über solche Markierungen erkannt werden. Dieser Ansatz reduziert jedoch die Anzahl der \emph{provided Typen}, die für die Generierung eines Proxies verwendet werden können. Dadurch sinkt auch die Wahrscheinlichkeit, dass ein passender Proxy gefunden wird.
-\subsection{Auswirkung auf die Stabilität des Systems}
+\\\\
+Um die zu markierenden EJBs zu identifizieren ist zu prüfen, wie sich die Ausführung der einzelnen Methoden der Bean auf das System auswirken. Es kann festgehalten werden, dass alle Methoden, die den persistenten oder den transienten Zustand von Objekten verändert, das Potential für solche unerwünschten Seiteneffenkte besitzen. 
+\\\\
+Aufbauend auf der Prüfung einzelner Methoden, kann auch die Markierung von Methoden in Betracht gezogen werden. So dürften markierte Methoden bei der Generierung eines Proxies nicht als Delegationsmethode verwendet werden.
+
+\subsection{Auswirkung auf die Stabilität des Systems}\label{sec_stabliliy}
 Ein System gilt als stabil, wenn die enthaltenen Komponenten problemlos zusammenarbeiten \cite{}. Da der Ansatz darauf abzielt, bestimmte Komponenten (EJBs) zur Laufzeit zu kombinieren, hat der vorgestellte Ansatz durchaus eine Auswirkung auf die Stabilität des Systems.
 \\\\
 Die Auswirkung des Ansatzes auf die Stabilität des Systems wird maßgeblich durch die Güte der vordefinierten Testfälle bestimmt. Sofern die durch die Testfälle sichergestellte Semantik der gefundenen Proxies ausreichend gut spezifiziert wurde, ist es möglich, dass das System auch dann noch stabil ist, wenn Komponenten entfernt wurden.
 \\\\
-Sofern die Testfälle nicht ausreichend die Semantik sicherstellen, können zwar immer noch passende Komponenten gefunden werden, jedoch muss in Frage gestellt werden, ob das System unter der Verwendung dieser immer noch korrekt arbeitet. Somit hängt die Auswirkung des Ansatzen auf die Stabilität des Systems direkt mit der Sorgfalt des Entwicklers, der dieses Ansatz verwendet, zusammen.
+Sofern die Testfälle nicht ausreichend die Semantik sicherstellen, können zwar immer noch passende Komponenten gefunden werden, jedoch muss in Frage gestellt werden, ob das System unter der Verwendung dieser immer noch korrekt arbeitet. Somit hängt die Auswirkung des Ansatzes auf die Stabilität des Systems direkt mit der Sorgfalt des Entwicklers, der dieses Ansatz verwendet, zusammen.
+\\\\
+Darüber hinaus darf nicht vernachlässigt werden, dass der Ansatz das Finden eines passenden Proxies nicht garantiert. Der Entwickler muss also damit umgehen, dass kein Proxy gefunden wurde.
 \subsection{Auswirkung durch Änderungen am System}
 An einem System könne vielfältige Änderungen vorgenommen werden. Im folgenden wird zum Einen die Erweiterung vom zusätzliche \emph{provided Typen} und zum Anderen die Entfernung von \emph{provided Typen} betrachtet. Dabei sei angenommen, dass die \emph{required Typen}, zu denen ein passender Proxy gefunden werden soll, nicht verändert werden.
 \\\\
