@@ -1,66 +1,19 @@
 \section{Auswertung der Untersuchungsergebnisse}
 \subsection{Einzelbetrachtung}\label{disc_einzel}
-Die in Kapitel \ref{chap_eval} beschriebenen Untersuchungsergebnisse zeigen, dass die Heuristiken die Anzahl der zu generierenden und zu evaluierenden Proxies reduzieren. Dabei zeigt sich, dass sich die Heuristiken nicht auf alle Explorationsdurchläufe positiv auswirken. So kann für die Heuristiken LMF und PTTF festgehalten werden, dass diese nur in den Durchlauf eine positive Wirkung erzielt, in dem ein passender Proxy auch gefunden wird.
+Die in Kapitel \ref{chap_evaluation} beschriebenen Untersuchungsergebnisse zeigen, dass die Heuristiken die Anzahl der zu generierenden und zu evaluierenden Proxies reduzieren. Dabei zeigt sich, dass sich die Heuristiken nicht auf alle Explorationsdurchläufe positiv auswirken. So kann für die Heuristiken LMF und PTTF festgehalten werden, dass diese nur in den Durchlauf eine positive Wirkung erzielt, in dem ein passender Proxy auch gefunden wird.
 \\\\
 Die Heuristiken BL\_NMC hingegen wirkt sich auf jeden der durchgeführten Durchläufe aus. Dies liegt zu einen daran, dass die Menge der Informationen, auf deren Basis sie arbeitet, während eines Durchlaufs anwächst. Bei der Heuristik LMF ist dies nicht der Fall. Allerdings weist die Heuristik PTTF ebenfalls dieses Merkmal auf.
 \\\\
 Ein weiterer Grund ist, dass die Heuristik BL\_NMC dafür sorgt, dass Proxies bei der Evaluierung mitunter übersprungen werden, oder diese gar nicht erst generiert werden. Die anderen Heuristiken hingegen sorgen lediglich für eine Umsortierung der zu generierenden bzw. zu evaluierenden Proxies. Somit müssen unter der Verwendung der Heuristiken LMF und PTTF im Zweifelsfall alle Proxies generiert und erzeugt werden, auch wenn kein passender Proxy ausgemacht werden kann.
 \\\\
 Weiterhin ist festzuhalten, dass mit der Heuristik BL\_NMC scheinbar die besten Ergebnisse erzielt werden. Eine Ausnahme bildet hier lediglich die Exploration zum required Typ $\texttt{ElerFTFoerderprogrammeProvider}$ (\emph{TEI1}). Die Ursache dafür liegt darin, dass die in den Methoden von TEI1 verwendeten provided Typen mit denen des erwarteten provided Typen, auf dessen Basis ein passender Proxies erzeugt wird, genau übereinstimmen. Damit wird ein vergleichsweise geringes Matcherrating für das Matching dieser beiden Typen ermittelt, wodurch der Proxy sehr früh während der Exploraiton generiert und evaluiert wird.
-% Das stimmt nicht mehr, wenn ich die p(x)-Notation im ersten Durchlauf entferne
-%Eine Ausnahme könnte hier die Exploration zum required Typ $\texttt{KOFGPCProvider}$ (\emph{TEI7}) darstellen. Die Ergebnisse bzgl. dieser Exploration sehen für die Heuristik LMF auf den ersten Blick besser aus. Allerdings konnte festgestellt werden, dass die Anzahl der Proxies, die im ersten Durchlauf im Ausgangszustand für \emph{TEI7} generiert und evaluiert werden mussten insgesamt 161294 ($\mathit{p(174)}$) beträgt. So kann festgehalten werden, dass mit der Heuristik BL\_NMC insgesamt 136141 generiert und evaluiert wurden. Damit liefert diese Heuristik die besten Ergebnisse, da die Heuristik LMF auf den ersten Durchlauf keine positive Auswirkung hat und somit in diesem 161294 Proxies generiert und evaluiert wurden.
-%\\\\
-%Bei einer Betrachtung der finalen Durchläufe - also in denen ein passender Proxy gefunden werden konnte - ergibt sich jedoch ein anderes Bild. Hierbei erweist sich in den meisten Fällen die Heuristik LMF als diejenige, mit der die besten Ergebnisse erzielt wurde. Eine Ausnahme stellen die required Typen $\texttt{FoerderprogrammeProvider}$ (\emph{TEI2}) und $\texttt{MinimalFoerderprogrammeProvider}$ (\emph{TEI3}) dar. Bei diesen beiden Typen lieferte wiederum die Heuristik BL\_NMC die besten Ergebnisse.
-%\\\\
-%Dies kann dadurch begründet werden, dass die provided Typen, die in den Methoden dieser beiden required Typen ab stärksten von denen abwichen, die in den Delegationsmethoden des passenden Proxies verwendet wurden. Aus dieser Tatsache ergibt sich für das Matcherrating ein höherer Wert, wodurch die Evaluierung des Proxies durch die Heuristik LMF weiter nach hinten verschoben wird, als es bei den Explorationen zum den übrigen required Typen der Fall war.
-\\\\
-In der unten stehenden Tabelle ist die Rangfolge der Heuristiken in Bezug auf die Einzelbetrachtung je required Typ aufgeführt. Der erste Platz steht dafür, dass mit der jeweiligen Heursitik am wenigsten Proxies generiert und evaluiert werden mussten.
-\begin{table}[!h]
-\centering
-\begin{tabular}{|l|c|c|c|c|c|c|c|}
-\hline
-\hline
-\textbf{Heuristik/Required Typ} & \textbf{TEI1} & \textbf{TEI2}& \textbf{TEI3}& \textbf{TEI4}& \textbf{TEI5}& \textbf{TEI6}& \textbf{TEI7}\\
-\hline
-\hline
-LMF  &1.&2.&2.&2.&2.&2.&2.\\
-\hline
-PTTF  &3. &3.&3.&3.&3.&3.&3. \\
-\hline
-BL\_NMC & 2. &1. &1. &1. &1.&1.&1.\\
-\hline
-\hline
-\end{tabular}
-\caption{Rangfolge der Heuristiken (Einzelbetrachtung)}
-\end{table}
 \subsection{Synergien}
-Neben der Einzelbetrachtung der Heuristiken wurden in Abschnitt \ref{sec_kombis} auch die Kombinationen der drei Heuristiken untersucht. Aus den Feststellungen in Abschnitt \ref{disc_einzel} lässt sich ableiten, dass eine Kombinationen mit der Heuristik BL\_NMC durchaus sinnvoll ist; egal ob sie mit der Heuristik LMF oder PTTF kombiniert wird. Der Grund dafür liegt wiederum in der Tatsache, dass die Heuristiken LMF und PTTF lediglich auf einen der Explorationsdurchläufe einen positiven Effekt haben. Aus diesem Grund kann in Kombination mit der Heuristik BL\_NMC wenigstens in den anderen Durchläufen eine positive Auswirkung festgestellt werden.
+Neben der Einzelbetrachtung der Heuristiken wurden in Abschnitt \ref{sec_evalKombis} auch die Kombinationen der drei Heuristiken untersucht. Aus den Feststellungen in Abschnitt \ref{disc_einzel} lässt sich ableiten, dass eine Kombinationen mit der Heuristik BL\_NMC durchaus sinnvoll ist; egal ob sie mit der Heuristik LMF oder PTTF kombiniert wird. Der Grund dafür liegt wiederum in der Tatsache, dass die Heuristiken LMF und PTTF lediglich auf einen der Explorationsdurchläufe einen positiven Effekt haben. Aus diesem Grund kann in Kombination mit der Heuristik BL\_NMC wenigstens in den anderen Durchläufen eine positive Auswirkung festgestellt werden.
 \\\\
 Dementgegen liefert die Kombination der Heuristiken LMF und PTTF miteinander kaum bessere Ergebnisse als die Heuristik LMF alleine. Eine Ausnahme bildet der required Typ $\texttt{KOFGPCProvider}$ (\emph{TEI7}). Dazu ist jedoch zu sagen, dass es gerade zu diesem required Typ im Vergleich zu den anderen required Typen die meisten matchenden provided Typen existieren. Insofern darf dieser scheinbare Ausreißer nicht unterschätzt werden, weshalb auch die Kombination der oben genannten Heuristiken sinnvoll ist.
 \\\\
-Ähnliches gilt für die Kombination aller vorgestellten Heuristiken. Dies ergibt sich jedoch ebenfalls aus den vorherigen Auswertungen bzgl. der Synergien in diesem Abschnitt. Bei der Betrachtung der Untersuchungsergebnisse zeigt sich hier ein ähnliches Muster wie zuvor: Die Kombination aller vorgestellten Heuristiken liefert nur für den required Typ $\texttt{KOFGPCProvider}$ (\emph{TEI7}) bessere Ergebnisse, als die Kombination der Heuristiken BL\_NMC und LMF. Aber auch hier darf dieses Ergebnis aufgrund der Eigenschaften von \emph{TEI7} nicht vernachlässigt werden.
-\\\\
-In der unten stehenden Tabelle ist die Rangfolge der Kombinationen von Heuristiken je required Typ aufgeführt. Der erste Platz steht dafür, dass mit der jeweiligen Heuristik am wenigsten Proxies generiert und evaluiert werden mussten.
-\begin{table}[!h]
-\centering
-\begin{tabular}{|l|c|c|c|c|c|c|c|}
-\hline
-\hline
-\textbf{Heuristik/Required Typ} & \textbf{TEI1} & \textbf{TEI2}& \textbf{TEI3}& \textbf{TEI4}& \textbf{TEI5}& \textbf{TEI6}& \textbf{TEI7}\\
-\hline
-\hline
-LMF + PTTF &3.&4.&4.&4.&4.&4.&4.\\
-\hline
-LMF + BL\_NMC &1. &2.&2.&1./2.&1./2.&1./2.&2. \\
-\hline
-PTTF + BL\_NMC &4. &3.&3.&3.&3.&3.& 3.\\
-\hline
-LMF + PTTF + BL\_NMC &2. &1. &1. & 1./2.&1./2.&1./2.&1.\\
-\hline
-\hline
-\end{tabular}
-\caption{Rangfolge der Heuristiken (Kombinationen)}
-\end{table}
+Ähnliches gilt für die Kombination aller vorgestellten Heuristiken (\emph{LMF + PTTF + BL\_NMC}). Dies ergibt sich jedoch ebenfalls aus den vorherigen Auswertungen bzgl. der Synergien in diesem Abschnitt. Bei der Betrachtung der Untersuchungsergebnisse zeigt sich hier ein ähnliches Muster wie zuvor: Die Kombination aller vorgestellten Heuristiken liefert nur für den required Typ $\texttt{KOFGPCProvider}$ (\emph{TEI7}) bessere Ergebnisse, als die Kombination der Heuristiken BL\_NMC und LMF. Aber auch hier darf dieses Ergebnis aufgrund der Eigenschaften von \emph{TEI7} nicht vernachlässigt werden.
+
 \subsection{Erhöhte Komplexität}
 Die vorliegende Untersuchung zweigt zwar, dass die Anzahl der zu evaluierenden Proxies in dem verwendeten System mit den vorgeschlagenen Heuristiken reduziert werden können. Allerdings wurden negative Auswirkungen wie bspw. Speichernutzung (Speicherkomplexität) oder die benötigte Zeit  (Zeitkomplexität) für die Evaluation nicht untersucht.
 \\\\
@@ -70,4 +23,8 @@ Da die benötigte Zeit für die Verwaltung von Listen, wie sie bei den Heuristik
 \\\\
 Aufgrund dessen, dass in dieser Arbeit lediglich die Anzahl der zu evaluierenden Proxies während der Exploration untersucht wurden, ist es auch nicht auszuschließen, dass die verwendete Implementierung kein Optimierungspotential besitzt.
 
+\subsection{Zusammenfassung}
+Die Ausführungen der Abschnitt \ref{sec_singleBew} und \ref{sec_combiBew} lassen vermuten, dass lediglich die Heuristiken LMF und BL\_NMC eine Daseinsberechtigung haben. Dies ist nicht korrekt. Die Heuristik PTTF liefert zwar schlechtere Ergebnisse, dennoch hat sie die zu generierenden und zu evaluierenden Proxies im Vergleich zum schlimmst Fall ohne Heuristiken stark Reduktion. Allerdings hat der Entwickler keinen höheren Aufwand bei der Implementierung der Testfälle. Die Heuristik BL\_NMC, welche in dieser Untersuchung häufig als diejenige mit den besten Ergebnissen herausgestellt hat, bedarf einer speziellen Implementierung der Testfälle.
+\\\\
+Dasselbe gilt für die Heuristik LMF. Diese liefert zwar bessere Ergebnisse als die Heuristik PTTF, kann aber aufgrund dessen, dass sie sich lediglich auf den finalen Explorationsdurchlauf positiv auswirkt, nur in wenigen Fällen mit der Heuristik BL\_NMC ist mithalten. Allerdings gilt auch hier, dass keine weiteren Anforderungen an die Arbeit des Entwickler gestellt werden. Dazu kommt noch, dass die Ermittlung der Matcherratings quasi bei dem Matching der Typen mit abfällt, wodurch die Verwendung dieser Heuristik kaum eine Auswirkung auf die Komplexität der Exploration hat.
 

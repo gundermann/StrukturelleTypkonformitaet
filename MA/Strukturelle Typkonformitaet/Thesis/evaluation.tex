@@ -1,4 +1,4 @@
-\chapter{Evaluierung}\label{chap_evaluation}
+\chapter{Untersuchungsergebnisse}\label{chap_evaluation}
 In dem System, welches für die Evaluation der Heuristiken verwendet wird, sind insgesamt 891 \emph{provided Typen} und 7 \emph{required Typen} enthalten. In \tabref{eIShort} sind die Namen der \emph{required Typen} zusammen mit jeweils einem Kürzel und den Namen der strukturell und semantisch matchenden Kombinationen von \emph{provided Typen} aufgeführt, die bei der Exploration ermittelt werden sollen. Die Kürzel dienen im weiteren Verlauf der Identifizierung der \emph{required Typen}.
 \begin{table}[h!]
 \centering
@@ -34,17 +34,18 @@ Die Deklaration der \emph{required Typen} und der \emph{provided Typen} aus \tab
 \\\\
 Um die Ergebnisse nachstellen zu können, kann die Implementierung, welche im Abschnitt \ref{sec_impl_descos} beschrieben wurde, mit einer beliebigen Bibliothek, welche sich ebenfalls durch die in Abschnitt \ref{sec:strukturTypen} beschriebene Struktur von Typen abbilden lässt, verwendet werden.
 
-\section{Darstellung der Evaluationsergebnisse}
-Die Evaluationsergebnisse werden in der Form von Vier-Felder-Tafeln dargestellt (Beispiel siehe \tabref{vft:beispiel}). Für jedes desired Interface wird eine Vier-Felder-Tafel für jeden Durchlauf der Schleife innerhalb der Methode $\texttt{semanticEval}$ des Explorationsalgorithmus (siehe Abschnitt \ref{sec_semEval}) aufgezeigt. Aus der jeweiligen Tafel geht hervor, wie viele Proxies über die Funktion $\mathit{targetSets}$ (vgl. Abschnitt \ref{sec_semEval}) in dem aktuellen Iterationsschritt erzeugt werden. Der Wert, den die Iterationsvariable $\texttt{i}$ im betrachteten Durchlauf enthält, wird in der oberen rechten Ecke der Tafel abgebildet.
+\section{Darstellung der Untersuchungsergebnisse}
+Die Untersuchungsergebnisse werden in der Form von Vier-Felder-Tafeln dargestellt (Beispiel siehe \tabref{vft:beispiel}). Für jedes required Interface wird eine Vier-Felder-Tafel für jeden Durchlauf der Schleife innerhalb der Methode $\texttt{semanticEval}$ des Explorationsalgorithmus (siehe Abschnitt \ref{sec_semEval}) aufgezeigt. Aus der jeweiligen Tafel geht hervor, wie viele Proxies über die Funktion $\mathit{targetSets}$ (vgl. Abschnitt \ref{sec_semEval}) in dem aktuellen Iterationsschritt erzeugt werden. Der Wert, den die Iterationsvariable $\texttt{i}$ im betrachteten Durchlauf enthält, wird in der oberen rechten Ecke der Tafel abgebildet.
 In der Spalte ``positiv'' ist die Anzahl der Proxies verzeichnet, die innerhalb des Durchlaufs im schlimmsten Fall evaluiert werden. Die Zahl in der Spalte ``negativ'' drückt hingegen aus, wie viele der Proxies aufgrund bestimmter Kriterien (bzw. Heuristiken) nicht evaluiert wurden.  Die Zeile ``falsch'' beschreibt die Anzahl der relevanten Proxies, welche die semantische Evaluation nicht bestehen. Dementsprechend stellt die Zeile ``richtig'' die Anzahl der Proxies dar, welche die semantischen Evaluation bestehen.
 \\\\
-Aus Abschnitt \ref{sec_proxyCount} geht hervor, dass die Anzahl der Proxies, die für ein desired Interface $R$ mit einer Menge von provided Interfaces $T$ über die Funktion $\mathit{proxyCount(R,T)}$ näherungsweise bestimmt werden kann. Für eine vereinfachte Darstellung der Evaluationsergebnisse bzgl. eines desired Interfaces $R$ aus einer Bibliothek $L$ und einem Iterationsschritt $i$ wird die Anzahl der Proxies für die Anzahl von Mengen von provided Interfaces $A$ wie folgt beschrieben:
+Aus Abschnitt \ref{sec_proxyCount} geht hervor, dass die Anzahl der Proxies, die für ein desired Interface $R$ mit einer Menge von provided Typen $T$ über die Funktion $\mathit{proxyCount(R,T)}$ näherungsweise bestimmt werden kann. Für eine vereinfachte Darstellung der Untersuchungsergebnisse bzgl. eines required Interfaces $R$ aus einer Bibliothek $L$ und einem Iterationsschritt $i$ wird die Anzahl der Proxies für die Anzahl von Mengen von provided Typen $A$ auch wie folgt beschrieben:
 \begin{gather*}
 p(A) = \begin{array}{l|l}
 \mathit{proxyCount(R,targetSets(T,i)} & |T| = A \wedge T \in \mathit{cover(R,L)}
 \end{array}
 \end{gather*}
 \noindent
+Diese Notation kommt jedoch nur bei der Darstellung der Untersuchungsergebnisse eines Iterationsschrittes zum Einsatz, in dem ein passender Proxy gefunden wird. Für alle anderen Durchläufe ist die Anzahl der möglichen Proxies bekannt und wird somit auch dargestellt. 
 %Für die Anzahl der zu erzeugenden Proxies $P$ wird der höchste mögliche Wert angenommen. Dieser ist von der Anzahl der angebotenen Methoden $am$ sowie der Anzahl der erwarteten Methoden $em$ abhängig und wird wie folgt berechnet: 
 %\begin{equation*}
 %MK = \frac{am!}{(am-em)!*em!}
@@ -127,8 +128,31 @@ Für die \emph{required Typen} \emph{TEI4}-\emph{TEI7} werden zwei Durchläufe b
 \input{test_tmr}
 \input{test_pttf}
 \input{test_blnmc}
+\noindent
+\\\\
+Aus den Ergebnissen, die in den Abschnitten \ref{sec_evalLMF} - \ref{sec_evalBLNMC} beschrieben wurden, lässt sich je required Typ eine Rangfolge der vorgestellten Heuristiken erstellen. Diese Rangfolge kann Tabelle \ref{tab_rankingSingle} entnommen werden. Dabei gilt, dass die Heuristik, mit der am wenigsten Proxies generiert und evaluiert werden mussten, den ersten Platz einnimmt. 
+\begin{table}[!h]
+\centering
+\begin{tabular}{|l|c|c|c|c|c|c|c|}
+\hline
+\hline
+\textbf{Heuristik/Required Typ} & \textbf{TEI1} & \textbf{TEI2}& \textbf{TEI3}& \textbf{TEI4}& \textbf{TEI5}& \textbf{TEI6}& \textbf{TEI7}\\
+\hline
+\hline
+LMF  &1.&2.&2.&2.&2.&2.&2.\\
+\hline
+PTTF  &3. &3.&3.&3.&3.&3.&3. \\
+\hline
+BL\_NMC & 2. &1. &1. &1. &1.&1.&1.\\
+\hline
+\hline
+\end{tabular}
+\caption{Rangfolge der Heuristiken (Einzelbetrachtung)}
+\label{tab_rankingSingle}
+\end{table}
 
-\section{Ergebnisse für die Kombination der Heuristiken}
+
+\section{Ergebnisse für die Kombination der Heuristiken}\label{sec_evalKombis}
 Nachdem gezeigt wurde, dass die Exploration durch jede der beschriebenen Heuristiken beschleunigt werden kann. Dabei wurden Exploration mit jeweils einer der Heuristiken durchgeführt. In den folgenden Abschnitten soll evaluiert werden, ob die Verwendung einer Kombination der einzelnen Heuristiken bei der Exploration einen zusätzlichen Vorteil bringt.
 \\\\
 Hierzu werden die Ergebnisse aller Kombinationen der einzelnen Heuristiken aufgeführt und im Anschluss bewertet.
@@ -269,7 +293,26 @@ Aus diesen Ergebnisse lässt sich folgenden Ableiten:
 \item Für den zweiten Durchlauf während der Exploration gilt zumindest für die \emph{required Typen} \emph{TEI4}-\emph{TEI6} dasselbe, wie für den ersten Durchlauf. Für den \emph{required Typ} \emph{TEI7} ist hingegen nochmals eine Verbesserung im Vergleich zu den 2er-Kombinationen (siehe Abschnitte \ref{sec_evalLMFPTTF}-\ref{sec_evalPTTFBLNMC}) zu erkennen.
 \end{enumerate}
 \noindent
-%Das ist schon Diskussion!!!!!
-Zusammenfassend ist zu Ergebnissen bzgl. der Kombination der Heuristiken zu sagen, dass sich zwischen den Heuristiken Synergien ergeben, wodurch im Allgemeinen weniger Proxies evaluiert werden müssen, als wenn die Exploration mit lediglich einer der Heuristiken durchgeführt wurde. 
 \\\\
-Allerdings gibt es auch Fälle, in denen sich die Kombination negativ auswirkt.   Hierzu ist die Exploration für \emph{TEI7} anzumerken, die im ersten Durchlauf  bei den Kombinationen der Heuristiken 2448 Proxies erzeugte und evaluiert, sofern die Heuristik \emph{LMF} in Kombination mit einer oder mehrerer anderer Heuristiken verwendet wurde. Die Ergebnisse zur Exploration mit der Heuristik \emph{BL\_NMC} zeigen hingegen, dass im ersten Durchlauf für \emph{TEI7} lediglich 1051 Proxies erzeugt und evaluiert wurden. 
+Wie bei der Einzelbetrachung der Heuristiken lässt sich auch eine Rangfolge der Kombinationen von Heuristiken je required Typ erstellen. Diese Rangfolge kann Tabelle \ref{tab_rankingCombi} entnommen werden. Dabei gilt wiederum, dass die Kombination von Heuristiken, mit der am wenigsten Proxies generiert und evaluiert werden mussten, den ersten Platz einnimmt. Sofern mehrere Kombinationen von Heuristiken bzgl. dessen gleich aufliegen, wird dies durch eine Doppelplatzierung dargestellt.
+\begin{table}[!h]
+\centering
+\begin{tabular}{|l|c|c|c|c|c|c|c|}
+\hline
+\hline
+\textbf{Heuristik/Required Typ} & \textbf{TEI1} & \textbf{TEI2}& \textbf{TEI3}& \textbf{TEI4}& \textbf{TEI5}& \textbf{TEI6}& \textbf{TEI7}\\
+\hline
+\hline
+LMF + PTTF &3.&4.&4.&4.&4.&4.&4.\\
+\hline
+LMF + BL\_NMC &1. &2.&2.&1./2.&1./2.&1./2.&2. \\
+\hline
+PTTF + BL\_NMC &4. &3.&3.&3.&3.&3.& 3.\\
+\hline
+LMF + PTTF + BL\_NMC &2. &1. &1. & 1./2.&1./2.&1./2.&1.\\
+\hline
+\hline
+\end{tabular}
+\caption{Rangfolge der Heuristiken (Kombinationen)}
+\label{tab_rankingCombi}
+\end{table}
