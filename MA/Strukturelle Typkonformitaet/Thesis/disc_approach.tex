@@ -9,44 +9,41 @@ Um dieses Problem zu beheben könnte man sicherstellen, dass die Generierung der
 Um die zu markierenden EJBs zu identifizieren ist zu prüfen, wie sich die Ausführung der einzelnen Methoden der Bean auf das System auswirken. Es kann festgehalten werden, dass alle Methoden, die den persistenten oder den transienten Zustand von Objekten verändert, das Potential für solche unerwünschten Seiteneffenkte besitzen. 
 \\\\
 Aufbauend auf der Prüfung einzelner Methoden, kann auch die Markierung von Methoden in Betracht gezogen werden. So dürften markierte Methoden bei der Generierung eines Proxies nicht als Delegationsmethode verwendet werden.
-
-\subsection{Auswirkung auf die Stabilität des Systems}\label{sec_stabliliy}
-Ein System gilt als stabil, wenn die enthaltenen Komponenten problemlos zusammenarbeiten \cite{}. Da der Ansatz darauf abzielt, bestimmte Komponenten (EJBs) zur Laufzeit zu kombinieren, hat der vorgestellte Ansatz durchaus eine Auswirkung auf die Stabilität des Systems.
+\subsection{Auswirkung auf die Verfügbarkeit eines Systems}\label{sec_stabliliy}
+Die Verfügbarkeit eines System bzw. von Systemkomponenten, bezeichnet die Wahrscheinlichkeit, ein System oder Systemkomponenten zu einem vorgegebenen Zeitpunkt in einem funktionsfähigen Zustand anzutreffen. \cite{it-admin}
+Die Auswirkung des Ansatzes auf die Verfügbarkeit wurde in dieser Arbeit nicht systematisch untersucht. Da der Ansatz jedoch darauf abzielt, bestimmte Komponenten (EJBs) zur Laufzeit zu kombinieren, können Überlegungen bzgl. der Verfügbarkeit durchaus angestellt werden.
 \\\\
-Die Auswirkung des Ansatzes auf die Stabilität des Systems wird maßgeblich durch die Güte der vordefinierten Testfälle bestimmt. Sofern die durch die Testfälle sichergestellte Semantik der gefundenen Proxies ausreichend gut spezifiziert wurde, ist es möglich, dass das System auch dann noch stabil ist, wenn Komponenten entfernt wurden.
+Dabei muss allerdings bedacht werden, dass die Verfügbarkeit der Komponente (also der EJB) in diesem Zusammenhang nicht ausschlaggebend ist. Immerhin wird sie nicht direkt adressiert, sondern auf Basis struktureller und semantischer Vorgaben ermittelt. Insofern bilden eher die Funktionen, die von den EJBs angeboten werden, die Komponenten in Bezug auf die hier betrachtete Verfügbarkeit.
 \\\\
-Sofern die Testfälle nicht ausreichend die Semantik sicherstellen, können zwar immer noch passende Komponenten gefunden werden, jedoch muss in Frage gestellt werden, ob das System unter der Verwendung dieser immer noch korrekt arbeitet. Somit hängt die Auswirkung des Ansatzes auf die Stabilität des Systems direkt mit der Sorgfalt des Entwicklers, der dieses Ansatz verwendet, zusammen.
+Ausgehend davon kann die These aufgestellt werden, dass mit diesem Ansatz eine höhere Verfügbarkeit erreicht wird, sofern die Funktionen im System redundant vorliegen. Da eine Funktion jedoch im Vergleich zu einer EJB eine kleinere Einheit bildet, wird es als wahrscheinlicher angesehen, dass Funktionen redundant bereitgestellt wurden, als dass es bei EJB der Fall ist.
+%\\\\
+%Die Auswirkung des Ansatzes auf die Verfügbarkeit bestimmter Komponenten Systems wird maßgeblich durch die Güte der vordefinierten Testfälle bestimmt. Sofern die durch die Testfälle sichergestellte Semantik der gefundenen Proxies ausreichend gut spezifiziert wurde, ist es möglich, dass das System auch dann noch stabil ist, wenn Komponenten entfernt wurden.
+%\\\\
+%Sofern die Testfälle nicht ausreichend die Semantik sicherstellen, können zwar immer noch passende Komponenten gefunden werden, jedoch muss in Frage gestellt werden, ob das System unter der Verwendung dieser immer noch korrekt arbeitet. Somit hängt die Auswirkung des Ansatzes auf die Stabilität des Systems direkt mit der Sorgfalt des Entwicklers, der dieses Ansatz verwendet, zusammen.
+%\\\\
+%Darüber hinaus darf nicht vernachlässigt werden, dass der Ansatz das Finden eines passenden Proxies nicht garantiert. Der Entwickler muss also damit umgehen, dass kein Proxy gefunden wurde.
+\subsection{Auswirkung von Änderungen an bestehenden Komponenten (EJBs)}
+Da die EJBs bei dem vorgestellten Ansatz nicht explizit adressiert werden, weiß der Entwickler auch nicht, an welche EJBs die Methodenaufrufe letztendlich delegiert werden. So können sich Änderungen an bestehenden Komponenten durchaus eine Auswirkung auf die gefundenen Proxies haben.
 \\\\
-Darüber hinaus darf nicht vernachlässigt werden, dass der Ansatz das Finden eines passenden Proxies nicht garantiert. Der Entwickler muss also damit umgehen, dass kein Proxy gefunden wurde.
-\subsection{Auswirkung durch Änderungen am System}
-An einem System könne vielfältige Änderungen vorgenommen werden. Im folgenden wird zum Einen die Erweiterung vom zusätzliche \emph{provided Typen} und zum Anderen die Entfernung von \emph{provided Typen} betrachtet. Dabei sei angenommen, dass die \emph{required Typen}, zu denen ein passender Proxy gefunden werden soll, nicht verändert werden.
+Im folgenden wird zum Einen die Erweiterung von zusätzlichen provided Typen (EJBs) und zum Anderen die Entfernung von provided Typen (EJBs) betrachtet. Dabei sei angenommen, dass die required Typen, zu denen ein passender Proxy gefunden werden soll, nicht verändert werden.
 \\\\
-Die Erweiterung von Systemen geht in Bezug auf den beschriebenen Ansatz zur testgetriebenen Exploration zur Laufzeit damit einher, dass sich die Anzahl der \emph{provided Typen} verändert. Wie in Abschnitt \ref{sec_anzahlProxies} beschrieben, besteht damit auch die Gefahr, dass die Anzahl der möglichen Proxies steigt. Dazu muss jedoch gelten, dass eine Methode im neuen provided Typ mit einer Methode eines required Typ gematcht werden kann.
+Die Erweiterung von Systemen geht in Bezug auf den beschriebenen Ansatz zur testgetriebenen Exploration zur Laufzeit damit einher, dass sich die Anzahl der provided Typen verändert. Wie in Abschnitt \ref{sec_anzahlProxies} beschrieben, besteht damit auch die Gefahr, dass die Anzahl der möglichen Proxies steigt. Dazu muss jedoch gelten, dass eine Methode im neuen provided Typ mit einer Methode eines required Typ gematcht werden kann.
 \\\\
-Mehrere mögliche Proxies haben wiederum einen Einfluss auf die Laufzeit und das Ergebnis der Exploration. So kann nicht davon ausgegangen werden, dass ein passender Proxy zu einem bestimmten required Typ genauso schnell gefunden wird, nachdem das System neu gestartet wurde.
+Mehrere mögliche Proxies haben wiederum einen Einfluss auf die Laufzeit und das Ergebnis der Exploration. So kann nicht davon ausgegangen werden, dass ein passender Proxy zu einem bestimmten required Typ genauso schnell gefunden wird, nachdem sich Änderungen an den provided Typen im System ergeben haben.
 \\\\
-Ebenso wirkt sich das Entfernen eines provided Typs, der bei einer früheren Exploration für die Generierung eines Proxies verwendet wurde, auf die Exploraiton nach einem Neustart aus. Dadurch, dass der früher verwendete provied Typ nicht mehr vorhanden ist, muss ein anderer Proxies, der auf anderen provided Typen basiert, erzeugt werden.
+Ebenso wirkt sich das Entfernen eines provided Typs, der bei einer früheren Exploration für die Generierung eines Proxies verwendet wurde, auf die Exploraiton nach einer solchen Änderung aus. Dadurch, dass der früher verwendete provided Typ nicht mehr vorhanden ist, muss ein anderer Proxies, der auf anderen provided Typen basiert, erzeugt werden\footnote{sofern dies gelingt, unterstützt dies die These aus Abschnitt \ref{sec_stabliliy}}.
 \\\\
 Da die Exploration beendet wird, sofern ein passender Proxy gefunden wurde, kann es auch unter diesen Umständen dazu kommen, dass die Exploration mitunter länger dauert als vorher. Zudem besteht in diesem Fall die Gefahr, dass die Exploration fehlschlägt.
 
-
-
-
-
-
-\subsection{Verantwortung des Entwicklers}
-Aus dem oben genannten ergibt sich, dass der Entwickler bei der Verwendung dieses Ansatzes eine große Verantwortung trägt. Dieser kann er meiner Meinung nach umso besser gerecht werden, je besser er das System, in dem der Ansatz verwendet werden soll, kennt. 
+\subsection{Nutzen für den Entwickler}
+Aus dem oben genannten ergibt sich, dass der Entwickler bei der Verwendung dieses Ansatzes eine große Verantwortung trägt. Dieser kann er umso besser gerecht werden, je besser er das System, in dem der Ansatz verwendet werden soll, kennt. 
 \\\\
 So kann festgehalten werden, dass ein Entwickler, der das System gut kennt und somit weiß, welche Komponenten innerhalb dessen verwendet werden, diesen Ansatz wohl kaum benötigt. Vielmehr ist es ihm möglich die passenden Komponenten aufgrund seines Wissens explizit zu benennen, wie es im EJB-Framework grundlegend der Fall ist.
 \\\\
 Ein Entwickler, der das System hingegen weniger kennt, kann von diesem Ansatz profitieren, da er nicht selbst nach einer für ihn passenden EJB (mitunter auch mehreren) suchen muss. Diese kann er über die Deklaration eines required Typen und der Spezifikation dazugehöriger Tests suchen lassen. Dabei ist jedoch zu erwähnen, dass die Exploration insbesondere mit der vorgestellten Heuristik LMF umso schneller ist, je genauer die in den Methoden des required Typs verwendeten Typen mit den Typen, die in den Methoden der provided Typen übereinstimmen (Matcherrating).
 \\\\
-Ist dem Entwickler das System unbekannt, wird es schwerfallen zum Einen ein \emph{required Typ} so zu definieren, dass die Anzahl der möglichen Proxies nicht zu hoch wird. Und zum Anderen werden sich auch Probleme bei der ausreichenden Spezifikation von Testfällen ergeben. Wobei der zweite Punkt direkt mit der Kopplung der \emph{provided Typen} zusammenhängt. Eine zu starke Kopplung könnte die Gefahr für unerwünschte Seiteneffekte erhöhen \cite{}. Zusammenfassend könnte folge These formuliert werden: These: Je schlechter ein Entwickler das vorliegende System kennt, desto eher wird der o.g. Abstraktionsgrad abweichen. Dies ließe sich mitunter durch eine Umfrage mehrere Mitarbeiter unterschiedlicher Betriebsangehörigkeit in Erfahrung bringen.
+Ist dem Entwickler das System unbekannt, wird es schwerfallen einen required Typ so zu deklarieren, dass die Anzahl der möglichen Proxies nicht zu hoch wird. 
 \\\\
+Zusammenfassend kann folge These formuliert werden: Der Nutzen dieses Ansatzes für einen Entwickler in Bezug auf ein System steht im umgekehrt proportionalen Verhältnis zum Wissen dieses Entwicklers über das System. 
 
-
-
-Das unten stehende Diagramm stellt dar, welche Eigenschaften in Bezug auf den Ansatz zu- bzw. abnehmen. Wobei das linke Ende der Skala als Grundlage das Wissen eines Entwicklers darstellt, der das System nicht kennt und das rechte Ende dementsprechend das Wissen eines Entwicklers darstellt, der das System sehr gut kennt.
-
-
-Darauf aufbauend ergibt sich die Frage nach der Aussagekraft der vorliegenden Untersuchungsergebnisse.
+%Dies ließe sich mitunter durch eine Umfrage mehrere Mitarbeiter unterschiedlicher Betriebsangehörigkeit in Erfahrung bringen.
