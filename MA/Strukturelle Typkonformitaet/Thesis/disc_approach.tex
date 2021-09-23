@@ -1,4 +1,4 @@
-\section{Kritik am Ansatz}
+\section{Kritik am Ansatz}\label{sec_discApproach}
 %Die Aussagekraft der Ergebnisse ist aufgrund der gewählten required Typen eher gering. Hier spielt auch der Abstraktionsgrad der Typen mit rein, die in den Methoden als Parameter- oder Rückgabetypen verwendet werden. Eine These ist, dass die Anzahl der zu evaluierenden Proxies steigt, je weiter der Abstraktionsgrad der in den required Typen und den provided Typen verwendeten Parameter- und Rückgabetypen auseinandergeht.
 
 \subsection{Seiteneffekte durch Testevaluation}\label{sec_sideeffects}
@@ -22,15 +22,16 @@ Ausgehend davon kann die These aufgestellt werden, dass mit diesem Ansatz eine h
 %Sofern die Testfälle nicht ausreichend die Semantik sicherstellen, können zwar immer noch passende Komponenten gefunden werden, jedoch muss in Frage gestellt werden, ob das System unter der Verwendung dieser immer noch korrekt arbeitet. Somit hängt die Auswirkung des Ansatzes auf die Stabilität des Systems direkt mit der Sorgfalt des Entwicklers, der dieses Ansatz verwendet, zusammen.
 %\\\\
 %Darüber hinaus darf nicht vernachlässigt werden, dass der Ansatz das Finden eines passenden Proxies nicht garantiert. Der Entwickler muss also damit umgehen, dass kein Proxy gefunden wurde.
-\subsection{Auswirkung von Änderungen an bestehenden Komponenten (EJBs)}
-Da die EJBs bei dem vorgestellten Ansatz nicht explizit adressiert werden, weiß der Entwickler auch nicht, an welche EJBs die Methodenaufrufe letztendlich delegiert werden. So können sich Änderungen an bestehenden Komponenten durchaus eine Auswirkung auf die gefundenen Proxies haben.
+\subsection{Auswirkung von Änderungen an bestehenden Komponenten}
+Da die EJBs bei dem vorgestellten Ansatz nicht explizit adressiert werden, weiß der Entwickler auch nicht, an welche EJBs die Methodenaufrufe letztendlich delegiert werden. Somit sind die Auswirkungen von Änderungen an bestehenden Komponenten nicht direkt vorhersehbar, da sich die Menge der matchenden provided Typen (EJBs) und dementsprechend auch die generierten Proxies ändern.
 \\\\
-Im folgenden wird zum Einen die Erweiterung von zusätzlichen provided Typen (EJBs) und zum Anderen die Entfernung von provided Typen (EJBs) betrachtet. Dabei sei angenommen, dass die required Typen, zu denen ein passender Proxy gefunden werden soll, nicht verändert werden.
+Im Folgenden wird zum Einen die Erweiterung von zusätzlichen provided Typen und zum Anderen die Entfernung von provided Typen betrachtet. Dabei sei angenommen, dass die required Typen, zu denen ein passender Proxy gefunden werden soll, nicht verändert werden.
 \\\\
+\subsubsection{Erweiterungen um neue Komponenten}
 Die Erweiterung von Systemen geht in Bezug auf den beschriebenen Ansatz zur testgetriebenen Exploration zur Laufzeit damit einher, dass sich die Anzahl der provided Typen verändert. Wie in Abschnitt \ref{sec_anzahlProxies} beschrieben, besteht damit auch die Gefahr, dass die Anzahl der möglichen Proxies steigt. Dazu muss jedoch gelten, dass eine Methode im neuen provided Typ mit einer Methode eines required Typ gematcht werden kann.
 \\\\
 Mehrere mögliche Proxies haben wiederum einen Einfluss auf die Laufzeit und das Ergebnis der Exploration. So kann nicht davon ausgegangen werden, dass ein passender Proxy zu einem bestimmten required Typ genauso schnell gefunden wird, nachdem sich Änderungen an den provided Typen im System ergeben haben.
-\\\\
+\subsubsection{Entfernen von bestehenden Komponenten}
 Ebenso wirkt sich das Entfernen eines provided Typs, der bei einer früheren Exploration für die Generierung eines Proxies verwendet wurde, auf die Exploraiton nach einer solchen Änderung aus. Dadurch, dass der früher verwendete provided Typ nicht mehr vorhanden ist, muss ein anderer Proxies, der auf anderen provided Typen basiert, erzeugt werden\footnote{sofern dies gelingt, unterstützt dies die These aus Abschnitt \ref{sec_stabliliy}}.
 \\\\
 Da die Exploration beendet wird, sofern ein passender Proxy gefunden wurde, kann es auch unter diesen Umständen dazu kommen, dass die Exploration mitunter länger dauert als vorher. Zudem besteht in diesem Fall die Gefahr, dass die Exploration fehlschlägt.

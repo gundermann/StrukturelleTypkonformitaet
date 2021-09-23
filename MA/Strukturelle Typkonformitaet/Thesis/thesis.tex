@@ -1,10 +1,18 @@
 \documentclass[a4paper,12pt]{book}
 \include{preamble}
-
 \mywork{Niels Gundermann}{Evaluation von Heuristiken für die testgetriebene Exploration von Enterprise-Java-Beans}
 \begin{document}
 \mymastertitle{Univ.\ Prof.\ Dr.\ Friedrich Steimann}
 \frontmatter
+
+%\phantomsection
+\section*{Abstract}
+Mit dem Verfahren der testgetriebenen Codesuche ist ein Software-Entwickler in der Lage bestehendem Code in einem Repository nach vorgegebenen Kriterien zu durchsuchen. Die Kriterien beinhalten dabei Testfälle, die auf den bestehenden Code im Repository angewendet werden.  Ausgehend davon, dass eine solche Suche auch zur Laufzeit innerhalb eines Systems möglich ist, wird die Zeit, die dafür zur Verfügung steht zu einem kritischen Aspekt.
+\\\\
+Daher ist es das Ziel dieser Arbeit, Heuristiken zu evaluieren, durch die die testgetriebene Codesuche beschleunigt werden kann. Dazu wird die Exploration im Kontext der Arbeit formal beschrieben. Aufbauend auf dieser formalen Beschreibung werden drei Heuristiken vorgestellt, die bei der Exploration in einem bestehenden System evaluiert werden. Das Repository bildet dabei ein EJB-Container mit ca. 900 EJBs innerhalb des Systems. 
+\\\\
+Die Untersuchungsergebnisse zeigen, dass alle drei Heuristiken - wenn auch mit Abstufungen - das Potential haben, die Exploration zu beschleunigen.
+%\newpage
 
 %\include{declarationofownwork}
 %\newpage
@@ -29,8 +37,6 @@
 %\newpage
 
 
-%\section*{Kurzfassung}
-%\newpage
 
 \mainmatter
 \input{introduction}
@@ -39,11 +45,9 @@
 \input{implementation}
 \input{evaluation}
 \input{discussion}
-\input{future}
-\chapter{Schlussbemerkung}
-Zusammenfassend ist zu sagen, dass die vorgestellten Heuristiken durchaus ihren Zweck erfüllen und die Anzahl der zu evaluierenden Proxies reduzieren. Auch die Entstehung von Synergien durch die Verwendung mehrere Heuristiken während der Exploration ist gelungen.
-\\\\
-Weiterhin wurde gezeigt, dass die testgetriebe Exploration von EJBs zur Laufzeit grundlegend funktioniert. Darüber hinaus wurden jedoch auch Probleme aufgezeigt, die den praktischen Nutzen des Ansatzes infrage stellen.
+
+\input{finish}
+
 
 \appendix
 \addcontentsline{toc}{chapter}{Literaturverzeichnis}

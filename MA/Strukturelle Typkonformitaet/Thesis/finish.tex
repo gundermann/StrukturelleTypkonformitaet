@@ -1,0 +1,12 @@
+\chapter{Schlussbemerkung}\label{chap_finish}
+\section{Zusammenfassung}
+Zusammenfassend ist zu sagen, dass die vorgestellten Heuristiken ihren Zweck erfüllen und gemessen an der Anzahl der zu generierenden und zu evaluierenden Proxies eine schnellere Exploration nach einem passenden Proxy ermöglichen. Dabei konnten auch Synergieeffekte zwischen den einzelnen Heuristiken festgestellt werden.
+\\\\
+Weiterhin wurde gezeigt, dass die testgetriebe Exploration von EJBs zur Laufzeit grundlegend funktioniert. Dennoch gibt es Szenarien, in denen von diesem Verfahren eher abzuraten ist. Das betrifft insbesondere solche EJBs, durch deren Methodenaufrufe eine Änderung an ihrem inneren Zustand bezweckt wird. Es wurden jedoch Möglichkeiten aufgezeigt, wie mit solchen Konstellationen umgegangen werden kann.
+\\\\
+Ob der Ansatz der testgetriebenen Exploration zur Laufzeit im Allgemein einen Nutzen verspricht wurde nicht geklärt. Wenn dies überhaupt der Fall ist, dass hängt der Nutzen sicherlich mit dem Wissen des jeweiligen Entwicklers zusammen, das er über das vorliegende System hat.
+\\\\
+Unabhängig davon wurde in dieser Arbeit eine allgemeine formale Beschreibung für Typen gegeben, die in anderen Typen enthalten sind (ContentTypeMatcher bzw. ContainerTypeMatcher). 
+\\\\
+Zudem können die entwickelten Module, welche in Kapitel \ref{chap_impl} vorgestellt wurden, in unterschiedlichen Systemen verwendet werden. Hinsichtlich des Repositories hat der Entwickler sehr viel Freiraum und ist nicht auf einen EJB-Container beschränkt. Weiterhin können neue Matcher durch die Implementierung der dafür vorgesehenen Interfaces in die Module integriert werden, was den Nutzen für ein System individuell steigern kann.
+\input{future}
