@@ -1,3 +1,56 @@
-\chapter{Problemstellung}
+\chapter{Forschungsziel}
+\section{Testgetriebene Codesuche}
+Die Idee der testgetriebenen Codesuche (testdriven codesearch - TDCS) beruht im Grunde auf dem Ziel der Wiederverwendung von Software, welches 1992 von Krueger wie folgt beschrieben wurde:
+\emph{\glqq Software resure is the process of creating software systems from existing software rather than building software systems from scratch.\grqq{}} \cite{krueger} In der TDCS soll dieses Ziel in Verbindung mit dem Prozess der testgetriebenen Software-Entwicklung (testdriven development - TDD) erreicht werden. \cite{hummel08} 
+\\\\
+TDCS beruht grundlegend darauf, dass der Entwickler Anforderungen spezifiziert, die im Anschluss verwendet werden, um relevanten Source Code aus einem Repository hinsichtlich dieser Anforderungen zu ermittelt. Darauf aufbauend kann das jeweilige Tool dem Entwickler Vorschläge für die Wiederverwendung bestehenden Codes unterbreiten.
+\\\\
+Der Prozess der TDCS kann grundlegend wie in Abbildung \ref{} dargestellt werden (vgl. \cite{hummel08}).
+\begin{figure}[h!]
+
+\end{figure}
+Somit entwirft der Entwickler zuerst ein Design in einem vorgegebenen Format, auf das er in den daraus zu spezifizierenden Tests zurückgreifen kann. Ausgehend von diesen Anforderungen wird das Repository nach Codeteilen durchsucht, die zu dem vorgegebenen Design passen. Die gefundenen Codeteile werden im Anschluss daran mithilfe der vorgegebenen Tests validiert\footnote{Durch die Vorgabe von Tests lässt sich die Parallele zum TDD ziehen.}.
+\\\\
+%\subsection{Verwandte Arbeiten}
+Solche Ansätze wurden bereits in \cite{sourcerer} von Bajaracharya et al.  verfolgt. Diese Gruppe entwickelte eine Search Engine namens Sourcerer, welche Suche von Open Source Code im Internet ermöglichte. Darauf aufbauend wurde von derselben Gruppe in \cite{Lemos} ein Tool namens CodeGenie entwickelt, welches einem Softwareentwickler die Code Suche über ein Eclipse-Plugin ermöglicht. In diesem Zusammenhang wurde erstmals der Begriff der Test-Driven Code Search etabliert. Parallel dazu wurde in Verbindung mit der Dissertation Oliver Hummel \cite{hummel08} ebenfalls eine Weiterentwicklung von Sourcerer veröffentlicht, welche unter dem Namen Merobase bekannt ist, welches ebenfalls das Konzept der TDCS verfolgt.
+\\\\
+%\subsection{Voraussetzungen}
+In Bezug auf die TDCS wurden von Hummel\cite{hummel08} dabei drei Voraussetzungen identifiziert:
+\begin{enumerate}
+\item Ein Software-Repository, in dem die wiederverwendbaren Softwareteile enthalten sind.
+\item Ein Format für die Repräsentation dieser Softwareteile.
+\item Ein Mechanismus, welcher in der Lage ist, das Repository zu durchsuchen.
+\end{enumerate}
+\noindent
+Als Software-Repository wurden in den früheren Arbeiten im Internet bestehende Code-Repositiories verwendet. Die Repräsentation konnte dabei je nach Repository unterschiedliche Formen haben. Und die Mechanismen, die für die Suche verwendet wurden, waren ebenfalls vielfältig.
+
 \section{Testgetriebene Exploration von EJBs}
-\input{related_works}
+Diese Arbeit legt den Fokus auf die Suche von Enterprise-Java-Beans (EJBs). Hummel hat EJBs bereits in \cite{hummel08} als Client-Server-Architektur für Software-Systeme, welche die Kommunikation zwischen Komponenten, die auf physikalisch unterschiedlichen Maschinen laufen, koordinieren bzw. unterstützen können (vgl. auch \cite{ejbspec}). Dazu wird das jeweilige Software-System auf einem Applikationsserver deployed, der die Enterprise-Java-Beans Spezifikation \cite{ejbspec} erfüllt.
+\\\\
+Bei einer Bean handelt es sich grundlegend um eine Java-Klasse, die eine vordefinierte Struktur hat. Seit der Version 3 kann die Struktur durch ein Java-Interface vorgegeben werden\cite{ejbspec}.
+\\\\
+Die Beans können über einen EJB-Container abgerufen werden. Zu diesem Zweck publiziert der EJB-Container die Interfaces der deployten Beans, sodass diese auf den Clients über JNDI oder Dependency Injection zur Verfügung stehen \cite{ejbspec}.
+\\\\
+Bezogen auf die in \cite{hummel08} beschriebenen Voraussetzungen für die TDCS wird der EJB-Container in dieser Arbeit als Software-Repository angesehen. Die einzelnen Softwareteile (EJBs) liegen in Form von Java-Interfaces repräsentiert. Und der Mechanismus zum Durchsuchen des Repositories wird durch die Publikation der Java-Interfaces der EJBs durch den EJB-Container bereitgestellt.
+\\\\
+Bezogen auf die Exploration von EJBs sieht der Prozess, der in Abbildung \ref{} aufgezeigt wurde vor, dass das Design der gesuchten Beans und die Tests, mit denen die zum Design passenden Beans validiert werden, vorgegeben wird. Für die Definition des Designs bietet sich dabei die Repräsentationsform der EJBs an - ein Java-Interface. Als Tests können wiederum Java-Klassen verwendet werden, die über ihre Methoden eine Validierung der EJBs erlauben.
+\\\\
+Somit kann der Prozess der testgetriebenen Exploration von EJBs in Anlehnung an der Beschreibung zu Abbildung \ref{} in Abbildung \ref{} etwas spezifiziert werden.
+\begin{figure}[h!]
+
+\end{figure}
+\\\\
+Die \emph{Strukturelle Evaluation} beschreibt die Ermittlung aller EJBs, die zu dem vorgegebenen Interface passen.
+In Anlehnung an \cite{hummel08} werden diese EJBs auf der Basis des Signature-Matching Ansatzes ermittelt. Dieser Ansatz wurde ursprünglich von Zaremski und Wing \cite{moormann} etabliert. Er basiert darauf, dass lediglich die Methoden-Signaturen der Klassen bzw. Interfaces miteinander abgeglichen werden. Der Abgleich erfolgt sowohl in \cite{moormann} als auch in dieser Arbeit auf der Basis von Matchern, die in Abschnitt \ref{sec_matcher} genauer beschrieben werden.
+\\\\
+Da bei der Ermittlung der Beans lediglich die Methoden-Signaturen eine Rolle spiele, besteht die Möglichkeit, dass die Methoden einer einzelnen Bean nur zu einem Teil der Methoden des vorgegebenen Interfaces passen. In diesem Fall kann der Ansatz dazu verwendet werden, für die übrigen Methoden eine andere Bean zu finden, die dafür passende Methoden bereitstellt. Damit müssten die beiden Beans jedoch miteinander kombiniert werden, um das vorgegebene Interface in Gänze zu matchen.
+\\\\
+Dieses Problem soll in dieser Arbeit ebenfalls adressiert werden. Die Kombination der Beans soll über ein Proxy-Objekt erreicht werden, welches bei der Exploration im Anschluss an die Strukturelle Evaluation generiert wird. Das Proxy-Objekt muss dann zum einen in der Lage sein, die Methodenaufrufe wie in den Methoden-Signaturen den vorgegebenen Interfaces entgegenzunehmen und diese dann zum Anderen an die entsprechende Bean, die eine dazu passende Methode bereitstellt, delegieren.
+\\\\
+Dieser Schritt ordnet sich in den Gesamtprozess der testgetriebenen Exploration von EJBs, wie folgt ein (siehe Abbildung \ref{}):
+\begin{figure}[h!]
+
+\end{figure}
+\noindent
+Der letzte Schritt beinhaltet die Validierung der generierten Proxies durch die vorgegebenen Testklassen. Da die Exploration mit den oben genannten Voraussetzungen nur zur Laufzeit durchgeführt werden kann\footnote{Anderenfalls steht der EJB-Container gar nicht zur Verfügung.}, sollte die Suche abgebrochen werden, sofern ein generierter Proxy erfolgreich validiert wurde. Anderenfalls kann es bspw. zu unnötigen Timeouts laufender Transaktionen kommen. Um darüber hinaus ein schnelles Auffinden eines validierten Proxies zu gewährleisten, werden in diesem letzten Schritt Heuristiken verwendet, welche die Generierung von Proxies und der positiven Validierung eines dieser Proxies beschleunigen. Die vorliegende Arbeit dient hauptsächlich der Evaluation solcher Heuristiken.
+
