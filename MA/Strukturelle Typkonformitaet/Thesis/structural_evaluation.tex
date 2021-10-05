@@ -1,4 +1,9 @@
 \section{Strukturelle Evaluation}
+In Anlehnung an \cite{hummel08} werden diese EJBs auf der Basis des Signature-Matching Ansatzes ermittelt. Dieser Ansatz wurde ursprünglich von Zaremski und Wing \cite{moormann} etabliert. Er basiert darauf, dass lediglich die Methoden-Signaturen der Klassen bzw. Interfaces miteinander abgeglichen werden. 
+\\\\
+Zu diesem Zweck wird eine Struktur zur Definition von Typen in Abschnitt \ref{sec:strukturTypen} vorgegeben, die eine abstrakte Darstellung der Klassen bzw. Interfaces, die im konkreten Fall verwendet werden, darstellen.
+\\\\
+Der Abgleich der Signaturen dieser Typen erfolgt sowohl in \cite{moormann} als auch in dieser Arbeit auf der Basis von Matchern, die in Abschnitt \ref{sec_matcher} genauer beschrieben werden.
 \subsection{Struktur für die Definition von Typen}\label{sec:strukturTypen}
 Die Typen seien in einer Bibliothek $\text{L}$ in folgender Form zusammengefasst:
 \begin{table}[H]
