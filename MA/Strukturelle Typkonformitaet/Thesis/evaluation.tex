@@ -38,7 +38,7 @@ Um die Ergebnisse nachstellen zu können, kann die Implementierung, welche im Ab
 Die Untersuchungsergebnisse werden in der Form von Vier-Felder-Tafeln dargestellt (Beispiel siehe \tabref{vft:beispiel}). Für jedes required Interface wird eine Vier-Felder-Tafel für jeden Durchlauf der Schleife innerhalb der Methode $\texttt{semanticEval}$ des Explorationsalgorithmus (siehe Abschnitt \ref{sec_semEval}) aufgezeigt. Aus der jeweiligen Tafel geht hervor, wie viele Proxies über die Funktion $\mathit{targetSets}$ (vgl. Abschnitt \ref{sec_semEval}) in dem aktuellen Iterationsschritt erzeugt werden. Der Wert, den die Iterationsvariable $\texttt{i}$ im betrachteten Durchlauf enthält, wird in der oberen rechten Ecke der Tafel abgebildet.
 In der Spalte ``positiv'' ist die Anzahl der Proxies verzeichnet, die innerhalb des Durchlaufs im schlimmsten Fall evaluiert werden. Die Zahl in der Spalte ``negativ'' drückt hingegen aus, wie viele der Proxies aufgrund bestimmter Kriterien (bzw. Heuristiken) nicht evaluiert wurden.  Die Zeile ``falsch'' beschreibt die Anzahl der relevanten Proxies, welche die semantische Evaluation nicht bestehen. Dementsprechend stellt die Zeile ``richtig'' die Anzahl der Proxies dar, welche die semantischen Evaluation bestehen.
 \\\\
-Aus Abschnitt \ref{sec_proxyCount} geht hervor, dass die Anzahl der Proxies, die für ein desired Interface $R$ mit einer Menge von provided Typen $T$ über die Funktion $\mathit{proxyCount(R,T)}$ näherungsweise bestimmt werden kann. Für eine vereinfachte Darstellung der Untersuchungsergebnisse bzgl. eines required Interfaces $R$ aus einer Bibliothek $L$ und einem Iterationsschritt $i$ wird die Anzahl der Proxies für die Anzahl von Mengen von provided Typen $A$ auch wie folgt beschrieben:
+Aus Abschnitt \ref{sec_anzahlProxies} geht hervor, dass die Anzahl der Proxies, die für ein desired Interface $R$ mit einer Menge von provided Typen $T$ über die Funktion $\mathit{proxyCount(R,T)}$ näherungsweise bestimmt werden kann. Für eine vereinfachte Darstellung der Untersuchungsergebnisse bzgl. eines required Interfaces $R$ aus einer Bibliothek $L$ und einem Iterationsschritt $i$ wird die Anzahl der Proxies für die Anzahl von Mengen von provided Typen $A$ auch wie folgt beschrieben:
 \begin{gather*}
 p(A) = \begin{array}{l|l}
 \mathit{proxyCount(R,targetSets(T,i)} & |T| = A \wedge T \in \mathit{cover(R,L)}
@@ -47,12 +47,12 @@ p(A) = \begin{array}{l|l}
 \noindent
 Diese Notation kommt jedoch nur bei der Darstellung der Untersuchungsergebnisse eines Iterationsschrittes zum Einsatz, in dem ein passender Proxy gefunden wird. Für alle anderen Durchläufe ist die Anzahl der möglichen Proxies bekannt und wird somit auch dargestellt. 
 \\\\
-\tabref{vft:beispiel} zeigt ein Beispiel für eine solche Vier-Felder-Tafel, in der die Ergebnisse des 1. Iterationsschritt dargestellt sind. Dabei wurden 11 Proxies generiert und getestet. 10 dieser Proxies bestanden die Evaluation nicht. Insgesamt konnte Proxies aus 20 Kombinationen von provided Typen erzeugt werden. Alle diese abzüglich der 11 generierten Proxies wurden im Vorfeld (bspw. durch Heuristiken) aussortiert. Weiterhin zeigt das Beispiel, dass es einen Proxy gab, der die semantische Evaluation bestand.
+\tabref{vft:beispiel} zeigt ein Beispiel für eine solche Vier-Felder-Tafel, in der die Ergebnisse des 1. Iterationsschritt dargestellt sind. Dabei wurden 11 Proxies generiert und getestet. 10 dieser Proxies bestanden die Evaluation nicht. Insgesamt konnten Proxies aus 20 Kombinationen von provided Typen erzeugt werden. Alle diese abzüglich der 11 generierten Proxies wurden im Vorfeld (bspw. durch Heuristiken) aussortiert. Weiterhin zeigt das Beispiel, dass es einen Proxy gab, der die semantische Evaluation bestand.
 \vft{1}{10}{$p(20)-11$}{1}{0}{Beispiel: Vier-Felder-Tafel}{vft:beispiel}
 
 
 \section{Ausgangspunkt}
-Für ein \emph{reqiured Typ} können mehrere \emph{provided Typen} gefunden werden, die eine strukturelle Übereinstimmung aufwiesen. \tabref{amountMatchedInterfaces} zeigt die Anzahl der strukturell übereinstimmenden \emph{provided Typen} je \emph{reqiured Typ}. Diese kommen einzeln oder in Kombination für die semantische Evaluation in Frage.
+Für einen reqiured Typ können mehrere provided Typen gefunden werden, die eine strukturelle Übereinstimmung aufwiesen. \tabref{amountMatchedInterfaces} zeigt die Anzahl der strukturell gematchten provided Typen zum jeweiligen reqiured Typ. Diese kommen einzeln oder in Kombination für die semantische Evaluation in Frage.
 \begin{table}[H]
 \centering
 \small
@@ -78,7 +78,7 @@ Für ein \emph{reqiured Typ} können mehrere \emph{provided Typen} gefunden werd
 				\hline
 				\hline
 			\end{tabular} 
- \caption{Anzahl strukturell übereinstimmender provided Typen je required Typ}
+ \caption{Anzahl strukturell gematchten provided Typen für die Evaluation}
  \label{tab:amountMatchedInterfaces}
 \onehalfspacing
 \end{table}
@@ -108,7 +108,7 @@ Die \tabsrefs{tmr_start_tei1}{tmr_start_tei7_2} zeigen die Vier-Felder-Tafeln, i
 \vft{2}{7764501}{$p(52150)-7764502$}{1}{0}{Ausgangspunkt für TEI7 \\2. Durchlauf}{tmr_start_tei7_2}
 \end{multicols}
 \noindent
-Für die \emph{required Typen} \emph{TEI4}-\emph{TEI7} werden zwei Durchläufe benötigt, da die semantischen Test nur von einem Proxy bestanden werden, der aus einer Kombination zweier \emph{provided Typen} erzeugt wurde (siehe auch \tabref{eIShort}).
+Für die \emph{required Typen} \emph{TEI4}-\emph{TEI7} werden zwei Durchläufe benötigt, da die semantischen Tests nur von einem Proxy bestanden werden, der aus einer Kombination zweier \emph{provided Typen} erzeugt wurde (siehe auch \tabref{eIShort}).
 
 \input{test_tmr}
 \input{test_pttf}
@@ -138,7 +138,7 @@ BL\_NMC & 2. &1. &1. &1. &1.&1.&1.\\
 
 
 \section{Ergebnisse für die Kombination der Heuristiken}\label{sec_evalKombis}
-Nachdem gezeigt wurde, dass die Exploration durch jede der beschriebenen Heuristiken beschleunigt werden kann. Dabei wurden Exploration mit jeweils einer der Heuristiken durchgeführt. In den folgenden Abschnitten soll evaluiert werden, ob die Verwendung einer Kombination der einzelnen Heuristiken bei der Exploration einen zusätzlichen Vorteil bringt.
+Im vorherigen Abschnitt wurde gezeigt, dass die Exploration durch jede der beschriebenen Heuristiken beschleunigt werden kann. Dabei wurden Exploration mit jeweils einer der Heuristiken durchgeführt. In den folgenden Abschnitten soll evaluiert werden, ob die Verwendung einer Kombination der einzelnen Heuristiken bei der Exploration einen zusätzlichen Vorteil bringt.
 \\\\
 Hierzu werden die Ergebnisse aller Kombinationen der einzelnen Heuristiken aufgeführt und im Anschluss bewertet.
 \subsection{Kombination: LMF + PTTF}\label{sec_evalLMFPTTF}

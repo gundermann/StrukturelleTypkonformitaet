@@ -1,0 +1,10 @@
+\chapter{Kombination von Matchern}\label{app_matchercombination}
+%hier soll der MatcherCombiner als der entwickelten Explorationskomponente beschrieben werden
+
+
+%TODO ANHANG: Kombination (siehe unten)
+%Die Matcher-Klassen $\texttt{ExactTypeMatcher}$, $\texttt{GenSpecTypeMatcher}$ und $\texttt{WrappedTypeMatcher}$ implementieren auch das von $\texttt{TypeMatcher}$ erbende Interfaces $\texttt{CombinalbeTypeMatcher}$. Klassen, die dieses Interface implementieren können über die Klasse $\texttt{MatcherCombiner}$ zu einem neuen $\texttt{TypeMatcher}$-Objekt kombiniert werden. Ein solcher kombinierte $\texttt{TypeMatcher}$ versucht beim Aufruf der Methode $\texttt{matchesType(S,T)}$ die beiden Typen $S$ und $T$ über einen der kombinierten Matcher zu matchen. Abbildung \ref{sd_matchercombiner} zeigt das Sequenzdiagramm für diesen Aufruf. Dabei liefert die Methode $\texttt{getSortedMatcher}$ eine sortiert Liste der kombinierten Matcher. Die Sortierung wird aufsteigend entsprechend dem Matcherrating der kombinierten Matcher vorgenommen.
+%\begin{figure}
+%\end{figure}\label{sd_matchercombiner}
+%\noindent
+%Darüber hinaus gibt es noch das von $\texttt{TypeMatcher}$ erbende Interface $\texttt{PartlyTypeMatcher}$. Dieses Interface wird nur von dem $\texttt{StructuralTypeMatcher}$ implementiert, welcher u.a. als Schnittstelle zwischen dem Modul \emph{SignatureMatching} und \emph{DesiredComponentSourcerer} fungiert. Wie der Name des Interfaces bereits impliziert, bieten die Implementierungen des Interfaces $\texttt{PartlyTypeMatcher}$ die Möglichkeit, zwei Typen nur teilweise zu Matchen. Das bildet die Grundlage für die Ermittlung der Typen, aus denen die Proxies für die semantische Evaluation erzeugt werden können (vgl. Abschnitt \ref{sec_ergStructEval}). So stellen die Objekte, die über die Methode $\texttt{calculatePartlyTypeMatchingInfos}$ erzeugten wurden, auf formaler Ebene die Elemente der Mengen, die in Abschnitt \ref{sec_ergStructEval} über Funktion $\texttt{cover}$ beschrieben wurden, dar.

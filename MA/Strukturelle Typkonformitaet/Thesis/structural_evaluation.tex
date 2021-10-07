@@ -1,11 +1,11 @@
 \section{Strukturelle Evaluation}
-In Anlehnung an \cite{hummel08} werden diese EJBs auf der Basis des Signature-Matching Ansatzes ermittelt. Dieser Ansatz wurde ursprünglich von Zaremski und Wing \cite{moormann} etabliert. Er basiert darauf, dass lediglich die Methoden-Signaturen der Klassen bzw. Interfaces miteinander abgeglichen werden. 
+In Anlehnung an \cite{hummel08} werden die \emph{EJBs} auf der Basis des Signature-Matching Ansatzes ermittelt. Dieser Ansatz wurde ursprünglich von Zaremski und Wing \cite{moormann} beschrieben. Er basiert darauf, dass lediglich die Methoden-Signaturen der Typen (Klassen bzw. Interfaces) miteinander abgeglichen (gematcht) werden. 
 \\\\
-Zu diesem Zweck wird eine Struktur zur Definition von Typen in Abschnitt \ref{sec:strukturTypen} vorgegeben, die eine abstrakte Darstellung der Klassen bzw. Interfaces, die im konkreten Fall verwendet werden, darstellen.
+Zu diesem Zweck wird eine Struktur zur Deklaration von Typen in Abschnitt \ref{sec:strukturTypen} vorgegeben, die eine abstrakte Darstellung der Klassen bzw. Interfaces, darstellen. Darüber hinaus werden in diesem Abschnitt Eigenschaften der Typen sowie Funktionen vorgestellt, die für den weiteren Verlauf der Arbeit von Belang sind.
 \\\\
-Der Abgleich der Signaturen dieser Typen erfolgt sowohl in \cite{moormann} als auch in dieser Arbeit auf der Basis von Matchern, die in Abschnitt \ref{sec_matcher} genauer beschrieben werden.
+Der Abgleich der Signaturen dieser Typen erfolgt in \cite{moormann} auf der Basis von Matchern. Die in dieser Arbeit verwendeten Matcher werden in Abschnitt \ref{sec_matcher} genauer beschrieben. Einige der dort beschriebenen Matcher basieren auf denen aus \cite{moormann}. Andere basieren auf Überlegungen aus \cite{hummel08}.
 \subsection{Struktur für die Definition von Typen}\label{sec:strukturTypen}
-Die Typen seien in einer Bibliothek $\text{L}$ in folgender Form zusammengefasst:
+Die Typen werden in einer Bibliothek $\text{L}$ in folgender Form deklariert:
 \begin{table}[H]
 \centering
 \begin{tabular}{|p{5.5cm}|p{8.5cm}|}
@@ -32,14 +32,14 @@ $\mathit{MD} ::= \mathit{T'}\texttt{ }\mathit{m(T_1,...,T_n)}$ & Eine Methodende
  \label{tab_typeStruct}
 \end{table}
 \noindent
-Weiterhin sei die Relation $<$ auf Typen durch folgende Regeln definiert:
+Zudem sei die Relation $<$ auf Typen durch folgende Regeln definiert:
 \begin{gather*}
 \frac{\texttt{provided }T \texttt{ extends } T' \in L}{T < T'}
 \end{gather*}
 \begin{gather*}
 \frac{\texttt{provided } T \texttt{ extends } T'' \in L \wedge T'' < T'}{T < T'}
 \end{gather*}
-
+\noindent
 Darüber hinaus seien folgende Funktionen definiert:
 \begin{gather*}
 \mathit{felder(T)} :=  \left\{ 
@@ -50,7 +50,7 @@ Darüber hinaus seien folgende Funktionen definiert:
 \\
 \mathit{feldTyp(f,T)} := 
 				\begin{array}{l|l}
-					T' & T' \texttt{ }\mathit{f}\text{ ist Felddeklatation von }T
+					T' & T' \texttt{ }\mathit{f}\text{ ist Felddeklaration von }T
 				\end{array}   
 \\
 \mathit{ret(T'\text{ }m(T''_1,...T''_n))} := T'
@@ -137,23 +137,21 @@ required MedicalFireFighter {
 	boolean extinguishFire( ExtFire fire )	
 }
 \end{lstlisting}
-
-\newpage
-
+\noindent
 \subsection{Definition der Matchern}\label{sec_matcher}
-Ein Matcher definiert das Matching eines Typs $T$ zu einem Typ $T'$ durch die asymmetrische Relation $T \Rightarrow T'$.
+Ein Matcher definiert das Matching eines Typs $T$ zu einem Typ $T'$ durch die asymmetrische Relation $\Rightarrow$ (auch Matchingrealtion genannt)\footnote{$T \Rightarrow T'$}.
 \subsubsection{ExactTypeMatcher}\label{sec:exacttypematcher}
-Der \emph{ExactTypeMatcher} stellt ein Matching von einem Typ $T$ zu demselben Typ $T$ her. Die dazugehörige Matchingrelation $\Rightarrow_{exact}$ wird durch folgende Regel beschrieben:
+Der \emph{ExactTypeMatcher} stellt ein Matching von einem Typ $T$ zu demselben Typ $T$ her (vgl. \cite{moormann}). Die dazugehörige Matchingrelation $\Rightarrow_{exact}$ wird durch folgende Regel beschrieben:
 \begin{gather*}
 \frac{}{T \Rightarrow_{exact} T}
 \end{gather*}
 \subsubsection{GenTypeMatcher}\label{sec:gentypematcher}
-Der \emph{GenTypeMatcher} stellt ein Matching von einem Typ $T$ zu einem Typ $T'$ mit $T > T'$ her. Die dazugehörige Matchingrelation $\Rightarrow_{gen}$ wird durch folgende Regel beschrieben:
+Der \emph{GenTypeMatcher} stellt ein Matching von einem Typ $T$ zu einem Typ $T'$ mit $T > T'$ her (vgl. \cite{moormann}). Die dazugehörige Matchingrelation $\Rightarrow_{gen}$ wird durch folgende Regel beschrieben:
 \begin{gather*}
 \frac{T > T'}{T \Rightarrow_{gen} T'}
 \end{gather*}
 \paragraph{SpecTypeMatcher}
-Der \emph{SpecTypeMatcher} stellt im Verhältnis zum \emph{GenTypeMatcher} das Matching in die entgegengesetzte Richtung dar. Die dazugehörige Matchingrelation $\Rightarrow_{spec}$ wird durch folgende Regel beschrieben: 
+Der \emph{SpecTypeMatcher} stellt im Verhältnis zum \emph{GenTypeMatcher} das Matching in die entgegengesetzte Richtung dar (vgl. \cite{moormann}). Die dazugehörige Matchingrelation $\Rightarrow_{spec}$ wird durch folgende Regel beschrieben: 
 \begin{gather*}
 \frac{T < T'}{T \Rightarrow_{spec} T'}
 \end{gather*}
@@ -163,8 +161,11 @@ Die oben genannten Matchingrelationen werden für die Definition weiterer Matche
 \frac{T \Rightarrow_{exact} T' \vee T \Rightarrow_{gen} T' \vee
 T \Rightarrow_{spec} T'  }{T \Rightarrow_{internCont} T'}
 \end{gather*}
+\noindent
+\\\\
+Die folgenden Matcher matchen so genannte Wrapper-Typen mit den Typen der in ihnen enthaltenen Attribute. Die Idee für solche Matcher fand in \cite{hummel08} zwar Erwähnung jedoch erfolgte dort keine formale Beschreibung. Ziel dieser Matcher ist es bspw. die Typen $\texttt{boolean}$ und $\texttt{FireState}$ aus Listing \ref{lst:libEx} zu matchen.
 \subsubsection{ContentTypeMatcher}
-Der \emph{ContentTypeMatcher} matcht einen Typ $T$ auf einen Typ $T'$, wobei $T'$ ein Feld enthält, auf dessen Typ $T''$ der Typ $T$ über die Matchingrelation $\Rightarrow_{internCont}$ gematcht werden kann. So kann bspw. der Typ $\texttt{boolean}$ aus Listing 1 auf den Typ $\texttt{FireState}$ gematcht werden.
+Der \emph{ContentTypeMatcher} matcht einen Typ $T$ auf einen Typ $T'$, wobei $T'$ ein Feld enthält, auf dessen Typ $T''$ der Typ $T$ über die Matchingrelation $\Rightarrow_{internCont}$ gematcht werden kann.
 \\\\
 Die dazugehörige Matchingrelation $\Rightarrow_{content}$ wird durch folgende Regel beschrieben:
 \begin{gather*}
@@ -176,7 +177,7 @@ So würde für die Typen $\texttt{boolean}$ und $\texttt{FireState}$ gelten:
 \texttt{boolean} \Rightarrow_{content} \texttt{FireState}
 \end{gather*}
 \subsubsection{ContainerTypeMatcher}
-Der \emph{ContainerTypeMatcher} stellt im Verhältnis zum \emph{ContentTypeMatcher} das Matching in die entgegengesetzte Richtung dar. So kann bspw. auch der Typ $\texttt{FireState}$ auf den Typ $\texttt{booealn}$ aus Listing 1 gematcht werden.
+Der \emph{ContainerTypeMatcher} stellt im Verhältnis zum \emph{ContentTypeMatcher} das Matching in die entgegengesetzte Richtung dar.
 \\\\
 Die dazugehörige Matchingrelation $\Rightarrow_{container}$ wird durch folgende Regel beschrieben:
 \begin{gather*}
@@ -193,11 +194,11 @@ Zur Definition des letzten Matchers werden die Matchingrelationen der oben genan
 \frac{T \Rightarrow_{internCont}T' \vee T \Rightarrow_{container} T' \vee T \Rightarrow_{content} T'}{T \Rightarrow_{internStruct}T'}
 \end{gather*}
 \subsubsection{StructuralTypeMatcher} 
-Der \emph{StructuralTypeMatcher} matcht einen \emph{required Typ} $R$ auf einen \emph{provided Typ} $P$ auf der Basis struktureller Eigenschaften der Methoden, die in den Typen deklariert sind. 
+Der \emph{StructuralTypeMatcher} matcht einen \emph{required Typ} $R$ auf einen \emph{provided Typ} $P$ auf der Basis der Methoden-Signaturen, die in den Typen deklariert sind.
 \\\\
-Somit soll bspw. der Typ $\texttt{MedicalFireFighter}$ auf den Typ $\texttt{FireFighter}$ (siehe Listing 1) gematcht werden. Als ein weiteres Beispiel, bezogen auf die Typen aus Listing 1, kann das Matching des Typs $\texttt{MedicalFireFighter}$ auf den Typ $\texttt{Doctor}$ angebracht werden.
+Somit soll bspw. der Typ $\texttt{MedicalFireFighter}$ auf den Typ $\texttt{FireFighter}$ (siehe Listing \ref{lst:libEx}) gematcht werden. Als ein weiteres Beispiel, bezogen auf die Typen aus Listing 1, kann das Matching des Typs $\texttt{MedicalFireFighter}$ auf den Typ $\texttt{Doctor}$ angebracht werden.
 \\\\
-Damit ein required Typ $R$ auf einen provided Typ $P$ über den \emph{StrukturalTypeMatcher} gematcht werden kann, muss mindestens eine Methode aus $R$ zu einer Methode aus $P$ gematcht werden. Die Reihenfolge, in der die Parameter in der jeweiligen Methode deklariert sind, soll dabei keine Rolle spielen. Von daher wird das Matching der Parameter zweier Methoden $m$ und $m'$ wie folgt beschrieben:
+Damit ein required Typ $R$ auf einen provided Typ $P$ über den \emph{StrukturalTypeMatcher} gematcht werden kann, muss mindestens eine Methode aus $R$ zu einer Methode aus $P$ gematcht werden. Wie in \cite{moormann} soll die Reihenfolge, in der die Parameter in der jeweiligen Methode deklariert sind, keine Rolle spielen. Von daher wird das Matching der Parameter zweier Methoden $m$ und $m'$ wie folgt beschrieben:
 \begin{gather*}
 \mathit{matchingParams(m, m')} :=
 \left\{
@@ -215,7 +216,7 @@ Damit ein required Typ $R$ auf einen provided Typ $P$ über den \emph{Struktural
 \right\}
 \end{gather*}
 \noindent
-Das strutkurelle Matching zweier Methoden $m$ und $m'$ wird durch folgende Regel beschrieben:
+Das Matching zweier Methoden $m$ und $m'$ wird durch die Relation $\Rightarrow_{method}$ über folgende Regel beschrieben:
 \begin{gather*}
 \frac{\mathit{ret(m)} \Rightarrow_{internStruct} \mathit{ret(m')} \wedge \mathit{matchingParams(m,m')}}{m \Rightarrow_{method} m'}
 \end{gather*}
@@ -231,8 +232,7 @@ m	& \mathit{m} \in \mathit{methoden(R)} \wedge \mathit{ }
               \right\}
 \end{gather*}
 \noindent
-
-Die Matchingrelation für die \emph{StructuralTypeMatcher} wird durch folgende Regel beschrieben:
+Die Matchingrelation für den \emph{StructuralTypeMatcher} wird durch folgende Regel beschrieben:
 \begin{gather*}
 \frac{structM(R,P) \neq \emptyset}{R \Rightarrow_{struct}P}
 \end{gather*}

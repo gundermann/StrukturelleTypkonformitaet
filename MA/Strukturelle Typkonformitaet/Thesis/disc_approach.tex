@@ -6,7 +6,7 @@ Die Exploration erfordert die Ausführung der vordefinierten Testfälle zur Lauf
 \\\\
 Um dieses Problem zu beheben könnte man sicherstellen, dass die Generierung der Proxies nur auf Basis von \emph{provided Typen} erfolgt, die solche Seiteneffekte nicht aufweise. Diese Eigenschaft kann jedoch nur durch den Entwickler festgestellt werden und entsprechend markiert werden (bspw. über Annotationen). Während der Exploration könnten solche \emph{provided Typen} über solche Markierungen erkannt werden. Dieser Ansatz reduziert jedoch die Anzahl der \emph{provided Typen}, die für die Generierung eines Proxies verwendet werden können. Dadurch sinkt auch die Wahrscheinlichkeit, dass ein passender Proxy gefunden wird.
 \\\\
-Um die zu markierenden EJBs zu identifizieren ist zu prüfen, wie sich die Ausführung der einzelnen Methoden der Bean auf das System auswirken. Es kann festgehalten werden, dass alle Methoden, die den persistenten oder den transienten Zustand von Objekten verändert, das Potential für solche unerwünschten Seiteneffenkte besitzen. 
+Um die zu markierenden EJBs zu identifizieren ist zu prüfen, wie sich die Ausführung der einzelnen Methoden der Bean auf das System auswirken. Es kann festgehalten werden, dass alle Methoden, die den persistenten oder den transienten Zustand von Objekten verändern, das Potential für solche unerwünschten Seiteneffekte besitzen. 
 \\\\
 Aufbauend auf der Prüfung einzelner Methoden, kann auch die Markierung von Methoden in Betracht gezogen werden. So dürften markierte Methoden bei der Generierung eines Proxies nicht als Delegationsmethode verwendet werden.
 \subsection{Auswirkung auf die Verfügbarkeit eines Systems}\label{sec_stabliliy}
@@ -32,7 +32,7 @@ Die Erweiterung von Systemen geht in Bezug auf den beschriebenen Ansatz zur test
 \\\\
 Mehrere mögliche Proxies haben wiederum einen Einfluss auf die Laufzeit und das Ergebnis der Exploration. So kann nicht davon ausgegangen werden, dass ein passender Proxy zu einem bestimmten required Typ genauso schnell gefunden wird, nachdem sich Änderungen an den provided Typen im System ergeben haben.
 \subsubsection{Entfernen von bestehenden Komponenten}
-Ebenso wirkt sich das Entfernen eines provided Typs, der bei einer früheren Exploration für die Generierung eines Proxies verwendet wurde, auf die Exploraiton nach einer solchen Änderung aus. Dadurch, dass der früher verwendete provided Typ nicht mehr vorhanden ist, muss ein anderer Proxies, der auf anderen provided Typen basiert, erzeugt werden\footnote{sofern dies gelingt, unterstützt dies die These aus Abschnitt \ref{sec_stabliliy}}.
+Ebenso wirkt sich das Entfernen eines provided Typs, der bei einer früheren Exploration für die Generierung eines Proxies verwendet wurde, auf die Exploraiton nach einer solchen Änderung aus. Dadurch, dass der früher verwendete provided Typ nicht mehr vorhanden ist, muss ein anderer Proxy, der auf anderen provided Typen basiert, erzeugt werden\footnote{sofern dies gelingt, unterstützt dies die These aus Abschnitt \ref{sec_stabliliy}}.
 \\\\
 Da die Exploration beendet wird, sofern ein passender Proxy gefunden wurde, kann es auch unter diesen Umständen dazu kommen, dass die Exploration mitunter länger dauert als vorher. Zudem besteht in diesem Fall die Gefahr, dass die Exploration fehlschlägt.
 
@@ -45,6 +45,6 @@ Ein Entwickler, der das System hingegen weniger kennt, kann von diesem Ansatz pr
 \\\\
 Ist dem Entwickler das System unbekannt, wird es schwerfallen einen required Typ so zu deklarieren, dass die Anzahl der möglichen Proxies nicht zu hoch wird. 
 \\\\
-Zusammenfassend kann folge These formuliert werden: Der Nutzen dieses Ansatzes für einen Entwickler in Bezug auf ein System steht im umgekehrt proportionalen Verhältnis zum Wissen dieses Entwicklers über das System. 
+Zusammenfassend kann folgende These formuliert werden: Der Nutzen dieses Ansatzes für einen Entwickler in Bezug auf ein System steht im umgekehrt proportionalen Verhältnis zum Wissen dieses Entwicklers über das System. 
 
 %Dies ließe sich mitunter durch eine Umfrage mehrere Mitarbeiter unterschiedlicher Betriebsangehörigkeit in Erfahrung bringen.
