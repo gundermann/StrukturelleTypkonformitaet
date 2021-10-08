@@ -532,7 +532,7 @@ Die im Abschnitt \ref{sec:proxygram} erwähnte Funktion $\mathit{proxies(S,T)}$ 
 \mathit{proxies(S,T)} := 
 \left\{\begin{array}{ll}
 \mathit{proxy_{sub}(S,T)}	& \text{wenn } |T| = 1 \wedge \mathit{ }\\
-& \forall T' \in T: S \Rightarrow_{sub} T'\\	
+& \forall T' \in T: S \Rightarrow_{spec} T'\\	
 &\\
 \mathit{proxy_{content}(S,T)}	& \text{wenn } |T| = 1 \wedge \mathit{ }\\
 & \forall T' \in T: S \Rightarrow_{content} T' \\
@@ -545,53 +545,34 @@ Die im Abschnitt \ref{sec:proxygram} erwähnte Funktion $\mathit{proxies(S,T)}$ 
 		 \end{array}
 \right\}
 \end{gather*}
-\subsection{Anzahl möglicher Proxies innerhalb einer Bibliothek}\label{sec_anzahlProxies}
-Die Generierung der Proxies für ein required Typ $R$ aus der Bibliothek $L$ erfolgt während der Exploration mit den Mengen von provided Typen aus $\mathit{cover(R,L)}$ (siehe Abschnitt \ref{sec_ergStructEval}). Mit einer Menge $T \in \mathit{cover(R,L)}$ können durchaus mehrere Proxies erzeugt werden. Das ist dann der Fall, wenn mehrere der Methoden, die in den provided Typen aus $T$ deklariert wurden, mit einer Methode des required Typs $R$ strukturell übereinstimmen.
+\subsection{Anzahl struktureller Proxies innerhalb einer Bibliothek}\label{sec_anzahlProxies}
+Die Generierung der strukturellen Proxies für ein \emph{required Typ} $R$ aus der Bibliothek $L$ erfolgt während der Exploration mit den Mengen von \emph{provided Typen} aus $\mathit{cover(R,L)}$ (siehe Abschnitt \ref{sec_ergStructEval}). Mit einer Menge $\mathit{TM} \in \mathit{cover(R,L)}$ können durchaus mehrere Proxies erzeugt werden. Das ist dann der Fall, wenn mehrere der Methoden, die in den \emph{provided Typen} aus $\mathit{TM}$ deklariert wurden, mit einer Methode aus $R$ strukturell übereinstimmen.
 \\\\
-Die Anzahl der möglichen Proxies für ein required Typ $R$ mit einer bestimmten Menge von Target-Typen $T_1,...,T_k$ ist somit von der Anzahl der Methoden abhängig, die in einem der Target-Typen des Proxies deklariert wurden und strukturell mit den Methoden aus $R$ übereinstimmen. 
+Die Anzahl der strukturellen Proxies für einen \emph{required Typ} $R$ mit einer bestimmten Menge von \emph{Target-Type}n ist somit von der Anzahl der Methoden abhängig, die in einem der \emph{Target-Typen} deklariert wurden und strukturell mit den Methoden aus $R$ übereinstimmen. 
 \\\\
-Die Menge der Methoden eines provided Typen $P$, die strukturell mit einer Methode $m$ übereinstimmen, wird über die Funktion $\mathit{structM_{target}}$ beschrieben.
+Die Menge der Methoden eines \emph{provided Typs} $T$, die strukturell mit einer Methode $m$ übereinstimmen, wird über die Funktion $\mathit{structM_{target}}$ beschrieben.
 \begin{gather*}
-\mathit{structM_{target}(m, P)} := 
+\mathit{structM_{target}(m, T)} := 
 \left\{\begin{array}{l|l}
-m'	& m' \in \mathit{methoden(P)} \wedge  m \Rightarrow_{method} m'
+m'	& m' \in \mathit{methoden(T)} \wedge  m \Rightarrow_{method} m'
 \end{array}
 \right\}
 \end{gather*}
 \noindent
-Darauf aufbauend wird die Menge der Methoden einer Menge von \emph{provided Typen} $T$, die strukturell mit einer Methode $m$ übereinstimmen, über die Funktion $\mathit{structM_{targetset}}$ beschrieben.
+Darauf aufbauend wird die Menge der Methoden einer Menge von \emph{provided Typen} $\mathit{TM}$, die strukturell mit einer Methode $m$ übereinstimmen, über die Funktion $\mathit{structM_{targetset}}$ beschrieben.
 \begin{gather*}
-\mathit{structM_{targetset}(m, T)} := 
+\mathit{structM_{targetset}(m, \mathit{TM})} := 
 \left\{\begin{array}{l|l}
-m'	& \exists P \in T: m' \in \mathit{structM_{target}(m,P)}
+m'	& \exists T \in \mathit{TM}: m' \in \mathit{structM_{target}(m,T)}
 \end{array}
 \right\}
 \end{gather*}
 \noindent
-Sei $R$ ein \emph{required Typ} und $T$ eine Menge von \emph{provided Typen} innerhalb einer Bibliothek $L$ mit $T \in \mathit{cover(R,L)}$. Dann bildet die Funktion $\mathit{structMSets}$ die Mengen der Methoden aus den \emph{provided Typen} ab, die mit jeweils einer Methode aus $R$ gematcht werden können.
-\begin{gather*}
-\mathit{structMSets(R,T)} := 
-\left\{M
-\begin{array}{l|l}
-&\exists \mathit{m} \in \mathit{methoden(R)} : 
-\\
-&M = \mathit{structM_{targetset}(m,T)}
-\end{array}
-\right\}
-\end{gather*}
-\noindent
-%Dann bilden $M_1,...,M_n$ wie folgt die Mengen der Methoden der Target-Typen in $T$, die mit jeweils einer Methode $m_i \in \mathit{methoden(R)}$  strukturell übereinstimmen.
-%\begin{gather*}
-%M_1 = \mathit{structM_{target}(m_1,T)}\\
-%...\\
-%M_n = \mathit{structM_{target}(m_n,T)}
-%\end{gather*}
-Für jede Kombination von jeweils einem Element aus jeder der Mengen aus $\mathit{structMSets(R,T)}$ kann ein Proxy für $R$ mit der Menge der Target-Typen $T$ erzeugt werden.
 
 \begin{example}{bsp_structmtarget}
-Aufbauend auf dem vorherigen Beispiel \ref{bsp_cover} ergeben sich für die Menge der Target-Typen  $\{\texttt{Leave}, \texttt{Come}\}$ und die beiden Methoden des required Typs $\texttt{Greeting}$ folgende Mengen von übereinstimmenden Methoden über die Funktion $\mathit{structMSets}$:
+Aufbauend auf dem vorherigen Beispiel \ref{bsp_cover} ergeben sich für die Menge der \emph{Target-Typen}  $\{\texttt{Leave}, \texttt{Come}\}$ und die beiden Methoden des \emph{required Typs} $\texttt{Greeting}$ folgende Mengen von übereinstimmenden Methoden über die Funktion $\mathit{structM_{targetset}}$:
 \begin{gather*}
-\mathit{structMSets(\methodForm{String}{hello}{},\{\texttt{Leave}, \texttt{Come}\})} = 
+\mathit{structM_{targetset}(\methodForm{String}{hello}{},\{\texttt{Leave}, \texttt{Come}\})} = 
 \left\{
 \begin{array}{l}
 \methodForm{String}{hello}{},\\
@@ -599,7 +580,7 @@ Aufbauend auf dem vorherigen Beispiel \ref{bsp_cover} ergeben sich für die Meng
 \methodForm{String}{bye}{}
 \end{array}
 \right\}\\
-\mathit{structMSets(\methodForm{String}{bye}{},\{\texttt{Leave}, \texttt{Come}\})} = 
+\mathit{structM_{targetset}(\methodForm{String}{bye}{},\{\texttt{Leave}, \texttt{Come}\})} = 
 \left\{
 \begin{array}{l}
 \methodForm{String}{hello}{},\\
@@ -608,8 +589,25 @@ Aufbauend auf dem vorherigen Beispiel \ref{bsp_cover} ergeben sich für die Meng
 \end{array}
 \right\}
 \end{gather*}
+\end{example}
 \noindent
-Darauf aufbauend lassen sich die folgenden vier Proxies mit den Target-Typen $\texttt{Leave}$ und $\texttt{Come}$ erzeugen.
+\\
+Sei $R$ ein \emph{required Typ} und $\mathit{TM}$ eine Menge von \emph{provided Typen} innerhalb einer Bibliothek $L$ mit $\mathit{TM} \in \mathit{cover(R,L)}$. Dann bildet die Funktion $\mathit{structMSets}$ die Menge von Mengen der Methoden aus den Elementen aus $\mathit{TM}$ ab, die mit jeweils einer Methode aus $R$ gematcht werden können.
+\begin{gather*}
+\mathit{structMSets(R,\mathit{TM})} := 
+\left\{M
+\begin{array}{l|l}
+&\exists \mathit{m} \in \mathit{methoden(R)} : 
+\\
+&M = \mathit{structM_{targetset}(m,\mathit{TM})}
+\end{array}
+\right\}
+\end{gather*}
+\noindent
+%Für jede Kombination von jeweils einem Element aus jeder der Mengen aus $\mathit{structMSets(R,T)}$ kann ein Proxy für $R$ mit der Menge der Target-Typen $T$ erzeugt werden.
+Für die Bildung eines Proxies wird aus jedem Element der Menge $structMSets(R,\mathit{TM})$ genau ein Element als Delegationsmethode verwendet werden. 
+\begin{example}{bsp_proxycreation}
+Ausgehend von Beispiel \ref{bsp_structmtarget} lassen sich die folgenden vier Proxies mit den \emph{Target-Typen} $\texttt{Leave}$ und $\texttt{Come}$ erzeugen.
 \begin{lstlisting}[style = dsl]
 proxy Greeting with [Come, Leave]{
 	Greeting.hello():String --> Come.hello():String
@@ -635,22 +633,21 @@ proxy Greeting with [Come, Leave]{
 }
 \end{lstlisting}
 \end{example}
+\noindent
 \\
-Für die Bildung eines Proxies wird aus jeder der oben genannten Menge $\{M_1,...,M_n\} = structMSets(R,T)$ genau ein Element als Delegationsmethode verwendet werden. Die Anzahl aller möglichen Proxies für ein \emph{required Typ} $R$ aus einer Menge von Target-Typen $T$ sei über die Funktion $\mathit{proxyCount(R,T)}$ ausgedrückt. 
-\\\\
-Für $\mathit{proxyCount(R,T)}$ ist zu beachten, dass es sich dabei lediglich um eine Annäherung an die tatsächliche Anzahl der Proxies handelt, die unter den oben beschriebenen Bedingungen erzeugt werden können. Dies liegt daran, dass eine Delegationsmethode $dm \in M_1 \cup ... \cup M_n$ innerhalb eines Proxy maximal einmal verwendet werden darf. Es ist jedoch möglich, dass es zwischen den oben genannten Mengen 
-$M_1,...,M_n$ Überschneidungen gibt (siehe vorheriges Beispiel). Daher gelten für die Funktion $\mathit{proxyCount}$ folgende Regeln unter den oben genannten Modalitäten:
+Die Anzahl aller möglichen Proxies für ein \emph{required Typ} $R$ aus einer Menge von \emph{Target-Typen} $\mathit{TM}$ sei näherungsweise über die Funktion $\mathit{proxyCount(R,\mathit{TM})}$ beschrieben. Dass es sich hierbei lediglich um eine Annäherung handelt liegt daran, dass eine Methode $\mathit{dm}$ mit $\mathit{dm} \in M_1 \cup ... \cup M_n$ und $\{M_1,...,M_n\} = \mathit{structMSets(R,TM)}$ innerhalb eines Proxy maximal einmal als Delegationsmethode verwendet werden darf. Es ist jedoch möglich, dass es zwischen den Mengen 
+$M_1,...,M_n$ Überschneidungen gibt (siehe vorheriges Beispiel). Daher gelten für die Funktion $\mathit{proxyCount}$ folgende Regeln:
 \begin{gather*}
-\frac{M_1 \cap ... \cap M_n = \emptyset}{\mathit{proxyCount(R,T)} = \prod\limits_{i=1}^{n}|M_i| }
+\frac{\{M_1,...,M_n\} = \mathit{structMSets(R,TM)} \wedge M_1 \cap ... \cap M_n = \emptyset}{\mathit{proxyCount(R,TM)} = \prod\limits_{i=1}^{n}|M_i| }
 \\\\
-\frac{M_1 \cap ... \cap M_n \neq \emptyset}{\mathit{proxyCount(R,T)} < \prod\limits_{i=1}^{n}|M_i| }
+\frac{\{M_1,...,M_n\} = \mathit{structMSets(R,TM)} \wedge M_1 \cap ... \cap M_n \neq \emptyset}{\mathit{proxyCount(R,TM)} < \prod\limits_{i=1}^{n}|M_i| }
 \end{gather*}
 \noindent
 Im Allgemeinen gilt demnach:
 \begin{gather*}
-\mathit{proxyCount(R,T)} \leq 
+\mathit{proxyCount(R,TM)} \leq 
 \begin{array}{l|l}
-\prod\limits_{i=1}^{n}|\mathit{structM_{targetset}(m_i, T)}|
+\prod\limits_{i=1}^{n}|\mathit{structM_{targetset}(m_i, TM)}|
 &
 \left\{
 \begin{array}{l}
@@ -662,7 +659,7 @@ m_n
 = \mathit{methoden(R)}
 \end{array}
 \end{gather*}
-Da innerhalb einer Bibliothek $L$ mehrere Mengen von Target-Typen zur Bildung eines Proxies für einen required Typ $R$ infrage kommen (siehe Funktion $\mathit{cover}$) muss die Anzahl der Proxies über die Funktion $\mathit{proxyCount}$ für alle Elemente aus $\mathit{cover(R,L)}$ ermittelt und summiert werden. Die folgende Funktion beschreibt diesen Sachverhalt für einen required Typ $R$ aus einer Bibliothek $L$.
+Da innerhalb einer Bibliothek $L$ mehrere Mengen von \emph{Target-Typen} zur Bildung eines Proxies für einen \emph{required Typ} $R$ infrage kommen (siehe Funktion $\mathit{cover}$) muss die Anzahl der strukturellen Proxies über die Funktion $\mathit{proxyCount}$ für alle Elemente aus $\mathit{cover(R,L)}$ ermittelt und summiert werden. Die folgende Funktion beschreibt diesen Sachverhalt:
 \begin{gather*}
 \mathit{libProxyCount(R,L)} = 
 \begin{array}{l|l}
