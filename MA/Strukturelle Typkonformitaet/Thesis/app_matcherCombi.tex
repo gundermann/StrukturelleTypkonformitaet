@@ -1,10 +1,87 @@
 \chapter{Kombination von Matchern}\label{app_matchercombination}
-%hier soll der MatcherCombiner als der entwickelten Explorationskomponente beschrieben werden
+Wie aus der formalen Beschreibung zum \emph{StructuralTypeMatcher} im Abschnitt \ref{subsec_structmatcher} hervorgeht, ist dieser von den übrigen Matchern abhängig. Die Implementierung der dazugehörigen Klasse $\texttt{StructuralTypeMatcher}$ verlangt zur Erzeugung eines Objektes dieser Klasse eine $\texttt{TypeMatcher}$. Dieser $\texttt{TypeMatcher}$ muss laut der formalen Beschreibung die Implementierung der Matchingrelation $\Rightarrow_{internStruct}$ darstellen.
+\\\\
+Zu diesem Zweck müssen die übrigen Matcher bzw. die dafür implementierten Klassen miteinander kombiniert werden, wie es in der Definition zur Matchingrelation $\Rightarrow_{internStruct}$ der Fall ist. Für solche Kombinationen steht die Klasse $\texttt{MatcherCombiner}$ im Modul \emph{SignatureMatching} bereit (siehe Listing \ref{lst_matchercombiner}).
+\\\\
+Diese Klasse erlaubt die Kombination von Objekten vom Typ $\texttt{TypeMatcher}$. 
+Die Matcher-Klassen $\texttt{ExactTypeMatcher}$, $\texttt{GenSpecTypeMatcher}$ und $\texttt{WrappedTypeMatcher}$ implementieren alle dieses Interface. 
+\\\\
+Über die Methode $\texttt{combine}$ in der $\texttt{MatcherCombiner}$ wird bei der Kombination ein Supplier-Objekt erzeuge, welches über die $\texttt{get}$-Methode ein Objekt vom Typ $\texttt{TypeMatcher}$ liefern kann. Dieses $\texttt{TypeMatcher}$-Objekt versucht beim Aufruf der Methode $\texttt{matchesType(S,T)}$ die beiden Typen $S$ und $T$ über einen der kombinierten Matcher zu matchen (siehe  Listing \ref{lst_matchercombiner}). Dabei liefert die Methode $\texttt{getSortedMatcher}$ eine sortiert Liste der kombinierten Matcher. Die Sortierung wird aufsteigend entsprechend dem Basisrating (siehe auch Abschnitt \ref{sec_lmf}) der kombinierten Matcher vorgenommen .
+\begin{lstlisting}[style = java, caption = Klasse: MatcherCombiner, captionpos = b, label = lst_matchercombiner]
+package de.fernuni.hagen.ma.gundermann.signaturematching.matching;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Supplier;
 
-%TODO ANHANG: Kombination (siehe unten)
-%Die Matcher-Klassen $\texttt{ExactTypeMatcher}$, $\texttt{GenSpecTypeMatcher}$ und $\texttt{WrappedTypeMatcher}$ implementieren auch das von $\texttt{TypeMatcher}$ erbende Interfaces $\texttt{CombinalbeTypeMatcher}$. Klassen, die dieses Interface implementieren können über die Klasse $\texttt{MatcherCombiner}$ zu einem neuen $\texttt{TypeMatcher}$-Objekt kombiniert werden. Ein solcher kombinierte $\texttt{TypeMatcher}$ versucht beim Aufruf der Methode $\texttt{matchesType(S,T)}$ die beiden Typen $S$ und $T$ über einen der kombinierten Matcher zu matchen. Abbildung \ref{sd_matchercombiner} zeigt das Sequenzdiagramm für diesen Aufruf. Dabei liefert die Methode $\texttt{getSortedMatcher}$ eine sortiert Liste der kombinierten Matcher. Die Sortierung wird aufsteigend entsprechend dem Matcherrating der kombinierten Matcher vorgenommen.
-%\begin{figure}
-%\end{figure}\label{sd_matchercombiner}
-%\noindent
-%Darüber hinaus gibt es noch das von $\texttt{TypeMatcher}$ erbende Interface $\texttt{PartlyTypeMatcher}$. Dieses Interface wird nur von dem $\texttt{StructuralTypeMatcher}$ implementiert, welcher u.a. als Schnittstelle zwischen dem Modul \emph{SignatureMatching} und \emph{DesiredComponentSourcerer} fungiert. Wie der Name des Interfaces bereits impliziert, bieten die Implementierungen des Interfaces $\texttt{PartlyTypeMatcher}$ die Möglichkeit, zwei Typen nur teilweise zu Matchen. Das bildet die Grundlage für die Ermittlung der Typen, aus denen die Proxies für die semantische Evaluation erzeugt werden können (vgl. Abschnitt \ref{sec_ergStructEval}). So stellen die Objekte, die über die Methode $\texttt{calculatePartlyTypeMatchingInfos}$ erzeugten wurden, auf formaler Ebene die Elemente der Mengen, die in Abschnitt \ref{sec_ergStructEval} über Funktion $\texttt{cover}$ beschrieben wurden, dar.
+import de.fernuni.hagen.ma.gundermann.signaturematching.SingleMatchingInfo;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.TypeMatcher;
+
+public final class MatcherCombiner {
+ private MatcherCombiner() {
+ }
+
+ public static Supplier<TypeMatcher> combine(TypeMatcher... matcher) {
+  return () -> new TypeMatcher() {
+
+   @Override
+   public boolean matchesType(Class<?> checkType, Class<?> queryType) {
+	for (TypeMatcher m : getSortedMatcher()) {
+	 if (m.matchesType(checkType, queryType)) {
+	  return true;
+	 }
+	}
+	return false;
+   }
+
+   @Override
+   public Collection<SingleMatchingInfo> calculateTypeMatchingInfos(Class<?> checkType, Class<?> queryType) {
+	for (TypeMatcher m : getSortedMatcher()) {
+	 if (m.matchesType(checkType, queryType)) {
+	  return m.calculateTypeMatchingInfos(checkType, queryType);
+	 }
+	}
+	return new ArrayList<>();
+   }
+
+   @Override
+   public MatcherRate matchesWithRating(Class<?> checkType, Class<?> queryType) {
+	for (TypeMatcher m : getSortedMatcher()) {
+	 MatcherRate rating = m.matchesWithRating(checkType, queryType);
+	 if (rating != null) {
+	  return rating;
+	 }
+	}
+	return null;
+   }
+
+   @Override
+   public double getTypeMatcherRate() {
+	// irrelevant, weil matchesWithRating ueberschrieben wurde.
+	return -0;
+   }
+
+   private Collection<TypeMatcher> getSortedMatcher() {
+	List<TypeMatcher> matcherList = Arrays.asList(matcher);
+	Collections.sort(matcherList,(l1, l2) -> Double.compare(l1.getTypeMatcherRate(), l2.getTypeMatcherRate()));
+	return matcherList;
+   }
+
+  };
+ }
+}
+\end{lstlisting}
+\noindent
+Bei der Exploration wird letztendlich immer ein Objekt des der Klasse $\texttt{StructuralTypeMatcher}$ zur Ermittlung des Matchings verwendet. Listing \ref{lst_matchermanager} zeigt die Instanziierung dieses Objektes unter Verwendung der Klasse $\texttt{MatcherCombiner}$.
+\begin{lstlisting}[style = java, caption = Default-Instanziierung des StructuralTypeMatchers im DesiredComponentFinder, captionpos = b, label = lst_matchermanager]
+TypeMatcher exactTM = new ExactTypeMatcher();
+TypeMatcher genSpecTM = new GenSpecTypeMatcher();
+TypeMatcher combinedGenSpecExactTM = MatcherCombiner.combine(genSpecTM, exactTM).get();
+TypeMatcher wrappedTM = new WrappedTypeMatcher(() -> combinedGenSpecExactTM);
+TypeMatcher combinedWrappedGenSpecExact = MatcherCombiner.combine(genSpecTM, exactTM, wrappedTM).get();
+StructuralTypeMatcher structWrappedGenSpecExactTM = new StructuralTypeMatcher(
+				() -> combinedWrappedGenSpecExact);
+\end{lstlisting}

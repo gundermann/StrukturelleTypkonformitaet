@@ -18,7 +18,7 @@ $\mathit{PROXY} ::=$\newline
 $\texttt{proxy } \texttt{for } T$\newline
 $ \texttt{with [}\mathit{P_1},...,\mathit{P_n}\texttt{]}$ \newline
 $\texttt{\{}\mathit{MDEL_1},...,\mathit{MDEL_k} \texttt{\}}$
- & Ein Proxy wird für ein Typ $T$ als Source-Typ mit einer Mengen von provided Typen $P = \{P_1,...,P_n\}$ als Target-Typen, einer Menge von Methoden-Delegationen erzeugt.\\
+ & Ein Proxy wird für ein Typ $T$ als \emph{Source-Typ} mit einer Menge von \emph{provided Typen} $P = \{P_1,...,P_n\}$ als \emph{Target-Typen}, einer Menge von Methoden-Delegationen erzeugt.\\
 \hline
 $\mathit{MDEL} ::=$\newline
 $CALLM \rightarrow DELM $  & Eine \emph{Methodendelegation} besteht aus einer \emph{aufgerufenen Methode} und aus einem \emph{Delegationsziel}.\\
@@ -49,7 +49,7 @@ $\mathit{REF} ::= \mathit{P_i}\texttt{.}\mathit{f}$
  \label{tab:grProxies}
 \end{table}
 \noindent
-Es handelt sich dabei um Produktionsregeln einer Attributgrammatik. Die dazugehörigen Attribute sind der Tabelle \ref{tab:attrGrProxies} zu entnehmen. Dazu sei zusätzlich festgelegt, dass die Notation $\mathit{NT}\texttt{.}\text{*}$ in der Spalte \emph{Attribute} eine Key-Value-Liste aller Attribute des Nonterminals $\mathit{NT}$ beschreibt, wobei der Attributname als Key und dessen Wert als Value innerhalb der Liste verwendet wird. Weiterhin sei ein Attribut, dass in der Spalte \emph{Attribute} zu einem Nonterminal nicht aufgeführt ist, wird mit dem Wert \emph{none} belegt.
+Es handelt sich dabei um Produktionsregeln einer Attributgrammatik. Die dazugehörigen Attribute sind der Tabelle \ref{tab:attrGrProxies} zu entnehmen. Dazu sei zusätzlich festgelegt, dass die Notation $\mathit{NT}\texttt{.}\text{*}$ in der Spalte \emph{Attribute} eine Key-Value-Liste aller Attribute des Nonterminals $\mathit{NT}$ beschreibt, wobei der Attributname als Key und dessen Wert als Value innerhalb der Liste verwendet wird. Weiterhin sei ein Attribut, dass in der Spalte \emph{Attribute} zu einem Nonterminal nicht aufgeführt ist, mit dem Wert \emph{none} belegt.
 \begin{table}[h!]
 \centering
 \begin{tabular}{|p{6cm}|p{8cm}|}
@@ -134,7 +134,8 @@ $\texttt{delType} = \mathit{feldTyp(f,P)}$
  \label{tab:attrGrProxies}
 \end{table}
 \noindent
-Ein Proxy bietet alle Methoden des Source-Typen an. Einige dieser Methoden werden an eine Methode delegiert, die von einem Target-Typ des Proxies angeboten wird. Eine solche Delegation wird durch eine Methoden-Delegation (siehe Nontermial $\mathit{MDEL}$) definiert.
+\\
+Ein Proxy bietet alle Methoden des \emph{Source-Typen} an. Einige dieser Methoden werden an eine Methode delegiert, die von einem \emph{Target-Typ} des Proxies angeboten wird. Eine solche Delegation wird durch eine Methoden-Delegation (siehe Nontermial $\mathit{MDEL}$) definiert.
 \paragraph{Beispiel} So beschreibt die folgende Methoden-Delegation, dass die Methode $\texttt{extinguishFire}$, die vom Source-Typ $\texttt{Patient}$ - und damit auch vom Proxy - angeboten wird, an die Methoden $\texttt{heal}$, die der Target-Typ $\texttt{Injured}$ anbietet, delegiert wird.
 \begin{lstlisting}[style = dsl, caption = Einfache Methoden-Delegation, captionpos = b]
 	Patient.heal(Medicine):void --> Injured.heal(Medicine):void
@@ -145,9 +146,9 @@ Die Delegation einer aufgerufenen Methode an ein Delegationsziel, erfolgt in dre
 \item Parameterübergabe\\
 Dabei werden die Parameter, mit denen die vom Proxy angebotene Methode aufgerufen wird, an die Delegationsmethode des Delegationsziels übergeben. Dabei sind zwei Dinge zu beachten. Zum Einen müssen die Typen der übergebenen Parameter zu den Typen der von der Delegationsmethode erwarteten Parameter passen. Zum Anderen muss die Reihenfolge, in der die Parameter übergeben wurden, an die erwartete Reihenfolge der Delegationsmethode angepasst werden.
 \item Ausführung\\
-Dieser Schritt meint die Durchführung der Delegationsmethode mit den übergeben Parametern aus Schritt 1. Dies schließt auch die Ermittlung des Rückgabewertes der Delegationsmethode ein.
+Dieser Schritt meint die Durchführung der Delegationsmethode mit den übergeben Parametern aus Schritt 1. Dies schließt auch die Ermittlung des korrekten Rückgabewertes der Delegationsmethode ein.
 \item Übergabe des Rückgabewertes\\
-Ähnlich wie bei der Parameterübergabe, muss auch der Rückgabewert, der bei der Ausführung in Schritt 2 ermittelt wurde, an die aufgerufenen Methode, die vom Proxy angeboten wird, übergeben werden. Hier muss ebenfalls sichergestellt werden, dass die beiden Rückgabetypen der beiden Methoden zueinander passen.
+Ähnlich wie bei der Parameterübergabe, muss auch der Rückgabewert, der bei der Ausführung in Schritt 2 ermittelt wurde, an die aufgerufene Methode, die vom Proxy angeboten wird, übergeben werden. Hier muss ebenfalls sichergestellt werden, dass die beiden Rückgabetypen der beiden Methoden zueinander passen.
 \end{enumerate}
 Die Delegation aus dem oben genannten Beispiel kann schematisch wie in Abbildung \ref{fig:DEL_heal} dargestellt werden. Die Übergabe der Parameter- und Rückgabewerte wird durch die gestrichelten Pfeile symbolisiert.
 \begin{figure}[h!]
@@ -165,7 +166,7 @@ Folgendes Beispiel soll zeigen, wie mit unterschiedlichen Reihenfolgen bzgl. der
 \noindent
 Um die Reihenfolge der Parameter aus dem ursprünglichen Aufruf zu variieren, wird das Schlüsselwort $\texttt{posModi}$ verwendet. Dort werden eine Reihe von Indizes angegeben. Die Anzahl der angegebenen Indizes muss mit der Anzahl der Parameter übereinstimmen. Ein Index beschreibt die Position des in der aufgerufenen Methode angegebenen Parameter. Weiterhin spielt die Reihenfolge der Indizes eine wichtige Rolle. Diese ist mit der Reihenfolge der Parameter der Delegationsmethoden gleichzusetzen.
 \\\\
-So wird in dem o.g. Beispiel der erste Parameter der aufgerufenen Methoden (Index = 0) der Delegationsmethode als zweiter Parameter übergeben. Dementsprechend wird der zweite Parameter der aufgerufenen Methoden (Index = 1) der Delegationsmethode als erster Parameter übergeben (siehe Abbildung \ref{fig:DEL_healInverse}). 
+So wird in dem o.g. Beispiel der erste Parameter der aufgerufenen Methoden (Index = 0) der Delegationsmethode als zweiter Parameter übergeben. Dementsprechend wird der zweite Parameter der aufgerufenen Methode (Index = 1) der Delegationsmethode als erster Parameter übergeben (siehe Abbildung \ref{fig:DEL_healInverse}). 
 \begin{figure}[H]
 \includegraphics[width=\linewidth]{MDEL_healInverse}
 \caption{Delegation der Methode $\texttt{heal}$ mit Parametern in unterschiedlicher Reihenfolge}
@@ -182,7 +183,7 @@ Darüber hinaus können Typen aber auch dann ohne Probleme übergeben werden, we
 \end{lstlisting}\label{lst:methdel3}
 \noindent
 In einem solchen Fall müssen die Parameter-Typen der aufgerufenen Methoden in die Parameter-Typen der Delegationsmethode konvertiert werden. Analog dazu muss der Rückgabetyp der Delegationsmethode in den Rückgabetyp der aufgerufenen Methoden konvertiert werden.\\\\
-Angenommen, die Funktion $\mathit{proxies(S,T)}$ beschreibt eine Menge von Proxies, mit $S$ als Source-Typ und $T$ als Menge der Target-Typen. Dann müssten bezogen auf die Methoden-Delegation aus Listing 4 für die Parameter-Typen einer der Proxies aus der Menge $\mathit{proxies(\texttt{Fire}, \{\texttt{ExtFire}\})}$ an die Delegationsmethode übergeben werden. Nach der Ausführung der Delegationsmethode müsste ein Proxy aus der Menge $\mathit{proxies(\texttt{boolean},\{\texttt{FireState}\})}$ an die aufgerufenen Methode als Rückgabetyp übergeben werden. Der Sachverhalt wird in Abbildung \ref{fig:DEL_extinguishFire} schematisch dargestellt.
+Angenommen, die Funktion $\mathit{proxies(S,T)}$ beschreibt eine Menge von Proxies, mit $S$ als \emph{Source-Typ} und $T$ als Menge der \emph{Target-Typen}, dann müssten bezogen auf die Methoden-Delegation aus Listing 4 für die Parameter-Typen einer der Proxies aus der Menge $\mathit{proxies(\texttt{Fire}, \{\texttt{ExtFire}\})}$ an die Delegationsmethode übergeben werden. Nach der Ausführung der Delegationsmethode müsste ein Proxy aus der Menge $\mathit{proxies(\texttt{boolean},\{\texttt{FireState}\})}$ an die aufgerufene Methode als Rückgabetyp übergeben werden. Der Sachverhalt wird in Abbildung \ref{fig:DEL_extinguishFire} schematisch dargestellt.
 \begin{figure}[H]
 \includegraphics[width=\linewidth]{MDEL_extinguishFire}
 \caption{Delegation der Methode $\texttt{extinguishFire}$ mit Typkonvertierungen}
@@ -192,7 +193,7 @@ Angenommen, die Funktion $\mathit{proxies(S,T)}$ beschreibt eine Menge von Proxi
 Wie die Proxies generiert werden, wird im folgenden Abschnitt beschrieben.
 
 \subsection{Generierung von Proxies}\label{sec_proxyGen}
-Wie im Abschnitt \ref{sec:proxygram} bereits erwähnt, soll die Menge der Proxies für einen Source-Typ $S$ und einer Menge von Target-Typen $T$ über die Funktion $\mathit{proxies(S,T)}$ beschrieben werden.\\\\
+Wie im Abschnitt \ref{sec:proxygram} bereits erwähnt, soll die Menge der Proxies für einen Source-Typ $S$ und einer Menge von \emph{Target-Typen} $T$ über die Funktion $\mathit{proxies(S,T)}$ beschrieben werden.\\\\
 In Abhängigkeit von dem Matching zwischen dem Source-Typ und den Target-Typen werden unterschiedliche Arten von Proxies generiert. Für die unterschiedlichen Proxy-Arten gibt es ebenfalls Funktionen, die eine Menge von Proxies zu einem Source-Typen $S$ und einer Menge von Target-Typen $T$ beschreiben.\\\\
 In den folgenden Abschnitten werden diese Funktionen für die einzelnen Proxy-Arten beschrieben. Dabei ist davon auszugehen, dass die Proxies eine allgemeine Struktur haben, die in Abschnitt \ref{sec:proxygram} aufgeführt ist. Um die Regeln für die Generierung der Proxies zu beschreiben, soll davon ausgegangen werden, dass jedes Listen-Attribut ($\mathit{NT.}\text{*}$) aus Tabelle \ref{tab:attrGrProxies} ein Attribut $\texttt{len}$ enthält in dem die Anzahl der in der Liste befindlichen Elemente abgelegt ist.
 
@@ -214,7 +215,8 @@ Der abstrakte Syntaxbaum mit den dazugehörigen Attributen ist Abbildung \ref{fi
 \label{fig:ASTSUB}
 \end{figure}
 \noindent
-Der Proxy bietet alle Methoden an, die auch von dessen Source-Typ angeboten werden. Die Methodendelegationen innerhalb des Proxies beschreiben, was beim Aufruf der jeweiligen aufgerufenen Methoden passiert. So wird ein Aufruf der Methode $\texttt{heal}$ an die Methode $\texttt{heal}$ aus dem Target-Typ delegiert. Ein Aufruf der Methode $\texttt{getName}$ hingegen führt zu einem Fehler, weil keine Delegationsmethode zur Verfügung steht.
+\\
+Der Proxy bietet alle Methoden an, die auch von dessen \emph{Source-Typ} angeboten werden. Die Methodendelegationen innerhalb eines Proxies beschreiben, was beim Aufruf der jeweiligen aufgerufenen Methode passiert. So wird ein Aufruf der Methode $\texttt{heal}$ an die Methode $\texttt{heal}$ aus dem \emph{Target-Typ} delegiert. Ein Aufruf der Methode $\texttt{getName}$ hingegen führt zu einem Fehler, weil keine Delegationsmethode zur Verfügung steht.
 \\\\
 Im Hinblick darauf, dass eine Konvertierung von einem Super-Typ und einen Sub-Typ (Down-Cast) ebenfalls dazu führt, dass bestimmte Methoden, wie in diesem Fall $\texttt{getName}$ nicht ausgeführt werden können, spiegelt der \emph{Sub-Proxy} dieses Verhalten wieder.
 \paragraph{Formalisierung}
@@ -278,7 +280,7 @@ Die genannten Regeln für eine Methoden-Delegation $\mathit{MD}$ in einem \emph{
 }
 {\mathit{methDel_{sub}(MD,P)}}
 \end{gather*}
-Innerhalb eines \emph{Sub-Proxies} gibt es für jede Methode $m$ des Source-Typ genau eine Methoden-Delegation mit der Methode $m$ als aufgerufene Methode. Damit lässt sich für einen Proxy $P$ in Bezug auf alle seine Methoden-Delegationen folgende Regeln formulieren:
+Innerhalb eines \emph{Sub-Proxies} gibt es für jede Methode $m$ des \emph{Source-Typ} genau eine Methoden-Delegation mit der Methode $m$ als aufgerufene Methode. Damit lässt sich für einen Proxy $P$ in Bezug auf alle seine Methoden-Delegationen folgende Regel formulieren:
 \begin{gather*}
 \frac{\splitfrac{\mathit{M} = \mathit{methoden(P.type)}\wedge|\mathit{M}| = |P.dels| \wedge \forall \mathit{T'\text{ }m(T)} \in \mathit{M}:}{\exists \mathit{MD} \in \mathit{P.dels}:m = \mathit{MD.call.name} \wedge \mathit{methDel_{sub}(MD,P)
  }}
@@ -379,7 +381,7 @@ Formal wird ein \emph{Container-Proxy} durch die Regeln beschrieben, die im Folg
 \\\\
 Ein \emph{Container-Proxy} enthält, wie die vorher beschriebenen Proxies, genau einen Target-Typ. Die Eigenschaften der Delegationsmethoden innerhalb der einzelnen Methoden-Delegationen gleichen denen aus dem \emph{Sub-Proxy}.
 \\\\
-In den angerufenen Methoden einer einzelnen Methoden-Delegation $\mathit{MD}$ dürfen die Attribute $\texttt{mainType}$ und $\texttt{delType}$ im \emph{Container-Proxy} nicht übereinstimmen. Dementsprechend darf das Attribut $\texttt{field}$ nicht mit dem Wert $\texttt{self}$ belegt sein. Vielmehr müssen der Wert des Attributs $\texttt{delTyp}$ und der Target-Typ $T$ des Proxies ein Matching der Form $T \Rightarrow_{internCont} \texttt{delTyp}$ aufweisen. Daher gilt für den \emph{Container-Proxy} $P$ folgende Regel.
+In der aufgerufenen Methode einer einzelnen Methoden-Delegation $\mathit{MD}$ dürfen die Attribute $\texttt{mainType}$ und $\texttt{delType}$ im \emph{Container-Proxy} nicht übereinstimmen. Dementsprechend darf das Attribut $\texttt{field}$ nicht mit dem Wert $\texttt{self}$ belegt sein. Vielmehr müssen der Wert des Attributs $\texttt{delTyp}$ und der Target-Typ $T$ des Proxies ein Matching der Form $T \Rightarrow_{internCont} \texttt{delTyp}$ aufweisen. Daher gilt für den \emph{Container-Proxy} $P$ folgende Regel.
 \begin{gather*}
 \frac{\splitfrac{\mathit{MD.call.mainType} = \mathit{P.type} \wedge \forall \mathit{T} \in \mathit{P.targets}:}
 {  \mathit{T} \Rightarrow_{internCont} \mathit{MD.call.delType}}
@@ -441,11 +443,11 @@ Der abstrakte Syntaxbaum mit den dazugehörigen Attributen ist Abbildung \ref{fi
 Ein \emph{struktureller Proxy} wird formal durch die folgenden Regeln beschrieben.
 \\\\
 Ein \emph{struktureller Proxy} kann, wie bereits erwähnt, mehrere Target-Typen enthalten.
-Für jeden Target-Typ $T$ muss dabei jedoch wenigstens eine Delegationsmethode im Proxy mit einem Attribut $\texttt{target} = T$ existieren. Dadurch gilt die für einen \emph{strukturellen Proxy} Proxy $P$:
+Für jeden Target-Typ $T$ muss dabei jedoch wenigstens eine Delegationsmethode im Proxy mit einem Attribut $\texttt{target} = T$ existieren. Dadurch gilt die für einen \emph{strukturellen Proxy} $P$:
 \begin{gather*}
 \frac{\forall \mathit{T} \in \mathit{P.targets}:\exists \mathit{MD} \in \mathtt{P.dels}:\mathit{MD.del.target} = T}{\mathit{targets_{struct}(P, T)}}
 \end{gather*}
-Für die aufgerufene Methode und die Delegationsmethode einer einzelnen Methoden-Delegation $\mathit{M}$ gelten im \emph{strukturellen Proxy} dieselben Regeln wie für den \emph{Sub-Proxy}. Die Namen der aufgerufenen Methoden und der Delegationsmethode müssen dabei jedoch nicht übereinstimmen. Dafür müssen diese beiden Methode jedoch ein strukturelles Matching aufweisen. Bezogen auf die Rückgabe-Typen einer aufgerufenen Methode $\mathit{C}$ und der Delegationsmethode $\mathit{D}$ aus einer Methoden-Delegation muss daher Folgendes gelten.
+Für die aufgerufene Methode und die Delegationsmethode einer einzelnen Methoden-Delegation $\mathit{M}$ gelten im \emph{strukturellen Proxy} dieselben Regeln wie für den \emph{Sub-Proxy}. Die Namen der aufgerufenen Methoden und der Delegationsmethode müssen dabei jedoch nicht übereinstimmen. Dafür müssen diese beiden Methoden jedoch ein strukturelles Matching aufweisen. Bezogen auf die Rückgabe-Typen einer aufgerufenen Methode $\mathit{C}$ und der Delegationsmethode $\mathit{D}$ aus einer Methoden-Delegation muss daher Folgendes gelten.
 \begin{gather*}
 \frac{\mathit{D.returnType} \Rightarrow_{internStruct} \mathit{C.returnType}}{\mathit{return_{struct}(C,D)}}
 \end{gather*} 
@@ -483,7 +485,7 @@ Die Menge der \emph{strukturellen Proxies}, die mit dem Source-Typ $R$ und der M
 \end{gather*}
 
 \subsubsection{Allgemeine Generierung von Proxies}
-Die Proxy-Funktion der einzelnen Proxy-Arten werden zur Beschreibung einer allgemeine Funktion für die Generierung der Proxies verwendet. Dazu sind die Proxy-Arten zusammen mit den dazugehörigen Matchingrelationen und den Namen der Funktionen zur Generierung des jeweiligen Proxies in Tabelle \ref{tab:baseMatcher} noch einmal aufgeführt.
+Die Proxy-Funktionen der einzelnen Proxy-Arten werden zur Beschreibung einer allgemeine Funktion für die Generierung der Proxies verwendet. Dazu sind die Proxy-Arten zusammen mit den dazugehörigen Matchingrelationen und den Namen der Funktionen zur Generierung des jeweiligen Proxies in Tabelle \ref{tab:baseMatcher} noch einmal aufgeführt.
 
 \begin{table}[H]
 \centering
@@ -605,7 +607,7 @@ Sei $R$ ein \emph{required Typ} und $\mathit{TM}$ eine Menge von \emph{provided 
 \end{gather*}
 \noindent
 %Für jede Kombination von jeweils einem Element aus jeder der Mengen aus $\mathit{structMSets(R,T)}$ kann ein Proxy für $R$ mit der Menge der Target-Typen $T$ erzeugt werden.
-Für die Bildung eines Proxies wird aus jedem Element der Menge $structMSets(R,\mathit{TM})$ genau ein Element als Delegationsmethode verwendet werden. 
+Für die Bildung eines Proxies wird aus jedem Element der Menge $structMSets(R,\mathit{TM})$ genau ein Element als Delegationsmethode verwendet. 
 \begin{example}{bsp_proxycreation}
 Ausgehend von Beispiel \ref{bsp_structmtarget} lassen sich die folgenden vier Proxies mit den \emph{Target-Typen} $\texttt{Leave}$ und $\texttt{Come}$ erzeugen.
 \begin{lstlisting}[style = dsl]
@@ -635,7 +637,7 @@ proxy Greeting with [Come, Leave]{
 \end{example}
 \noindent
 \\
-Die Anzahl aller möglichen Proxies für ein \emph{required Typ} $R$ aus einer Menge von \emph{Target-Typen} $\mathit{TM}$ sei näherungsweise über die Funktion $\mathit{proxyCount(R,\mathit{TM})}$ beschrieben. Dass es sich hierbei lediglich um eine Annäherung handelt liegt daran, dass eine Methode $\mathit{dm}$ mit $\mathit{dm} \in M_1 \cup ... \cup M_n$ und $\{M_1,...,M_n\} = \mathit{structMSets(R,TM)}$ innerhalb eines Proxy maximal einmal als Delegationsmethode verwendet werden darf. Es ist jedoch möglich, dass es zwischen den Mengen 
+Die Anzahl aller möglichen strukturellen Proxies für ein \emph{required Typ} $R$ aus einer Menge von \emph{Target-Typen} $\mathit{TM}$ sei näherungsweise über die Funktion $\mathit{proxyCount(R,\mathit{TM})}$ beschrieben. Dass es sich hierbei lediglich um eine Annäherung handelt liegt daran, dass eine Methode $\mathit{dm}$ mit $\mathit{dm} \in M_1 \cup ... \cup M_n$ und $\{M_1,...,M_n\} = \mathit{structMSets(R,TM)}$ innerhalb eines Proxy maximal einmal als Delegationsmethode verwendet werden darf. Es ist jedoch möglich, dass es zwischen den Mengen 
 $M_1,...,M_n$ Überschneidungen gibt (siehe vorheriges Beispiel). Daher gelten für die Funktion $\mathit{proxyCount}$ folgende Regeln:
 \begin{gather*}
 \frac{\{M_1,...,M_n\} = \mathit{structMSets(R,TM)} \wedge M_1 \cap ... \cap M_n = \emptyset}{\mathit{proxyCount(R,TM)} = \prod\limits_{i=1}^{n}|M_i| }

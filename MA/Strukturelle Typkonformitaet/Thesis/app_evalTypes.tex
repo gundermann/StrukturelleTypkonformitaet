@@ -1,44 +1,44 @@
-\chapter{Deklaration der Typen für die Evaluation der Heuristiken}\label{app_evalTypes}
-Im Folgenden erfolgt die Deklaration der \emph{required Typen}, mit denen die Evaluation der Heuristiken in Kapitel \ref{chap_evaluation} durchgeführt wird, sowie die Deklartion der\emph{provided Typen}, die als Ergebniss der jeweiligen Exploration für einen \emph{required Typ} einzeln oder in Kombination erwartet werden, oder innerhalb einer der Deklarationen eines \emph{required Typ} verwendet werden. Dabei ist davon auszugehen, dass diese Typen auf dem JDK als Bibliothek aufbauen.
+\chapter{Deklaration der relevanten Typen}\label{app_evalTypes}
+Im Folgenden erfolgt die Deklaration der \emph{required Typen}, mit denen die Evaluation der Heuristiken in Kapitel \ref{chap_evaluation} durchgeführt wird, sowie die Deklaration der \emph{provided Typen}, die als Ergebnis der jeweiligen Exploration für einen \emph{required Typ} einzeln oder in Kombination erwartet, oder innerhalb einer der Deklarationen eines \emph{required Typ} verwendet werden. Dabei ist davon auszugehen, dass diese Typen aus dem JDK als Bibliothek aufbauen.
 \\\\
 Die Listings \ref{lst_tei1} - \ref{lst_tei7} zeigen die Deklarationen für die \emph{required Typen}.
-\begin{lstlisting}[style = dsl, caption = Deklartion von ElerFTFoerderprogrammeProvider, captionpos = b, label = lst_tei1]
+\begin{lstlisting}[style = dsl, caption = Deklaration von ElerFTFoerderprogrammeProvider, captionpos = b, label = lst_tei1]
 required ElerFTFoerderprogrammeProvider{
 	Collection getAlleFreigegebenenFPs()
 	ElerFTFoerderprogramm getElerFTFoerderprogramm(DvAntragsJahr, DvFoerderprogramm, Date)
 }
 \end{lstlisting}
-\begin{lstlisting}[style = dsl, caption = Deklartion von FoerderprogrammeProvider, captionpos = b, label = lst_tei2]
+\begin{lstlisting}[style = dsl, caption = Deklaration von FoerderprogrammeProvider, captionpos = b, label = lst_tei2]
 required FoerderprogrammeProvider{
 	Collection getAlleFreigegebenenFPs()
 	Foerderprogramm getFoerderprogramm(DvAntragsJahr, DvFoerderprogramm, Date)
 }
 \end{lstlisting}
-\begin{lstlisting}[style = dsl, caption = Deklartion von MinimalFoerderprogrammeProvider, captionpos = b, label = lst_tei3]
+\begin{lstlisting}[style = dsl, caption = Deklaration von MinimalFoerderprogrammeProvider, captionpos = b, label = lst_tei3]
 required MinimalFoerderprogrammeProvider{
 	Collection getAlleFreigegebenenFPs()
 	Foerderprogramm getFoerderprogramm(String, int, Date)
 }
 \end{lstlisting}
-\begin{lstlisting}[style = dsl, caption = Deklartion von IntubatingFireFighter, captionpos = b, label = lst_tei4]
+\begin{lstlisting}[style = dsl, caption = Deklaration von IntubatingFireFighter, captionpos = b, label = lst_tei4]
 required IntubatingFireFighter{
 	void intubate(Injured)
 	FireState extinguishFire(Fire)
 }
 \end{lstlisting}
-\begin{lstlisting}[style = dsl, caption = Deklartion von IntubatingFreeing, captionpos = b, label = lst_tei5]
+\begin{lstlisting}[style = dsl, caption = Deklaration von IntubatingFreeing, captionpos = b, label = lst_tei5]
 required IntubatingFreeing{
 	void intubate(Injured)
 	void free(Injured)
 }
 \end{lstlisting}
-\begin{lstlisting}[style = dsl, caption = Deklartion von IntubatingPatientFireFighter, captionpos = b, label = lst_tei6]
+\begin{lstlisting}[style = dsl, caption = Deklaration von IntubatingPatientFireFighter, captionpos = b, label = lst_tei6]
 required IntubatingFreeing{
 	void intubate(IntubationPatient)
 	FireState extinguishFire(Fire)
 }
 \end{lstlisting}
-\begin{lstlisting}[style = dsl, caption = Deklartion von KOFGPCProvider, captionpos = b, label = lst_tei7]
+\begin{lstlisting}[style = dsl, caption = Deklaration von KOFGPCProvider, captionpos = b, label = lst_tei7]
 required KOFGPCProvider{
 	Collection getKOFGsVonFP(DvFoerderprogramm)
 	Collection getPCsZuKOFG(DvFoerdergegenstand, DvAntragsJahr)
@@ -46,7 +46,7 @@ required KOFGPCProvider{
 \end{lstlisting}
 \noindent
 Die Listings \ref{lst_ElerFTFoerderprogramm} - \ref{lst_IntubationPatient} zeigen die \emph{provided Typen}, die in den Deklarationen der \emph{required Typen} verwendet wurden und nicht Teil des JDKs sind.
-\begin{lstlisting}[style = dsl, caption = Deklartion von ElerFTFoerderprogramm, captionpos = b, label = lst_ElerFTFoerderprogramm]
+\begin{lstlisting}[style = dsl, caption = Deklaration von ElerFTFoerderprogramm, captionpos = b, label = lst_ElerFTFoerderprogramm]
 provided ElerFTFoerderprogramm extends Foerderprogramm{
   DvFlaeche mindestParzellenGroesse
   DvFlaeche maximaleParzellenGroesse
@@ -59,7 +59,7 @@ provided ElerFTFoerderprogramm extends Foerderprogramm{
   boolean isMehrjaehrig()
 }
 \end{lstlisting}
-\begin{lstlisting}[style = dsl, caption = Deklartion von Foerderprogramm, captionpos = b, label = lst_Foerderprogramm]
+\begin{lstlisting}[style = dsl, caption = Deklaration von Foerderprogramm, captionpos = b, label = lst_Foerderprogramm]
 provided Foerderprogramm extends Object{
   Long id
   STDGueltigkeit gueltigkeit
@@ -89,7 +89,7 @@ provided Foerderprogramm extends Object{
 %  boolean imGueltigkeitszeitraum(DvAntragsJahr)
 %}
 %\end{lstlisting}
-\begin{lstlisting}[style = dsl, caption = Deklartion von DvAntragsJahr, captionpos = b, label = lst_dvantragsjahr]
+\begin{lstlisting}[style = dsl, caption = Deklaration von DvAntragsJahr, captionpos = b, label = lst_dvantragsjahr]
 provided DvAntragsJahr extends AbstractDomainValue{
   int antragsJahr
   
@@ -127,7 +127,7 @@ provided DvAntragsJahr extends AbstractDomainValue{
 %  boolean hasAttribute(String)
 %}
 %\end{lstlisting}
-\begin{lstlisting}[style = dsl, caption = Deklartion von DvFoerderprogramm, captionpos = b, label = lst_DvFoerderprogramm]
+\begin{lstlisting}[style = dsl, caption = Deklaration von DvFoerderprogramm, captionpos = b, label = lst_DvFoerderprogramm]
 provided DvFoerderprogramm extends DvEnumerable{
   long id
   String code
@@ -147,7 +147,7 @@ provided DvFoerderprogramm extends DvEnumerable{
   String getBezeichnungLang()
 }
 \end{lstlisting}
-\begin{lstlisting}[style = dsl, caption = Deklartion von Injured, captionpos = b, label = lst_Injured]
+\begin{lstlisting}[style = dsl, caption = Deklaration von Injured, captionpos = b, label = lst_Injured]
 provided Injured extends Object{
   Collection suffers
 
@@ -156,7 +156,7 @@ provided Injured extends Object{
   boolean isStabilized()
 }
 \end{lstlisting}
-\begin{lstlisting}[style = dsl, caption = Deklartion von Fire, captionpos = b, label = lst_Fire]
+\begin{lstlisting}[style = dsl, caption = Deklaration von Fire, captionpos = b, label = lst_Fire]
 provided Fire extends Object{
   boolean active
 
@@ -164,7 +164,7 @@ provided Fire extends Object{
   boolean isActive()
 }
 \end{lstlisting}
-\begin{lstlisting}[style = dsl, caption = Deklartion von IntubationPatient, captionpos = b, label = lst_IntubationPatient]
+\begin{lstlisting}[style = dsl, caption = Deklaration von IntubationPatient, captionpos = b, label = lst_IntubationPatient]
 provided IntubationPatient extends Object{
   boolean isIntubated
 
@@ -174,7 +174,7 @@ provided IntubationPatient extends Object{
 \end{lstlisting}
 \noindent
 Die Listings \ref{lst_eftstd} - \ref{lst_firefighter} zeigen die Deklarationen der \emph{provided Typen}, aus denen bei der Exploration ein passender Proxy erzeugt werden soll.
-\begin{lstlisting}[style = dsl, caption = Deklartion von ElerFTStammdatenAuskunftService, captionpos = b, label = lst_eftstd]
+\begin{lstlisting}[style = dsl, caption = Deklaration von ElerFTStammdatenAuskunftService, captionpos = b, label = lst_eftstd]
 provided ElerFTStammdatenAuskunftService extends Object{
 	Collection getAlleElerFTKombiKzFpFoerdergegenstaende()
 	Collection getAlleElerFTKoFoerdergegenstaende()
@@ -219,7 +219,7 @@ provided ElerFTStammdatenAuskunftService extends Object{
 	Map getKzFpJeFg(Collection, DvAntragsJahr)
 }
 \end{lstlisting}
-\begin{lstlisting}[style = dsl, caption = Deklartion von StammdatenAuskunftService, captionpos = b, label = lst_std]
+\begin{lstlisting}[style = dsl, caption = Deklaration von StammdatenAuskunftService, captionpos = b, label = lst_std]
 provided StammdatenAuskunftService extends Object{
   Collection getLandesmassnahmen2Foerdergegenstaende(Landesmassnahme2FoerdergegenstandQuery)
   Collection getFoerdergegenstaendeZuFinanzierungsschluessel(DvFoerderprogramm, Finanzierungsschluessel, DvAntragsJahr)
@@ -265,7 +265,7 @@ provided StammdatenAuskunftService extends Object{
   Vorgang getVorgang(DvFoerderprogramm, Date, AntragsVorgangsTyp, DvAntragsJahr)
 }
 \end{lstlisting}
-\begin{lstlisting}[style = dsl, caption = Deklartion von Doctor, captionpos = b, label = lst_doctor]
+\begin{lstlisting}[style = dsl, caption = Deklaration von Doctor, captionpos = b, label = lst_doctor]
 provided Doctor extends Object{
   void provideHeartbeatMassage(Injured)
   void stablilizeBrokenBones(Injured)
@@ -275,7 +275,7 @@ provided Doctor extends Object{
   void intubate(Injured)
 }
 \end{lstlisting}
-\begin{lstlisting}[style = dsl, caption = Deklartion von FireFighter, captionpos = b, label = lst_firefighter]
+\begin{lstlisting}[style = dsl, caption = Deklaration von FireFighter, captionpos = b, label = lst_firefighter]
 provided FireFighter extends Object{
   void stabilizeBrokenBones(Injured)
   void provideHeartbeatMassage(Injured)

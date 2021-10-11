@@ -4,13 +4,13 @@
 \subsection{Seiteneffekte durch Testevaluation}\label{sec_sideeffects}
 Die Exploration erfordert die Ausführung der vordefinierten Testfälle zur Laufzeit. Sofern diese Testfälle eine Änderung des Zustands bestimmter Objekte bewirken, kann dies auch Auswirkungen auf die Funktionsweise des Systems haben. 
 \\\\
-Um dieses Problem zu beheben könnte man sicherstellen, dass die Generierung der Proxies nur auf Basis von \emph{provided Typen} erfolgt, die solche Seiteneffekte nicht aufweise. Diese Eigenschaft kann jedoch nur durch den Entwickler festgestellt werden und entsprechend markiert werden (bspw. über Annotationen). Während der Exploration könnten solche \emph{provided Typen} über solche Markierungen erkannt werden. Dieser Ansatz reduziert jedoch die Anzahl der \emph{provided Typen}, die für die Generierung eines Proxies verwendet werden können. Dadurch sinkt auch die Wahrscheinlichkeit, dass ein passender Proxy gefunden wird.
+Um dieses Problem zu beheben könnte man sicherstellen, dass die Generierung der Proxies nur auf Basis von \emph{provided Typen} erfolgt, die solche Seiteneffekte nicht aufweisen. Diese Eigenschaft kann jedoch nur durch den Entwickler festgestellt und entsprechend markiert werden (bspw. über Annotationen). Während der Exploration könnten solche \emph{provided Typen} über solche Markierungen erkannt werden. Dieser Ansatz reduziert jedoch die Anzahl der \emph{provided Typen}, die für die Generierung eines Proxies verwendet werden können. Dadurch sinkt auch die Wahrscheinlichkeit, dass ein passender Proxy gefunden wird.
 \\\\
-Um die zu markierenden EJBs zu identifizieren ist zu prüfen, wie sich die Ausführung der einzelnen Methoden der Bean auf das System auswirken. Es kann festgehalten werden, dass alle Methoden, die den persistenten oder den transienten Zustand von Objekten verändern, das Potential für solche unerwünschten Seiteneffekte besitzen. 
+Um die zu markierenden \emph{EJBs} zu identifizieren ist zu prüfen, wie sich die Ausführung der einzelnen Methoden der Bean auf das System auswirken. Es kann festgehalten werden, dass alle Methoden, die den persistenten oder den transienten Zustand von Objekten verändern, das Potential für solche unerwünschten Seiteneffekte besitzen. 
 \\\\
 Aufbauend auf der Prüfung einzelner Methoden, kann auch die Markierung von Methoden in Betracht gezogen werden. So dürften markierte Methoden bei der Generierung eines Proxies nicht als Delegationsmethode verwendet werden.
 \subsection{Auswirkung auf die Verfügbarkeit eines Systems}\label{sec_stabliliy}
-Die Verfügbarkeit eines System bzw. von Systemkomponenten, bezeichnet die Wahrscheinlichkeit, ein System oder Systemkomponenten zu einem vorgegebenen Zeitpunkt in einem funktionsfähigen Zustand anzutreffen. \cite{it-admin}
+Die Verfügbarkeit eines Systems bzw. von Systemkomponenten, bezeichnet die Wahrscheinlichkeit, ein System oder Systemkomponenten zu einem vorgegebenen Zeitpunkt in einem funktionsfähigen Zustand anzutreffen. \cite{it-admin}
 Die Auswirkung des Ansatzes auf die Verfügbarkeit wurde in dieser Arbeit nicht systematisch untersucht. Da der Ansatz jedoch darauf abzielt, bestimmte Komponenten (EJBs) zur Laufzeit zu kombinieren, können Überlegungen bzgl. der Verfügbarkeit durchaus angestellt werden.
 \\\\
 Dabei muss allerdings bedacht werden, dass die Verfügbarkeit der Komponente (also der EJB) in diesem Zusammenhang nicht ausschlaggebend ist. Immerhin wird sie nicht direkt adressiert, sondern auf Basis struktureller und semantischer Vorgaben ermittelt. Insofern bilden eher die Funktionen, die von den EJBs angeboten werden, die Komponenten in Bezug auf die hier betrachtete Verfügbarkeit.
@@ -37,7 +37,7 @@ Ebenso wirkt sich das Entfernen eines provided Typs, der bei einer früheren Exp
 Da die Exploration beendet wird, sofern ein passender Proxy gefunden wurde, kann es auch unter diesen Umständen dazu kommen, dass die Exploration mitunter länger dauert als vorher. Zudem besteht in diesem Fall die Gefahr, dass die Exploration fehlschlägt.
 
 \subsection{Nutzen für den Entwickler}
-Aus dem oben genannten ergibt sich, dass der Entwickler bei der Verwendung dieses Ansatzes eine große Verantwortung trägt. Dieser kann er umso besser gerecht werden, je besser er das System, in dem der Ansatz verwendet werden soll, kennt. 
+Aus den vorherigen Absätzen ergibt sich, dass der Entwickler bei der Verwendung dieses Ansatzes eine große Verantwortung trägt. Dieser Verantwortung kann er umso besser gerecht werden, je genauer er das System, in dem der Ansatz verwendet werden soll, kennt. 
 \\\\
 So kann festgehalten werden, dass ein Entwickler, der das System gut kennt und somit weiß, welche Komponenten innerhalb dessen verwendet werden, diesen Ansatz wohl kaum benötigt. Vielmehr ist es ihm möglich die passenden Komponenten aufgrund seines Wissens explizit zu benennen, wie es im EJB-Framework grundlegend der Fall ist.
 \\\\

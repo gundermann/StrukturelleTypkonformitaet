@@ -138,7 +138,7 @@ required MedicalFireFighter {
 }
 \end{lstlisting}
 \noindent
-\subsection{Definition der Matchern}\label{sec_matcher}
+\subsection{Definition der Matcher}\label{sec_matcher}
 Ein Matcher definiert das Matching eines Typs $T$ zu einem Typ $T'$ durch die asymmetrische Relation $\Rightarrow$ (auch Matchingrealtion genannt)\footnote{$T \Rightarrow T'$}.
 \subsubsection{ExactTypeMatcher}\label{sec:exacttypematcher}
 Der \emph{ExactTypeMatcher} stellt ein Matching von einem Typ $T$ zu demselben Typ $T$ her (vgl. \cite{moormann}). Die dazugehörige Matchingrelation $\Rightarrow_{exact}$ wird durch folgende Regel beschrieben:
@@ -193,7 +193,7 @@ Zur Definition des letzten Matchers werden die Matchingrelationen der oben genan
 \begin{gather*}
 \frac{T \Rightarrow_{internCont}T' \vee T \Rightarrow_{container} T' \vee T \Rightarrow_{content} T'}{T \Rightarrow_{internStruct}T'}
 \end{gather*}
-\subsubsection{StructuralTypeMatcher} 
+\subsubsection{StructuralTypeMatcher} \label{subsec_structmatcher}
 Der \emph{StructuralTypeMatcher} matcht einen \emph{required Typ} $R$ auf einen \emph{provided Typ} $P$ auf der Basis der Methoden-Signaturen, die in den Typen deklariert sind.
 \\\\
 Somit soll bspw. der Typ $\texttt{MedicalFireFighter}$ auf den Typ $\texttt{FireFighter}$ (siehe Listing \ref{lst:libEx}) gematcht werden. Als ein weiteres Beispiel, bezogen auf die Typen aus Listing 1, kann das Matching des Typs $\texttt{MedicalFireFighter}$ auf den Typ $\texttt{Doctor}$ angebracht werden.
@@ -239,7 +239,7 @@ Die Matchingrelation für den \emph{StructuralTypeMatcher} wird durch folgende R
 
 
 \subsection{Ergebnis der strukturellen Evaluation}\label{sec_ergStructEval}
-Die gesamte Exploration wird für einen required Typ durchgeführt. Bei der strukturellen Evaluation sollen dabei Mengen von provided Typen ermittelt werden, deren Methoden in Kombination zu jeder Methode des required Typ ein Matching aufweisen. Die Mengen von provided Typen innerhalb einer Bibliothek $L$ für die dies in Bezug auf ein required Typ $R$ zutrifft, wird über die Funktion $cover$ beschrieben.
+Die gesamte Exploration wird für einen \emph{required Typ} durchgeführt. Bei der strukturellen Evaluation sollen Mengen von \emph{provided Typen} ermittelt werden, deren Methoden in Kombination zu jeder Methode des \emph{required Typ} ein Matching aufweisen. Die Mengen von \emph{provided Typen} innerhalb einer Bibliothek $L$ für die dies in Bezug auf ein \emph{required Typ} $R$ zutrifft, wird über die Funktion $cover$ beschrieben.
 
 \begin{gather*}
 cover(R,L) := 
@@ -268,7 +268,7 @@ required Greeting{
 	String bye()
 }
 \end{lstlisting}
-Über die Funktion $\mathit{cover}$ werden folgenden Mengen von Target-Typen für die Bildung von Proxies für den required Typ $\texttt{Greeting}$ ermittelt.
+Über die Funktion $\mathit{cover}$ werden folgende Mengen von Target-Typen für die Bildung von Proxies für den required Typ $\texttt{Greeting}$ ermittelt.
 \begin{gather*}
 \mathit{cover(\texttt{Greeting},L)} = \{
 	\{\texttt{Come}\},\{\texttt{Leave}, \texttt{Come}\}

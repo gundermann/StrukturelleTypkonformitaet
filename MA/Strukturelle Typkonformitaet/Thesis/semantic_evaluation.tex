@@ -1,7 +1,7 @@
 \section{Semantische Evaluation}\label{sec_semEval}
 Das Ziel der semantischen Evaluation ist es, einen der Proxies, die aus den Mengen von Target-Typen, die im Rahmen der strukturellen Evaluation erzeugt werden können, hinsichtlich der vordefinierten Testfälle zu evaluieren. Da die gesamte Exploration zur Laufzeit des Programms durchgeführt wird, stellt sie hinsichtlich der nicht-funktionalen Anforderungen eine zeitkritische Komponente dar.
 \\\\
-Da die Anforderungen an die gesuchte Komponente mit bedacht spezifiziert werden müssen, ist es irrelevant, ob es mehrere Proxies gibt, die hinsichtlich der vordefinierten Testfällen positiv evaluatiert werden können. Es ist ausreichend lediglich ein Proxy zu finden, dessen Semantik zu positiven Ergebnissen hinsichtlich aller vordefinierten Testfälle führt.
+Da die Anforderungen an die gesuchte Komponente mit Bedacht spezifiziert werden müssen, ist es irrelevant, ob es mehrere Proxies gibt, die hinsichtlich der vordefinierten Testfällen positiv evaluatiert werden können. Es ist ausreichend lediglich ein Proxy zu finden, dessen Semantik zu positiven Ergebnissen hinsichtlich aller vordefinierten Testfälle führt.
 \subsection{Besonderheiten der Testfälle}\label{sec_testanforderungen}
 Bei den vordefinierten Tests handelt es sich auf formaler Ebene um Typen, die eine eval-Methode mit der Struktur $\texttt{boolean eval( proxy )}$ anbieten, welche einen Proxy als Parameter erwartet und ein Objekt vom Typ $\texttt{boolean}$ zurückgibt. Weiterhin verfügt ein Test über ein Attribut $\texttt{triedMethodCalls}$, in dem eine Liste von Methodennamen des Proxies, die bei der Durchführung der eval-Methode aufgerufen wurden, hinterlegt ist.
 \\\\
@@ -187,7 +187,7 @@ Für einen \emph{required Typ} $R$ und einem \emph{provided Typ} $P$ wird die Me
 \right\}
 \end{gather*}
 \noindent
-In einer Bibliothek $L$ wird die Ermittlung des Matcherratings eines \emph{required Typs} $R$ und einer Menge von \emph{provided Typen} $\{T_1,...,T_n\}$ mit $\{T_1,...,T_n\} \in \mathit{cover(R,L)}$ über die Funktion $\mathit{rating}$ beschrieben. Auch hierfür werden in dieser Arbeit insgesamt 4 Varianten vorgeschlagen, die in Kapitel \ref{chap_eval} evaluiert werden sollen.
+In einer Bibliothek $L$ wird die Ermittlung des Matcherratings eines \emph{required Typs} $R$ und einer Menge von \emph{provided Typen} $\{T_1,...,T_n\}$ mit $\{T_1,...,T_n\} \in \mathit{cover(R,L)}$ über die Funktion $\mathit{rating}$ beschrieben. Auch hierfür werden in dieser Arbeit insgesamt 4 Varianten vorgeschlagen, die in Kapitel \ref{chap_evaluation} evaluiert werden sollen.
 \paragraph{Variante 1: Durchschnitt ($\mathit{rating}$)}
 
 \begin{gather*}
@@ -263,7 +263,7 @@ Da die Funktion $\mathit{rating}$ von $\mathit{mRating}$ abhängt und für $\mat
 \end{table}
 \noindent
 \\
-Zur Anwendung der Heuristik muss das Matcherrating bei der Erzeugung der Proxies aus den jeweiligen Mengen von \emph{provided Typen} beachtet werden. Dabei sollte die Liste der Mengen von \emph{provided Typen}, die über die Funktion $\mathit{targetSets}$ abgebildet wird und über die in der Methode $\texttt{semanticEval}$ iteriert wird, entsprechend dem Matcherrating sortiert werden. Dadurch werden in der Methode $\texttt{evalProxies}$ zuerst die Proxies evaluiert, die auf Basis einer Menge von \emph{provided Typen} mit dem kleinsten Matcherrating erzeugt wurde. Listing \ref{lst_lmf} zeigt die Anpassungen der Methode $\texttt{relevantProxies}$ auf Basis der Implementierung der semantischen Evaluation aus Listing \ref{lst_semEval}. Für die Sortierung der Liste von Proxies wurde in der Methode $\texttt{LMF}$ exemplarisch das Bubble-Sort-Verfahren verwendet.
+Zur Anwendung der Heuristik muss das Matcherrating bei der Erzeugung der Proxies aus den jeweiligen Mengen von \emph{provided Typen} beachtet werden. Dabei sollte die Liste der Mengen von \emph{provided Typen}, die über die Funktion $\mathit{targetSets}$ abgebildet wird und über die in der Methode $\texttt{semanticEval}$ iteriert wird, entsprechend dem Matcherrating sortiert werden. Dadurch werden in der Methode $\texttt{evalProxies}$ zuerst die Proxies evaluiert, die auf Basis einer Menge von \emph{provided Typen} mit dem kleinsten Matcherrating erzeugt wurden. Listing \ref{lst_lmf} zeigt die Anpassungen der Methode $\texttt{relevantProxies}$ auf Basis der Implementierung der semantischen Evaluation aus Listing \ref{lst_semEval}. Für die Sortierung der Liste von Proxies wurde in der Methode $\texttt{LMF}$ exemplarisch das Bubble-Sort-Verfahren verwendet.
 \begin{lstlisting}[style = pseudo, caption=Semantische Evaluation mit Heuristik LMF, captionpos=b, label=lst_lmf]
 function semanticEval( R, T, tests ){
 	for( anzahl = 1; anzahl <= $\mathit{maxTargets( R )}$; i++ ){
@@ -298,24 +298,27 @@ function LMF( R, targets ){
 
 
 \subsection{Beachtung positiver Tests (PTTF)}\label{sec_pttf}
-Das Testergebnis, welches bei Applikation eines Testfalls für einen Proxy ermittelt wird, ist maßgeblich von den Methoden-Delegationen des Proxies abhängig. Jede Methoden-Delegation $\mathit{MD}$ enthält ein Typ in dem die Delegationsmethode spezifiziert ist. Dieser Typ befindet sich im Attribut $\mathit{MD.del.delTyp}$. Im Fall der sturkturellen Proxies, handelt es sich bei diesem Typ um einen der Target-Typen des Proxies.
+Das Testergebnis, welches bei Applikation eines Testfalls für einen Proxy ermittelt wird, ist maßgeblich von den Methoden-Delegationen des Proxies abhängig. Jede Methoden-Delegation $\mathit{MD}$ enthält einen Typ in dem die Delegationsmethode deklariert wurde. Dieser Typ befindet sich im Attribut $\mathit{MD.del.delTyp}$. Im Fall der sturkturellen Proxies, handelt es sich bei diesem Typ um einen der Target-Typen des Proxies.
 \\\\
 Für einen required Typ $R$ aus einer Bibliothek $L$, kann ein Target-Typ $T$ in den Mengen der möglichen Mengen von Target-Typen $\mathit{cover(R,L)}$ mehrmals auftreten. Dies gilt insbesondere dann, wenn es in $\mathit{cover(R,L)}$ Mengen gibt, deren Mächtigkeit größer ist, als die Mächtigkeit der Menge, in der $T$ enthalten ist. Daher gilt:
 \begin{gather*}
 \frac{\exists \mathit{TG},\mathit{TG'} \in \mathit{cover(R,L)} : \wedge T \in \mathit{TG} \wedge |\mathit{TG}| < |\mathit{TG'}|}{\exists \mathit{TG''} \in \mathit{cover(R,L)} : |\mathit{TG'}| = |\mathit{TG''}| \wedge T \in \mathit{TG''}}
 \end{gather*}
 \noindent
-Für die in diesem Abschnitt beschriebene Heuristik mit dem Namen \emph{positive tested targets first} (kurz: PTTF) ist das Ergebnis einzelner Tests in Bezug auf einen Proxy $P$ relevant. Es wird davon ausgegangen, dass wenn ein Testfall durch einen Proxy $P$ erfolgreich durchgeführt wird, sollte die Reihenfolge der zu prüfenden Proxies so angepasst werden, dass die Proxies, die einen Target-Typen des Proxies $P$ verwenden, im weiteren Verlauf zuerst geprüft werden.
+Für die in diesem Abschnitt beschriebene Heuristik mit dem Namen \emph{positive tested targets first} (kurz: PTTF) ist das Ergebnis einzelner Tests in Bezug auf einen Proxy $P$ relevant. Wenn ein Testfall mit einen Proxy $P$ erfolgreich durchgeführt wurde, dann sollte die Reihenfolge der zu prüfenden Proxies so angepasst werden, dass die Proxies, die einen \emph{Target-Typen} des Proxies $P$ verwenden, im weiteren Verlauf zuerst geprüft werden.
 \\\\
 Dafür sind auf Basis von Listing \ref{lst_semEval} mehrere Anpassungen bzgl. der Implementierung der Methode $\texttt{evalProxies}$ von Nöten:
 \begin{enumerate}
-\item Die Target-Typen der Proxies, mit denen mind. ein Testfall erfolgreich durchgeführt werden konnte, müssen in einer globalen Variable ($\texttt{prioTargets}$) hinterlegt werden.
+\item 
+Die Target-Typen der Proxies, mit denen mind. ein Testfall erfolgreich durchgeführt werden konnte, müssen in einer globalen Variable ($\texttt{prioTargets}$) hinterlegt werden.
 
-\item Die Liste der Proxies, die der Methode $\texttt{evalProxies}$ als Parameter übergeben wird, muss so sortiert werden, dass die Proxies, mit den Target-Typen, die in der globalen Variable ($\texttt{prioTargets}$) hinterlegt wurden, zuerst getestet werden. Dies erfolgt wiederum exemplarisch über das Bubble-Sort-Verfahren in der Methode $\texttt{PTTF}$.
+\item 
+Die Liste der Proxies, die der Methode $\texttt{evalProxies}$ als Parameter übergeben wird, muss so sortiert werden, dass die Proxies, mit den Target-Typen, die in der globalen Variable ($\texttt{prioTargets}$) hinterlegt wurden, zuerst getestet werden. Dies erfolgt wiederum exemplarisch über das Bubble-Sort-Verfahren in der Methode $\texttt{PTTF}$.
 
-\item Die Liste der Proxies, über die innerhalb der Methode $\texttt{evalProxies}$ iteriert wird, kann bzgl. ihrer Reihenfolge bereits dann optimiert werden, wenn mind. einer der Testfälle für den aktuellen Proxy erfolgreich durchgeführt wurde. Dazu müssen jedoch die Proxies, die bereits innerhalb der Methode getestet wurden, in einer lokalen Variable ($\texttt{tested}$) hinterlegt werden. Dann kann die Methode rekursiv mit den Proxies, die noch nicht getestet wurden, aufgerufen werden. So werden die darin enthaltenen Elemente aufgrund der 2. Anpassung erneut sortiert.
+\item 
+Die Liste der Proxies, über die innerhalb der Methode $\texttt{evalProxies}$ iteriert wird, kann bzgl. ihrer Reihenfolge bereits dann optimiert werden, wenn mind. einer der Testfälle für den aktuellen Proxy erfolgreich durchgeführt wurde. Dazu müssen jedoch die Proxies, die bereits innerhalb der Methode getestet wurden, in einer lokalen Variable ($\texttt{tested}$) hinterlegt werden. Dann kann die Methode rekursiv mit den Proxies, die noch nicht getestet wurden, aufgerufen werden. So werden die darin enthaltenen Elemente aufgrund der 2. Anpassung erneut sortiert.
 \end{enumerate}  
-In Listing \ref{lst_pttf} sind die entsprechend Anpassungen und Ergänzungen im Vergleich zu Listing \ref{lst_semEval} zu entnehmen.
+In Listing \ref{lst_pttf} sind die entsprechenden Anpassungen und Ergänzungen im Vergleich zu Listing \ref{lst_semEval} zu entnehmen.
 \begin{lstlisting}[style = pseudo, caption = Semantische Evaluation mit Heuristik PTTF, captionpos = b, label = lst_pttf]
 prioTargets = []
 
@@ -360,7 +363,7 @@ function PTTF( proxies ){
 \end{lstlisting}
 
 \subsection{Beachtung fehlgeschlagener Methodenaufrufe (BL\_NMC)}\label{sec_bl_nmc}
-Diese Heuristik mit dem Namen \emph{blacklist negative method calls} (kurz: BL\_NMC) beschreibt ein Ausschlussverfahren. Das bedeutet, dass bestimmte Proxies auf der Basis von Erkenntnissen, die während der laufenden semantischen Evaluation entstanden sind, für den weiteren Verlauf ausgeschlossen werden. Dadurch soll die erneute Prüfung eines Proxies, der ohnehin nicht zum gewünschten Ergebnis führt, verhindert werden.
+Diese Heuristik mit dem Namen \emph{blacklist negative method calls} (kurz: BL\_NMC) beschreibt ein Ausschlussverfahren. Das bedeutet, dass bestimmte Proxies auf der Basis von Erkenntnissen, die während der laufenden semantischen Evaluation entstanden sind, für den weiteren Verlauf ausgeschlossen werden. Dadurch soll die erneute Prüfung eines Proxies, dessen Target-Typen ohnehin nicht zum gewünschten Ergebnis führt, verhindert werden.
 \\\\
 Die Heuristik zielt darauf ab, Methoden-Delegationen, die immer fehlschlagen, zu identifizieren. Wurde eine solche Methoden-Delegation gefunden, können alle Proxies, die diese Methoden-Delegation enthalten von der weiteren Exploration ausgeschlossen werden.
 \\\\

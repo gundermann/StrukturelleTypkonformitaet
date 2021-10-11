@@ -47,12 +47,12 @@ p(A) = \begin{array}{l|l}
 \noindent
 Diese Notation kommt jedoch nur bei der Darstellung der Untersuchungsergebnisse eines Iterationsschrittes zum Einsatz, in dem ein passender Proxy gefunden wird. Für alle anderen Durchläufe ist die Anzahl der möglichen Proxies bekannt und wird somit auch dargestellt. 
 \\\\
-\tabref{vft:beispiel} zeigt ein Beispiel für eine solche Vier-Felder-Tafel, in der die Ergebnisse des 1. Iterationsschritt dargestellt sind. Dabei wurden 11 Proxies generiert und getestet. 10 dieser Proxies bestanden die Evaluation nicht. Insgesamt konnten Proxies aus 20 Kombinationen von provided Typen erzeugt werden. Alle diese abzüglich der 11 generierten Proxies wurden im Vorfeld (bspw. durch Heuristiken) aussortiert. Weiterhin zeigt das Beispiel, dass es einen Proxy gab, der die semantische Evaluation bestand.
+\tabref{vft:beispiel} zeigt ein Beispiel für eine solche Vier-Felder-Tafel, in der die Ergebnisse des 1. Iterationsschrittes dargestellt sind. Dabei wurden 11 Proxies generiert und getestet. 10 dieser Proxies bestanden die Evaluation nicht. Insgesamt konnten Proxies aus 20 Kombinationen von provided Typen erzeugt werden. Alle diese abzüglich der 11 generierten Proxies wurden im Vorfeld (bspw. durch Heuristiken) aussortiert. Weiterhin zeigt das Beispiel, dass es einen Proxy gab, der die semantische Evaluation bestand.
 \vft{1}{10}{$p(20)-11$}{1}{0}{Beispiel: Vier-Felder-Tafel}{vft:beispiel}
 
 
 \section{Ausgangspunkt}
-Für einen reqiured Typ können mehrere provided Typen gefunden werden, die eine strukturelle Übereinstimmung aufwiesen. \tabref{amountMatchedInterfaces} zeigt die Anzahl der strukturell gematchten provided Typen zum jeweiligen reqiured Typ. Diese kommen einzeln oder in Kombination für die semantische Evaluation in Frage.
+Für einen \emph{reqiured Typ} können mehrere \emph{provided Typen} gefunden werden, die eine strukturelle Übereinstimmung aufwiesen. \tabref{amountMatchedInterfaces} zeigt die Anzahl der strukturell gematchten \emph{provided Typen} zum jeweiligen \emph{reqiured Typ}. Diese kommen einzeln oder in Kombination für die semantische Evaluation in Frage.
 \begin{table}[H]
 \centering
 \small
@@ -169,7 +169,7 @@ Die folgenden Vier-Felder Tafeln zeigen die Ergebnisse mit der Kombination der H
 \vft{2}{1076}{$p(52150)-1077$}{1}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} für TEI7 2. Durchlauf}{lmfpttf_TEI7_2}
 \end{multicols}
 \noindent
-Aus diesen Ergebnisse lässt sich folgenden Ableiten:
+Aus diesen Ergebnissen lässt sich Folgendes ableiten:
 \begin{enumerate}
 \item Auf den ersten Durchlauf während der Exploration wirkt sich die Kombination der Heuristiken \emph{LMF} und \emph{PTTF} nicht nennenswert aus. Hierzu sind die Tabellen \ref{tab:lmfpttf_TEI1_1}, \ref{tab:lmfpttf_TEI2_1}, \ref{tab:lmfpttf_TEI3_1}, \ref{tab:lmfpttf_TEI4_1}, \ref{tab:lmfpttf_TEI5_1}, \ref{tab:lmfpttf_TEI6_1} und \ref{tab:lmfpttf_TEI7_1} mit den Tabellen der Heuristik mit den besseren Ergebnissen im ersten Durchlauf (\emph{LMF}) zu vergleichen (siehe Abschnitt \ref{sec_evalLMF} Tabellen \ref{tab:lmf11_TEI1_1}, \ref{tab:lmf11_TEI2_1}, \ref{tab:lmf11_TEI3_1}, \ref{tab:lmf11_TEI4_1}, \ref{tab:lmf11_TEI5_1}, \ref{tab:lmf11_TEI6_1} und \ref{tab:lmf11_TEI7_1}).
 \item Für den zweiten Durchlauf während der Exploration ist eine Verbesserung zu erkennen. Diese bezieht sich jedoch nur auf die Exploration für \emph{TEI7} (vergleiche Tabelle \ref{tab:lmf11_TEI7_2} aus Abschnitt \ref{sec_evalLMF} mit Tabelle \ref{tab:lmfpttf_TEI7_2}).
@@ -203,9 +203,9 @@ Die folgenden Vier-Felder Tafeln zeigen die Ergebnisse mit der Kombination der H
 \vft{2}{954}{$p(52150)-955$}{1}{0}{Ergebnisse \emph{LMF} + \emph{BL\_NMC} für TEI7 2. Durchlauf}{lmfbl_TEI7_2}
 \end{multicols}
 \noindent
-Aus diesen Ergebnisse lässt sich folgenden Ableiten:
+Aus diesen Ergebnissen lässt sich Folgendes ableiten:
 \begin{enumerate}
-\item Auf den ersten Durchlauf während der Exploration wirkt sich die Kombination der Heuristiken \emph{LMF} und \emph{BL\_NMC} positiv aus. Hierzu sind ist die Tabelle \ref{tab:lmfbl_TEI1_1} mit der Tabelle \ref{tab:lmf11_TEI1_1} aus Abschnitt \ref{sec_evalLMF} sowie die Tabellen \ref{tab:lmfbl_TEI2_1}, \ref{tab:lmfbl_TEI3_1} und \ref{tab:lmfbl_TEI6_1} mit den Tabellen \ref{tab:blnmc_TEI2_1}, \ref{tab:blnmc_TEI3_1}, \ref{tab:blnmc_TEI3_1} und \ref{tab:blnmc_TEI6_1} aus Abschnitt \ref{sec_evalBLNMC} zu vergleichen.
+\item Auf den ersten Durchlauf während der Exploration wirkt sich die Kombination der Heuristiken \emph{LMF} und \emph{BL\_NMC} positiv aus. Hierzu sind die Tabelle \ref{tab:lmfbl_TEI1_1} mit der Tabelle \ref{tab:lmf11_TEI1_1} aus Abschnitt \ref{sec_evalLMF} sowie die Tabellen \ref{tab:lmfbl_TEI2_1}, \ref{tab:lmfbl_TEI3_1} und \ref{tab:lmfbl_TEI6_1} mit den Tabellen \ref{tab:blnmc_TEI2_1}, \ref{tab:blnmc_TEI3_1}, \ref{tab:blnmc_TEI3_1} und \ref{tab:blnmc_TEI6_1} aus Abschnitt \ref{sec_evalBLNMC} zu vergleichen.
 \item Für den zweiten Durchlauf während der Exploration ist ebenfalls eine Verbesserung zu erkennen. Diese bezieht sich jedoch nur auf die Exploration für \emph{TEI7} (vergleiche Tabelle \ref{tab:lmf11_TEI7_2} aus Abschnitt \ref{sec_evalLMF} mit Tabelle \ref{tab:lmfbl_TEI7_2}).
 \end{enumerate}
 
@@ -237,9 +237,9 @@ Die folgenden Vier-Felder Tafeln zeigen die Ergebnisse mit der Kombination der H
 \vft{2}{6015}{$p(52150)-6016$}{1}{0}{Ergebnisse \emph{PTTF} + \emph{BL\_NMC} für TEI7 2. Durchlauf}{pttfbl_TEI7_2}
 \end{multicols}
 \noindent
-Aus diesen Ergebnisse lässt sich folgenden Ableiten:
+Aus diesen Ergebnissen lässt sich Folgendes ableiten:
 \begin{enumerate}
-\item Auf den ersten Durchlauf während der Exploration hat die Kombination der der Heuristiken \emph{PTTF} und \emph{BL\_NMC} keine Auswirkung. Die Ergebnisse sind nahezu identisch mit denen der Exploration mit der Heuristik \emph{BL\_NMC} aus Abschnitt \ref{sec_evalBLNMC}. (Vergleiche Tabellen \ref{tab:pttfbl_TEI1_1}, \ref{tab:pttfbl_TEI2_1}, \ref{tab:pttfbl_TEI3_1}, \ref{tab:pttfbl_TEI4_1}, \ref{tab:pttfbl_TEI5_1}, \ref{tab:lmfbl_TEI6_1} und  \ref{tab:pttfbl_TEI7_1} mit den Tabellen \ref{tab:blnmc_TEI1_1}, \ref{tab:blnmc_TEI2_1}, \ref{tab:blnmc_TEI3_1}, \ref{tab:blnmc_TEI4_1}, \ref{tab:blnmc_TEI5_1}, \ref{tab:blnmc_TEI6_1} und \ref{tab:blnmc_TEI7_1}.
+\item Auf den ersten Durchlauf während der Exploration hat die Kombination der Heuristiken \emph{PTTF} und \emph{BL\_NMC} keine Auswirkung. Die Ergebnisse sind nahezu identisch mit denen der Exploration mit der Heuristik \emph{BL\_NMC} aus Abschnitt \ref{sec_evalBLNMC}. (Vergleiche Tabellen \ref{tab:pttfbl_TEI1_1}, \ref{tab:pttfbl_TEI2_1}, \ref{tab:pttfbl_TEI3_1}, \ref{tab:pttfbl_TEI4_1}, \ref{tab:pttfbl_TEI5_1}, \ref{tab:lmfbl_TEI6_1} und  \ref{tab:pttfbl_TEI7_1} mit den Tabellen \ref{tab:blnmc_TEI1_1}, \ref{tab:blnmc_TEI2_1}, \ref{tab:blnmc_TEI3_1}, \ref{tab:blnmc_TEI4_1}, \ref{tab:blnmc_TEI5_1}, \ref{tab:blnmc_TEI6_1} und \ref{tab:blnmc_TEI7_1}.
 \item Für den zweiten Durchlauf während der Exploration ist eine Verbesserung  zu erkennen. Da mit der Heuristik \emph{BL\_NMC} bessere Ergebnisse erzielt wurden als mit der Heuristik \emph{PTTF} (vergleiche Ergebnisse aus Abschnitt \ref{sec_evalBLNMC} mit den Ergebnissen aus Abschnitt \ref{sec_evalPTTF}) kann dies durch den Vergleich der Tabellen \ref{tab:pttfbl_TEI4_2}, \ref{tab:pttfbl_TEI5_2}, \ref{tab:lmfbl_TEI6_2} und  \ref{tab:pttfbl_TEI7_2} mit den Tabellen \ref{tab:blnmc_TEI4_2}, \ref{tab:blnmc_TEI5_2}, \ref{tab:blnmc_TEI6_2} und \ref{tab:blnmc_TEI7_2} belegt werden.
 \end{enumerate}
 
@@ -272,7 +272,7 @@ Die folgenden Vier-Felder Tafeln zeigen die Ergebnisse mit der Kombination der H
 \vft{2}{12}{$p(52150)-13$}{1}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} + \emph{BL\_NMC} für TEI7 2. Durchlauf}{lmfpttfbl_TEI7_2}
 \end{multicols}
 \noindent
-Aus diesen Ergebnisse lässt sich folgenden Ableiten:
+Aus diesen Ergebnissen lässt sich Folgendes ableiten:
 \begin{enumerate}
 \item Auf den ersten Durchlauf während der Exploration wirkt sich die Kombination der Heuristiken \emph{LMF}, \emph{PTTF} und \emph{BL\_NMC} nicht besser aus, als die Kombination der Heuristiken \emph{LMF} und \emph{BL\_NMC} (siehe Abschnitt \ref{sec_evalLMFBLNMC}). Die Ergebnisse sind nahezu identisch.
 \item Für den zweiten Durchlauf während der Exploration gilt zumindest für die \emph{required Typen} \emph{TEI4}-\emph{TEI6} dasselbe, wie für den ersten Durchlauf. Für den \emph{required Typ} \emph{TEI7} ist hingegen nochmals eine Verbesserung im Vergleich zu den 2er-Kombinationen (siehe Abschnitte \ref{sec_evalLMFPTTF}-\ref{sec_evalPTTFBLNMC}) zu erkennen.
