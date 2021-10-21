@@ -1,6 +1,8 @@
 \documentclass[a4paper,12pt]{book}
 \include{preamble}
+\usepackage{glossaries}
 
+\makeglossaries
 
 \mywork{Niels Gundermann}{Evaluation von Heuristiken für die testgetriebene Exploration von Enterprise-Java-Beans}
 \begin{document}
@@ -15,6 +17,9 @@ Daher zielt diese Arbeit darauf ab, Heuristiken zu evaluieren, durch die die tes
 \\\\
 Die Untersuchungsergebnisse zeigen, dass alle drei Heuristiken - wenn auch mit Abstufungen - das Potential haben, die Exploration zu beschleunigen.
 \newpage
+
+
+\include{glossarydef}
 
 %\include{declarationofownwork}
 %\newpage
@@ -50,11 +55,10 @@ Die Untersuchungsergebnisse zeigen, dass alle drei Heuristiken - wenn auch mit A
 
 \input{finish}
 
-
+\newpage
 \appendix
-\addcontentsline{toc}{chapter}{Literaturverzeichnis}
-\bibliography{thesisbib}{}
-
+\addcontentsline{toc}{chapter}{Glossar}
+\printglossaries
 
 \input{app_matcherCombi}
 \input{app_heuristicCombi}
@@ -62,6 +66,9 @@ Die Untersuchungsergebnisse zeigen, dass alle drei Heuristiken - wenn auch mit A
 \input{app_requiredInterfacesAndTests}
 \input{app_matcherratingEval}
 
+
+\addcontentsline{toc}{chapter}{Literaturverzeichnis}
+\bibliography{thesisbib}{}
 
 
 

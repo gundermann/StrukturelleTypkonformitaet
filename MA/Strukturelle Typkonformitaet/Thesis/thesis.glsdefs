@@ -1,0 +1,140 @@
+\glsdefs@newdocentry{komponente}%
+{%
+name={Komponente},%
+sort={Komponente},%
+type={main},%
+first={Komponente},%
+firstplural={Komponentes},%
+text={Komponente},%
+plural={Komponentes},%
+description={Eine Komponente beschreibt in der Softwarearchitektur im Allgemeinen ein Teil eines Softwaresystems. Die Definition dieses Begriffs wird in speziellen Frameworks weiter spezifiziert. Bezogen auf das in der Arbeit verwendete EJB-Framework, werden bspw. die Beans als Komponenten betrachtet (vgl. \cite {ejbspec}). },%
+descriptionplural={Eine Komponente beschreibt in der Softwarearchitektur im Allgemeinen ein Teil eines Softwaresystems. Die Definition dieses Begriffs wird in speziellen Frameworks weiter spezifiziert. Bezogen auf das in der Arbeit verwendete EJB-Framework, werden bspw. die Beans als Komponenten betrachtet (vgl. \cite {ejbspec}). },%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={},%
+longplural={},%
+short={},%
+shortplural={},%
+counter={page},%
+parent={},%
+%
+}%
+
+\glsdefs@newdocentry{artefakt}%
+{%
+name={Artefakt},%
+sort={Artefakt},%
+type={main},%
+first={Artefakt},%
+firstplural={Artefakts},%
+text={Artefakt},%
+plural={Artefakts},%
+description={Ein Artefakt beschreibt in der Software-Entwicklung die Spezifikation einer physischen Informationseinheit als Ergebnis des Software-Entwicklungsprozesses oder dem Deployment bzw. der Ausführung eines Systems. In der UML Spezifikation 2.1.2 werden folgende konkrete Beispiele für Artefakte genannt (vgl. \cite {uml}) \begin {itemize} \item Dateien in denen Source Code enthalten ist \item Skripte \item Datenbanktabellen \end {itemize} \noindent Im Kontext dieser Arbeit sind insbesondere die Dateien, in denen Source Code enthalten ist, allgemein als Artefakt bezeichnet. },%
+descriptionplural={Ein Artefakt beschreibt in der Software-Entwicklung die Spezifikation einer physischen Informationseinheit als Ergebnis des Software-Entwicklungsprozesses oder dem Deployment bzw. der Ausführung eines Systems. In der UML Spezifikation 2.1.2 werden folgende konkrete Beispiele für Artefakte genannt (vgl. \cite {uml}) \begin {itemize} \item Dateien in denen Source Code enthalten ist \item Skripte \item Datenbanktabellen \end {itemize} \noindent Im Kontext dieser Arbeit sind insbesondere die Dateien, in denen Source Code enthalten ist, allgemein als Artefakt bezeichnet. },%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={},%
+longplural={},%
+short={},%
+shortplural={},%
+counter={page},%
+parent={},%
+%
+}%
+
+\glsdefs@newdocentry{jndi}%
+{%
+name={JNDI},%
+sort={JNDI},%
+type={main},%
+first={JNDI},%
+firstplural={JNDIs},%
+text={JNDI},%
+plural={JNDIs},%
+description={},%
+descriptionplural={},%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={},%
+longplural={},%
+short={},%
+shortplural={},%
+counter={page},%
+parent={},%
+%
+}%
+
+\glsdefs@newdocentry{injection}%
+{%
+name={Injection},%
+sort={Injection},%
+type={main},%
+first={Injection},%
+firstplural={Injections},%
+text={Injection},%
+plural={Injections},%
+description={},%
+descriptionplural={},%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={},%
+longplural={},%
+short={},%
+shortplural={},%
+counter={page},%
+parent={},%
+%
+}%
+
+\glsdefs@newdocentry{proxy}%
+{%
+name={Proxy},%
+sort={Proxy},%
+type={main},%
+first={Proxy},%
+firstplural={Proxys},%
+text={Proxy},%
+plural={Proxys},%
+description={},%
+descriptionplural={},%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={},%
+longplural={},%
+short={},%
+shortplural={},%
+counter={page},%
+parent={},%
+%
+}%
+
