@@ -35,8 +35,36 @@ first={Artefakt},%
 firstplural={Artefakts},%
 text={Artefakt},%
 plural={Artefakts},%
-description={Ein Artefakt beschreibt in der Software-Entwicklung die Spezifikation einer physischen Informationseinheit als Ergebnis des Software-Entwicklungsprozesses oder dem Deployment bzw. der Ausführung eines Systems. In der UML Spezifikation 2.1.2 werden folgende konkrete Beispiele für Artefakte genannt (vgl. \cite {uml}) \begin {itemize} \item Dateien in denen Source Code enthalten ist \item Skripte \item Datenbanktabellen \end {itemize} \noindent Im Kontext dieser Arbeit sind insbesondere die Dateien, in denen Source Code enthalten ist, allgemein als Artefakt bezeichnet. },%
-descriptionplural={Ein Artefakt beschreibt in der Software-Entwicklung die Spezifikation einer physischen Informationseinheit als Ergebnis des Software-Entwicklungsprozesses oder dem Deployment bzw. der Ausführung eines Systems. In der UML Spezifikation 2.1.2 werden folgende konkrete Beispiele für Artefakte genannt (vgl. \cite {uml}) \begin {itemize} \item Dateien in denen Source Code enthalten ist \item Skripte \item Datenbanktabellen \end {itemize} \noindent Im Kontext dieser Arbeit sind insbesondere die Dateien, in denen Source Code enthalten ist, allgemein als Artefakt bezeichnet. },%
+description={Ein Artefakt beschreibt in der Software-Entwicklung die Spezifikation einer physischen Informationseinheit als Ergebnis des Software-Entwicklungsprozesses oder dem Deployment bzw. der Ausführung eines Systems. In der UML Spezifikation 2.1.2 \cite {uml} werden u.a. folgende konkrete Beispiele für Artefakte genannt: \begin {itemize} \item Dateien in denen Source Code enthalten ist \item Skripte \item Datenbanktabellen \end {itemize} \noindent Im Kontext dieser Arbeit sind insbesondere die Dateien, in denen Source Code enthalten ist, allgemein als Artefakt bezeichnet. },%
+descriptionplural={Ein Artefakt beschreibt in der Software-Entwicklung die Spezifikation einer physischen Informationseinheit als Ergebnis des Software-Entwicklungsprozesses oder dem Deployment bzw. der Ausführung eines Systems. In der UML Spezifikation 2.1.2 \cite {uml} werden u.a. folgende konkrete Beispiele für Artefakte genannt: \begin {itemize} \item Dateien in denen Source Code enthalten ist \item Skripte \item Datenbanktabellen \end {itemize} \noindent Im Kontext dieser Arbeit sind insbesondere die Dateien, in denen Source Code enthalten ist, allgemein als Artefakt bezeichnet. },%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={},%
+longplural={},%
+short={},%
+shortplural={},%
+counter={page},%
+parent={},%
+%
+}%
+
+\glsdefs@newdocentry{Engine}%
+{%
+name={Engine},%
+sort={Engine},%
+type={main},%
+first={Engine},%
+firstplural={Engines},%
+text={Engine},%
+plural={Engines},%
+description={Eine Engine beschreibt eine Software oder einen Teil einer Software, der für eine spezifische Aufgabe verantwortlich ist (vgl. \cite {pcmag}). Die Aufgabe, die die in der Arbeit beschriebenen Source Engines erfüllen, wird in Abschnitt \ref {sec_tdcs} beschrieben.},%
+descriptionplural={Eine Engine beschreibt eine Software oder einen Teil einer Software, der für eine spezifische Aufgabe verantwortlich ist (vgl. \cite {pcmag}). Die Aufgabe, die die in der Arbeit beschriebenen Source Engines erfüllen, wird in Abschnitt \ref {sec_tdcs} beschrieben.},%
 symbol={\relax },%
 symbolplural={\relax },%
 user1={},%
