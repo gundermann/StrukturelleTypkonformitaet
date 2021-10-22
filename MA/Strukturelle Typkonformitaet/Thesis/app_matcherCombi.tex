@@ -4,7 +4,7 @@ Wie aus der formalen Beschreibung zum \emph{StructuralTypeMatcher} im Abschnitt 
 Zu diesem Zweck müssen die übrigen Matcher bzw. die dafür implementierten Klassen miteinander kombiniert werden, wie es in der Definition zur Matchingrelation $\Rightarrow_{internStruct}$ der Fall ist. Für solche Kombinationen steht die Klasse $\texttt{MatcherCombiner}$ im Modul \emph{SignatureMatching} bereit (siehe Listing \ref{lst_matchercombiner}).
 \\\\
 Diese Klasse erlaubt die Kombination von Objekten vom Typ $\texttt{TypeMatcher}$. 
-Die Matcher-Klassen $\texttt{ExactTypeMatcher}$, $\texttt{GenSpecTypeMatcher}$ und $\texttt{WrappedTypeMatcher}$ implementieren alle dieses Interface. 
+Die Matcher-Klassen $\texttt{ExactTypeMatcher}$, $\texttt{GenSpecTypeMatcher}$ und $\texttt{WrappedTypeMatcher}$ implementieren alle dieses \Gls{Interface}. 
 \\\\
 Über die Methode $\texttt{combine}$ in der $\texttt{MatcherCombiner}$ wird bei der Kombination ein Supplier-Objekt erzeuge, welches über die $\texttt{get}$-Methode ein Objekt vom Typ $\texttt{TypeMatcher}$ liefern kann. Dieses $\texttt{TypeMatcher}$-Objekt versucht beim Aufruf der Methode $\texttt{matchesType(S,T)}$ die beiden Typen $S$ und $T$ über einen der kombinierten Matcher zu matchen (siehe  Listing \ref{lst_matchercombiner}). Dabei liefert die Methode $\texttt{getSortedMatcher}$ eine sortiert Liste der kombinierten Matcher. Die Sortierung wird aufsteigend entsprechend dem Basisrating (siehe auch Abschnitt \ref{sec_lmf}) der kombinierten Matcher vorgenommen .
 \begin{lstlisting}[style = java, caption = Klasse: MatcherCombiner, captionpos = b, label = lst_matchercombiner]

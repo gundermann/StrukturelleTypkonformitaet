@@ -1,5 +1,5 @@
 \chapter{Interfaces und Test-Implementierungen}\label{app_interfacesAndTests}
-Im Folgenden werden zum einen die Interfaces, die sich aus den Deklarationen der \emph{required Typen} aus dem Anhang \ref{app_evalTypes} ableiten lassen, aufgeführt. Zum anderen werden die Implementierungen der Testklassen, auf die die oben genannten Interfaces über die Annotation $\texttt{RequiredTypeTestReference}$ verweisen, dargelegt. 
+Im Folgenden werden zum einen die \Gls{Interface}s, die sich aus den Deklarationen der \emph{required Typen} aus dem Anhang \ref{app_evalTypes} ableiten lassen, aufgeführt. Zum anderen werden die Implementierungen der Testklassen, auf die die oben genannten \Gls{Interface}s über die Annotation $\texttt{RequiredTypeTestReference}$ verweisen, dargelegt. 
 \\\\
 Die Listings \ref{lst_interfaces_tei1} - \ref{lst_interfaces_tei7} zeigen dabei die Deklarationen der Java-Interfaces\footnote{Auf die Import-Anweisungen wurde verzichtet.} für die \emph{required Typen} aus Tabelle \ref{tab:eIShort} aus Kapitel \ref{chap_evaluation}.
 \begin{lstlisting}[style = java, caption = Interface ElerFTFoerderprogrammeProvider, captionpos = b, label = lst_interfaces_tei1]
@@ -72,7 +72,7 @@ public interface KOFGPCProvider {
   
 }
 \end{lstlisting}
-Zu erkennen ist, dass jedes Interfaces, wie in Abschnitt \ref{sec_Impl_CT} beschrieben, mit der Annotation $\texttt{RequiredTypeTestReference}$ versehen ist, über die auf eine Java-Klasse verwiesen wird, in der die Tests zu dem jeweiligen \emph{required Typ} implementiert sind.
+Zu erkennen ist, dass jedes \Gls{Interface}s, wie in Abschnitt \ref{sec_Impl_CT} beschrieben, mit der Annotation $\texttt{RequiredTypeTestReference}$ versehen ist, über die auf eine Java-Klasse verwiesen wird, in der die Tests zu dem jeweiligen \emph{required Typ} implementiert sind.
 \\\\
 Die Listings \ref{lst_testklassen_tei1} - \ref{lst_testklassen_tei7} zeigen die Implementierungen dieser Testklassen\footnote{Auf die Import-Anweisungen wurde verzichtet.}.
 \begin{lstlisting}[style = java, caption = Interface ElerFTFoerderprogrammProviderTest, captionpos = b, label = lst_testklassen_tei1]
@@ -373,4 +373,4 @@ public class KOFGPCProviderTest implements TriedMethodCallsInfo {
 }
 \end{lstlisting}
 \noindent
-Hier ist zu erkennen, dass die Testklassen alle das Interfaces $\texttt{TriedMethodCallsInfo}$ implementieren, über das die für die Heuristik \emph{BL\_NMC} benötigten Informationen (siehe Abschnitt \ref{sec_bl_nmc}) ermittelt werden. Ebenso ist die Implementierung dieses Interfaces in den oben genannten Listings zu erkennen.
+Hier ist zu erkennen, dass die Testklassen alle das \Gls{Interface}s $\texttt{TriedMethodCallsInfo}$ implementieren, über das die für die Heuristik \emph{BL\_NMC} benötigten Informationen (siehe Abschnitt \ref{sec_bl_nmc}) ermittelt werden. Ebenso ist die Implementierung dieses \Gls{Interface}s in den oben genannten Listings zu erkennen.
