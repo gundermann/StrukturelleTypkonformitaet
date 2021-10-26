@@ -110,6 +110,34 @@ parent={},%
 %
 }%
 
+\glsdefs@newdocentry{wrappertype}%
+{%
+name={Wrapper-Typ},%
+sort={Wrapper-Typ},%
+type={main},%
+first={Wrapper-Typ},%
+firstplural={Wrapper-Typs},%
+text={Wrapper-Typ},%
+plural={Wrapper-Typs},%
+description={},%
+descriptionplural={},%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={},%
+longplural={},%
+short={},%
+shortplural={},%
+counter={page},%
+parent={},%
+%
+}%
+
 \glsdefs@newdocentry{jndi}%
 {%
 name={JNDI},%

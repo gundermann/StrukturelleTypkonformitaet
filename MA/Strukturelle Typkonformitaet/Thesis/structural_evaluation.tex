@@ -1,11 +1,11 @@
 \section{Strukturelle Evaluation}
 In Anlehnung an \cite{hummel08} werden die \emph{EJBs} auf der Basis des Signature-Matching Ansatzes ermittelt. Dieser Ansatz wurde ursprünglich von Zaremski und Wing \cite{moormann} beschrieben. Er basiert darauf, dass lediglich die Methoden-Signaturen der Typen (Klassen bzw. \Gls{Interface}s) miteinander abgeglichen (gematcht) werden. 
 \\\\
-Zu diesem Zweck wird eine Struktur zur Deklaration von Typen in Abschnitt \ref{sec:strukturTypen} vorgegeben, die eine abstrakte Darstellung der Klassen bzw. \Gls{Interface}s, darstellen. Darüber hinaus werden in diesem Abschnitt Eigenschaften der Typen sowie Funktionen vorgestellt, die für den weiteren Verlauf der Arbeit von Belang sind.
+Zu diesem Zweck wird eine Struktur zur Deklaration von Typen in Abschnitt \ref{sec:strukturTypen} vorgegeben, die eine abstrakte Darstellung von Klassen oder \Gls{Interface}s, darstellen. Darüber hinaus werden in den genannten Abschnitt die Eigenschaften der Typen sowie Funktionen vorgestellt, die für den weiteren Verlauf der Arbeit von Belang sind.
 \\\\
-Der Abgleich der Signaturen dieser Typen erfolgt in \cite{moormann} auf der Basis von Matchern. Die in dieser Arbeit verwendeten Matcher werden in Abschnitt \ref{sec_matcher} genauer beschrieben. Einige der dort beschriebenen Matcher basieren auf denen aus \cite{moormann}. Andere basieren auf Überlegungen aus \cite{hummel08}.
+Der Abgleich der Methoden-Signaturen dieser Typen erfolgt in Anlehnung an \cite{moormann} auf der Basis von Matchern, welche in Abschnitt \ref{sec_matcher} genauer beschrieben werden. Einige der dort beschriebenen Matcher basieren auf denen aus \cite{moormann}. Andere basieren auf Überlegungen aus \cite{hummel08}.
 \subsection{Struktur für die Definition von Typen}\label{sec:strukturTypen}
-Die Typen werden in einer Bibliothek $\text{L}$ in folgender Form deklariert:
+Die Typen werden in einer Bibliothek $L$ in folgender Form deklariert:
 \begin{table}[H]
 \centering
 \begin{tabular}{|p{5.5cm}|p{8.5cm}|}
@@ -16,15 +16,15 @@ Die Typen werden in einer Bibliothek $\text{L}$ in folgender Form deklariert:
 \hline
 $\mathit{L} ::= \mathit{TD}\text{*}$ & Eine Bibliothek \emph{L} besteht aus einer Menge von Typdefinitionen.\\
 \hline
-$\mathit{TD} ::= \mathit{PD} | \mathit{RD}$ & Eine Typdefinition kann entweder die Definition eines provided Typen (PD) oder eines required Typen (RD) sein.\\
+$\mathit{TD} ::= \mathit{PD} | \mathit{RD}$ & Eine Typdefinition kann entweder die Definition eines \emph{provided Typen} (PD) oder eines \emph{required Typen} (RD) sein.\\
 \hline
-$\mathit{PD} ::= \newline\texttt{provided }T \texttt{ extends } T' \newline  \texttt{\{} \mathit{FD}\text{*} \mathit{MD}\text{*}\texttt{\}}$& Die Definition eines provided Typen besteht aus dem Namen des Typen \emph{T}, dem Namen des Super-Typs \emph{T'} von \emph{T} sowie mehreren Feld- und Methodendeklarationen.\\
+$\mathit{PD} ::= \newline\texttt{provided }T \texttt{ extends } T' \newline  \texttt{\{} \mathit{FD}\text{*} \mathit{MD}\text{*}\texttt{\}}$& Die Definition eines \emph{provided Typen} besteht aus dem Namen des Typen \emph{T}, dem Namen des Super-Typs \emph{T'} von \emph{T} sowie mehreren Feld- und Methodendeklarationen.\\
 \hline
-$\mathit{RD} ::= \texttt{required } T \texttt{ \{}\mathit{MD}\text{*}\texttt{\}}$ & Die Definition eines required Typen besteht aus dem Namen des Typen \emph{T} sowie mehreren Methodendeklarationen.\\
+$\mathit{RD} ::= \texttt{required } T \texttt{ \{}\mathit{MD}\text{*}\texttt{\}}$ & Die Definition eines \emph{required Typen} besteht aus dem Namen des Typen \emph{T} sowie mehreren Methodendeklarationen.\\
 \hline
 $\mathit{FD} ::= T \texttt{ }\mathit{f}$ & Eine Felddeklaration besteht aus dem Namen des Feldes \emph{f} und dem Namen seines Typs \emph{T}.\\
 \hline
-$\mathit{MD} ::= \mathit{T'}\texttt{ }\mathit{m(T_1,...,T_n)}$ & Eine Methodendeklaration besteht aus dem Namen der Methode \emph{m}, $n$ Namen der Parameter-Typen $T_1$ bis $T_n$ und dem Namen des Rückgabe-Typs \emph{T'}.\\
+$\mathit{MD} ::= \mathit{T'}\texttt{ }\mathit{m(T_1,...,T_n)}$ & Eine Methodendeklaration besteht aus dem Namen der Methode \emph{m}, den insgesamt $n$ Namen der Parameter-Typen $T_1$ bis $T_n$ und dem Namen des Rückgabe-Typs \emph{T'}.\\
 \hline
 \hline
 \end{tabular}
@@ -50,7 +50,7 @@ Darüber hinaus seien folgende Funktionen definiert:
 \\
 \mathit{feldTyp(f,T)} := 
 				\begin{array}{l|l}
-					T' & T' \texttt{ }\mathit{f}\text{ ist Felddeklaration von }T
+					T' & T' \texttt{ }\mathit{f} \in \mathit{felder(T)}
 				\end{array}   
 \\
 \mathit{ret(T'\text{ }m(T''_1,...T''_n))} := T'
@@ -65,93 +65,76 @@ Darüber hinaus seien folgende Funktionen definiert:
 \\        
 \end{gather*}
 \noindent
-Listing \ref{lst:libEx} zeigt ein Beispiel für eine Bibilothek mit \emph{required} und \emph{provided Typen}.
-\begin{lstlisting}[style = dsl]
-provided Fire extends Object{}
-\end{lstlisting}
-
-\begin{lstlisting}[style = dsl]
-provided ExtFire extends Fire{}
-\end{lstlisting}
-
-
-\begin{lstlisting}[style = dsl]
-provided FireState extends Object{
-	boolean isActive
-}
-\end{lstlisting}
-
-\begin{lstlisting}[style = dsl]
-provided Medicine extends Object{
-	String getDescription()
-}
-\end{lstlisting}
-
-\begin{lstlisting}[style = dsl]
-provided Injured extends Object{
-	void heal(Medicine med)	
-}
-\end{lstlisting}
-
-
-\begin{lstlisting}[style = dsl]
-provided Patient extends Injured{
-	String getName()
-}
-\end{lstlisting}
-\begin{lstlisting}[style = dsl]
-provided FireFighter extends Object{
-	FireState extinguishFire(Fire fire)
-}
-\end{lstlisting}
-
-\begin{lstlisting}[style = dsl]
-provided Doctor extends Object{	
-	void heal( Patient pat, Medicine med )
-}
-\end{lstlisting}
-
-
-\begin{lstlisting}[style = dsl]
-provided InverseDoctor extends Object{	
-	void heal( Medicine med, Patient pat )
-}
-\end{lstlisting}
-
-\begin{lstlisting}[style = dsl]
-provided MedCabinet extends Object{
-	Medicine med
-}
-\end{lstlisting}
-
-\begin{lstlisting}[style = dsl]
-required PatientMedicalFireFighter {
-	void heal( Patient patient, MedCabinet med )
-	boolean extinguishFire( ExtFire fire )	
-}
-\end{lstlisting}
-
-\begin{lstlisting}[caption={Bibliothek \emph{ExampLe} von Typen},captionpos=b, style = dsl, label=lst:libEx]
-required MedicalFireFighter {
-	void heal( Injured injured, MedCabinet med )
-	boolean extinguishFire( ExtFire fire )	
-}
-\end{lstlisting}
+Listing \ref{lst:libEx} zeigt die Deklaration der Bibliothek \emph{ExampLe} als Beispiel für eine Bibilothek mit \emph{required} und \emph{provided Typen}\footnote{Zu beachten ist, dass die Bibliothek auf die im JDK enthaltenen Typen aufbaut. Daher ist davon auszugehen, dass Typen wie $\texttt{Object}$ oder $\texttt{boolean}$ bereits als \emph{provided Typen} definiert sind.}.
 \noindent
+\begin{multicols}{2}
+\begin{lstlisting}[caption={Bibliothek \emph{ExampLe} von Typen},captionpos=b, style = dsl, label=lst:libEx]
+provided Fire extends Object{}
+
+provided FireState extends Object{
+ boolean isActive
+}
+
+provided Injured extends Object{
+ void heal(Medicine med)	
+}
+
+provided FireFighter extends Object{
+ FireState extinguishFire(Fire fire)
+}
+
+provided InverseDoctor extends Object{	
+ void heal( Medicine med, Patient pat )
+}
+
+required PatientMedicalFireFighter {
+ void heal( Patient patient, 
+            MedCabinet med )
+ boolean extinguishFire( ExtFire fire )	
+}
+
+
+provided ExtFire extends Fire{}
+
+provided Medicine extends Object{
+ String getDescription()
+}
+
+provided Patient extends Injured{
+ String getName()
+}
+
+provided Doctor extends Object{	
+ void heal( Patient pat, Medicine med )
+}
+
+provided MedCabinet extends Object{
+ Medicine med
+}
+
+required MedicalFireFighter {
+ void heal( Injured injured, 
+            MedCabinet med )
+ boolean extinguishFire( ExtFire fire )	
+}
+\end{lstlisting}
+\end{multicols}
+\noindent
+
 \subsection{Definition der Matcher}\label{sec_matcher}
-Ein Matcher definiert das Matching eines Typs $T$ zu einem Typ $T'$ durch die asymmetrische Relation $\Rightarrow$ (auch Matchingrealtion genannt)\footnote{$T \Rightarrow T'$}.
+Ein Matcher definiert das Matching eines Typs $T$ zu einem Typ $T'$ oder einer Methode $m$ zu einer Methode $m'$ durch die asymmetrische Relation $\Rightarrow$ (auch Matchingrealtion genannt)\footnote{$T \Rightarrow T'$\newline Gesprochen: $T$ matcht $T'$}. Im Folgenden werden die Matchingrelationen der spezifischen Matcher über ein Subskript differenziert.
 \subsubsection{ExactTypeMatcher}\label{sec:exacttypematcher}
-Der \emph{ExactTypeMatcher} stellt ein Matching von einem Typ $T$ zu demselben Typ $T$ her (vgl. \cite{moormann}). Die dazugehörige Matchingrelation $\Rightarrow_{exact}$ wird durch folgende Regel beschrieben:
+Der \emph{ExactTypeMatcher} definiert das Matching von einem Typ $T$ zu sich selbst her (vgl. \cite{moormann}). Die dazugehörige Matchingrelation $\Rightarrow_{exact}$ wird durch folgende Regel beschrieben:
 \begin{gather*}
 \frac{}{T \Rightarrow_{exact} T}
 \end{gather*}
 \subsubsection{GenTypeMatcher}\label{sec:gentypematcher}
-Der \emph{GenTypeMatcher} stellt ein Matching von einem Typ $T$ zu einem Typ $T'$ mit $T > T'$ her (vgl. \cite{moormann}). Die dazugehörige Matchingrelation $\Rightarrow_{gen}$ wird durch folgende Regel beschrieben:
+Der \emph{GenTypeMatcher} definiert das Matching von einem Typ $T$ zu einem Typ $T'$ mit $T > T'$ (vgl. \cite{moormann}). Die dazugehörige Matchingrelation $\Rightarrow_{gen}$ wird durch folgende Regel beschrieben:
 \begin{gather*}
 \frac{T > T'}{T \Rightarrow_{gen} T'}
 \end{gather*}
-\paragraph{SpecTypeMatcher}
-Der \emph{SpecTypeMatcher} stellt im Verhältnis zum \emph{GenTypeMatcher} das Matching in die entgegengesetzte Richtung dar (vgl. \cite{moormann}). Die dazugehörige Matchingrelation $\Rightarrow_{spec}$ wird durch folgende Regel beschrieben: 
+\subsubsection{SpecTypeMatcher}
+Der \emph{SpecTypeMatcher} definiert im Verhältnis zum \emph{GenTypeMatcher} das Matching in die entgegengesetzte Richtung (vgl. \cite{moormann}). Die dazugehörige Matchingrelation $\Rightarrow_{spec}$ wird durch folgende Regel beschrieben: 
 \begin{gather*}
 \frac{T < T'}{T \Rightarrow_{spec} T'}
 \end{gather*}
@@ -163,42 +146,45 @@ T \Rightarrow_{spec} T'  }{T \Rightarrow_{internCont} T'}
 \end{gather*}
 \noindent
 \\\\
-Die folgenden Matcher matchen so genannte Wrapper-Typen mit den Typen der in ihnen enthaltenen Attribute. Die Idee für solche Matcher fand in \cite{hummel08} zwar Erwähnung jedoch erfolgte dort keine formale Beschreibung. Ziel dieser Matcher ist es bspw. die Typen $\texttt{boolean}$ und $\texttt{FireState}$ aus Listing \ref{lst:libEx} zu matchen.
+Die folgenden Matcher definieren das Matching für so genannte \Gls{wrappertype}en zu den Typen der in ihnen enthaltenen Attribute. Die Idee für solche Matcher fand in \cite{hummel08} zwar Erwähnung, jedoch erfolgte dort keine formale Beschreibung. Das Ziel dieser Matcher ist es bspw. die Typen $\texttt{boolean}$ und $\texttt{FireState}$ aus der in Listing \ref{lst:libEx} deklarierten Bibliothek \emph{ExampLe} zu matchen.
 \subsubsection{ContentTypeMatcher}
-Der \emph{ContentTypeMatcher} matcht einen Typ $T$ auf einen Typ $T'$, wobei $T'$ ein Feld enthält, auf dessen Typ $T''$ der Typ $T$ über die Matchingrelation $\Rightarrow_{internCont}$ gematcht werden kann.
+Der \emph{ContentTypeMatcher} definiert das Matching von einem Typ $T$ zu einem Typ $T'$, wobei $T'$ ein Feld enthält, auf dessen Typ $T''$ der Typ $T$ über die Matchingrelation $\Rightarrow_{internCont}$ gematcht werden kann.
 \\\\
 Die dazugehörige Matchingrelation $\Rightarrow_{content}$ wird durch folgende Regel beschrieben:
 \begin{gather*}
 \frac{\exists \mathit{T''\text{ }f}\in felder(T'): T \Rightarrow_{internCont} T''}{T \Rightarrow_{content} T'}
 \end{gather*}
 \noindent
-So würde für die Typen $\texttt{boolean}$ und $\texttt{FireState}$ gelten: 
+So würde für die Typen $\texttt{boolean}$ und $\texttt{FireState}$ aus der Bibliothek \emph{ExampLe} (siehe \ref{lst:libEx}) gelten: 
 \begin{gather*}
 \texttt{boolean} \Rightarrow_{content} \texttt{FireState}
 \end{gather*}
 \subsubsection{ContainerTypeMatcher}
-Der \emph{ContainerTypeMatcher} stellt im Verhältnis zum \emph{ContentTypeMatcher} das Matching in die entgegengesetzte Richtung dar.
+Der \emph{ContainerTypeMatcher} definiert im Verhältnis zum \emph{ContentTypeMatcher} das Matching für die entgegengesetzte Richtung.
 \\\\
 Die dazugehörige Matchingrelation $\Rightarrow_{container}$ wird durch folgende Regel beschrieben:
 \begin{gather*}
 \frac{\exists \mathit{T''\text{ }f}\in felder(T): T'' \Rightarrow_{internCont} T'}{T \Rightarrow_{container} T'}
 \end{gather*}
 \noindent
-So gilt für die Typen $\texttt{FireState}$ und $\texttt{boolean}$: 
+So gilt für die Typen $\texttt{FireState}$ und $\texttt{boolean}$ aus der Bibliothek \emph{ExampLe} (siehe \ref{lst:libEx}): 
 \begin{gather*}
 \texttt{FireState} \Rightarrow_{container} \texttt{boolean}
 \end{gather*}
 \\\\
-Zur Definition des letzten Matchers werden die Matchingrelationen der oben genannten Matcher noch einmal zusammengefasst. Dabei entsteht die Matchingrelation $\Rightarrow_{internStruct}$, welche durch folgende Regel beschrieben wird:
+Zur Definition des letzten Matchers werden die Matchingrelationen der oben genannten Matcher wiederum zusammengefasst. Dabei entsteht die Matchingrelation $\Rightarrow_{internStruct}$, welche durch folgende Regel beschrieben wird:
 \begin{gather*}
 \frac{T \Rightarrow_{internCont}T' \vee T \Rightarrow_{container} T' \vee T \Rightarrow_{content} T'}{T \Rightarrow_{internStruct}T'}
 \end{gather*}
 \subsubsection{StructuralTypeMatcher} \label{subsec_structmatcher}
-Der \emph{StructuralTypeMatcher} matcht einen \emph{required Typ} $R$ auf einen \emph{provided Typ} $P$ auf der Basis der Methoden-Signaturen, die in den Typen deklariert sind.
+Der \emph{StructuralTypeMatcher} definiert das Matching von einem \emph{required Typ} $R$ zu einem \emph{provided Typ} $P$ auf der Basis der Methoden-Signaturen der beiden Typen.
 \\\\
-Somit soll bspw. der Typ $\texttt{MedicalFireFighter}$ auf den Typ $\texttt{FireFighter}$ (siehe Listing \ref{lst:libEx}) gematcht werden. Als ein weiteres Beispiel, bezogen auf die Typen aus Listing 1, kann das Matching des Typs $\texttt{MedicalFireFighter}$ auf den Typ $\texttt{Doctor}$ angebracht werden.
+Somit soll bspw. ein Matching zwischen dem Typ $\texttt{MedicalFireFighter}$ und dem den $\texttt{FireFighter}$ aus der Bibliothek \emph{ExampLe}  (siehe Listing \ref{lst:libEx}) gematcht werden. Als ein weiteres Beispiel, bezogen auf die Typen aus der Bibliothek \emph{ExampLe}, kann das Matching zwischen dem Typ $\texttt{MedicalFireFighter}$ und dem Typ $\texttt{Doctor}$ angebracht werden.
 \\\\
-Damit ein required Typ $R$ auf einen provided Typ $P$ über den \emph{StrukturalTypeMatcher} gematcht werden kann, muss mindestens eine Methode aus $R$ zu einer Methode aus $P$ gematcht werden. Wie in \cite{moormann} soll die Reihenfolge, in der die Parameter in der jeweiligen Methode deklariert sind, keine Rolle spielen. Von daher wird das Matching der Parameter zweier Methoden $m$ und $m'$ wie folgt beschrieben:
+Damit ein \emph{required Typ} $R$ auf einen \emph{provided Typ} $P$ über den \emph{StrukturalTypeMatcher} gematcht werden kann, muss mindestens eine Methode aus $R$ zu einer Methode aus $P$ gematcht werden (Signature-Matching). Ein Matching der Methoden liegt dann vor, wenn sowohl die Rückgabe- als auch die Parameter-Typen dieser beiden Methoden miteinander gematcht werden können (vgl. \cite{moormann}). 
+\\\\
+Wie in \cite{moormann} soll die Reihenfolge, in der die Parameter in der jeweiligen Methode deklariert wurden, keine Rolle spielen. Ausgehend von den Parameter-Typen der beiden Methoden als Mengen, muss eine der Mengen also so umsortiert werden, dass die Parameter-Typen aus beiden Mengen an der jeweils gleichen Position miteinander gematcht werden können.
+Die möglichen umsortierte Mengen von Parameter-Typen einer Methode $m$ auf die dies in Bezug auf die Menge der Parameter-Typen einer Methoge $m'$ zutrifft, werden über die Funktion $\mathit{matchingParams}$ beschrieben:
 \begin{gather*}
 \mathit{matchingParams(m, m')} :=
 \left\{
@@ -218,7 +204,7 @@ Damit ein required Typ $R$ auf einen provided Typ $P$ über den \emph{Struktural
 \noindent
 Das Matching zweier Methoden $m$ und $m'$ wird durch die Relation $\Rightarrow_{method}$ über folgende Regel beschrieben:
 \begin{gather*}
-\frac{\mathit{ret(m)} \Rightarrow_{internStruct} \mathit{ret(m')} \wedge \mathit{matchingParams(m,m')}}{m \Rightarrow_{method} m'}
+\frac{\mathit{ret(m)} \Rightarrow_{internStruct} \mathit{ret(m')} \wedge \mathit{matchingParams(m,m')} \neq \emptyset}{m \Rightarrow_{method} m'}
 \end{gather*}
 \noindent
 Die Menge der gematchten Methoden aus $R$ in $P$ wird darauf aufbauend durch folgende Funktion beschrieben:
@@ -239,7 +225,7 @@ Die Matchingrelation für den \emph{StructuralTypeMatcher} wird durch folgende R
 
 
 \subsection{Ergebnis der strukturellen Evaluation}\label{sec_ergStructEval}
-Die gesamte Exploration wird für einen \emph{required Typ} durchgeführt. Bei der strukturellen Evaluation sollen Mengen von \emph{provided Typen} ermittelt werden, deren Methoden in Kombination zu jeder Methode des \emph{required Typ} ein Matching aufweisen. Die Mengen von \emph{provided Typen} innerhalb einer Bibliothek $L$ für die dies in Bezug auf ein \emph{required Typ} $R$ zutrifft, wird über die Funktion $cover$ beschrieben.
+Die Exploration wird für einen \emph{required Typ} durchgeführt. Bei der \emph{strukturellen Evaluation} sollen Mengen von \emph{provided Typen} ermittelt werden, deren Methoden in Kombination zu jeder Methode des \emph{required Typ} ein Matching aufweisen. Die Mengen von \emph{provided Typen} innerhalb einer Bibliothek $L$ für die dies in Bezug auf ein \emph{required Typ} $R$ zutrifft, wird über die Funktion $cover$ beschrieben.
 
 \begin{gather*}
 cover(R,L) := 
@@ -250,7 +236,7 @@ cover(R,L) :=
 					& \forall T \in \{T_1,...,T_n\}:											\mathit{structM(R,T)} \neq \emptyset
 \end{array}\right\}
 \end{gather*}
-
+Die \emph{provided Typen} innerhalb dieser Mengen werden im nächsten Schritt des Explorationsprozesses als \emph{Target-Typen} bezeichnet und als Basis für die Generierung der Proxies für den \emph{required Typ} $R$ verwendet. 
 \begin{example}{bsp_cover}
 Sei folgende Bibliothek $L$ gegeben.
 \begin{lstlisting}[style = dsl]
@@ -268,7 +254,7 @@ required Greeting{
 	String bye()
 }
 \end{lstlisting}
-Über die Funktion $\mathit{cover}$ werden folgende Mengen von Target-Typen für die Bildung von Proxies für den required Typ $\texttt{Greeting}$ ermittelt.
+Über die Funktion $\mathit{cover}$ werden folgende \emph{Target-Typen} für die Generierung von Proxies für den \emph{required Typ} $\texttt{Greeting}$ ermittelt.
 \begin{gather*}
 \mathit{cover(\texttt{Greeting},L)} = \{
 	\{\texttt{Come}\},\{\texttt{Leave}, \texttt{Come}\}
