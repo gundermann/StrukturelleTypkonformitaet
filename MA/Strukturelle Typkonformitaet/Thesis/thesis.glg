@@ -1,7 +1,7 @@
 This is makeindex, version 2.15 [MiKTeX 21.3].
 Scanning style file ./thesis.ist.............................done (29 attributes redefined, 0 ignored).
-Scanning input file thesis.glo....done (78 entries accepted, 0 rejected).
-Sorting entries....done (505 comparisons).
-Generating output file thesis.gls....done (27 lines written, 0 warnings).
+Scanning input file thesis.glo....done (84 entries accepted, 0 rejected).
+Sorting entries....done (594 comparisons).
+Generating output file thesis.gls....done (39 lines written, 0 warnings).
 Output written in thesis.gls.
 Transcript written in thesis.glg.

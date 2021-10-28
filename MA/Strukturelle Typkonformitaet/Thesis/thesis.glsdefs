@@ -194,15 +194,127 @@ parent={},%
 %
 }%
 
-\glsdefs@newdocentry{proxy}%
+\glsdefs@newdocentry{attributgrammatik}%
 {%
-name={Proxy},%
-sort={Proxy},%
+name={Attributgrammatik},%
+sort={Attributgrammatik},%
 type={main},%
-first={Proxy},%
-firstplural={Proxys},%
-text={Proxy},%
-plural={Proxys},%
+first={Attributgrammatik},%
+firstplural={Attributgrammatiks},%
+text={Attributgrammatik},%
+plural={Attributgrammatiks},%
+description={},%
+descriptionplural={},%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={},%
+longplural={},%
+short={},%
+shortplural={},%
+counter={page},%
+parent={},%
+%
+}%
+
+\glsdefs@newdocentry{substitutionsprinzip}%
+{%
+name={Substitutionsprinzip},%
+sort={Substitutionsprinzip},%
+type={main},%
+first={Substitutionsprinzip},%
+firstplural={Substitutionsprinzips},%
+text={Substitutionsprinzip},%
+plural={Substitutionsprinzips},%
+description={},%
+descriptionplural={},%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={},%
+longplural={},%
+short={},%
+shortplural={},%
+counter={page},%
+parent={},%
+%
+}%
+
+\glsdefs@newdocentry{ast}%
+{%
+name={AST},%
+sort={AST},%
+type={main},%
+first={\Gls {abstractSyntaxtree}\glsspace (AST)},%
+firstplural={\Gls {abstractSyntaxtree}\acrpluralsuffix \glsspace (AST\acrpluralsuffix )},%
+text={AST},%
+plural={AST\acrpluralsuffix },%
+description={\Gls {abstractSyntaxtree}},%
+descriptionplural={\Gls {abstractSyntaxtree}\acrpluralsuffix },%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={\Gls {abstractSyntaxtree}},%
+longplural={\Gls {abstractSyntaxtree}s},%
+short={AST},%
+shortplural={ASTs},%
+counter={page},%
+parent={},%
+%
+}%
+
+\glsdefs@newdocentry{abstractSyntaxtree}%
+{%
+name={Abstrakter Syntaxbaum},%
+sort={Abstrakter Syntaxbaum},%
+type={main},%
+first={Abstrakter Syntaxbaum},%
+firstplural={Abstrakter Syntaxbaums},%
+text={Abstrakter Syntaxbaum},%
+plural={Abstrakter Syntaxbaums},%
+description={},%
+descriptionplural={},%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={},%
+longplural={},%
+short={},%
+shortplural={},%
+counter={page},%
+parent={},%
+%
+}%
+
+\glsdefs@newdocentry{downcast}%
+{%
+name={Down-Cast},%
+sort={Down-Cast},%
+type={main},%
+first={Down-Cast},%
+firstplural={Down-Casts},%
+text={Down-Cast},%
+plural={Down-Casts},%
 description={},%
 descriptionplural={},%
 symbol={\relax },%
