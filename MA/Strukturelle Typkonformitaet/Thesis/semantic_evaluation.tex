@@ -1,21 +1,20 @@
 \section{Semantische Evaluation}\label{sec_semEval}
-Das Ziel der semantischen Evaluation ist es, einen der Proxies, die aus den Mengen von Target-Typen, die im Rahmen der strukturellen Evaluation erzeugt werden können, hinsichtlich der vordefinierten Testfälle zu evaluieren. Da die gesamte Exploration zur Laufzeit des Programms durchgeführt wird, stellt sie hinsichtlich der nicht-funktionalen Anforderungen eine zeitkritische Komponente dar.
+Das Ziel der \emph{semantischen Evaluation} ist es, einen der \emph{Proxies}, die aus den Mengen von \emph{Target-Typen}, die im Rahmen der \emph{strukturellen Evaluation} erzeugt werden können, hinsichtlich der vordefinierten Testfälle zu evaluieren. Da der gesamte \emph{Explorationsprozess} zur Laufzeit des jeweiligen Programms durchgeführt wird, stellt sie hinsichtlich der nicht-funktionalen Anforderungen eine zeitkritische Komponente dar.
 \\\\
-Da die Anforderungen an die gesuchte Komponente mit Bedacht spezifiziert werden müssen, ist es irrelevant, ob es mehrere Proxies gibt, die hinsichtlich der vordefinierten Testfällen positiv evaluatiert werden können. Es ist ausreichend lediglich ein Proxy zu finden, dessen Semantik zu positiven Ergebnissen hinsichtlich aller vordefinierten Testfälle führt.
+Da die Anforderungen an den gesuchten \emph{Proxy} mit Bedacht spezifiziert werden müssen, ist es irrelevant, ob es mehrere \emph{Proxies} gibt, die hinsichtlich der vordefinierten Testfällen positiv geprüft werden können. Es ist ausreichend lediglich ein \emph{Proxy} zu finden, dessen Semantik zu positiven Ergebnissen hinsichtlich aller vordefinierten Testfälle führt.
 \subsection{Besonderheiten der Testfälle}\label{sec_testanforderungen}
-Bei den vordefinierten Tests handelt es sich auf formaler Ebene um Typen, die eine eval-Methode mit der Struktur $\texttt{boolean eval( proxy )}$ anbieten, welche einen Proxy als Parameter erwartet und ein Objekt vom Typ $\texttt{boolean}$ zurückgibt. Weiterhin verfügt ein Test über ein Attribut $\texttt{triedMethodCalls}$, in dem eine Liste von Methodennamen des Proxies, die bei der Durchführung der eval-Methode aufgerufen wurden, hinterlegt ist.
+Bei den vordefinierten Tests handelt es sich auf formaler Ebene um Typen, die eine $\texttt{eval}$-Methode mit der Struktur $\texttt{boolean eval( proxy )}$ anbieten, welche einen \emph{Proxy} als Parameter erwartet und ein Objekt vom Typ $\texttt{boolean}$ zurückgibt. Weiterhin verfügt ein Test über ein Attribut $\texttt{triedMethodCalls}$, in dem eine Liste von Methodennamen, die bei der Durchführung der $\texttt{eval}$-Methode auf den \emph{Proxies} aufgerufen wurden, hinterlegt ist.
 \\\\
-Die Implementierung der eval-Methode ist an folgende Bedingungen geknüpft:
+Die Implementierung der $\texttt{eval}$-Methode ist an folgende Bedingungen geknüpft:
 \begin{enumerate}
-\item Vor dem Aufruf einer Methode auf dem als Parameter übergebenen Proxy-Objekt, wird der Name dieser Methode in der Liste im Feld $\texttt{triedMethodCalls}$ ergänzt.
-%\item Nach einem fehlgeschlagenen Aufruf einer Methode auf dem als Parameter übergebenen Proxy-Objekt, wird das Feld $\texttt{failedMethod}$ mit dem Namen der fehlgeschlagenen Methode belegt. Zusätzlich wird die eval-Methode direkt danach mit dem Rückgabewert $\texttt{false}$ beendet.
-\item Wenn der Proxy den Test erfüllt, wird der Wert $\texttt{true}$ zurückgegeben. Anderenfalls wird der Wert $\texttt{false}$ zurückgegeben.
+\item Vor dem Aufruf einer Methode auf dem als Parameter übergebenen \emph{Proxy}, wird der Name dieser Methode in der Liste im Feld $\texttt{triedMethodCalls}$ ergänzt.
+\item Wenn der \emph{Proxy} den Test besteht, wird der Wert $\texttt{true}$ zurückgegeben. Anderenfalls wird der Wert $\texttt{false}$ zurückgegeben.
 \end{enumerate}
 
 \begin{example}{xmpl_evalMethode}
-In folgendem Listing \ref{lst_examEval} ist eine eval-Methode aufgeführt, die die oben genannten Bedingungen erfüllt. Es sei davon auszugehen, dass der als Parameter übergebene Proxy eine Methode mit der Struktur $\methodForm{Integer}{add}{Integer x, Integer y}$
-anbietet. Der Fehlschlag ($\texttt{err}$) dieser Methode wird über einen Try-Catch-Block abgefangen.
-\begin{lstlisting}[style = pseudo, label = lst_examEval, caption = Beispielhafte Implementierung einer eval-Methode, captionpos = b]
+In folgendem Listing \ref{lst_examEval} ist eine $\texttt{eval}$-Methode aufgeführt, die die oben genannten Bedingungen erfüllt. Es sei davon auszugehen, dass der als Parameter übergebene \emph{Proxy} eine Methode mit der Struktur $\methodForm{Integer}{add}{Integer, Integer}$
+anbietet.
+\begin{lstlisting}[style = pseudo, label = lst_examEval, caption = Beispielhafte Implementierung einer $\texttt{eval}$-Methode, captionpos = b]
 function eval( proxy ){
 	res = 0	
 	triedMethodCalls.add( "add" )
@@ -26,7 +25,7 @@ function eval( proxy ){
 \end{example}
 
 \subsection{Algorithmus für die semantische Evaluation}\label{sec_semEvalAlgo}
-Bei der Exploration soll letztendlich in einer Bibliothek $L$ zu einem vorgegebenen required Type $R$ ein Proxy gefunden werden. Die Mengen der Target-Typen auf deren Basis mehrere Proxies erzeugt werden können, wurden im Abschnitt \ref{sec_anzahlProxies} über $\mathit{cover(R,L)}$ beschrieben. Die in $T = \mathit{cover(R,L)}$ befindlichen Mengen können eine unterschiedliche Anzahl von Target-Typen enthalten. Die maximale Mächtigkeit einer Menge $T_i \in T$ ist gleich der Anzahl der Methoden in $R$.
+Während des \emph{Explorationsprozesses} soll aus den \emph{provided Typen} in einer Bibliothek $L$ zu einem vorgegebenen \emph{required Type} $R$ ein Proxy generiert und evaluiert werden. Die Mengen der \emph{Target-Typen} auf deren Basis mehrere \emph{Proxies} erzeugt werden können, wurden im Abschnitt \ref{sec_anzahlProxies} über $\mathit{cover(R,L)}$ beschrieben. Die in $\mathit{cover(R,L)}$ befindlichen Mengen können eine unterschiedliche Anzahl von \emph{Target-Typen} enthalten. Die maximale Mächtigkeit einer Menge $T_i \in \mathit{cover(R,L)}$ ist gleich der Anzahl der Methoden in $R$.
 \begin{gather*}
 \mathit{maxTargets(R)} := |\mathit{methoden(R)}|
 \end{gather*}
@@ -36,15 +35,18 @@ In Bezug zur Funktion $\mathit{cover}$ gilt:
 \forall T \in \mathit{cover(R,L)} : |T| \leq \mathit{maxTargets(R)}
 \end{gather*}
 \noindent
-\\
-Das in dieser Arbeit beschriebene Konzept basiert auf der Annahme, dass der gesamte Anwendungsfall - oder Teile davon - , der mit der vordefinierten Struktur und den vordefinierten Tests abgebildet werden soll, schon einmal genauso oder so ähnlich in dem gesamten System implementiert wurde. Aus diesem Grund kann für die semantische Evaluation davon ausgegangen werden, dass die erfolgreiche Durchführung aller relevanten Tests umso wahrscheinlicher ist, je weniger Target-Typen im Proxy verwendet werden.
+Das in dieser Arbeit beschriebene Konzept basiert auf der Annahme, dass der gesamte Anwendungsfall - oder Teile davon - , der mit der vordefinierten Struktur (\emph{required Typ}) und den vordefinierten Tests abgebildet werden soll, schon einmal genauso oder so ähnlich in dem gesamten System implementiert wurde. Aus diesem Grund kann für die \emph{semantische Evaluation} davon ausgegangen werden, dass die erfolgreiche Durchführung aller relevanten Tests umso wahrscheinlicher ist, je weniger \emph{Target-Typen} im \emph{Proxy} enthalten sind.
 \\\\
-Sei folgende Funktion für eine Menge von Target-Typen $T \in \mathit{cover(R,L)}$ und eine ganze Zahl $a > 0$ definiert:
+Die Mengen innerhalb einer Menge $T$ mit einer Mächtigkeit $a < 0$ seien durch folgende Funktion beschrieben:
 \begin{gather*}
-\mathit{targetSets(T,a)} := \{T_i | T_i \in T \wedge |T_i| = a\}
+\mathit{targetSets(T,a)} := 
+\left\{\begin{array}{l|l}	
+				T_i & T_i \in T \wedge |T_i| = a
+		 \end{array}
+\right\}
 \end{gather*}
 \noindent
-Ausgehend von einer Bibliothek $L$ kann der Algorithmus für die semantische Evaluation der Proxies, die für einen \emph{required Typ} $R$ mit den Mengen der Target-Typen $T = \mathit{cover(R, L)}$ erzeugt werden können, und der Menge von Tests (Parameter $\texttt{tests}$) wie folgt im Pseudo-Code beschrieben werden. Die globale Variable $\texttt{passedTests}$ enthält dabei die Anzahl der für den aktuell zu überprüfenden Proxy erfolgreich durchgeführten Tests. Außerdem sei davon auszugehen, dass die Funktionen aus Abschnitt \ref{sec_proxyGen} wie beschrieben definiert sind.
+Ausgehend von einer Bibliothek $L$ kann der Algorithmus für die \emph{semantische Evaluation} der \emph{Proxies}, die für einen \emph{required Typ} $R$ (Parameter $\texttt{R}$) mit den Mengen der \emph{Target-Typen} $\mathit{cover(R, L)}$ (Parameter $\texttt{T}$) erzeugt werden können, und einer Menge von Tests (Parameter $\texttt{tests}$) über die Methode $\texttt{semanticEval}$ wie folgt im Pseudo-Code beschrieben werden. Die globale Variable $\texttt{passedTests}$ enthält dabei die Anzahl der für den aktuell zu überprüfenden \emph{Proxy} erfolgreich durchgeführten Tests. Außerdem sei davon auszugehen, dass die Funktionen aus Abschnitt \ref{sec_proxyGen} wie beschrieben definiert sind.
 \begin{lstlisting}[style = pseudo, caption = Semantische Evaluation ohne Heuristiken, captionpos = b, label = lst_semEval]
 passedTests = 0
 
@@ -79,15 +81,15 @@ function evalProxies(proxies, tests){
 function evalProxy(proxy, tests){
 	for( test : tests ){
 		if( !test.eval( proxy ) ){
-			\\ wenn ein Test fehlschlaegt, dann entspricht der 
-			\\ Proxy nicht den semantischen Anforderungen
+			// wenn ein Test fehlschlaegt, dann entspricht der 
+			// Proxy nicht den semantischen Anforderungen
 			return
 		}
 		passedTests = passedTests + 1
 	}
 }
 \end{lstlisting}
-Die Dauer der Laufzeit der in Listing \ref{lst_semEval} definierten Funktionen hängt maßgeblich von der Anzahl der Proxies ab, die für den required Typ $R$ in der Bibliothek $L$ erzeugt werden können (siehe auch Abschnitt \ref{sec_anzahlProxies} Funktion $\mathit{proxyCount}$). Im schlimmsten Fall müssen alle Proxies hinsichtlich der vordefinierten Tests erzeugt und evaluiert werden. Um die Anzahl dieser Proxies zu reduzieren, werden die im folgenden Abschnitt beschriebenen Heuristiken verwendet.
+Die Dauer der Laufzeit der in Listing \ref{lst_semEval} definierten Funktionen hängt maßgeblich von der Anzahl der \emph{Proxies} ab, die für den \emph{required Typ} $R$ in der Bibliothek $L$ erzeugt werden können (siehe auch Abschnitt \ref{sec_anzahlProxies} Funktion $\mathit{libProxyCount}$). Im schlimmsten Fall müssen alle \emph{Proxies} generiert werden und hinsichtlich der vordefinierten Tests geprüft werden. Um die Anzahl dieser \emph{Proxies} zu reduzieren, werden die im folgenden Abschnitt beschriebenen Heuristiken verwendet.
 
 
 \section{Heuristiken}\label{sec_heuristics}
