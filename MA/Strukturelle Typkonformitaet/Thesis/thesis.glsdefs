@@ -334,3 +334,59 @@ parent={},%
 %
 }%
 
+\glsdefs@newdocentry{Heuristik}%
+{%
+name={Heuristik},%
+sort={Heuristik},%
+type={main},%
+first={Heuristik},%
+firstplural={Heuristiks},%
+text={Heuristik},%
+plural={Heuristiks},%
+description={},%
+descriptionplural={},%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={},%
+longplural={},%
+short={},%
+shortplural={},%
+counter={page},%
+parent={},%
+%
+}%
+
+\glsdefs@newdocentry{bsort}%
+{%
+name={Bubble-Sort},%
+sort={Bubble-Sort},%
+type={main},%
+first={Bubble-Sort},%
+firstplural={Bubble-Sorts},%
+text={Bubble-Sort},%
+plural={Bubble-Sorts},%
+description={},%
+descriptionplural={},%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={},%
+longplural={},%
+short={},%
+shortplural={},%
+counter={page},%
+parent={},%
+%
+}%
+
