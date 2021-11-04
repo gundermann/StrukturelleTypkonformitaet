@@ -1,5 +1,5 @@
 \chapter{Untersuchungsergebnisse}\label{chap_evaluation}
-In dem System, welches für die Evaluation der Heuristiken verwendet wird, sind insgesamt 891 \emph{provided Typen} und 7 \emph{required Typen} enthalten. In \tabref{eIShort} sind die Namen der \emph{required Typen} zusammen mit jeweils einem Kürzel und den Namen der strukturell und semantisch matchenden Kombinationen von \emph{provided Typen} aufgeführt, die bei der Exploration ermittelt werden sollen. Die Kürzel dienen im weiteren Verlauf der Identifizierung der \emph{required Typen}.
+In dem System, welches für die Evaluation der \Gls{Heuristik}en verwendet wird, sind insgesamt 891 \emph{provided Typen} (\emph{EJBs}) und 7 \emph{required Typen} enthalten. In \tabref{eIShort} sind die Namen der \emph{required Typen} zusammen mit jeweils einem Kürzel und den Namen der strukturell und semantisch matchenden Kombinationen von \emph{provided Typen} aufgeführt, die während des \emph{Explorationsprozesses} ermittelt werden sollen. Die Kürzel dienen im weiteren Verlauf der Identifizierung der \emph{required Typen}.
 \begin{table}[h!]
 \centering
 \small
@@ -25,34 +25,39 @@ KOFGPCProvider & TEI7 & ElerFTStammdatenAuskunftService, StammdatenAuskunftServi
 \hline
 \hline
 \end{tabular}
-\caption{Required Typen mit Kürzeln von matchenden Kombinationen von provided Typen für die Evaluation}
+\caption{Required Typen mit Kürzeln und matchenden Kombinationen von provided Typen}
  \label{tab:eIShort}
 \end{table}
 \noindent
 \\
-Die Deklaration der \emph{required Typen} und der \emph{provided Typen} aus \tabref{eIShort} ist im Anhang \ref{app_evalTypes} zu finden. Aufgrund der Geheimhaltungspflicht bzgl. der Implementierungsdetails kann auf die Deklaration der Java-Interfaces, die sich aus dieser Deklaration der \emph{required} und \emph{provided Typen} ableiten lassen, und deren Implementierungen in dieser Arbeit nicht genauer eingegangen werden.
+Die Deklarationen der \emph{required Typen} und der \emph{provided Typen} aus \tabref{eIShort} sind im Anhang \ref{app_evalTypes} zu finden. Aufgrund der Geheimhaltungspflicht bzgl. der Implementierungsdetails kann auf die Deklaration der Java-Interfaces, die sich aus dieser Deklaration der \emph{required} und \emph{provided Typen} ableiten lassen, und deren Implementierungen in dieser Arbeit nicht genauer eingegangen werden.
 \\\\
 Um die Ergebnisse nachstellen zu können, kann die Implementierung, welche im Abschnitt \ref{sec_impl_descos} beschrieben wurde, mit einer beliebigen Bibliothek, welche sich ebenfalls durch die in Abschnitt \ref{sec:strukturTypen} beschriebene Struktur von Typen abbilden lässt, verwendet werden.
 
 \section{Darstellung der Untersuchungsergebnisse}
-Die Untersuchungsergebnisse werden in der Form von Vier-Felder-Tafeln dargestellt (Beispiel siehe \tabref{vft:beispiel}). Für jedes required Interface wird eine Vier-Felder-Tafel für jeden Durchlauf der Schleife innerhalb der Methode $\texttt{semanticEval}$ des Explorationsalgorithmus (siehe Abschnitt \ref{sec_semEval}) aufgezeigt. Aus der jeweiligen Tafel geht hervor, wie viele Proxies über die Funktion $\mathit{targetSets}$ (vgl. Abschnitt \ref{sec_semEval}) in dem aktuellen Iterationsschritt erzeugt werden. Der Wert, den die Iterationsvariable $\texttt{i}$ im betrachteten Durchlauf enthält, wird in der oberen rechten Ecke der Tafel abgebildet.
-In der Spalte ``positiv'' ist die Anzahl der Proxies verzeichnet, die innerhalb des Durchlaufs im schlimmsten Fall evaluiert werden. Die Zahl in der Spalte ``negativ'' drückt hingegen aus, wie viele der Proxies aufgrund bestimmter Kriterien (bzw. Heuristiken) nicht evaluiert wurden.  Die Zeile ``falsch'' beschreibt die Anzahl der relevanten Proxies, welche die semantische Evaluation nicht bestehen. Dementsprechend stellt die Zeile ``richtig'' die Anzahl der Proxies dar, welche die semantischen Evaluation bestehen.
+Die Untersuchungsergebnisse werden in der Form von Vier-Felder-Tafeln dargestellt (Beispiel siehe \tabref{vft:beispiel}). Für jeden \emph{required Typ} wird eine Vier-Felder-Tafel für jeden Durchlauf der Schleife innerhalb der Methode $\texttt{semanticEval}$ der \emph{semantischen Evaluation} (siehe Abschnitt \ref{sec_semEval}) aufgezeigt. Aus der jeweiligen Tafel geht hervor, wie viele \emph{Proxies} über die Funktion $\mathit{targetSets}$ (vgl. Abschnitt \ref{sec_semEval}) in dem aktuellen Iterationsschritt erzeugt werden können. Der Wert, den die Iterationsvariable $\texttt{i}$ im betrachteten Durchlauf enthält, wird in der oberen rechten Ecke der Tafel abgebildet.
 \\\\
-Aus Abschnitt \ref{sec_anzahlProxies} geht hervor, dass die Anzahl der Proxies, die für ein desired Interface $R$ mit einer Menge von provided Typen $T$ über die Funktion $\mathit{proxyCount(R,T)}$ näherungsweise bestimmt werden kann. Für eine vereinfachte Darstellung der Untersuchungsergebnisse bzgl. eines required Interfaces $R$ aus einer Bibliothek $L$ und einem Iterationsschritt $i$ wird die Anzahl der Proxies für die Anzahl von Mengen von provided Typen $A$ auch wie folgt beschrieben:
+In der Spalte ``positiv'' ist die Anzahl der \emph{Proxies} verzeichnet, die innerhalb des Durchlaufs erzeugt und geprüft wurden. Die Zahl in der Spalte ``negativ'' drückt hingegen aus, wie viele der möglichen \emph{Proxies} aufgrund bestimmter Kriterien (bzw. \Gls{Heuristik}en) nicht erzeugt wurden. 
+\\\\
+Die Zeile ``falsch'' beschreibt die Anzahl der möglichen \emph{Proxies}, welche die \emph{semantische Evaluation} nicht bestehen. Dementsprechend stellt die Zeile ``richtig'' die Anzahl der \emph{Proxies} dar, welche die \emph{semantischen Evaluation} bestehen.
+\\\\
+Da der \emph{Explorationsprozess} abgebrochen wird, sofern ein \emph{Proxy} die \emph{semantische Evaluation} besteht, ist in der Zelle ``positiv'' - ``richtig'' ein Wert von 0 oder 1 zu erwarten. Dementsprechend ist in der Zelle ``negativ'' - ``richtig'' immer der Wert 0 enthalten, denn ein \emph{Proxy}, der nicht erzeugt wurde, kann auch nicht positiv getestet werden.
+\\\\
+Aus Abschnitt \ref{sec_anzahlProxies} geht hervor, dass die Anzahl der \emph{Proxies}, die für einen \emph{required Typ} $R$ mit einer Menge von \emph{provided Typen} $T$ über die Funktion $\mathit{proxyCount(R,T)}$ näherungsweise bestimmt werden kann. Für eine vereinfachte Darstellung der Untersuchungsergebnisse bzgl. eines \emph{required Typs} $R$ aus einer Bibliothek $L$ mit $C = \mathit{cover(R,L)}$ und einem Iterationsschritt $i$ wird die Anzahl der \emph{Proxies} für die Anzahl $a$ von Mengen von \emph{provided Typen}, auf deren Basis die \emph{Proxies} erzeugt werden können, näherungsweise auch wie folgt beschrieben:
 \begin{gather*}
-p(A) = \begin{array}{l|l}
-\mathit{proxyCount(R,targetSets(T,i)} & |T| = A \wedge T \in \mathit{cover(R,L)}
+p_i(a) := \begin{array}{l|l}
+\sum_{k=1}^{a}\mathit{proxyCount(R,TM)} & \{\mathit{TM_1},...,\mathit{TM_a}\} = \mathit{targetSets(C,i)}  
 \end{array}
 \end{gather*}
 \noindent
-Diese Notation kommt jedoch nur bei der Darstellung der Untersuchungsergebnisse eines Iterationsschrittes zum Einsatz, in dem ein passender Proxy gefunden wird. Für alle anderen Durchläufe ist die Anzahl der möglichen Proxies bekannt und wird somit auch dargestellt. 
+Diese Notation kommt jedoch nur bei der Darstellung der Untersuchungsergebnisse eines Iterationsschrittes zum Einsatz, in dem ein passender \emph{Proxy} gefunden wird. Für alle anderen Durchläufe ist die Anzahl der möglichen \emph{Proxies} bekannt und wird somit auch explizit dargestellt. 
 \\\\
-\tabref{vft:beispiel} zeigt ein Beispiel für eine solche Vier-Felder-Tafel, in der die Ergebnisse des 1. Iterationsschrittes dargestellt sind. Dabei wurden 11 Proxies generiert und getestet. 10 dieser Proxies bestanden die Evaluation nicht. Insgesamt konnten Proxies aus 20 Kombinationen von provided Typen erzeugt werden. Alle diese abzüglich der 11 generierten Proxies wurden im Vorfeld (bspw. durch Heuristiken) aussortiert. Weiterhin zeigt das Beispiel, dass es einen Proxy gab, der die semantische Evaluation bestand.
-\vft{1}{10}{$p(20)-11$}{1}{0}{Beispiel: Vier-Felder-Tafel}{vft:beispiel}
+\tabref{vft:beispiel} zeigt ein Beispiel für eine solche Vier-Felder-Tafel, in der die Ergebnisse des 1. Iterationsschrittes dargestellt sind. Dabei wurden 11 \emph{Proxies} generiert und getestet. 10 dieser \emph{Proxies} bestanden die \emph{semantische Evaluation} nicht. Da in diesem Beispiel ein \emph{Proxy} die \emph{semantische Evaluation} bestand, und der \emph{Explorationsprozess} anschließend beendet wurde, mussten die übrigen \emph{Proxies}, die auf Basis der insgesamt 20 Kombinationen von \emph{provided Typen} hätten erzeugt werden können, nicht generiert und damit auch nicht getestet werden.
+\vft{1}{10}{$p_1(20)-11$}{1}{0}{Beispiel: Vier-Felder-Tafel}{vft:beispiel}
 
 
-\section{Ausgangspunkt}
-Für einen \emph{reqiured Typ} können mehrere \emph{provided Typen} gefunden werden, die eine strukturelle Übereinstimmung aufwiesen. \tabref{amountMatchedInterfaces} zeigt die Anzahl der strukturell gematchten \emph{provided Typen} zum jeweiligen \emph{reqiured Typ}. Diese kommen einzeln oder in Kombination für die semantische Evaluation in Frage.
+\section{Ausgangspunkt}\label{sec_ausgangspunkt}
+Für einen \emph{reqiured Typ} können mehrere \emph{provided Typen} gefunden werden, auf deren Basis ein \emph{Proxy} erzeugt werden kann. \tabref{amountMatchedInterfaces} zeigt die Anzahl der \emph{provided Typen}, zu denen der jeweilige \emph{required Typ} über den \emph{StructuralTypeMatcher} gematcht werden kann\footnote{Strukturelle Übereinstimmung}. Diese kommen einzeln oder in Kombination für die \emph{semantische Evaluation} in Frage.
 \begin{table}[H]
 \centering
 \small
@@ -60,7 +65,7 @@ Für einen \emph{reqiured Typ} können mehrere \emph{provided Typen} gefunden we
 			\begin{tabular}[c]{|>{\centering\arraybackslash}p{2cm}|>{\centering\arraybackslash}p{5cm}|}
 			\hline
 			\hline
-				 \textbf{required Interface} & \textbf{Anzahl strukturell übereinstimmender provided Interfaces} \\
+				 \textbf{Required Typ} & \textbf{Anzahl strukturell übereinstimmender provided Typ} \\
 				\hline\hline
 				TEI1 & 221 \\
 				\hline
@@ -83,39 +88,39 @@ Für einen \emph{reqiured Typ} können mehrere \emph{provided Typen} gefunden we
 \onehalfspacing
 \end{table}
 \noindent
-Die \tabsrefs{tmr_start_tei1}{tmr_start_tei7_2} zeigen die Vier-Felder-Tafeln, in denen die Ergebnisse der benötigten Iterationen innerhalb des Explorationsalgorithmus für jeden der \emph{required Typen} aus \tabref{amountMatchedInterfaces}. Dabei wurden keine Heuristiken verwendet. Somit stellt dies den Ausgangspunkt für die weitere Evaluation dar.
+Die \tabsrefs{tmr_start_tei1}{tmr_start_tei7_2} zeigen die Vier-Felder-Tafeln, in denen die Ergebnisse der benötigten Iterationen innerhalb der \emph{semantischen Evaluation} für jeden der \emph{required Typen} aus \tabref{amountMatchedInterfaces}. Dabei wurden keine \Gls{Heuristik}en verwendet. Somit stellt dies den Ausgangspunkt für die weitere Evaluation der \Gls{Heuristik}en dar.
 \begin{multicols}{3}
-\vft{1}{233}{$p(44)-234$}{1}{0}{Ausgangspunkt für TEI1}{tmr_start_tei1}\columnbreak
-\vft{1}{9389}{$p(55)-9399$}{1}{0}{Ausgangspunkt für TEI2}{tmr_start_tei2}\columnbreak
-\vft{1}{8364}{$p(50)-8365$}{1}{0}{Ausgangspunkt für TEI3}{tmr_start_tei3}
+\vft{1}{233}{$p_1(44)-234$}{1}{0}{Ausgangspunkt für TEI1}{tmr_start_tei1}\columnbreak
+\vft{1}{9389}{$p_1(55)-9399$}{1}{0}{Ausgangspunkt für TEI2}{tmr_start_tei2}\columnbreak
+\vft{1}{8364}{$p_1(50)-8365$}{1}{0}{Ausgangspunkt für TEI3}{tmr_start_tei3}
 \end{multicols}
 \begin{multicols}{2}
 \vft{1}{$1174$}{0}{0}{0}{Ausgangspunkt für TEI4 1.~\mbox{Durchlauf}}{tmr_start_tei4_1}\columnbreak
-\vft{2}{56766}{$p(2247)-56767$}{1}{0}{Ausgangspunkt für TEI4 2.~\mbox{Durchlauf}}{tmr_start_tei4_2}
+\vft{2}{56766}{$p_2(2247)-56767$}{1}{0}{Ausgangspunkt für TEI4 2.~\mbox{Durchlauf}}{tmr_start_tei4_2}
 \end{multicols}
 \begin{multicols}{2}
 \vft{1}{$4984$}{0}{0}{0}{Ausgangspunkt für TEI5 1.~Durchlauf}{tmr_start_tei5_1}\columnbreak
-\vft{2}{244479}{$p(2775)-244480$}{1}{0}{Ausgangspunkt für TEI5 2.~\mbox{Durchlauf}}{tmr_start_tei5_2}
+\vft{2}{244479}{$p_2(2775)-244480$}{1}{0}{Ausgangspunkt für TEI5 2.~\mbox{Durchlauf}}{tmr_start_tei5_2}
 \end{multicols}
 \begin{multicols}{2}
 \vft{1}{$1051$}{0}{0}{0}{Ausgangspunkt für TEI6 1.~\mbox{Durchlauf}}{tmr_start_tei6_1}
 \columnbreak
-\vft{2}{43360}{$p(1323)-43361$}{1}{0}{Ausgangspunkt für TEI6 2.~\mbox{Durchlauf}}{tmr_start_tei6_2}
+\vft{2}{43360}{$p_2(1323)-43361$}{1}{0}{Ausgangspunkt für TEI6 2.~\mbox{Durchlauf}}{tmr_start_tei6_2}
 \end{multicols}
 \begin{multicols}{2}
 \vft{1}{$161294$}{0}{0}{0}{Ausgangspunkt für TEI7 1.~\mbox{Durchlauf}}{tmr_start_tei7_1}
 \columnbreak
-\vft{2}{7764501}{$p(52150)-7764502$}{1}{0}{Ausgangspunkt für TEI7 2.~\mbox{Durchlauf}}{tmr_start_tei7_2}
+\vft{2}{7764501}{$p_2(52150)-7764502$}{1}{0}{Ausgangspunkt für TEI7 2.~\mbox{Durchlauf}}{tmr_start_tei7_2}
 \end{multicols}
 \noindent
-Für die \emph{required Typen} \emph{TEI4}-\emph{TEI7} werden zwei Durchläufe benötigt, da die semantischen Tests nur von einem Proxy bestanden werden, der aus einer Kombination zweier \emph{provided Typen} erzeugt wurde (siehe auch \tabref{eIShort}).
+Für die \emph{required Typen} \emph{TEI4}-\emph{TEI7} werden zwei Durchläufe benötigt, da die Tests nur von einem \emph{Proxy} bestanden werden, der aus einer Kombination zweier \emph{provided Typen} erzeugt wurde (siehe auch \tabref{eIShort}).
 
 \input{test_tmr}
 \input{test_pttf}
 \input{test_blnmc}
 \noindent
 \\\\
-Aus den Ergebnissen, die in den Abschnitten \ref{sec_evalLMF} - \ref{sec_evalBLNMC} beschrieben wurden, lässt sich je required Typ eine Rangfolge der vorgestellten Heuristiken erstellen. Diese Rangfolge kann Tabelle \ref{tab_rankingSingle} entnommen werden. Dabei gilt, dass die Heuristik, mit der am wenigsten Proxies generiert und evaluiert werden mussten, den ersten Platz einnimmt. 
+Aus den Ergebnissen, die in den Abschnitten \ref{sec_evalLMF} - \ref{sec_evalBLNMC} beschrieben wurden, lässt sich je \emph{required Typ} eine Rangfolge der vorgestellten \Gls{Heuristik}en erstellen. Diese Rangfolge kann Tabelle \ref{tab_rankingSingle} entnommen werden. Dabei gilt, dass die \Gls{Heuristik}, mit der am wenigsten \emph{Proxies} generiert und geprüft werden mussten, den ersten Platz einnimmt. 
 \begin{table}[!h]
 \centering
 \begin{tabular}{|l|c|c|c|c|c|c|c|}
@@ -138,152 +143,156 @@ BL\_NMC & 2. &1. &1. &1. &1.&1.&1.\\
 
 
 \section{Ergebnisse für die Kombination der Heuristiken}\label{sec_evalKombis}
-Im vorherigen Abschnitt wurde gezeigt, dass die Exploration durch jede der beschriebenen Heuristiken beschleunigt werden kann. Dabei wurden Exploration mit jeweils einer der Heuristiken durchgeführt. In den folgenden Abschnitten soll evaluiert werden, ob die Verwendung einer Kombination der einzelnen Heuristiken bei der Exploration einen zusätzlichen Vorteil bringt.
+Im vorherigen Abschnitt wurde gezeigt, dass der \emph{Explorationsprozess} durch jede der beschriebenen \Gls{Heuristik}en beschleunigt werden kann. Dabei wurde der \emph{Explorationsprozess} mit jeweils einer der \Gls{Heuristik}en durchgeführt. In den folgenden Abschnitten soll evaluiert werden, ob die Verwendung einer Kombination der einzelnen \Gls{Heuristik}en während des \emph{Explorationsprozesses} einen zusätzlichen Vorteil bringt.
 \\\\
-Hierzu werden die Ergebnisse aller Kombinationen der einzelnen Heuristiken aufgeführt und im Anschluss bewertet.
+Hierzu werden die Ergebnisse aller Kombinationen der einzelnen \Gls{Heuristik}en aufgeführt und im Anschluss bewertet.
 \subsection{Kombination: LMF + PTTF}\label{sec_evalLMFPTTF}
-Die folgenden Vier-Felder Tafeln zeigen die Ergebnisse mit der Kombination der Heuristiken \emph{LMF} und \emph{PTTF}.
+Die folgenden Vier-Felder Tafeln zeigen die Ergebnisse mit der Kombination der \Gls{Heuristik}en \emph{LMF} und \emph{PTTF}.
 \begin{multicols}{3}
-\vft{1}{5}{$p(44)-6$}{1}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} für TEI1}{lmfpttf_TEI1_1}\columnbreak
-\vft{1}{1877}{$p(55)-1878$}{1}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} für TEI2 1. Durchlauf}{lmfpttf_TEI2_1}\columnbreak
-\vft{1}{1473}{$p(50)-1474$}{1}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} für TEI3 1. Durchlauf}{lmfpttf_TEI3_1}
+\vft{1}{5}{$p_1(44)-6$}{1}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} für TEI1}{lmfpttf_TEI1_1}\columnbreak
+\vft{1}{1877}{$p_1(55)-1878$}{1}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} für TEI2 1. Durchlauf}{lmfpttf_TEI2_1}\columnbreak
+\vft{1}{1473}{$p_1(50)-1474$}{1}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} für TEI3 1. Durchlauf}{lmfpttf_TEI3_1}
 \end{multicols}
 
 \begin{multicols}{2}
 \vft{1}{$1174$}{0}{0}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} für TEI4 1. Durchlauf}{lmfpttf_TEI4_1}\columnbreak
-\vft{2}{4}{$p(2247)-5$}{1}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} für TEI4 2. Durchlauf}{lmfpttf_TEI4_2}
+\vft{2}{4}{$p_2(2247)-5$}{1}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} für TEI4 2. Durchlauf}{lmfpttf_TEI4_2}
 \end{multicols}
 
 \begin{multicols}{2}
 \vft{1}{$4984$}{0}{0}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} für TEI5 1. Durchlauf}{lmfpttf_TEI5_1}\columnbreak
-\vft{2}{34}{$p(2346)-35$}{1}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} für TEI5 2. Durchlauf}{lmfpttf_TEI5_2}
+\vft{2}{34}{$p_2(2346)-35$}{1}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} für TEI5 2. Durchlauf}{lmfpttf_TEI5_2}
 \end{multicols}
 
 \begin{multicols}{2}
 \vft{1}{$1051$}{0}{0}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} für TEI6 1. Durchlauf}{lmfpttf_TEI6_1}\columnbreak
-\vft{2}{0}{$p(1323)-1$}{1}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} für TEI6 2. Durchlauf}{lmfpttf_TEI6_2}
+\vft{2}{0}{$p_2(1323)-1$}{1}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} für TEI6 2. Durchlauf}{lmfpttf_TEI6_2}
 \end{multicols}
 
 \begin{multicols}{2}
 \vft{1}{$161294$}{0}{0}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} für TEI7 1. Durchlauf}{lmfpttf_TEI7_1}\columnbreak
-\vft{2}{1076}{$p(52150)-1077$}{1}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} für TEI7 2. Durchlauf}{lmfpttf_TEI7_2}
+\vft{2}{1076}{$p_2(52150)-1077$}{1}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} für TEI7 2. Durchlauf}{lmfpttf_TEI7_2}
 \end{multicols}
 \noindent
 Aus diesen Ergebnissen lässt sich Folgendes ableiten:
 \begin{enumerate}
 \item 
-Auf den ersten Durchlauf wirkt sich die Kombination der Heuristiken \emph{LMF} und \emph{PTTF} nicht nennenswert während der Exploration aus.
-Da mit der Heuristik \emph{LMF} alleine bessere Ergebnisse erzielt wurden als mit der Heuristik \emph{PTTF}, müssen hierfür die Tabellen \ref{tab:lmf11_TEI1_1}, \ref{tab:lmf11_TEI2_1}, \ref{tab:lmf11_TEI3_1}, \ref{tab:lmf11_TEI4_1}, \ref{tab:lmf11_TEI5_1}, \ref{tab:lmf11_TEI6_1} und \ref{tab:lmf11_TEI7_1} mit den Tabellen \ref{tab:lmfpttf_TEI1_1}, \ref{tab:lmfpttf_TEI2_1}, \ref{tab:lmfpttf_TEI3_1}, \ref{tab:lmfpttf_TEI4_1}, \ref{tab:lmfpttf_TEI5_1}, \ref{tab:lmfpttf_TEI6_1} und \ref{tab:lmfpttf_TEI7_1} verglichen werden.
+Auf den ersten Durchlauf wirkt sich die Kombination der \Gls{Heuristik}en \emph{LMF} und \emph{PTTF} nicht nennenswert aus.
+Da in der Einzelbetrachtung mit der \Gls{Heuristik} \emph{LMF} bessere Ergebnisse erzielt wurden als mit der \Gls{Heuristik} \emph{PTTF}, kann dies durch einen Vergleich der Tabellen \ref{tab:lmf11_TEI1_1}, \ref{tab:lmf11_TEI2_1}, \ref{tab:lmf11_TEI3_1}, \ref{tab:lmf11_TEI4_1}, \ref{tab:lmf11_TEI5_1}, \ref{tab:lmf11_TEI6_1} und \ref{tab:lmf11_TEI7_1} mit den Tabellen \ref{tab:lmfpttf_TEI1_1}, \ref{tab:lmfpttf_TEI2_1}, \ref{tab:lmfpttf_TEI3_1}, \ref{tab:lmfpttf_TEI4_1}, \ref{tab:lmfpttf_TEI5_1}, \ref{tab:lmfpttf_TEI6_1} und \ref{tab:lmfpttf_TEI7_1} nachvollzogen werden.
 
 \item 
-Für den zweiten Durchlauf während der Exploration ist eine Verbesserung zu erkennen. Diese bezieht sich jedoch nur auf die Exploration für \emph{TEI7} (vergleiche Tabelle \ref{tab:lmf11_TEI7_2} aus Abschnitt \ref{sec_evalLMF} mit Tabelle \ref{tab:lmfpttf_TEI7_2}).
+Für den zweiten Durchlauf ist eine Verbesserung zu festzustellen. Diese bezieht sich jedoch nur auf den \emph{Explorationsprozess} für \emph{TEI7} (vergleiche Tabelle \ref{tab:lmf11_TEI7_2} aus Abschnitt \ref{sec_evalLMF} mit Tabelle \ref{tab:lmfpttf_TEI7_2}).
 \end{enumerate}
 
 \subsection{Kombination: LMF + BL\_NMC}\label{sec_evalLMFBLNMC}
-Die folgenden Vier-Felder Tafeln zeigen die Ergebnisse mit der Kombination der Heuristiken \emph{LMF} und \emph{BL\_NMC}.
+Die folgenden Vier-Felder Tafeln zeigen die Ergebnisse mit der Kombination der \Gls{Heuristik}en \emph{LMF} und \emph{BL\_NMC}.
 \begin{multicols}{3}
-\vft{1}{0}{$p(44)-1$}{1}{0}{Ergebnisse \emph{LMF} + \emph{BL\_NMC} für TEI1}{lmfbl_TEI1_1}\columnbreak
-\vft{1}{83}{$p(55)-84$}{1}{0}{Ergebnisse \emph{LMF} + \emph{BL\_NMC} für TEI2 1. Durchlauf}{lmfbl_TEI2_1}\columnbreak
-\vft{1}{89}{$p(50)-90$}{1}{0}{Ergebnisse \emph{LMF} + \emph{BL\_NMC} für TEI3 1. Durchlauf}{lmfbl_TEI3_1}
+\vft{1}{0}{$p_1(44)-1$}{1}{0}{Ergebnisse \emph{LMF} + \emph{BL\_NMC} für TEI1}{lmfbl_TEI1_1}\columnbreak
+\vft{1}{83}{$p_1(55)-84$}{1}{0}{Ergebnisse \emph{LMF} + \emph{BL\_NMC} für TEI2 1. Durchlauf}{lmfbl_TEI2_1}\columnbreak
+\vft{1}{89}{$p_1(50)-90$}{1}{0}{Ergebnisse \emph{LMF} + \emph{BL\_NMC} für TEI3 1. Durchlauf}{lmfbl_TEI3_1}
 \end{multicols}
 
 \begin{multicols}{2}
 \vft{1}{120}{$1054$}{0}{0}{Ergebnisse \emph{LMF} + \emph{BL\_NMC} für TEI4 1. Durchlauf}{lmfbl_TEI4_1}\columnbreak
-\vft{2}{4}{$p(2247)-5$}{1}{0}{Ergebnisse \emph{LMF} + \emph{BL\_NMC} für TEI4 2. Durchlauf}{lmfbl_TEI4_2}
+\vft{2}{4}{$p_2(2247)-5$}{1}{0}{Ergebnisse \emph{LMF} + \emph{BL\_NMC} für TEI4 2. Durchlauf}{lmfbl_TEI4_2}
 \end{multicols}
 
 \begin{multicols}{2}
 \vft{1}{550}{$4434$}{0}{0}{Ergebnisse \emph{LMF} + \emph{BL\_NMC} für TEI5 1. Durchlauf}{lmfbl_TEI5_1}\columnbreak
-\vft{2}{34}{$p(2346)-35$}{1}{0}{Ergebnisse \emph{LMF} + \emph{BL\_NMC} für TEI5 2. Durchlauf}{lmfbl_TEI5_2}
+\vft{2}{34}{$p_2(2346)-35$}{1}{0}{Ergebnisse \emph{LMF} + \emph{BL\_NMC} für TEI5 2. Durchlauf}{lmfbl_TEI5_2}
 \end{multicols}
 
 \begin{multicols}{2}
 \vft{1}{115}{$936$}{0}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} für TEI6 1. Durchlauf}{lmfbl_TEI6_1}\columnbreak
-\vft{2}{0}{$p(1323)-1$}{1}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} für TEI6 2. Durchlauf}{lmfbl_TEI6_2}
+\vft{2}{0}{$p_2(1323)-1$}{1}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} für TEI6 2. Durchlauf}{lmfbl_TEI6_2}
 \end{multicols}
 
 \begin{multicols}{2}
 \vft{1}{2448}{$158846$}{0}{0}{Ergebnisse \emph{LMF} + \emph{BL\_NMC} für TEI7 1. Durchlauf}{lmfbl_TEI7_1}\columnbreak
-\vft{2}{954}{$p(52150)-955$}{1}{0}{Ergebnisse \emph{LMF} + \emph{BL\_NMC} für TEI7 2. Durchlauf}{lmfbl_TEI7_2}
+\vft{2}{954}{$p_2(52150)-955$}{1}{0}{Ergebnisse \emph{LMF} + \emph{BL\_NMC} für TEI7 2. Durchlauf}{lmfbl_TEI7_2}
 \end{multicols}
 \noindent
 Aus diesen Ergebnissen lässt sich Folgendes ableiten:
 \begin{enumerate}
-\item Auf den ersten Durchlauf während der Exploration wirkt sich die Kombination der Heuristiken \emph{LMF} und \emph{BL\_NMC} positiv aus. Hierzu sind die Tabelle \ref{tab:lmfbl_TEI1_1} mit der Tabelle \ref{tab:lmf11_TEI1_1} aus Abschnitt \ref{sec_evalLMF} sowie die Tabellen \ref{tab:lmfbl_TEI2_1}, \ref{tab:lmfbl_TEI3_1} und \ref{tab:lmfbl_TEI6_1} mit den Tabellen \ref{tab:blnmc_TEI2_1}, \ref{tab:blnmc_TEI3_1}, \ref{tab:blnmc_TEI3_1} und \ref{tab:blnmc_TEI6_1} aus Abschnitt \ref{sec_evalBLNMC} zu vergleichen.
-\item Für den zweiten Durchlauf während der Exploration ist ebenfalls eine Verbesserung zu erkennen. Diese bezieht sich jedoch nur auf die Exploration für \emph{TEI7} (vergleiche Tabelle \ref{tab:lmf11_TEI7_2} aus Abschnitt \ref{sec_evalLMF} mit Tabelle \ref{tab:lmfbl_TEI7_2}).
+\item Auf den ersten Durchlauf wirkt sich die Kombination der \Gls{Heuristik}en \emph{LMF} und \emph{BL\_NMC} positiv aus. Hierzu sind die Tabelle \ref{tab:lmfbl_TEI1_1} mit der Tabelle \ref{tab:lmf11_TEI1_1} aus Abschnitt \ref{sec_evalLMF} sowie die Tabellen \ref{tab:lmfbl_TEI2_1}, \ref{tab:lmfbl_TEI3_1} und \ref{tab:lmfbl_TEI6_1} mit den Tabellen \ref{tab:blnmc_TEI2_1}, \ref{tab:blnmc_TEI3_1}, \ref{tab:blnmc_TEI3_1} und \ref{tab:blnmc_TEI6_1} aus Abschnitt \ref{sec_evalBLNMC} zu vergleichen.
+
+\item Für den zweiten Durchlauf ist ebenfalls eine Verbesserung zu erkennen. Diese bezieht sich jedoch nur auf den \emph{Explorationsprozess} für \emph{TEI7} (vergleiche Tabelle \ref{tab:lmf11_TEI7_2} aus Abschnitt \ref{sec_evalLMF} mit Tabelle \ref{tab:lmfbl_TEI7_2}).
 \end{enumerate}
 
 \subsection{Kombination: PTTF + BL\_NMC}\label{sec_evalPTTFBLNMC}
-Die folgenden Vier-Felder Tafeln zeigen die Ergebnisse mit der Kombination der Heuristiken \emph{PTTF} und \emph{BL\_NMC}.
+Die folgenden Vier-Felder Tafeln zeigen die Ergebnisse mit der Kombination der \Gls{Heuristik}en \emph{PTTF} und \emph{BL\_NMC}.
 \begin{multicols}{3}
-\vft{1}{104}{$p(44)-105$}{1}{0}{Ergebnisse \emph{PTTF} + \emph{BL\_NMC} für TEI1}{pttfbl_TEI1_1}\columnbreak
-\vft{1}{337}{$p(55)-338$}{1}{0}{Ergebnisse \emph{PTTF} + \emph{BL\_NMC} für TEI2 1. Durchlauf}{pttfbl_TEI2_1}\columnbreak
-\vft{1}{357}{$p(50)-358$}{1}{0}{Ergebnisse \emph{PTTF} + \emph{BL\_NMC} für TEI3 1. Durchlauf}{pttfbl_TEI3_1}
+\vft{1}{104}{$p_1(44)-105$}{1}{0}{Ergebnisse \emph{PTTF} + \emph{BL\_NMC} für TEI1}{pttfbl_TEI1_1}\columnbreak
+\vft{1}{337}{$p_1(55)-338$}{1}{0}{Ergebnisse \emph{PTTF} + \emph{BL\_NMC} für TEI2 1. Durchlauf}{pttfbl_TEI2_1}\columnbreak
+\vft{1}{357}{$p_1(50)-358$}{1}{0}{Ergebnisse \emph{PTTF} + \emph{BL\_NMC} für TEI3 1. Durchlauf}{pttfbl_TEI3_1}
 \end{multicols}
 
 \begin{multicols}{2}
 \vft{1}{120}{$1054$}{0}{0}{Ergebnisse \emph{PTTF} + \emph{BL\_NMC} für TEI4 1. Durchlauf}{pttfbl_TEI4_1}\columnbreak
-\vft{2}{47}{$p(2247)-48$}{1}{0}{Ergebnisse \emph{PTTF} + \emph{BL\_NMC} für TEI4 2. Durchlauf}{pttfbl_TEI4_2}
+\vft{2}{47}{$p_2(2247)-48$}{1}{0}{Ergebnisse \emph{PTTF} + \emph{BL\_NMC} für TEI4 2. Durchlauf}{pttfbl_TEI4_2}
 \end{multicols}
 
 \begin{multicols}{2}
 \vft{1}{550}{$4434$}{0}{0}{Ergebnisse \emph{PTTF} + \emph{BL\_NMC} für TEI5 1. Durchlauf}{pttfbl_TEI5_1}\columnbreak
-\vft{2}{219}{$p(2346)-220$}{1}{0}{Ergebnisse \emph{PTTF} + \emph{BL\_NMC} für TEI5 2. Durchlauf}{pttfbl_TEI5_2}
+\vft{2}{219}{$p_2(2346)-220$}{1}{0}{Ergebnisse \emph{PTTF} + \emph{BL\_NMC} für TEI5 2. Durchlauf}{pttfbl_TEI5_2}
 \end{multicols}
 
 \begin{multicols}{2}
 \vft{1}{366}{$685$}{0}{0}{Ergebnisse \emph{PTTF} + \emph{PTTF} für TEI6 1. Durchlauf}{pttfbl_TEI6_1}\columnbreak
-\vft{2}{204}{$p(1323)-205$}{1}{0}{Ergebnisse \emph{PTTF} + \emph{PTTF} für TEI6 2. Durchlauf}{pttfbl_TEI6_2}
+\vft{2}{204}{$p_2(1323)-205$}{1}{0}{Ergebnisse \emph{PTTF} + \emph{PTTF} für TEI6 2. Durchlauf}{pttfbl_TEI6_2}
 \end{multicols}
 
 \begin{multicols}{2}
 \vft{1}{1036}{$160258$}{0}{0}{Ergebnisse \emph{PTTF} + \emph{BL\_NMC} für TEI7 1. Durchlauf}{pttfbl_TEI7_1}\columnbreak
-\vft{2}{6015}{$p(52150)-6016$}{1}{0}{Ergebnisse \emph{PTTF} + \emph{BL\_NMC} für TEI7 2. Durchlauf}{pttfbl_TEI7_2}
+\vft{2}{6015}{$p_2(52150)-6016$}{1}{0}{Ergebnisse \emph{PTTF} + \emph{BL\_NMC} für TEI7 2. Durchlauf}{pttfbl_TEI7_2}
 \end{multicols}
 \noindent
 Aus diesen Ergebnissen lässt sich Folgendes ableiten:
 \begin{enumerate}
-\item Auf den ersten Durchlauf während der Exploration hat die Kombination der Heuristiken \emph{PTTF} und \emph{BL\_NMC} keine Auswirkung. Die Ergebnisse sind nahezu identisch mit denen der Exploration mit der Heuristik \emph{BL\_NMC} aus Abschnitt \ref{sec_evalBLNMC}. (Vergleiche Tabellen \ref{tab:pttfbl_TEI1_1}, \ref{tab:pttfbl_TEI2_1}, \ref{tab:pttfbl_TEI3_1}, \ref{tab:pttfbl_TEI4_1}, \ref{tab:pttfbl_TEI5_1}, \ref{tab:lmfbl_TEI6_1} und  \ref{tab:pttfbl_TEI7_1} mit den Tabellen \ref{tab:blnmc_TEI1_1}, \ref{tab:blnmc_TEI2_1}, \ref{tab:blnmc_TEI3_1}, \ref{tab:blnmc_TEI4_1}, \ref{tab:blnmc_TEI5_1}, \ref{tab:blnmc_TEI6_1} und \ref{tab:blnmc_TEI7_1}.
-\item Für den zweiten Durchlauf während der Exploration ist eine Verbesserung  zu erkennen. Da mit der Heuristik \emph{BL\_NMC} bessere Ergebnisse erzielt wurden als mit der Heuristik \emph{PTTF} (vergleiche Ergebnisse aus Abschnitt \ref{sec_evalBLNMC} mit den Ergebnissen aus Abschnitt \ref{sec_evalPTTF}), kann dies durch einen Vergleich der Tabellen \ref{tab:pttfbl_TEI4_2}, \ref{tab:pttfbl_TEI5_2}, \ref{tab:lmfbl_TEI6_2} und  \ref{tab:pttfbl_TEI7_2} mit den Tabellen \ref{tab:blnmc_TEI4_2}, \ref{tab:blnmc_TEI5_2}, \ref{tab:blnmc_TEI6_2} und \ref{tab:blnmc_TEI7_2} belegt werden.
+\item Auf den ersten Durchlauf hat die Kombination der \Gls{Heuristik}en \emph{PTTF} und \emph{BL\_NMC} keine Auswirkung. Die Ergebnisse sind nahezu identisch mit denen der Durchgeführten \emph{Explorationsprozesse} mit der \Gls{Heuristik} \emph{BL\_NMC} aus Abschnitt \ref{sec_evalBLNMC}. Dies kann durch einen Vergleich der Tabellen \ref{tab:pttfbl_TEI1_1}, \ref{tab:pttfbl_TEI2_1}, \ref{tab:pttfbl_TEI3_1}, \ref{tab:pttfbl_TEI4_1}, \ref{tab:pttfbl_TEI5_1}, \ref{tab:lmfbl_TEI6_1} und  \ref{tab:pttfbl_TEI7_1} mit den Tabellen \ref{tab:blnmc_TEI1_1}, \ref{tab:blnmc_TEI2_1}, \ref{tab:blnmc_TEI3_1}, \ref{tab:blnmc_TEI4_1}, \ref{tab:blnmc_TEI5_1}, \ref{tab:blnmc_TEI6_1} und \ref{tab:blnmc_TEI7_1} nachvollzogen werden.
+
+\item Für den zweiten Durchlauf ist eine Verbesserung  zu erkennen. Da in der Einzelbetrachtung mit der \Gls{Heuristik} \emph{BL\_NMC} bessere Ergebnisse erzielt wurden als mit der \Gls{Heuristik} \emph{PTTF} (vergleiche Ergebnisse aus Abschnitt \ref{sec_evalBLNMC} mit den Ergebnissen aus Abschnitt \ref{sec_evalPTTF}), kann dies durch einen Vergleich der Tabellen \ref{tab:pttfbl_TEI4_2}, \ref{tab:pttfbl_TEI5_2}, \ref{tab:lmfbl_TEI6_2} und  \ref{tab:pttfbl_TEI7_2} mit den Tabellen \ref{tab:blnmc_TEI4_2}, \ref{tab:blnmc_TEI5_2}, \ref{tab:blnmc_TEI6_2} und \ref{tab:blnmc_TEI7_2} nachvollzogen werden.
 \end{enumerate}
 
 
 \subsection{Kombination: LMF + PTTF + BL\_NMC}
-Die folgenden Vier-Felder Tafeln zeigen die Ergebnisse mit der Kombination der Heuristiken \emph{LMF}, \emph{PTTF} und \emph{BL\_NMC}.
+Die folgenden Vier-Felder Tafeln zeigen die Ergebnisse mit der Kombination der \Gls{Heuristik}en \emph{LMF}, \emph{PTTF} und \emph{BL\_NMC}.
 \begin{multicols}{3}
-\vft{1}{2}{$p(44)-3$}{1}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} + \emph{BL\_NMC} für TEI1}{lmfpttfbl_TEI1_1}\columnbreak
-\vft{1}{79}{$p(55)-80$}{1}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} + \emph{BL\_NMC} für TEI2 1. Durchlauf}{lmfpttfbl_TEI2_1}\columnbreak
-\vft{1}{86}{$p(50)-87$}{1}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} + \emph{BL\_NMC} für TEI3 1. Durchlauf}{lmfpttfbl_TEI3_1}
+\vft{1}{2}{$p_1(44)-3$}{1}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} + \emph{BL\_NMC} für TEI1}{lmfpttfbl_TEI1_1}\columnbreak
+\vft{1}{79}{$p_1(55)-80$}{1}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} + \emph{BL\_NMC} für TEI2 1. Durchlauf}{lmfpttfbl_TEI2_1}\columnbreak
+\vft{1}{86}{$p_1(50)-87$}{1}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} + \emph{BL\_NMC} für TEI3 1. Durchlauf}{lmfpttfbl_TEI3_1}
 \end{multicols}
 
 \begin{multicols}{2}
 \vft{1}{120}{$1054$}{0}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} + \emph{BL\_NMC} für TEI4 1. Durchlauf}{lmfpttfbl_TEI4_1}\columnbreak
-\vft{2}{4}{$p(2247)-5$}{1}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} + \emph{BL\_NMC} für TEI4 2. Durchlauf}{lmfpttfbl_TEI4_2}
+\vft{2}{4}{$p_2(2247)-5$}{1}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} + \emph{BL\_NMC} für TEI4 2. Durchlauf}{lmfpttfbl_TEI4_2}
 \end{multicols}
 
 \begin{multicols}{2}
 \vft{1}{550}{$4434$}{0}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} + \emph{BL\_NMC} für TEI5 1. Durchlauf}{lmfpttfbl_TEI5_1}\columnbreak
-\vft{2}{34}{$p(2346)-35$}{1}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} + \emph{BL\_NMC} für TEI5 2. Durchlauf}{lmfpttfbl_TEI5_2}
+\vft{2}{34}{$p_2(2346)-35$}{1}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} + \emph{BL\_NMC} für TEI5 2. Durchlauf}{lmfpttfbl_TEI5_2}
 \end{multicols}
 
 \begin{multicols}{2}
 \vft{1}{115}{$936$}{0}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} + \emph{PTTF} für TEI6 1. Durchlauf}{lmfpttfbl_TEI6_1}\columnbreak
-\vft{2}{0}{$p(1323)-1$}{1}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} + \emph{PTTF} für TEI6 2. Durchlauf}{lmfpttfbl_TEI6_2}
+\vft{2}{0}{$p_2(1323)-1$}{1}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} + \emph{PTTF} für TEI6 2. Durchlauf}{lmfpttfbl_TEI6_2}
 \end{multicols}
 
 \begin{multicols}{2}
 \vft{1}{2448}{$158846$}{0}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} + \emph{BL\_NMC} für TEI7 1. Durchlauf}{lmfpttfbl_TEI7_1}\columnbreak
-\vft{2}{12}{$p(52150)-13$}{1}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} + \emph{BL\_NMC} für TEI7 2. Durchlauf}{lmfpttfbl_TEI7_2}
+\vft{2}{12}{$p_2(52150)-13$}{1}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} + \emph{BL\_NMC} für TEI7 2. Durchlauf}{lmfpttfbl_TEI7_2}
 \end{multicols}
 \noindent
 Aus diesen Ergebnissen lässt sich Folgendes ableiten:
 \begin{enumerate}
-\item Auf den ersten Durchlauf während der Exploration wirkt sich die Kombination der Heuristiken \emph{LMF}, \emph{PTTF} und \emph{BL\_NMC} nicht besser aus als die Kombination der Heuristiken \emph{LMF} und \emph{BL\_NMC} (siehe Abschnitt \ref{sec_evalLMFBLNMC}). Die Ergebnisse sind nahezu identisch.
-\item Für den zweiten Durchlauf während der Exploration gilt zumindest für die \emph{required Typen} \emph{TEI4}-\emph{TEI6} dasselbe, wie für den ersten Durchlauf. Für den \emph{required Typ} \emph{TEI7} ist hingegen nochmals eine Verbesserung im Vergleich zu den 2er-Kombinationen (siehe Abschnitte \ref{sec_evalLMFPTTF}-\ref{sec_evalPTTFBLNMC}) zu erkennen.
+\item Auf den ersten Durchlauf wirkt sich die Kombination der \Gls{Heuristik}en \emph{LMF}, \emph{PTTF} und \emph{BL\_NMC} nicht stärker aus als die Kombination der \Gls{Heuristik}en \emph{LMF} und \emph{BL\_NMC} (siehe Abschnitt \ref{sec_evalLMFBLNMC}). Die Ergebnisse sind nahezu identisch.
+
+
+\item Für den zweiten Durchlauf gilt zumindest für die \emph{required Typen} \emph{TEI4}-\emph{TEI6} dasselbe, wie für den ersten Durchlauf. Für den \emph{required Typ} \emph{TEI7} ist hingegen nochmals eine Verbesserung im Vergleich zu den 2er-Kombinationen (siehe Abschnitte \ref{sec_evalLMFPTTF}-\ref{sec_evalPTTFBLNMC}) zu erkennen.
 \end{enumerate}
 \noindent
 \\\\
-Wie bei der Einzelbetrachung der Heuristiken lässt sich auch eine Rangfolge der Kombinationen von Heuristiken je required Typ erstellen. Diese Rangfolge kann Tabelle \ref{tab_rankingCombi} entnommen werden. Dabei gilt wiederum, dass die Kombination von Heuristiken, mit der am wenigsten Proxies generiert und evaluiert werden mussten, den ersten Platz einnimmt. Sofern mehrere Kombinationen von Heuristiken bzgl. dessen gleich aufliegen, wird dies durch eine Doppelplatzierung dargestellt.
+Wie bei der Einzelbetrachtung der \Gls{Heuristik}en lässt sich auch eine Rangfolge der Kombinationen von \Gls{Heuristik}en je \emph{required Typ} erstellen. Diese Rangfolge kann Tabelle \ref{tab_rankingCombi} entnommen werden. Dabei gilt wiederum, dass die Kombination von required Typ, mit der am wenigsten \emph{Proxies} generiert und geprüft werden mussten, den ersten Platz einnimmt. Sofern mehrere Kombinationen von Proxies bzgl. dessen gleich aufliegen, wird dies durch eine Doppelplatzierung dargestellt.
 \begin{table}[!h]
 \centering
 \begin{tabular}{|l|c|c|c|c|c|c|c|}
@@ -305,3 +314,11 @@ LMF + PTTF + BL\_NMC &2. &1. &1. & 1./2.&1./2.&1./2.&1.\\
 \caption{Rangfolge der Heuristiken (Kombinationen)}
 \label{tab_rankingCombi}
 \end{table}
+\noindent
+\\\\
+Zusammenfassend können die Untersuchungsergebnisse zusammen mit dem Ausgangspunkt nochmals \abbref{gegenueberstellung} entnommen werden. Diese zeigt die Anzahl der \emph{Proxies}, die während des \emph{Explorationsprozesses} für den jeweiligen \emph{required Typ} unter der Verwendung der entsprechenden \Gls{Heuristik}en generiert und getestet wurden. Zu beachten ist hierbei, dass die Y-Achse (Anzahl der generierten und getesteten \emph{Proxies}) logarithmisch skaliert ist.
+\begin{sidewaysfigure}[ht]
+    \includegraphics[width=\textwidth]{gegenueberstellung.png}
+    \caption{Gegenüberstellung der Untersuchungsergebniss}
+    \label{abb:gegenueberstellung}
+\end{sidewaysfigure}

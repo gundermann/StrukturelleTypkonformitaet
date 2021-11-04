@@ -1,36 +1,36 @@
 \section{Ergebnisse für die Heuristik PTTF}\label{sec_evalPTTF}
-Für die Heuristik PTTF gilt es zu evaluieren, ob die Suche nach einem Proxy, der die vordefinierten Tests besteht, beschleunigt werden kann. Hierzu wird die Exploration für alle der oben genannten required Typen unter der Verwendung der in Abschnitt \ref{sec_pttf} beschriebenen Heuristik durchgeführt.
+Für die \Gls{Heuristik} \emph{PTTF} gilt es zu evaluieren, ob die Suche nach einem \emph{Proxy}, der die vordefinierten Tests besteht, beschleunigt werden kann. Hierzu wird der \emph{Explorationsprozess} für alle in Tabelle \ref{tab:eIShort} genannten \emph{required Typen} unter der Verwendung der in Abschnitt \ref{sec_pttf} beschriebenen \Gls{Heuristik} durchgeführt.
 \\\\
-Die folgenden Vier-Felder-Tafeln zeigen die Ergebnisse für die required Typen TEI1-TEI7 auf.
+Die folgenden Vier-Felder-Tafeln zeigen die Ergebnisse für die \emph{required Typen} \emph{TEI1}-\emph{TEI7} auf.
 \begin{multicols}{3}
-\vft{1}{29}{$p(44)-30$}{1}{0}{Ergebnisse \emph{PTTF} für TEI1 1.~\mbox{Durchlauf}}{pttf_TEI1_1}
-\vft{1}{5544}{$p(55)-5545$}{1}{0}{Ergebnisse \emph{PTTF} für TEI2 1.~\mbox{Durchlauf}}{pttf_TEI2_1}
-\vft{1}{4761}{$p(50)-4762$}{1}{0}{Ergebnisse \emph{PTTF} für TEI3 1.~\mbox{Durchlauf}}{pttf_TEI3_1}
+\vft{1}{29}{$p_1(44)-30$}{1}{0}{Ergebnisse \emph{PTTF} für TEI1 1.~\mbox{Durchlauf}}{pttf_TEI1_1}
+\vft{1}{5544}{$p_1(55)-5545$}{1}{0}{Ergebnisse \emph{PTTF} für TEI2 1.~\mbox{Durchlauf}}{pttf_TEI2_1}
+\vft{1}{4761}{$p_1(50)-4762$}{1}{0}{Ergebnisse \emph{PTTF} für TEI3 1.~\mbox{Durchlauf}}{pttf_TEI3_1}
 \end{multicols}
 \pagebreak
 \begin{multicols}{2}
 \vft{1}{$1174$}{0}{0}{0}{Ergebnisse \emph{PTTF} für TEI4 1.~\mbox{Durchlauf}}{pttf_TEI4_1}
-\vft{2}{466}{$p(2247)-467$}{1}{0}{Ergebnisse \emph{PTTF} für TEI4 2.~\mbox{Durchlauf}}{pttf_TEI4_2}
+\vft{2}{466}{$p_2(2247)-467$}{1}{0}{Ergebnisse \emph{PTTF} für TEI4 2.~\mbox{Durchlauf}}{pttf_TEI4_2}
 \end{multicols}
 
 \begin{multicols}{2}
 \vft{1}{$4984$}{0}{0}{0}{Ergebnisse \emph{PTTF} für TEI5 1.~\mbox{Durchlauf}}{pttf_TEI5_1}
-\vft{2}{2172}{$p(2775)-2173$}{1}{0}{Ergebnisse \emph{PTTF} für TEI5 2.~\mbox{Durchlauf}}{pttf_TEI5_2}
+\vft{2}{2172}{$p_2(2775)-2173$}{1}{0}{Ergebnisse \emph{PTTF} für TEI5 2.~\mbox{Durchlauf}}{pttf_TEI5_2}
 \end{multicols}
 
 \begin{multicols}{2}
 \vft{1}{$1051$}{0}{0}{0}{Ergebnisse \emph{PTTF} für TEI6 1.~\mbox{Durchlauf}}{pttf_TEI6_1}
-\vft{2}{13122}{$p(1323)-13123$}{1}{0}{Ergebnisse \emph{PTTF} für TEI6 2.~\mbox{Durchlauf}}{pttf_TEI6_2}
+\vft{2}{13122}{$p_2(1323)-13123$}{1}{0}{Ergebnisse \emph{PTTF} für TEI6 2.~\mbox{Durchlauf}}{pttf_TEI6_2}
 \end{multicols}
 \pagebreak
 \begin{multicols}{2}
 \vft{1}{$161294$}{0}{0}{0}{Ergebnisse \emph{PTTF} für TEI7 1.~\mbox{Durchlauf}}{pttf_TEI7_1}
-\vft{2}{149961}{$p(52150)-149962$}{1}{0}{Ergebnisse \emph{PTTF} für TEI7 2.~\mbox{Durchlauf}}{pttf_TEI7_2}
+\vft{2}{149961}{$p_2(52150)-149962$}{1}{0}{Ergebnisse \emph{PTTF} für TEI7 2.~\mbox{Durchlauf}}{pttf_TEI7_2}
 \end{multicols}
 \noindent
 Folgendes kann aus diesen Ergebnissen abgeleitet werden:
 \begin{enumerate}
-\item Die Heuristik \emph{PTTF} erzielt eine Reduktion der zu evaluierenden Proxies. Dies wird durch einen Vergleich der Spalte ``positiv'' innerhalb der Vier-Felder-Tafeln zum jeweiligen \emph{required Typ} belegt.
+\item Die \Gls{Heuristik} \emph{PTTF} erzielt im Vergleich zum Ausgangspunkt (Abschnitt \ref{sec_ausgangspunkt}) für jeden \emph{required Typ} eine weitere Reduktion der zu prüfenden \emph{Proxies}.
 
-\item Die Heuristik \emph{PTTF} hat keine Auswirkung auf einen Durchlauf, in dem kein Proxy erzeugt wird, mit dem die semantischen Tests erfolgreich durchgeführt werden können. Dies kann durch einen Vergleich des ersten Durchlaufs für den \emph{required Typ} \emph{TEI4}-\emph{TEI7} im Ausgangspunkt (Tabelle \ref{tab:tmr_start_tei4_1}, \ref{tab:tmr_start_tei5_1}, \ref{tab:tmr_start_tei6_1} und \ref{tab:tmr_start_tei6_1}) mit dem ersten Durchlauf unter Anwendung der Heuristik (Tabellen \ref{tab:pttf_TEI4_1}, \ref{tab:pttf_TEI5_1}, \ref{tab:pttf_TEI6_1} und \ref{tab:pttf_TEI7_1}) festgestellt werden.
+\item Die Heuristik \emph{PTTF} hat keine Auswirkung auf einen Durchlauf, in dem kein \emph{Proxy} erzeugt wird, mit dem die vordefinierten Tests erfolgreich durchgeführt werden können. Dies kann durch einen Vergleich des ersten Durchlaufs für den \emph{required Typ} \emph{TEI4}-\emph{TEI7} im Ausgangspunkt (Tabelle \ref{tab:tmr_start_tei4_1}, \ref{tab:tmr_start_tei5_1}, \ref{tab:tmr_start_tei6_1} und \ref{tab:tmr_start_tei6_1}) mit dem ersten Durchlauf unter Anwendung der Heuristik (Tabellen \ref{tab:pttf_TEI4_1}, \ref{tab:pttf_TEI5_1}, \ref{tab:pttf_TEI6_1} und \ref{tab:pttf_TEI7_1}) festgestellt werden. Aus diesem Grund kommt die in Punkt 1 beschriebene Reduktion erst im jeweils letzten Durchlauf zum Tragen.
 \end{enumerate}
