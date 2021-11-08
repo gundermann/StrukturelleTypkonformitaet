@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.BestMatchingComponentCombinationFinder;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.CombinationInfo;
-import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.DefaultTypeMatcherHeuristic;
+import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.TypeMatcherManager;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.heuristics.MatcherratingFunctions;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.Logger;
 import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo;
@@ -31,7 +31,7 @@ import tester.TestResult.Cause;
 
 public class DesiredComponentFinder {
 
-	private StructuralTypeMatcher[] mainTypeMatcher = DefaultTypeMatcherHeuristic.getMainTypeMatcher();
+	private StructuralTypeMatcher[] mainTypeMatcher = TypeMatcherManager.getMainTypeMatcher();
 
 	private final Class<?>[] registeredComponentInterfaces;
 
@@ -54,7 +54,7 @@ public class DesiredComponentFinder {
 	}
 
 	public void setFullTypeMatcher(TypeMatcher[] fullTypeMatcher) {
-		this.mainTypeMatcher = DefaultTypeMatcherHeuristic.createMainMatcher(fullTypeMatcher);
+		this.mainTypeMatcher = TypeMatcherManager.createMainMatcher(fullTypeMatcher);
 	}
 
 	private Optional<?> getComponent(Class<?> componentClass) {
