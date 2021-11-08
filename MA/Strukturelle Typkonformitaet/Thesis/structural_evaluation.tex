@@ -42,22 +42,22 @@ Zudem sei die Relation $<$ auf Typen durch folgende Regeln definiert:
 \noindent
 Darüber hinaus seien folgende Funktionen definiert:
 \begin{gather*}
-\mathit{felder(T)} :=  \left\{ 
+\mathit{members(T)} :=  \left\{ 
 				\begin{array}{l|l}
 					T \texttt{ }\mathit{f} & T \texttt{ }\mathit{f}\text{ ist Felddeklaration von }T
 				\end{array}
               \right\}
 \\
-\mathit{feldTyp(f,T)} := 
+\mathit{memType(f,T)} := 
 				\begin{array}{l|l}
-					T' & T' \texttt{ }\mathit{f} \in \mathit{felder(T)}
+					T' & T' \texttt{ }\mathit{f} \in \mathit{members(T)}
 				\end{array}   
 \\
 \mathit{ret(T'\text{ }m(T''_1,...T''_n))} := T'
 \\
 \mathit{params(T''\text{ }m(T'_1,...T'_n))} := \{ T'_1,...,T'_n \}
 \\   
-\mathit{methoden(T)} := \left\{ 
+\mathit{methods(T)} := \left\{ 
 				\begin{array}{l|l}
 					T'' \text{ }m(T'_1,...,T'_n) & T'' \text{ }m(T'_1,...,T'_n) \text{ ist Methodendeklaration von }T
 				\end{array}
@@ -152,7 +152,7 @@ Der \emph{ContentTypeMatcher} definiert das Matching von einem Typ $T$ zu einem 
 \\\\
 Die dazugehörige Matchingrelation $\Rightarrow_{content}$ wird durch folgende Regel beschrieben:
 \begin{gather*}
-\frac{\exists \mathit{T''\text{ }f}\in felder(T'): T \Rightarrow_{internCont} T''}{T \Rightarrow_{content} T'}
+\frac{\exists \mathit{T''\text{ }f}\in members(T'): T \Rightarrow_{internCont} T''}{T \Rightarrow_{content} T'}
 \end{gather*}
 \noindent
 So würde für die Typen $\texttt{boolean}$ und $\texttt{FireState}$ aus der Bibliothek \emph{ExampLe} (siehe \ref{lst:libEx}) gelten: 
@@ -164,7 +164,7 @@ Der \emph{ContainerTypeMatcher} definiert im Verhältnis zum \emph{ContentTypeMa
 \\\\
 Die dazugehörige Matchingrelation $\Rightarrow_{container}$ wird durch folgende Regel beschrieben:
 \begin{gather*}
-\frac{\exists \mathit{T''\text{ }f}\in felder(T): T'' \Rightarrow_{internCont} T'}{T \Rightarrow_{container} T'}
+\frac{\exists \mathit{T''\text{ }f}\in members(T): T'' \Rightarrow_{internCont} T'}{T \Rightarrow_{container} T'}
 \end{gather*}
 \noindent
 So gilt für die Typen $\texttt{FireState}$ und $\texttt{boolean}$ aus der Bibliothek \emph{ExampLe} (siehe \ref{lst:libEx}): 
@@ -177,14 +177,14 @@ Zur Definition des letzten Matchers werden die Matchingrelationen der oben genan
 \frac{T \Rightarrow_{internCont}T' \vee T \Rightarrow_{container} T' \vee T \Rightarrow_{content} T'}{T \Rightarrow_{internStruct}T'}
 \end{gather*}
 \subsubsection{StructuralTypeMatcher} \label{subsec_structmatcher}
-Der \emph{StructuralTypeMatcher} definiert das Matching von einem \emph{required Typ} $R$ zu einem \emph{provided Typ} $P$ auf der Basis der Methoden-Signaturen der beiden Typen.
+Der \emph{StructuralTypeMatcher} definiert das Matching von einem \emph{required Typ} $R$ zu einem \emph{provided Typ} $T$ auf der Basis der Methoden-Signaturen der beiden Typen.
 \\\\
 Somit soll bspw. ein Matching zwischen dem Typ $\texttt{MedicalFireFighter}$ und dem den $\texttt{FireFighter}$ aus der Bibliothek \emph{ExampLe}  (siehe Listing \ref{lst:libEx}) gematcht werden. Als ein weiteres Beispiel, bezogen auf die Typen aus der Bibliothek \emph{ExampLe}, kann das Matching zwischen dem Typ $\texttt{MedicalFireFighter}$ und dem Typ $\texttt{Doctor}$ angebracht werden.
 \\\\
-Damit ein \emph{required Typ} $R$ auf einen \emph{provided Typ} $P$ über den \emph{StrukturalTypeMatcher} gematcht werden kann, muss mindestens eine Methode aus $R$ zu einer Methode aus $P$ gematcht werden (Signature-Matching). Ein Matching der Methoden liegt dann vor, wenn sowohl die Rückgabe- als auch die Parameter-Typen dieser beiden Methoden miteinander gematcht werden können (vgl. \cite{moormann}). 
+Damit ein \emph{required Typ} $R$ auf einen \emph{provided Typ} $T$ über den \emph{StrukturalTypeMatcher} gematcht werden kann, muss mindestens eine Methode aus $R$ zu einer Methode aus $T$ gematcht werden (Signature-Matching). Ein Matching der Methoden liegt dann vor, wenn sowohl die Rückgabe- als auch die Parameter-Typen dieser beiden Methoden miteinander gematcht werden können (vgl. \cite{moormann}). 
 \\\\
 Wie in \cite{moormann} soll die Reihenfolge, in der die Parameter in der jeweiligen Methode deklariert wurden, keine Rolle spielen. Ausgehend von den Parameter-Typen der beiden Methoden als Mengen, muss eine der Mengen also so umsortiert werden, dass die Parameter-Typen aus beiden Mengen an der jeweils gleichen Position miteinander gematcht werden können.
-Die möglichen umsortierte Mengen von Parameter-Typen einer Methode $m$ auf die dies in Bezug auf die Menge der Parameter-Typen einer Methoge $m'$ zutrifft, werden über die Funktion $\mathit{matchingParams}$ beschrieben:
+Die möglichen umsortierte Mengen von Parameter-Typen einer Methode $m$ auf die dies in Bezug auf die Menge der Parameter-Typen einer Methode $m'$ zutrifft, werden über die Funktion $\mathit{matchingParams}$ beschrieben:
 \begin{gather*}
 \mathit{matchingParams(m, m')} :=
 \left\{
@@ -207,9 +207,9 @@ Das Matching zweier Methoden $m$ und $m'$ wird durch die Relation $\Rightarrow_{
 \frac{\mathit{ret(m)} \Rightarrow_{internStruct} \mathit{ret(m')} \wedge \mathit{matchingParams(m,m')} \neq \emptyset}{m \Rightarrow_{method} m'}
 \end{gather*}
 \noindent
-Die Menge der gematchten Methoden aus $R$ in $P$ wird darauf aufbauend durch folgende Funktion beschrieben:
+Die Menge der gematchten Methoden aus $R$ in $T$ wird darauf aufbauend durch folgende Funktion beschrieben:
 \begin{gather*}
-structM(R,P) := \left\{ 
+structM_{source}(R,T) := \left\{ 
 				\begin{array}{l|l}
 m	& \mathit{m} \in \mathit{methoden(R)} \wedge \mathit{ }
 \\
@@ -220,7 +220,7 @@ m	& \mathit{m} \in \mathit{methoden(R)} \wedge \mathit{ }
 \noindent
 Die Matchingrelation für den \emph{StructuralTypeMatcher} wird durch folgende Regel beschrieben:
 \begin{gather*}
-\frac{structM(R,P) \neq \emptyset}{R \Rightarrow_{struct}P}
+\frac{structM_{source}(R,T) \neq \emptyset}{R \Rightarrow_{struct}T}
 \end{gather*}
 
 

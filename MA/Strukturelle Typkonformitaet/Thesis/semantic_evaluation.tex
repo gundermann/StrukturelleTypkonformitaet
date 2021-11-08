@@ -25,14 +25,15 @@ function eval( proxy ){
 \end{example}
 
 \subsection{Algorithmus für die semantische Evaluation}\label{sec_semEvalAlgo}
-Während des \emph{Explorationsprozesses} soll aus den \emph{provided Typen} in einer Bibliothek $L$ zu einem vorgegebenen \emph{required Type} $R$ ein Proxy generiert und evaluiert werden. Die Mengen der \emph{Target-Typen} auf deren Basis mehrere \emph{Proxies} erzeugt werden können, wurden im Abschnitt \ref{sec_anzahlProxies} über $\mathit{cover(R,L)}$ beschrieben. Die in $\mathit{cover(R,L)}$ befindlichen Mengen können eine unterschiedliche Anzahl von \emph{Target-Typen} enthalten. Die maximale Mächtigkeit einer Menge $T_i \in \mathit{cover(R,L)}$ ist gleich der Anzahl der Methoden in $R$.
+Während des \emph{Explorationsprozesses} soll aus den \emph{provided Typen} in einer Bibliothek $L$ zu einem vorgegebenen \emph{required Type} $R$ ein Proxy generiert und evaluiert werden. Die Mengen der \emph{Target-Typen} auf deren Basis mehrere \emph{Proxies} erzeugt werden können, wurden im Abschnitt \ref{sec_anzahlProxies} über $\mathit{cover(R,L)}$ beschrieben. Die in $\mathit{cover(R,L)}$ befindlichen Mengen können eine unterschiedliche Anzahl von \emph{Target-Typen} enthalten. Die maximale Mächtigkeit einer Menge $\mathit{TM} \in \mathit{cover(R,L)}$ ist gleich der Anzahl der Methoden in $R$.
+%TODO Daraus ergibt sich folgender Satz:
 \begin{gather*}
-\mathit{maxTargets(R)} := |\mathit{methoden(R)}|
+\mathit{maxTargets(R)} := |\mathit{methods(R)}|
 \end{gather*}
 \noindent
 In Bezug zur Funktion $\mathit{cover}$ gilt:
 \begin{gather*}
-\forall T \in \mathit{cover(R,L)} : |T| \leq \mathit{maxTargets(R)}
+\forall \mathit{TM} \in \mathit{cover(R,L)} : |\mathit{TM}| \leq \mathit{maxTargets(R)}
 \end{gather*}
 \noindent
 Das in dieser Arbeit beschriebene Konzept basiert auf der Annahme, dass der gesamte Anwendungsfall - oder Teile davon - , der mit der vordefinierten Struktur (\emph{required Typ}) und den vordefinierten Tests abgebildet werden soll, schon einmal genauso oder so ähnlich in dem gesamten System implementiert wurde. Aus diesem Grund kann für die \emph{semantische Evaluation} davon ausgegangen werden, dass die erfolgreiche Durchführung aller relevanten Tests umso wahrscheinlicher ist, je weniger \emph{Target-Typen} im \emph{Proxy} enthalten sind.
@@ -101,7 +102,7 @@ Der Pseudo-Code für die \emph{semantische Evaluation} mit der Kombination aller
 
 
 \subsection{Beachtung des Matcherratings (LMF)}\label{sec_lmf}
-Bei dieser \Gls{Heuristik}, welche den Namen \emph{low matcherrating first} (kurz: LMF) trägt, werden die Mengen von \emph{Target-Typen}, aus denen die \emph{Proxies} erzeugt werden, auf der Basis eines so genannten \emph{Matcherratings} bewertet. Bei dem \emph{Matcherrating} einer solchen Menge handelt es sich um einen numerischen Wert, auf dessen Basis entschieden werden kann, für welche Menge von \emph{Target-Typ} die Generierung und Evaluation der \emph{Proxies} vollzogen werden soll.
+Bei dieser \Gls{Heuristik}, welche den Namen \emph{low matcherrating first} (kurz: \emph{LMF}) trägt, werden die Mengen von \emph{Target-Typen}, aus denen die \emph{Proxies} erzeugt werden, auf der Basis eines so genannten \emph{Matcherratings} bewertet. Bei dem \emph{Matcherrating} einer solchen Menge handelt es sich um einen numerischen Wert, auf dessen Basis entschieden werden kann, für welche Menge von \emph{Target-Typ} die Generierung und Evaluation der \emph{Proxies} vollzogen werden soll.
 \\\\
 Um das \emph{Matcherrating} zu ermitteln, wird für jede Matchingrelation bzw. für jeden Matcher aus Abschnitt \ref{sec_matcher} ein \emph{Basisrating} vergeben. Folgende Funktion beschreibt das \emph{Basisrating} für das Matching zweier Typen $S$ und $T$:
 \begin{gather*}
@@ -289,12 +290,13 @@ function LMF( R, targets ){
 \subsection{Beachtung positiver Tests (PTTF)}\label{sec_pttf}
 Das Testergebnis, welches bei Applikation eines Testfalls für einen \emph{Proxy} ermittelt wird, ist maßgeblich von den \emph{Methoden-Delegationen} des \emph{Proxies} abhängig. Jede \emph{Methoden-Delegation} $\mathit{MD}$ enthält einen Typ in dem die \emph{Delegationsmethode} deklariert wurde. Dieser Typ befindet sich im Attribut $\texttt{MD.del.delTyp}$. Im Fall der \emph{sturkturellen Proxies}, handelt es sich bei diesem Typ um einen der \emph{Target-Typen} des \emph{Proxies}.
 \\\\
+%TODO Satz?
 Für einen \emph{required Typ} $R$ aus einer Bibliothek $L$, kann ein \emph{Target-Typ} $T$ in den Mengen der möglichen Mengen von \emph{Target-Typen} aus $\mathit{cover(R,L)}$ mehrmals auftreten. Dies gilt insbesondere dann, wenn es in $\mathit{cover(R,L)}$ Mengen gibt, deren Mächtigkeit größer ist, als die Mächtigkeit der Menge, in der $T$ enthalten ist. Es gilt also:
 \begin{gather*}
-\frac{\exists \mathit{TG},\mathit{TG'} \in \mathit{cover(R,L)} :  T \in \mathit{TG} \wedge |\mathit{TG}| < |\mathit{TG'}|}{\exists \mathit{TG''} \in \mathit{cover(R,L)} : |\mathit{TG'}| = |\mathit{TG''}| \wedge T \in \mathit{TG''}}
+\frac{\exists \mathit{TM},\mathit{TM'} \in \mathit{cover(R,L)} :  T \in \mathit{TM} \wedge |\mathit{TM}| < |\mathit{TM'}|}{\exists \mathit{TM''} \in \mathit{cover(R,L)} : |\mathit{TM''}| = |\mathit{TM'}| \wedge T \in \mathit{TM''}}
 \end{gather*}
 \noindent
-Für die in diesem Abschnitt beschriebene \Gls{Heuristik} mit dem Namen \emph{positive tested targets first} (kurz: PTTF) ist das Ergebnis einzelner Tests in Bezug auf einen \emph{Proxy} $P$ relevant. Wenn ein Testfall mit einem \emph{Proxy} $P$ erfolgreich durchgeführt wurde, dann sollte die Reihenfolge der zu prüfenden \emph{Proxies} so angepasst werden, dass die \emph{Proxies}, die einen \emph{Target-Typen} des \emph{Proxies} $P$ verwenden, im weiteren Verlauf zuerst geprüft werden.
+Für die in diesem Abschnitt beschriebene \Gls{Heuristik} mit dem Namen \emph{positive tested targets first} (kurz: \emph{PTTF}) ist das Ergebnis einzelner Tests in Bezug auf einen \emph{Proxy} $P$ relevant. Wenn ein Testfall mit einem \emph{Proxy} $P$ erfolgreich durchgeführt wurde, dann sollte die Reihenfolge der zu prüfenden \emph{Proxies} so angepasst werden, dass die \emph{Proxies}, die einen \emph{Target-Typen} des \emph{Proxies} $P$ verwenden, im weiteren Verlauf zuerst geprüft werden.
 \\\\
 Dafür sind auf Basis von Listing \ref{lst_semEval} mehrere Anpassungen bzgl. der Implementierung der Methode $\texttt{evalProxies}$ von Nöten:
 \begin{enumerate}
@@ -353,7 +355,7 @@ function PTTF( proxies ){
 \end{lstlisting}
 
 \subsection{Beachtung fehlgeschlagener Methodenaufrufe (BL\_NMC)}\label{sec_bl_nmc}
-Diese \Gls{Heuristik} mit dem Namen \emph{blacklist negative method calls} (kurz: BL\_NMC) beschreibt ein Ausschlussverfahren. Das bedeutet, dass bestimmte \emph{Proxies} auf der Basis von Erkenntnissen, die während der \emph{semantischen Evaluation} entstanden sind, für den weiteren Verlauf ausgeschlossen werden. Dadurch soll die Prüfung eines \emph{Proxies}, dessen \emph{Methoden-Delegationen} ohnehin nicht zum gewünschten Ergebnis führen, verhindert werden.
+Diese \Gls{Heuristik} mit dem Namen \emph{blacklist negative method calls} (kurz: \emph{BL\_NMC}) beschreibt ein Ausschlussverfahren. Das bedeutet, dass bestimmte \emph{Proxies} auf der Basis von Erkenntnissen, die während der \emph{semantischen Evaluation} entstanden sind, für den weiteren Verlauf ausgeschlossen werden. Dadurch soll die Prüfung eines \emph{Proxies}, dessen \emph{Methoden-Delegationen} ohnehin nicht zum gewünschten Ergebnis führen, verhindert werden.
 \\\\
 Die Heuristik zielt darauf ab, \emph{Methoden-Delegationen}, die immer fehlschlagen, zu identifizieren. Wurde eine solche \emph{Methoden-Delegation} gefunden, können alle \emph{Proxies}, die diese \emph{Methoden-Delegation} enthalten von der weiteren Exploration ausgeschlossen werden.
 \\\\

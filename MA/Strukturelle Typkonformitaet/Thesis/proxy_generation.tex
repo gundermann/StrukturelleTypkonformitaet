@@ -128,7 +128,7 @@ $\mathit{REF} ::= \mathit{P}\texttt{.}\mathit{f}$
 &
 $\texttt{mainType} = \mathit{P}$\newline
 $\texttt{field} = \mathit{f}$\newline
-$\texttt{delType} = \mathit{feldTyp(f,P)}$
+$\texttt{delType} = \mathit{memType(f,P)}$
 \\
 \hline
 \end{tabular}
@@ -200,15 +200,15 @@ Angenommen, eine Funktion $\mathit{proxies(S,T)}$ beschreibt eine Menge von \emp
 Wie die \emph{Proxies} generiert werden, wird im folgenden Abschnitt beschrieben.
 
 \subsection{Generierung von Proxies}\label{sec_proxyGen}
-Wie im Abschnitt \ref{sec:proxygram} bereits angedeutet, soll die Menge der \emph{Proxies} für einen \emph{Source-Typ} $S$ und einer Menge von \emph{Target-Typen} $T$ über die Funktion $\mathit{proxies(S,T)}$ beschrieben werden.
+Wie im Abschnitt \ref{sec:proxygram} bereits angedeutet, soll die Menge der \emph{Proxies} für einen \emph{Source-Typ} $S$ und einer Menge von \emph{Target-Typen} $\mathit{TM}$ über die Funktion $\mathit{proxies(S,\mathit{TM})}$ beschrieben werden.
 \\\\
-In Abhängigkeit von dem Matching zwischen dem \emph{Source-Typ} und den \emph{Target-Typen} werden unterschiedliche Arten von \emph{Proxies} generiert. Für die unterschiedlichen Proxy-Arten gibt es ebenfalls Funktionen, die eine Menge von \emph{Proxies} zu einem \emph{Source-Typen} $S$ und einer Menge von \emph{Target-Typen} $T$ beschreiben.
+In Abhängigkeit von dem Matching zwischen dem \emph{Source-Typ} und den \emph{Target-Typen} werden unterschiedliche Arten von \emph{Proxies} generiert. Für die unterschiedlichen \emph{Proxy}-Arten gibt es ebenfalls Funktionen, die eine Menge von \emph{Proxies} zu einem \emph{Source-Typen} $S$ und einer Menge von \emph{Target-Typen} $\mathit{TM}$ beschreiben.
 \\\\
 In den folgenden Abschnitten werden diese Funktionen für die einzelnen Proxy-Arten beschrieben. Dabei ist davon auszugehen, dass die \emph{Proxies} eine allgemeine Struktur haben, die in Abschnitt \ref{sec:proxygram} aufgeführt ist. Um die Regeln für die Generierung der \emph{Proxies} zu beschreiben, soll davon ausgegangen werden, dass jedes Listen-Attribut ($\mathit{NT.}\text{*}$) aus Tabelle \ref{tab:attrGrProxies} ein Attribut $\texttt{len}$ enthält in dem die Anzahl der Elemente abgelegt ist, die sich in dieser Liste befinden.
 
 
 \subsubsection{Sub-Proxy}
-Die Voraussetzung für die Erzeugung eines \emph{Sub-Proxies} vom Typ $S$ (\emph{Source-Typ}) aus einem \emph{Target-Typ} $T$ ist $S \Rightarrow_{spec} T$. Damit ist der \emph{SpecTypeMatcher} der \emph{Basis-Matcher} für den \emph{Sub-Proxy}.
+Die Voraussetzung für die Erzeugung eines \emph{Sub-Proxies} vom Typ $S$ (\emph{Source-Typ}) aus einem \emph{Target-Typ} $\mathit{T}$ ist $S \Rightarrow_{spec} T$. Damit ist der \emph{SpecTypeMatcher} der \emph{Basis-Matcher} für den \emph{Sub-Proxy}.
 \paragraph{Beispiel}
 Als Beispiel soll  der Typ $\texttt{Patient}$ als \emph{Source-Typ} und der Typ $\texttt{Injured}$ als \emph{Target-Typ} verwendet werden. Da $\texttt{Patient} \Rightarrow_{spec} \texttt{Injured}$ gilt, kann ein \emph{Sub-Proxy} für diese Konstellation erzeugt werden. Der resultierende \emph{Sub-Proxy} ist in Listing \ref{lst:subproxy} aufgeführt. Der abstrakte Syntaxbaum (\acrshort{ast}) mit den dazugehörigen Attributen ist Abbildung \ref{fig:ASTSUB} zu entnehmen. \footnote{Es wurden nur die Nonterminale mit den dazugehörigen Attributen aufgeführt.}
 \begin{lstlisting}[style = dsl, caption = Sub-Proxy für Patient, captionpos = b, label = lst:subproxy]
@@ -227,12 +227,13 @@ proxy for Patient with [Injured]{
 \\
 Ein \emph{Proxy} bietet alle Methoden an, die auch von dessen \emph{Source-Typ} angeboten werden. Sofern für eine angebotene Methode keine \emph{Methodendelegationen} innerhalb des \emph{Proxies} existiert, wird diese Methode so ausgeführt, wie sie innerhalb des \emph{Source-Typen} implementiert wurde. Anderenfalls beschreiben die \emph{Methodendelegationen} innerhalb eines \emph{Proxies}, was beim Aufruf der entsprechenden Methode passiert. So wird ein Aufruf der Methode $\texttt{heal}$ an die Methode $\texttt{heal}$ aus dem \emph{Target-Typ} delegiert. Ein Aufruf der Methode $\texttt{getName}$ hingegen führt zu einem Fehler, weil keine passende \emph{Delegationsmethode} zur Verfügung steht.
 \\\\
-Weiterhin beschreibt der \emph{Sub-Proxy} aus dem Beispiel auch, dass der Aufruf der Methode $\texttt{getName}$ zu einem Fehlschlag führt. Dies ist auf eine Problematik zurückzuführen, die auch bei einem \Gls{downcast} auftritt. Hierbei soll ein Objekt eines Super-Typs anstelle eines Objektes eines Sub-Typs verwendet werden. Das Objekt des Sub-Typs bietet jedoch mitunter Methoden an, die im Super-Typ nicht deklariert wurden. Folglich können diese Methoden nicht ausgeführt werden, was jedoch häufig erst zur Laufzeit auffällt. 
-%TODO ZITAT
+Weiterhin beschreibt der \emph{Sub-Proxy} aus dem Beispiel auch, dass der Aufruf der Methode $\texttt{getName}$ zu einem Fehlschlag führt. Dies ist auf eine Problematik zurückzuführen, die auch bei einem \Gls{downcast} auftritt. Hierbei soll ein Objekt eines Super-Typs anstelle eines Objektes eines Sub-Typs verwendet werden. Das Objekt des Sub-Typs bietet jedoch mitunter Methoden an, die im Super-Typ nicht deklariert wurden. Folglich können diese Methoden nicht ausgeführt werden, was jedoch häufig erst zur Laufzeit auffällt.
 \paragraph{Formalisierung}
-Formal wird ein \emph{Sub-Proxy} durch die Regeln beschrieben, die im Folgenden vorgestellt werden. Ein \emph{Sub-Proxy} enthält genau einen \emph{Target-Typ}. Für einen \emph{Proxy} $P$ wird dieser Sachverhalt durch die folgende Regel dargestellt.
+Formal wird ein \emph{Sub-Proxy} für einen \emph{Source-Typ} $S$ auf der Basis von einer Menge von \emph{Target-Typen} $\mathit{TM}$ durch die Regeln beschrieben, die im Folgenden vorgestellt werden.
+\\\\
+Ein \emph{Sub-Proxy} enthält genau einen \emph{Target-Typ}. Für einen \emph{Proxy} $P$ wird dieser Sachverhalt durch die folgende Regel dargestellt.
 \begin{gather*}
-\frac{|\mathit{P.targets}| = 1 \wedge T \in \mathit{P.targets}}{\mathit{targets_{single}(P,T)}}
+\frac{|\mathit{P.targets}| = 1 \wedge \forall \mathit{T} \in \mathit{TM}: T \in \mathit{P.targets}}{\mathit{targets_{single}(P,\mathit{TM})}}
 \end{gather*}
 \noindent
 Darüber hinaus kann für jeden \emph{Proxy} $P$ (egal welcher Art) festgehalten werden, dass dessen Attribut $\texttt{type}$ immer mit einem bestimmten Typen $S$ übereinstimmt. Damit wird ausgesagt, dass $S$ der \emph{Source-Typ} des \emph{Proxies} $P$ ist.
@@ -244,13 +245,13 @@ Die Unterschiede der einzelnen Proxy-Arten lassen sich in den \emph{Methoden-Del
 \\\\
 So muss die \emph{aufgerufene Methode} immer im Typ aus dem Attribut $\texttt{call.delType}$ deklariert sein.
 \begin{gather*}
-\frac{\exists \mathit{T'\text{ } m(T)} \in \mathit{methoden(MD.call.delType)}: \mathit{MD.call.name} = m}
+\frac{\exists \mathit{T'\text{ } m(T)} \in \mathit{methods(MD.call.delType)}: \mathit{MD.call.name} = m}
 {\mathit{callDecl(MD)}}
 \end{gather*}
 \noindent
 Bezüglich des Feldes $\texttt{delType}$ der \emph{Delegationsmethode} gilt ähnliches.
 \begin{gather*}
-\frac{\exists \mathit{T'\text{ }m(T)} \in \mathit{methoden(MD.del.delType)}: \mathit{MD.del.name} = m}
+\frac{\exists \mathit{T'\text{ }m(T)} \in \mathit{methods(MD.del.delType)}: \mathit{MD.del.name} = m}
 {\mathit{delDecl(MD)}}
 \end{gather*}
 \noindent
@@ -314,12 +315,12 @@ Die Regel für alle \emph{Methoden-Delegationen} eines \emph{Sub-Proxies} $P$ l�
 {\mathit{delegations_{sub}(P)}}
 \end{gather*}
 \noindent
-Die Menge der \emph{Sub-Proxies}, die mit dem \emph{Source-Typ} $S$ und dem \emph{Target-Typ} $T$ erzeugt werden, wird darauf aufbauend durch die folgende Funktion beschrieben.
+Die Menge der \emph{Sub-Proxies}, die mit dem \emph{Source-Typ} $S$ und der Menge von \emph{Target-Typen} $\mathit{TM}$ erzeugt werden, wird darauf aufbauend durch die folgende Funktion beschrieben.
 \begin{gather*}
-\mathit{proxies_{sub}(S,T)} := 
+\mathit{proxies_{sub}(S,\mathit{TM})} := 
 \left\{\begin{array}{l|l}
 		& \mathit{proxy(P,S)}\wedge \mathit{ } \\
-	P	& \mathit{targets_{sub}(P,T)} \wedge \mathit{ } \\
+	P	& \mathit{targets_{single}(P,\mathit{TM})} \wedge \mathit{ } \\
 		& \mathit{delegations_{sub}(P)}
 		 \end{array}
 \right\}
@@ -375,12 +376,12 @@ Für die Gesamtheit der \emph{Methoden-Delegationen} innerhalb eines \emph{Conte
 {\mathit{delegations_{content}(P)}}
 \end{gather*}
 \noindent
-Die Menge der \emph{Content-Proxies}, die mit dem \emph{Source-Typ} $S$ und dem \emph{Target-Typ} $T$ erzeugt werden, wird durch die folgende Funktion beschrieben.
+Die Menge der \emph{Content-Proxies}, die mit dem \emph{Source-Typ} $S$ und der Mengen von \emph{Target-Typen} $\mathit{TM}$ erzeugt werden, wird durch die folgende Funktion beschrieben.
 \begin{gather*}
-\mathit{proxies_{content}(S,T)} := 
+\mathit{proxies_{content}(S,\mathit{TM})} := 
 \left\{\begin{array}{l|l}
 		& \mathit{proxy(P,S)} \wedge \mathit{ } \\
-	P	& \mathit{targets_{single}(P,T)} \wedge \mathit{ }\\
+	P	& \mathit{targets_{single}(P,\mathit{TM})} \wedge \mathit{ }\\
 		& \mathit{delegations_{content}(P)} 
 		 \end{array}
 \right\}
@@ -415,10 +416,6 @@ In der \emph{aufgerufenen Methode} einer einzelnen \emph{Methoden-Delegation} $\
 {\mathit{callDelegationType_{container}(MD)}}
 \end{gather*}
 \noindent
-
-
-
-
 Folglich werden auch die Eigenschaften einer \emph{aufgerufenen Methode} in einer \emph{Methoden-Delegation} $\mathit{MD}$ im \emph{Container-Proxy} durch eine andere Regel beschrieben als beim \emph{Sub-Proxy}:
 \begin{gather*}
 \frac{\mathit{callDecl(MD)} \wedge \mathit{callDelegationType_{container}(MD,P)} \wedge \mathit{sourceType(MD,P)}}
@@ -443,12 +440,12 @@ Für die Gesamtheit der \emph{Methoden-Delegationen} innerhalb eines \emph{Conta
 {\mathit{delegations_{container}(P)}}
 \end{gather*}
 \noindent
-Die Menge der \emph{Container-Proxies}, die mit dem \emph{Source-Typ} $S$ und dem \emph{Target-Typ} $T$ erzeugt werden, wird durch die folgende Funktion beschrieben.
+Die Menge der \emph{Container-Proxies}, die mit dem \emph{Source-Typ} $S$ und der Menge von \emph{Target-Typen} $\mathit{TM}$ erzeugt werden, wird durch die folgende Funktion beschrieben.
 \begin{gather*}
-\mathit{proxies_{container}(S,T)} := 
+\mathit{proxies_{container}(S,\mathit{TM})} := 
 \left\{\begin{array}{l|l}
 		& \mathit{proxy(P,S)}  \wedge \mathit{ } \\
-	P	& \mathit{target_{single}(P,T)} \wedge \mathit{ } \\
+	P	& \mathit{target_{single}(P,\mathit{TM})} \wedge \mathit{ } \\
 		& \mathit{delegations_{container}(P)} 
 		 \end{array}
 \right\}
@@ -479,10 +476,10 @@ Der \acrshort{ast} mit den dazugehörigen Attributen ist Abbildung \ref{fig:ASTS
 \paragraph{Formalisierung}
 Ein \emph{struktureller Proxy} wird formal durch die folgenden Regeln beschrieben.
 \\\\
-Ein \emph{struktureller Proxy} kann, wie bereits erwähnt, mehrere \emph{Target-Typen} enthalten.
-Für jeden \emph{Target-Typ} $T$ muss dabei jedoch wenigstens eine \emph{Delegationsmethode} im \emph{Proxy} mit einem Attribut $\texttt{target} = T$ existieren. Dadurch gilt die für einen \emph{strukturellen Proxy} $P$:
+Ein \emph{struktureller Proxy} kann, wie bereits erwähnt, mehrere \emph{Target-Typen} $\mathit{TM}$ enthalten.
+Für jeden \emph{Target-Typ} $T \in \mathit{TM}$ muss dabei jedoch wenigstens eine \emph{Delegationsmethode} im \emph{Proxy} mit einem Attribut $\texttt{target} = T$ existieren. Dadurch gilt die für einen \emph{strukturellen Proxy} $P$:
 \begin{gather*}
-\frac{\forall \mathit{T} \in \mathit{P.targets}:\exists \mathit{MD} \in \mathtt{P.dels}:\mathit{MD.del.target} = T}{\mathit{targets_{multi}(P, T)}}
+\frac{|\mathit{P.targets}| = |\mathit{TM}| \wedge \forall \mathit{T} \in \mathit{P.targets}: T \in \mathit{TM} \wedge \exists \mathit{MD} \in \mathtt{P.dels}:\mathit{MD.del.target} = T}{\mathit{targets_{multi}(P, \mathit{TM})}}
 \end{gather*}
 \noindent
 Für die \emph{aufgerufene Methode} und die \emph{Delegationsmethode} einer einzelnen \emph{Methoden-Delegation} gelten im \emph{strukturellen Proxy} dieselben Regeln wie für den \emph{Sub-Proxy}. Die Namen der \emph{aufgerufenen Methoden} und der \emph{Delegationsmethode} müssen dabei jedoch nicht übereinstimmen. Dafür müssen diese beiden Methoden jedoch ein strukturelles Matching aufweisen. Bezogen auf die Rückgabe-Typen einer \emph{aufgerufenen Methode} $\mathit{C}$ und einer \emph{Delegationsmethode} $\mathit{D}$ müssen daher folgende Regeln gelten.
@@ -514,7 +511,7 @@ Für eine einzelne \emph{Methoden-Delegation} $\mathit{MD}$ eines \emph{struktur
 \noindent
 In einem \emph{strukturellen Proxy} muss für jede Methode $m$ des \emph{Source-Typen} genau eine \emph{Methoden-Delegation} mit der Methode $m$ als \emph{aufgerufene Methode} existieren:
 \begin{gather*}
-\frac{|\mathit{methoden(P.type)}| = P.dels.len}{delegationCount_{struct}(P)}
+\frac{|\mathit{methods(P.type)}| = P.dels.len}{delegationCount_{struct}(P)}
 \end{gather*}
 \noindent
 Für die Gesamtheit der \emph{Methoden-Delegationen} aus einem \emph{strukturellen Proxy} $P$ muss dann gelten:
@@ -523,12 +520,12 @@ Für die Gesamtheit der \emph{Methoden-Delegationen} aus einem \emph{strukturell
 {\mathit{delegations_{struct}(P)}}
 \end{gather*}
 \noindent
-Die Menge der \emph{strukturellen Proxies}, die mit dem \emph{Source-Typ} $S$ und der Menge von \emph{Target-Typen} $T$ erzeugt werden, wird aufbauend auf den oben genannten Regeln durch die folgende Funktion beschrieben.
+Die Menge der \emph{strukturellen Proxies}, die mit dem \emph{Source-Typ} $S$ und der Menge von \emph{Target-Typen} $\mathit{TM}$ erzeugt werden, wird aufbauend auf den oben genannten Regeln durch die folgende Funktion beschrieben.
 \begin{gather*}
-\mathit{proxies_{struct}(S,T)} := 
+\mathit{proxies_{struct}(S,\mathit{TM})} := 
 \left\{\begin{array}{l|l}
 		& \mathit{proxy(P,S)}\wedge \mathit{ }\\
-	P	& \mathit{targets_{multi}(P,T)} \wedge \mathit{ }\\
+	P	& \mathit{targets_{multi}(P,\mathit{TM})} \wedge \mathit{ }\\
 		& \mathit{delegations_{struct}(P)}  
 		 \end{array}
 \right\}
@@ -579,21 +576,21 @@ $\mathit{proxies_{struct}}$
  \label{tab:baseMatcher}
 \end{table}
 \noindent
-Die im Abschnitt \ref{sec:proxygram} erwähnte Funktion $\mathit{proxies(S,T)}$ kann darauf aufbauend für einen \emph{Source-Typ} $S$ und eine Menge von \emph{Target-Typen} $T$ wie folgt beschrieben werden.
+Die im Abschnitt \ref{sec:proxygram} erwähnte Funktion $\mathit{proxies(S,\mathit{TM})}$ kann darauf aufbauend für einen \emph{Source-Typ} $S$ und eine Menge von \emph{Target-Typen} $\mathit{TM}$ wie folgt beschrieben werden.
 \begin{gather*}
-\mathit{proxies(S,T)} := 
+\mathit{proxies(S,\mathit{TM})} := 
 \left\{\begin{array}{ll}
-\mathit{proxy_{sub}(S,T)}	& \text{wenn } |T| = 1 \wedge \mathit{ }\\
-& \forall T' \in T: S \Rightarrow_{spec} T'\\	
+\mathit{proxies_{sub}(S,\mathit{TM})}	& \text{wenn } |\mathit{TM}| = 1 \wedge \mathit{ }\\
+& \forall T \in \mathit{TM}: S \Rightarrow_{spec} T\\	
 &\\
-\mathit{proxy_{content}(S,T)}	& \text{wenn } |T| = 1 \wedge \mathit{ }\\
-& \forall T' \in T: S \Rightarrow_{content} T' \\
+\mathit{proxies_{content}(S,\mathit{TM})}	& \text{wenn } |\mathit{TM}| = 1 \wedge \mathit{ }\\
+& \forall T \in \mathit{TM}: S \Rightarrow_{content} T \\
 &\\
-\mathit{proxy_{container}(S,T)} & \text{wenn } |T| = 1 \wedge \mathit{ } \\
-& \forall T' \in T: S \Rightarrow_{container} T' \\
+\mathit{proxies_{container}(S,\mathit{TM})} & \text{wenn } |\mathit{TM}| = 1 \wedge \mathit{ } \\
+& \forall T \in \mathit{TM}: S \Rightarrow_{container} T \\
 &\\
-\mathit{proxy_{struct}(S,T)} & \text{wenn } |T| > 0 \wedge \mathit{ } \\
-&\forall T' \in T: S \Rightarrow_{struct} T'
+\mathit{proxies_{struct}(S,\mathit{TM})} & \text{wenn } |\mathit{TM}| > 0 \wedge \mathit{ } \\
+&\forall T \in \mathit{TM}: S \Rightarrow_{struct} T
 		 \end{array}
 \right\}
 \end{gather*}
@@ -606,7 +603,7 @@ Die Menge der Methoden eines \emph{provided Typs} $T$, die strukturell mit einer
 \begin{gather*}
 \mathit{structM_{target}(m, T)} := 
 \left\{\begin{array}{l|l}
-m'	& m' \in \mathit{methoden(T)} \wedge  m \Rightarrow_{method} m'
+m'	& m' \in \mathit{methods(T)} \wedge  m \Rightarrow_{method} m'
 \end{array}
 \right\}
 \end{gather*}
@@ -649,16 +646,16 @@ Sei $R$ ein \emph{required Typ} und $\mathit{TM}$ eine Menge von \emph{provided 
 \mathit{structMSets(R,\mathit{TM})} := 
 \left\{M
 \begin{array}{l|l}
-&\exists \mathit{m} \in \mathit{methoden(R)} : 
+&\exists \mathit{m} \in \mathit{methods(R)} : 
 \\
 &M = \mathit{structM_{targetset}(m,\mathit{TM})}
 \end{array}
 \right\}
 \end{gather*}
 \noindent
-Für die Bildung eines \emph{Proxies} wird aus jedem Element der Menge $structMSets(R,\mathit{TM})$ genau ein Element als Delegationsmethode verwendet. 
+Für die Bildung eines \emph{Proxies} wird aus jedem Element der Menge $structMSets(R,\mathit{TM})$ genau ein Element als \emph{Delegationsmethode} verwendet. 
 \begin{example}{bsp_proxycreation}
-Ausgehend von Beispiel \ref{bsp_structmtarget} lassen sich die folgenden vier Proxies mit den \emph{Target-Typen} $\texttt{Leave}$ und $\texttt{Come}$ erzeugen.
+Ausgehend von Beispiel \ref{bsp_structmtarget} lassen sich die folgenden vier \emph{Proxies} mit den \emph{Target-Typen} $\texttt{Leave}$ und $\texttt{Come}$ erzeugen.
 \begin{lstlisting}[style = dsl]
 proxy Greeting with [Come, Leave]{
 	Greeting.hello():String --> Come.hello():String
@@ -685,8 +682,7 @@ proxy Greeting with [Come, Leave]{
 \end{lstlisting}
 \end{example}
 \noindent
-\\
-Die Anzahl aller möglichen \emph{strukturellen Proxies} für ein \emph{required Typ} $R$ aus einer Menge von \emph{Target-Typen} $\mathit{TM}$ sei näherungsweise über die Funktion $\mathit{proxyCount(R,\mathit{TM})}$ beschrieben. Dass es sich hierbei lediglich um eine Annäherung handelt liegt daran, dass eine Methode $\mathit{dm}$ mit $\mathit{dm} \in M_1 \cup ... \cup M_n$ und $\{M_1,...,M_n\} = \mathit{structMSets(R,TM)}$ innerhalb eines Proxy maximal einmal als Delegationsmethode verwendet werden darf. Es ist jedoch möglich, dass es zwischen den Mengen 
+Die Anzahl aller möglichen \emph{strukturellen Proxies} für ein \emph{required Typ} $R$ aus einer Menge von \emph{Target-Typen} $\mathit{TM}$ sei näherungsweise über die Funktion $\mathit{proxyCount(R,\mathit{TM})}$ beschrieben. Dass es sich hierbei lediglich um eine Annäherung handelt liegt daran, dass eine Methode $\mathit{dm}$ mit $\mathit{dm} \in M_1 \cup ... \cup M_n$ und $\{M_1,...,M_n\} = \mathit{structMSets(R,TM)}$ innerhalb eines Proxy maximal einmal als \emph{Delegationsmethode} verwendet werden darf. Es ist jedoch möglich, dass es zwischen den Mengen 
 $M_1,...,M_n$ Überschneidungen gibt (siehe vorheriges Beispiel). Darüber hinaus blenden die oben genannten Funktionen zur Ermittlung der matchenden Methoden die Anzahl der für die \emph{Methoden-Delegation} möglichen Parameter-Sortierungen aus $\mathit{matchtingParams}$ aus.
 \\\\
 Unter der Annahme, dass es nur eine mögliche Sortierung der Parameter für die matchenden Methoden gibt, gilt:
@@ -702,7 +698,7 @@ m_1,\\
 m_n
 \end{array}
 \right\}
-= \mathit{methoden(R)}
+= \mathit{methods(R)}
 \end{array}
 \end{gather*}
 \noindent
