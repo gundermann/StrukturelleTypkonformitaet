@@ -21,18 +21,6 @@ import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.beans.impl.Volun
 import de.fernuni.hagen.ma.gundermann.ejb.pcs_scenarios.provided.beans.impl.EftSTDAuskunftImpl;
 import de.fernuni.hagen.ma.gundermann.ejb.pcs_scenarios.provided.beans.impl.STDAuskunftImpl;
 
-/**
- * TODO dieser Test benoetigt verhaeltnismae�ig viel Zeit. Vermutlich liegt es
- * daran, dass viele der deg-Bean-Interfaces strutkurell vollstaendig passen und
- * die semantisch passenden Interfaces im Container an das Ende der Liste
- * angefuegt wurden. </br>
- * </br>
- * Loeseung: Die Vorsortierung der Komponenten erfolgt zus�tzlich noch �ber
- * ein qualitatives Kriterium, welches das Verhaeltnis von originalen Methoden
- * der Quell-Komponenten zu den nutzbaren Methoden der Ziel-Komponente
- * sicherstellt: ORI_MET / PUBLIC_MET ==> siehe
- * {@link QuantitaiveMatchingInfoComparator}
- */
 public class FindIntubatingFreeingTest {
 
 	@Before
@@ -68,11 +56,6 @@ public class FindIntubatingFreeingTest {
 		EJBContainer.CONTAINER.registerBean(Doctor.class, new EmergencyDoctor());
 		EJBContainer.CONTAINER.registerBean(Intubator.class, new EmergencyDoctor());
 
-		// EJBContainer.CONTAINER.registerBean( FirstAidTrainedPasserby.class, new
-		// TrainedPasserby() );
-		// EJBContainer.CONTAINER.registerBean( FireFighter.class, new
-		// ProfessionalFireFighter() );
-
 		// Wenn der ParaMedic mit hineingenommen wird, kann auch die Kombination aus
 		// ParaMedic und Doctor gefunden werden.
 		// EJBContainer.CONTAINER.registerBean( ParaMedic.class, new
@@ -80,8 +63,8 @@ public class FindIntubatingFreeingTest {
 		DesiredComponentFinderConfig config = new DesiredComponentFinderConfig.Builder(
 				EJBContainer.CONTAINER.getRegisteredBeanInterfaces(), EJBContainer.CONTAINER::getOptBean)//
 						.useHeuristicLMF()//
-//						.useHeuristicBL_NMC()//
-//						.useHeuristicPTTF()//
+						.useHeuristicBL_NMC()//
+						.useHeuristicPTTF()//
 						.build();
 		IntubatingFreeing desiredBean = new DesiredComponentFinder(config).getDesiredComponent(desiredInterface);
 		assertThat(desiredBean, notNullValue());

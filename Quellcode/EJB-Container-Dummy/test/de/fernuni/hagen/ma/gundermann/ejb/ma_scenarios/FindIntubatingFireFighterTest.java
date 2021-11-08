@@ -58,8 +58,8 @@ public class FindIntubatingFireFighterTest {
 		DesiredComponentFinderConfig config = new DesiredComponentFinderConfig.Builder(
 				EJBContainer.CONTAINER.getRegisteredBeanInterfaces(), EJBContainer.CONTAINER::getOptBean)//
 						.useHeuristicLMF()//
-//						.useHeuristicBL_NMC()//
-//						.useHeuristicPTTF()//
+						.useHeuristicBL_NMC()//
+						.useHeuristicPTTF()//
 						.build();
 		IntubatingFireFighter desiredBean = new DesiredComponentFinder(config).getDesiredComponent(desiredInterface);
 		assertThat(desiredBean, notNullValue());

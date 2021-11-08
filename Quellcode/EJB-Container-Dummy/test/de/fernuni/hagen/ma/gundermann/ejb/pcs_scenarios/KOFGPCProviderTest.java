@@ -30,14 +30,11 @@ public class KOFGPCProviderTest {
 		Class<MinimalFoerderprogrammeProvider> desiredInterface = MinimalFoerderprogrammeProvider.class;
 		EJBContainer.CONTAINER.registerBean(ElerFTStammdatenAuskunftService.class, new EftSTDAuskunftImpl());
 		EJBContainer.CONTAINER.registerBean(StammdatenAuskunftService.class, new STDAuskunftImpl());
-//		EJBContainer.CONTAINER.registerBean(FireFighter.class, new VolunteerFireFighter());
-//		EJBContainer.CONTAINER.registerBean(Doctor.class, new EmergencyDoctor());
-//		EJBContainer.CONTAINER.registerBean(Intubator.class, new EmergencyDoctor());
 		DesiredComponentFinderConfig config = new DesiredComponentFinderConfig.Builder(
 				EJBContainer.CONTAINER.getRegisteredBeanInterfaces(), EJBContainer.CONTAINER::getOptBean)//
-//						.useHeuristicLMF()//
-//						.useHeuristicPTTF()//
-//						.useHeuristicBL_NMC()//
+						.useHeuristicLMF()//
+						.useHeuristicPTTF()//
+						.useHeuristicBL_NMC()//
 						.build();
 		MinimalFoerderprogrammeProvider desiredBean = new DesiredComponentFinder(config)
 				.getDesiredComponent(desiredInterface);

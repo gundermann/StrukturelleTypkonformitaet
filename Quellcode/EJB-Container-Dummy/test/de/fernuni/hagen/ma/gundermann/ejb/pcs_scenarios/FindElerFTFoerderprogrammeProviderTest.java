@@ -42,8 +42,8 @@ public class FindElerFTFoerderprogrammeProviderTest {
 		DesiredComponentFinderConfig config = new DesiredComponentFinderConfig.Builder(
 				EJBContainer.CONTAINER.getRegisteredBeanInterfaces(), EJBContainer.CONTAINER::getOptBean)//
 						.useHeuristicLMF()//
-//						.useHeuristicPTTF()//
-//						.useHeuristicBL_NMC()//
+						.useHeuristicPTTF()//
+						.useHeuristicBL_NMC()//
 						.build();
 		ElerFTFoerderprogrammeProvider desiredBean = new DesiredComponentFinder(config)
 				.getDesiredComponent(desiredInterface);

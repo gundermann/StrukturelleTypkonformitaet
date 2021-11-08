@@ -41,8 +41,8 @@ public class FindMinimalFoerderprogrammeProviderTest {
 		DesiredComponentFinderConfig config = new DesiredComponentFinderConfig.Builder(
 				EJBContainer.CONTAINER.getRegisteredBeanInterfaces(), EJBContainer.CONTAINER::getOptBean)//
 						.useHeuristicLMF()//
-//						.useHeuristicPTTF()//
-//						.useHeuristicBL_NMC()//
+						.useHeuristicPTTF()//
+						.useHeuristicBL_NMC()//
 						.build();
 		MinimalFoerderprogrammeProvider desiredBean = new DesiredComponentFinder(config)
 				.getDesiredComponent(desiredInterface);

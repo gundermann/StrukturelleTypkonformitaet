@@ -21,10 +21,6 @@ import de.fernuni.hagen.ma.gundermann.ejb.ma_scenarios.provided.beans.impl.Volun
 import de.fernuni.hagen.ma.gundermann.ejb.pcs_scenarios.provided.beans.impl.EftSTDAuskunftImpl;
 import de.fernuni.hagen.ma.gundermann.ejb.pcs_scenarios.provided.beans.impl.STDAuskunftImpl;
 
-/**
- * TODO Auch dieser Test benoetigt relativ viel Zeit. (Siehe Kommentar in
- * {@link FindIntubatingFreeingTest})
- */
 public class FindIntubatingPatientFireFighterTest {
 
 	@Before
@@ -59,8 +55,8 @@ public class FindIntubatingPatientFireFighterTest {
 		EJBContainer.CONTAINER.registerBean(Intubator.class, new EmergencyDoctor());
 		DesiredComponentFinderConfig config = new DesiredComponentFinderConfig.Builder(
 				EJBContainer.CONTAINER.getRegisteredBeanInterfaces(), EJBContainer.CONTAINER::getOptBean)//
-//						.useHeuristicLMF() //
-//						.useHeuristicPTTF()//
+						.useHeuristicLMF() //
+						.useHeuristicPTTF()//
 						.useHeuristicBL_NMC()//
 						.build();
 		IntubatingPatientFireFighter desiredBean = new DesiredComponentFinder(config)
