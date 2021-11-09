@@ -41,12 +41,12 @@ Darüber hinaus muss klargestellt werden, dass die Exploration der \emph{EJBs} z
 Der Prozess für den beschriebenen Ansatz kann somit in einen Implementierungsprozess und einen Explorationsprozess, welcher zur Laufzeit durchgeführt wird, eingeteilt werden.
 \\\\
 In \abbref{ejb_expl_impl} ist der Implementierungsprozess aufgezeigt:
-\myScalableFigure[0.6\linewidth]{ejb_expl_impl}{Implementierungsprozess}{ejb_expl_impl}
+\myScalableFigure[1.0\linewidth]{ejb_expl_impl}{Implementierungsprozess}{ejb_expl_impl}
 \noindent
 Wie bereits erwähnt, deklarieren die Entwickler*innen das \Gls{Interface} (1) und die Testklassen (2). Im dritten Schritt erfolgt der Aufruf der Explorationskomponente, wodurch zur Laufzeit der Explorationsprozess (siehe \abbref{ejb_expl_search}) gestartet wird. Das Ergebnis des Explorationsprozesses kann in Form des deklarierten \Gls{Interface}s weiter verwendet werden. Allerdings muss der Entwickler auch davon ausgehen, dass durch die Explorationskomponente keine passende Komponente ermittelt werden konnte.
 \\\\
 Die folgende Abbildung stellt den Explorationsprozess dar:
-\myScalableFigure[0.6\linewidth]{ejb_expl_search}{Explorationsprozess}{ejb_expl_search}
+\myScalableFigure[1.0\linewidth]{ejb_expl_search}{Explorationsprozess}{ejb_expl_search}
 \noindent
 Hier wird zuerst eine \emph{strukturelle Evaluation} auf Basis des vorgegebenen \Gls{Interface}s und der vom \emph{EJB-Container} publizierten \Gls{Interface}s durchgeführt. 
 Dieser Schritt ist mit dem Suchen der Kanditaten aus \abbref{tdr_cycle} vergleichbar. Auf Basis der Kandidaten, die bei der \emph{sturkturellen Evaluation} ermittelt wurden, werden im zweiten Schritt \emph{Proxies} generiert, durch die die Methodenaufrufe auf dem vorgegebenen \Gls{Interface} an die jeweiligen Kandidaten delegiert werden. Dies ist mit Schritt d aus \abbref{tdr_cycle} zu vergleichen. Im nächsten Schritt (\emph{semantische Evaluation}) werden - analog zu Schritt e aus \abbref{tdr_cycle} - die vorgegebenen Testklassen verwendet, um eben jene \emph{Proxies} zu validieren. Sofern ein valider \emph{Proxy} gefunden wurden, wird dieser im 4. Schritt von der Explorationskomponente zurückgegeben.

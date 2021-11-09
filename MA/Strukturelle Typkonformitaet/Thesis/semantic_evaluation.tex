@@ -38,11 +38,11 @@ In Bezug zur Funktion $\mathit{cover}$ gilt:
 \noindent
 Das in dieser Arbeit beschriebene Konzept basiert auf der Annahme, dass der gesamte Anwendungsfall - oder Teile davon - , der mit der vordefinierten Struktur (\emph{required Typ}) und den vordefinierten Tests abgebildet werden soll, schon einmal genauso oder so ähnlich in dem gesamten System implementiert wurde. Aus diesem Grund kann für die \emph{semantische Evaluation} davon ausgegangen werden, dass die erfolgreiche Durchführung aller relevanten Tests umso wahrscheinlicher ist, je weniger \emph{Target-Typen} im \emph{Proxy} enthalten sind.
 \\\\
-Die Mengen innerhalb einer Menge $T$ mit einer Mächtigkeit $a$ seien durch folgende Funktion beschrieben:
+Die Mengen innerhalb einer Menge $\mathit{TM}$ mit einer Mächtigkeit $a$ seien durch folgende Funktion beschrieben:
 \begin{gather*}
-\mathit{targetSets(T,a)} := 
+\mathit{targetSets(\mathit{TM},a)} := 
 \left\{\begin{array}{l|l}	
-				T_i & T_i \in T \wedge |T_i| = a
+				T_i & T_i \in \mathit{TM} \wedge |T_i| = a
 		 \end{array}
 \right\}
 \end{gather*}
@@ -57,12 +57,12 @@ function semanticEval( R, T, tests ){
 			relProxies = $\mathit{proxies( R, targets )}$
 			proxy = evalProxies( relProxies, tests )	
 			if( proxy != null ){
-				// passenden Proxy gefunden
+				// validen Proxy gefunden
 				return proxy
 			}
 		}
 	}
-	// kein passenden Proxy gefunden
+	// kein validen Proxy gefunden
 	return null;
 }
 
@@ -71,11 +71,11 @@ function evalProxies(proxies, tests){
 		passedTests = 0
 		evalProxy(proxy, tests)
 		if( passedTests == tests.size ){
-			// passenden Proxy gefunden
+			// validen Proxy gefunden
 			return proxy
 		}
 	}
-	// kein passenden Proxy gefunden
+	// kein validen Proxy gefunden
 	return null
 }
 
@@ -96,7 +96,7 @@ Die Dauer der Laufzeit der in Listing \ref{lst_semEval} definierten Funktionen h
 \section{Heuristiken}\label{sec_heuristics}
 Die \Gls{Heuristik}en werden innerhalb des Algorithmus aus Listing \ref{lst_semEval} eingebaut. Teilweise ist es für die Verwendung einer \Gls{Heuristik} notwendig, weitere Information während der \emph{semantischen Evaluation} zu ermitteln und diese zu speichern. In den folgenden Abschnitten werden die \Gls{Heuristik}en und die dafür notwendigen Anpassungen an den jeweiligen Funktionen beschrieben.
 \\\\
-Die \Gls{Heuristik}en, die in den Abschnitten \ref{sec_lmf} und \ref{sec_pttf} beschrieben werden, haben zum Ziel, die Reihenfolge, in der die \emph{Proxies} hinsichtlich der vordefinierten Tests geprüft werden, so anzupassen, dass ein passender \emph{Proxy} möglichst früh geprüft wird. Die dritte Heuristik, die im Abschnitt \ref{sec_bl_nmc} beschrieben wird, beschreibt ein Ausschlussverfahren.
+Die \Gls{Heuristik}en, die in den Abschnitten \ref{sec_lmf} und \ref{sec_pttf} beschrieben werden, haben zum Ziel, die Reihenfolge, in der die \emph{Proxies} hinsichtlich der vordefinierten Tests geprüft werden, so anzupassen, dass ein valider \emph{Proxy} möglichst früh geprüft wird. Die dritte Heuristik, die im Abschnitt \ref{sec_bl_nmc} beschrieben wird, beschreibt ein Ausschlussverfahren.
 \\\\
 Der Pseudo-Code für die \emph{semantische Evaluation} mit der Kombination aller genannten \Gls{Heuristik}en ist im Anhang \ref{app_semEvalMitAllenHeuristiken} zu finden.
 
@@ -263,12 +263,12 @@ function semanticEval( R, T, tests ){
 			relProxies = $\mathit{proxies( R, targets )}$
 			proxy = evalProxies( relProxies, tests )	
 			if( proxy != null ){
-				// passenden Proxy gefunden
+				// validen Proxy gefunden
 				return proxy
 			}
 		}
 	}
-	// kein passenden Proxy gefunden
+	// kein validen Proxy gefunden
 	return null;
 }
 
@@ -320,7 +320,7 @@ function evalProxies( proxies, tests ){
   passedTests = 0
   evalProxy( proxy, tests )
   if( passedTests == tests.size ){
-   // passenden Proxy gefunden
+   // validen Proxy gefunden
    return proxy
   }
   else{
@@ -333,7 +333,7 @@ function evalProxies( proxies, tests ){
    }
   }
  }
- // kein passenden Proxy gefunden
+ // kein validen Proxy gefunden
  return null
 }
 
@@ -417,7 +417,7 @@ function evalProxies( proxies, tests ){
 		passedTestcases = 0
 		evalProxy(proxy, tests)
 		if( passedTestcases == tests.size ){
-			// passenden Proxy gefunden
+			// validen Proxy gefunden
 			return proxy
 		}
 		else{
@@ -427,7 +427,7 @@ function evalProxies( proxies, tests ){
 			return evalProxies( leftProxies, tests )
 		}
 	}
-	// kein passenden Proxy gefunden
+	// kein validen Proxy gefunden
 	return null
 }
 \end{lstlisting}
