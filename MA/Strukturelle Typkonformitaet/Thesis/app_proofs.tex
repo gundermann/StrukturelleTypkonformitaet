@@ -1,0 +1,40 @@
+\chapter{Beweise}\label{app_proofs}
+\section{Lemma \ref{lemma_targetcount}}
+\begin{lemma*}\label{lemma_targetcount}
+Sei $R$ ein \emph{required Typ} innerhalb einer Bibliothek $L$. 
+Ein \emph{struktureller Proxy} für $R$ lässt sich nur aus den Mengen $\mathit{TM} \in \mathit{cover(R,L)}$ generieren, für die gilt:
+\begin{gather*}
+|\mathit{TM}| \leq |\mathit{methods(R)}|
+\end{gather*}
+\end{lemma*}
+\begin{proof}
+In Bezug auf alle \emph{strukturellen Proxies} $P \in \mathit{proxies_{struct}(R,TM})$, drückt das Lemma folgendes aus:
+\begin{gather*}
+\forall \mathit{P} \in \mathit{proxies_{struct}(R,TM}):\mathit{TM}| \leq |\mathit{methods(R)}|
+\end{gather*}
+\noindent
+Da ein \emph{struktureller Proxy} $P \in \mathit{proxies_{struct}(R,TM)}$ der Bedingung $\mathit{targets_{multi}(P,TM)}$ unterliegt (siehe Abschnitt \ref{sssec_structproxy}), muss gelten:
+\begin{gather*}
+|\mathit{P.targets}| = |\mathit{TM}|
+\end{gather*}
+Weiterhin gilt aufgrund von $\mathit{targets_{multi}(P,TM)}$, dass für jeden \emph{Target-Typ} eine \emph{Methoden-Delegation} existiert, die diesen \emph{Target-Typ} im Attribut $\texttt{target}$ enthält:
+\begin{gather*}
+\forall \mathit{T} \in \mathit{P.targets}: \exists \mathit{MD} \in \mathit{P.dels}:\mathit{MD.del.target} = T
+\end{gather*}
+Daraus folgt für die Mächtigkeit der \emph{Methoden-Delegationen}:
+\begin{gather*}
+\mathit{P.dels.len} \geq |\mathit{P.targets}|\\ \mathit{P.dels.len} \geq |\mathit{TM}|
+\end{gather*}
+\noindent
+Zusätzlich gilt aufgrund der Regel $\mathit{delegationCount_{struct}(P)}$ (siehe Abschnitt \ref{sssec_structproxy}):
+\begin{gather*}
+|\mathit{methods(R)}| = \mathit{P.dels.len}
+\end{gather*}
+Daraus folgt direkt:
+\begin{gather*}
+\forall \mathit{P} \in \mathit{proxies_{struct}(R,TM}):\mathit{TM}| \leq |\mathit{methods(R)}|
+\end{gather*}
+
+
+
+\end{proof}

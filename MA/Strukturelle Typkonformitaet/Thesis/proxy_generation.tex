@@ -450,7 +450,7 @@ Die Menge der \emph{Container-Proxies}, die mit dem \emph{Source-Typ} $S$ und de
 		 \end{array}
 \right\}
 \end{gather*}
-\subsubsection{Struktureller Proxy}
+\subsubsection{Struktureller Proxy}\label{sssec_structproxy}
 Die Voraussetzung für die Erzeugung eines \emph{strukturellen Proxies} vom \emph{required Typ} $R$ aus einem Target-Typ $T$ ist $R \Rightarrow_{struct} T$. Damit ist der \emph{StructuralTypeMatcher} der Basis-Matcher für den \emph{strukturellen Proxy}.
 \\\\
 Der \emph{strukturelle Proxy} ist der einzige \emph{Proxy}, der mit mehreren \emph{Target-Typen} erzeugt werden kann. 
@@ -595,7 +595,16 @@ Die im Abschnitt \ref{sec:proxygram} erwähnte Funktion $\mathit{proxies(S,\math
 \right\}
 \end{gather*}
 \subsection{Anzahl struktureller Proxies innerhalb einer Bibliothek}\label{sec_anzahlProxies}
-Die Generierung der \emph{strukturellen Proxies} für ein \emph{required Typ} $R$ aus der Bibliothek $L$ erfolgt während des \emph{Explorationsprozesses} auf Basis der Mengen von \emph{provided Typen} aus $\mathit{cover(R,L)}$ (siehe Abschnitt \ref{sec_ergStructEval}). Mit einer Menge $\mathit{TM} \in \mathit{cover(R,L)}$ können durchaus mehrere \emph{Proxies} erzeugt werden. Das ist dann der Fall, wenn mehrere der Methoden, die in den \emph{provided Typen} aus $\mathit{TM}$ deklariert wurden, mit einer Methode aus $R$ strukturell übereinstimmen, oder wenn für eine Methode $m$ aus $R$ und eine Methode $m'$ aus einem der \emph{Target-Typen} $|matchingParams(m,m')| > 1$ gilt (siehe Abschnitt \ref{subsec_structmatcher}).
+Die Generierung der \emph{strukturellen Proxies} für ein \emph{required Typ} $R$ aus der Bibliothek $L$ erfolgt während des \emph{Explorationsprozesses} auf Basis der Mengen von \emph{provided Typen} aus $\mathit{cover(R,L)}$ (siehe Abschnitt \ref{sec_ergStructEval}). Bezüglich dieser Mengen aus $\mathit{cover(R,L)}$ gilt jedoch folgendes Lemma\footnote{Der Beweis ist im Anhang \ref{app_proofs} zu finden.}:
+\begin{lemma}\label{lemma_targetcount}
+Sei $R$ ein \emph{required Typ} innerhalb einer Bibliothek $L$. 
+Ein \emph{struktureller Proxy} für $R$ lässt sich nur aus den Mengen $\mathit{TM} \in \mathit{cover(R,L)}$ generieren, für die gilt:
+\begin{gather*}
+|\mathit{TM}| \leq |\mathit{methods(R)}|
+\end{gather*}
+\end{lemma}
+\noindent
+Mit einer Menge $\mathit{TM} \in \mathit{cover(R,L)}$, für die die Bedingung aus Lemma \ref{lemma_targetcount} eingehalten wird, können durchaus mehrere \emph{Proxies} erzeugt werden. Das ist dann der Fall, wenn mehrere der Methoden, die in den \emph{provided Typen} aus $\mathit{TM}$ deklariert wurden, mit einer Methode aus $R$ strukturell übereinstimmen, oder wenn für eine Methode $m$ aus $R$ und eine Methode $m'$ aus einem der \emph{Target-Typen} $|matchingParams(m,m')| > 1$ gilt (siehe Abschnitt \ref{subsec_structmatcher}).
 \\\\
 Die Anzahl der \emph{strukturellen Proxies} für einen \emph{required Typ} $R$ mit einer bestimmten Menge von \emph{Target-Typen} ist somit von der Anzahl der Methoden abhängig, die in einem der \emph{Target-Typen} deklariert wurden und strukturell mit den Methoden aus $R$ übereinstimmen. 
 \\\\
@@ -617,7 +626,6 @@ m'	& \exists T \in \mathit{TM}: m' \in \mathit{structM_{target}(m,T)}
 \right\}
 \end{gather*}
 \noindent
-
 \begin{example}{bsp_structmtarget}
 Aufbauend auf dem vorherigen Beispiel \ref{bsp_cover} ergeben sich für die Menge der \emph{Target-Typen}  $\{\texttt{Leave}, \texttt{Come}\}$ und die beiden Methoden des \emph{required Typs} $\texttt{Greeting}$ folgende Mengen von übereinstimmenden Methoden über die Funktion $\mathit{structM_{targetset}}$:
 \begin{gather*}
@@ -639,7 +647,6 @@ Aufbauend auf dem vorherigen Beispiel \ref{bsp_cover} ergeben sich für die Meng
 \right\}
 \end{gather*}
 \end{example}
-\noindent
 \\
 Sei $R$ ein \emph{required Typ} und $\mathit{TM}$ eine Menge von \emph{provided Typen} innerhalb einer Bibliothek $L$ mit $\mathit{TM} \in \mathit{cover(R,L)}$. Dann bildet die Funktion $\mathit{structMSets}$ die Menge von Mengen der Methoden aus den Elementen aus $\mathit{TM}$ ab, die mit jeweils einer Methode aus $R$ gematcht werden können.
 \begin{gather*}
@@ -681,7 +688,7 @@ proxy Greeting with [Come, Leave]{
 }
 \end{lstlisting}
 \end{example}
-\noindent
+\\
 Die Anzahl aller möglichen \emph{strukturellen Proxies} für ein \emph{required Typ} $R$ aus einer Menge von \emph{Target-Typen} $\mathit{TM}$ sei näherungsweise über die Funktion $\mathit{proxyCount(R,\mathit{TM})}$ beschrieben. Dass es sich hierbei lediglich um eine Annäherung handelt liegt daran, dass eine Methode $\mathit{dm}$ mit $\mathit{dm} \in M_1 \cup ... \cup M_n$ und $\{M_1,...,M_n\} = \mathit{structMSets(R,TM)}$ innerhalb eines Proxy maximal einmal als \emph{Delegationsmethode} verwendet werden darf. Es ist jedoch möglich, dass es zwischen den Mengen 
 $M_1,...,M_n$ Überschneidungen gibt (siehe vorheriges Beispiel). Darüber hinaus blenden die oben genannten Funktionen zur Ermittlung der matchenden Methoden die Anzahl der für die \emph{Methoden-Delegation} möglichen Parameter-Sortierungen aus $\mathit{matchtingParams}$ aus.
 \\\\
@@ -704,9 +711,9 @@ m_n
 \noindent
 Durch mehrere Möglichkeiten der Sortierung der Parameter würde sich dieser Wert nochmals erhöhen. Auf eine genaue Formel wird an dieser Stelle verzichtet, da hier lediglich eine Vorstellung davon vermittelt werden soll, wie große die Anzahl der möglichen \emph{strukturellen Proxies} mit einer bestimmten Mengen von \emph{Target-Typen} ist.
 \\\\
-Da innerhalb einer Bibliothek $L$ mehrere Mengen von \emph{Target-Typen} zur Bildung eines \emph{Proxies} für einen \emph{required Typ} $R$ infrage kommen (siehe Funktion $\mathit{cover}$) muss die Anzahl der strukturellen Proxies über die Funktion $\mathit{proxyCount}$ für alle Elemente aus $\mathit{cover(R,L)}$ ermittelt und summiert werden. Die folgende Funktion beschreibt diesen Sachverhalt:
+Da innerhalb einer Bibliothek $L$ mehrere Mengen von \emph{Target-Typen} zur Bildung eines \emph{Proxies} für einen \emph{required Typ} $R$ infrage kommen (siehe Funktion $\mathit{cover}$) muss die Anzahl der \emph{strukturellen Proxies} über die Funktion $\mathit{proxyCount}$ für alle Elemente aus $\mathit{cover(R,L)}$ ermittelt und summiert werden. Dabei muss jedoch beachtet werden, dass die Funktion $\mathit{cover}$ nicht die Bedingung aus Lemma \ref{lemma_targetcount} abbildet. Daher muss die Funktion für diesen Sachverhalt, wie folgt näherungsweise definiert werden:
 \begin{gather*}
-\mathit{libProxyCount(R,L)} = 
+\mathit{libProxyCount(R,L)} \leq 
 \begin{array}{l|l}
 \sum_{i=1}^{n}\mathit{proxyCount(R,c_i)}
 &

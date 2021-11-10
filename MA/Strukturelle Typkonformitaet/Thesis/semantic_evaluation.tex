@@ -25,24 +25,21 @@ function eval( proxy ){
 \end{example}
 
 \subsection{Algorithmus für die semantische Evaluation}\label{sec_semEvalAlgo}
-Während des \emph{Explorationsprozesses} soll aus den \emph{provided Typen} in einer Bibliothek $L$ zu einem vorgegebenen \emph{required Type} $R$ ein Proxy generiert und evaluiert werden. Die Mengen der \emph{Target-Typen} auf deren Basis mehrere \emph{Proxies} erzeugt werden können, wurden im Abschnitt \ref{sec_anzahlProxies} über $\mathit{cover(R,L)}$ beschrieben. Die in $\mathit{cover(R,L)}$ befindlichen Mengen können eine unterschiedliche Anzahl von \emph{Target-Typen} enthalten. Die maximale Mächtigkeit einer Menge $\mathit{TM} \in \mathit{cover(R,L)}$ ist gleich der Anzahl der Methoden in $R$.
+Während des \emph{Explorationsprozesses} soll aus den \emph{provided Typen} in einer Bibliothek $L$ zu einem vorgegebenen \emph{required Type} $R$ ein Proxy generiert und evaluiert werden. Die Mengen der \emph{Target-Typen} auf deren Basis mehrere \emph{Proxies} erzeugt werden können, wurden in Abschnitt \ref{sec_anzahlProxies} mithilfe der Funktion $\mathit{cover(R,L)}$ beschrieben. In diesem Zusammenhang in Lemma \ref{lemma_targetcount} eine Restriktion bzgl. der Anzahl möglicher \emph{Target-Typen} eines \emph{Proxies} beschrieben.
+%Die in $\mathit{cover(R,L)}$ befindlichen Mengen können eine unterschiedliche Anzahl von \emph{Target-Typen} enthalten. Die maximale Mächtigkeit einer Menge $\mathit{TM} \in \mathit{cover(R,L)}$ ist gleich der Anzahl der Methoden in $R$.
+Darauf aufbauend, kann die maximale Anzahl von \emph{Target-Typen} eines \emph{Proxies} für $R$ wie folgt definiert werden:
 %TODO Daraus ergibt sich folgender Satz:
 \begin{gather*}
 \mathit{maxTargets(R)} := |\mathit{methods(R)}|
 \end{gather*}
 \noindent
-In Bezug zur Funktion $\mathit{cover}$ gilt:
-\begin{gather*}
-\forall \mathit{TM} \in \mathit{cover(R,L)} : |\mathit{TM}| \leq \mathit{maxTargets(R)}
-\end{gather*}
-\noindent
 Das in dieser Arbeit beschriebene Konzept basiert auf der Annahme, dass der gesamte Anwendungsfall - oder Teile davon - , der mit der vordefinierten Struktur (\emph{required Typ}) und den vordefinierten Tests abgebildet werden soll, schon einmal genauso oder so ähnlich in dem gesamten System implementiert wurde. Aus diesem Grund kann für die \emph{semantische Evaluation} davon ausgegangen werden, dass die erfolgreiche Durchführung aller relevanten Tests umso wahrscheinlicher ist, je weniger \emph{Target-Typen} im \emph{Proxy} enthalten sind.
 \\\\
-Die Mengen innerhalb einer Menge $\mathit{TM}$ mit einer Mächtigkeit $a$ seien durch folgende Funktion beschrieben:
+Die Mengen innerhalb einer Menge $\mathit{C}$ mit einer Mächtigkeit $a$ seien durch folgende Funktion beschrieben:
 \begin{gather*}
-\mathit{targetSets(\mathit{TM},a)} := 
+\mathit{targetSets(\mathit{C},a)} := 
 \left\{\begin{array}{l|l}	
-				T_i & T_i \in \mathit{TM} \wedge |T_i| = a
+				\mathit{TM} & \mathit{TM} \in \mathit{C} \wedge |\mathit{TM}| = a
 		 \end{array}
 \right\}
 \end{gather*}
