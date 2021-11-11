@@ -30,7 +30,7 @@ Diese Arbeit legt den Fokus auf die Exploration von \emph{Enterprise-Java-Beans}
 \\\\
 Bei einer \emph{Bean} handelt es sich grundlegend um eine Java-Klasse, deren Struktur außerhalb dieser Klasse spezifiziert wurde. Seit der Version 3.0 der EJB-Spezifikation kann die Struktur durch ein Java-Interface spezifiziert werden. In früheren Versionen erfolgt dies in einer XML-Datei. \cite{ejbspec}
 \\\\
-Die \emph{Beans} können über einen \emph{EJB-Container} abgerufen werden. Zu diesem Zweck publiziert der \emph{EJB-Container} die \Gls{Interface}s der deployten \emph{Beans}, sodass diese auf den Clients über \emph{JNDI} oder \emph{Dependency Injection} zur Verfügung stehen \cite{ejbspec}.
+Die \emph{Beans} können über einen \emph{EJB-Container} abgerufen werden. Zu diesem Zweck publiziert der \emph{EJB-Container} die \Gls{Interface}s der deployten \emph{Beans}, sodass diese auf den Clients über \Gls{JNDI} oder \Gls{DependencyInjection} zur Verfügung stehen \cite{ejbspec}.
 \\\\
 Bezogen auf die in \cite{hummel08} beschriebenen Voraussetzungen für die \emph{TDCS} wird der \emph{EJB-Container} in dieser Arbeit als Software-Repository angesehen. Die einzelnen Softwareteile werden in Form von Java-Interfaces repräsentiert. Und der Mechanismus zum Durchsuchen des Repositories wird durch die Publikation der Java-Interfaces der \emph{EJBs} durch den \emph{EJB-Container} bereitgestellt.
 \\\\

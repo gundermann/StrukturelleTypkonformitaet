@@ -36,15 +36,26 @@
 \newglossaryentry{wrappertype}
 {
     name=Wrapper-Typ,
-    description={}
+    description={Ein Wrapper-Typ wird in der Programmierung auch als Hüllenklasse oder Adapter bezeichnet und entstammen dem \emph{Adapter-Muster} - einem Strukturmuster aus \cite{gof}. Eine solche Hüllenklasse beschreibt eine Klasse, mit der die Schnittstelle einer anderen Klasse angepasst werden kann. So ist es einem Klienten, welcher eine bestimmte Schnittstelle erwartet, möglich über die Hüllenklassen mit einer Klasse zusammenzuarbeiten, die die erwartete Schnittstelle nicht erfüllt. Die in dieser Arbeit beschriebenen Wrapper-Typen setzen dabei auf die Delegation der Schnittstellen-Anfragen. Das folgende Klassendiagramm zeigt die grundlegende Struktur solcher Wrapper-Typen. 
+\begin{figure}[!h]
+\centering
+\includegraphics[width=0.75\textwidth]{cd_wrapper.png}
+\label{bild}
+\end{figure} 
+    }
 }
 
-\newglossaryentry{jndi}
+\newglossaryentry{JNDI}
 {
     name=JNDI,
-    description={}
+    description={Java Naming and Directory Interface (JNDI) ist eine API, welches den Entwickler*innen bei der Verwendung der Programmiersprache Java erlaubt, Referenzen von Objekten anhand eines Namens abzulegen und diese Objekte somit auch über den jeweiligen Namen zu adressieren. (vgl. \cite{jndi})}
 }
 
+\newglossaryentry{DependencyInjection}
+{
+    name=Dependency Injection,
+    description={}
+}
 
 \newglossaryentry{injection}
 {
