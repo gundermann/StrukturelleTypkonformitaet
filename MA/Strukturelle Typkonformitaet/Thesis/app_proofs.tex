@@ -1,14 +1,14 @@
 \chapter{Beweise}\label{app_proofs}
-\section{Lemma \ref{lemma_targetcount}}
-\begin{lemma*}\label{lemma_targetcount}
+\section*{Theorem \ref{lemma_targetcount}}
+\begin{theorem*}
 Sei $R$ ein \emph{required Typ} innerhalb einer Bibliothek $L$. 
 Ein \emph{struktureller Proxy} für $R$ lässt sich nur aus den Mengen $\mathit{TM} \in \mathit{cover(R,L)}$ generieren, für die gilt:
 \begin{gather*}
 |\mathit{TM}| \leq |\mathit{methods(R)}|
 \end{gather*}
-\end{lemma*}
+\end{theorem*}
 \begin{proof}
-In Bezug auf alle \emph{strukturellen Proxies} $P \in \mathit{proxies_{struct}(R,TM})$, drückt das Lemma folgendes aus:
+In Bezug auf alle \emph{strukturellen Proxies} $P \in \mathit{proxies_{struct}(R,TM})$, drückt das Theorem folgendes aus:
 \begin{gather*}
 \forall \mathit{P} \in \mathit{proxies_{struct}(R,TM}):\mathit{TM}| \leq |\mathit{methods(R)}|
 \end{gather*}
@@ -34,7 +34,88 @@ Daraus folgt direkt:
 \begin{gather*}
 \forall \mathit{P} \in \mathit{proxies_{struct}(R,TM}):\mathit{TM}| \leq |\mathit{methods(R)}|
 \end{gather*}
+\end{proof}
 
+\section*{Theorem \ref{lemma_wiederholteTargets}}
+\begin{theorem*}
+Sei $R$ ein \emph{required Typ} aus einer Bibliothek $L$. Sei weiterhin $\mathit{C} = \mathit{cover(R,L)}$. Ferner seien $\mathit{TM} \in \mathit{C}$ und $\mathit{TM'} \in \mathit{C}$ mit $\mathit{proxies_{struct}(R,TM)} \neq \emptyset$ sowie $\mathit{proxies_{struct}(R,TM')} \neq \emptyset$ und $|\mathit{TM}| < |\mathit{TM'}|$ gegeben.
+\\\\
+Dann gilt:
+\begin{gather*}
+\forall \mathit{T} \in \mathit{TM}: \exists \mathit{TM''} \in \mathit{targetSets(C,|\mathit{TM'}|)}: \mathit{proxies_{struct}(R,TM'')} \neq \emptyset \wedge \mathit{T} \in \mathit{TM''} 
+\end{gather*}
+\end{theorem*}
+\begin{proof}
+Sofern es zwei Mengen von \emph{Target-Typen} eines \emph{strukturellen Proxies} unterschiedlicher Mächtigkeit gibt - so wie es bei $\mathit{TM}$ und $\mathit{TM'}$ der Fall ist, gibt in der Menge mit der geringeren Mächtigkeit auch immer einen Typ der mind. zwei Methoden enthält, die zu den Methoden des \emph{required Typ} $R$ gematcht werden können. Anderenfalls würde Theorem \ref{lemma_targetcount} nicht gelten.
+Darauf aufbauend kann jede Konstellation von Mengen von \emph{Target-Typen}, auf die die oben genannten Voraussetzungen zutreffen, auf das folgende Szenario reduziert werden.
+\\\\
+Angenommen $R$ enthält zwei Methoden $m_1$ und $m_2$ und $|\mathit{TM}| = 1$.
+Dann sind in $A \in \mathit{TM}$ zwei Methoden $a_1$ und $a_2$ deklariert, sodass $m_1 \Rightarrow_{method} a_1$ und $m_2 \Rightarrow_{method} a_2$ oder $m_1 \Rightarrow_{method} a_2$ und $m_2 \Rightarrow_{method} a_1$. Dann wäre aufgrund von Theorem \ref{lemma_targetcount} $|\mathit{TM'}| = 2$. Somit ist in $B \in \mathit{TM'}$ eine Methode $b_1$ deklariert mit $m_1 \Rightarrow_{method} b_1$ oder $m_2 \Rightarrow_{method} b_1$.
+Somit sind vier Fälle zu unterscheiden:
+\begin{enumerate}
+\item 
+Wenn gilt: 
+\begin{gather*}
+m_1 \Rightarrow_{method} a_1 \\
+m_2 \Rightarrow_{method} a_2 \\
+m_1 \Rightarrow_{method} b_1
+\end{gather*}
+Dann gilt $\{A, B\} \in \mathit{targetSets(C,2)}$ und $\mathit{proxy_{struct}(R,\{A, B\})} \neq \emptyset$.
+Ein beispielhafter \emph{struktureller Proxy} wäre:
+\begin{lstlisting}[mathescape, style=dsl]
+proxy for R with [A, B]{
+ R.$m_1$ --> TM.$b_1$
+ R.$m_2$ --> TM.$a_2$
+}
+\end{lstlisting}
 
+\item 
+Wenn gilt: 
+\begin{gather*}
+m_1 \Rightarrow_{method} a_1 \\
+m_2 \Rightarrow_{method} a_2 \\
+m_2 \Rightarrow_{method} b_1
+\end{gather*}
+Dann gilt $\{A, B\} \in \mathit{targetSets(C,2)}$ und $\mathit{proxy_{struct}(R,\{A, B\})} \neq \emptyset$.
+Ein beispielhafter \emph{struktureller Proxy} wäre:
+\begin{lstlisting}[mathescape, style=dsl]
+proxy for R with [A, B]{
+ R.$m_1$ --> TM.$a_1$
+ R.$m_2$ --> TM.$b_1$
+}
+\end{lstlisting}
+\item 
+Wenn gilt: 
+\begin{gather*}
+m_1 \Rightarrow_{method} a_2 \\
+m_2 \Rightarrow_{method} a_1 \\
+m_1 \Rightarrow_{method} b_1
+\end{gather*}
+Dann gilt $\{A, B\} \in \mathit{targetSets(C,2)}$ und $\mathit{proxy_{struct}(R,\{A, B\})} \neq \emptyset$.
+Ein beispielhafter \emph{struktureller Proxy} wäre:
+\begin{lstlisting}[mathescape, style=dsl]
+proxy for R with [A, B]{
+ R.$m_1$ --> TM.$b_1$
+ R.$m_2$ --> TM.$a_1$
+}
+\end{lstlisting}
+
+\item 
+Wenn gilt: 
+\begin{gather*}
+m_1 \Rightarrow_{method} a_2 \\
+m_2 \Rightarrow_{method} a_1 \\
+m_2 \Rightarrow_{method} b_1
+\end{gather*}
+Dann gilt $\{A, B\} \in \mathit{targetSets(C,2)}$ und $\mathit{proxy_{struct}(R,\{A, B\})} \neq \emptyset$.
+Ein beispielhafter \emph{struktureller Proxy} wäre:
+\begin{lstlisting}[mathescape, style=dsl]
+proxy for R with [A, B]{
+ R.$m_1$ --> TM.$a_2$
+ R.$m_2$ --> TM.$b_1$
+}
+\end{lstlisting}
+\end{enumerate}
+Damit kann in jedem Fall ein \emph{struktureller Proxy} generiert werden, in dem der \emph{Target-Typ} aus $\mathit{TM}$ ebenfalls als \emph{Target-Typ} verwendet wird.
 
 \end{proof}

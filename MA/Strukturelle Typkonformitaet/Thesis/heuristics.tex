@@ -1,0 +1,354 @@
+
+\section{Heuristiken}\label{sec_heuristics}
+Die \Gls{Heuristik}en werden innerhalb des Algorithmus aus Listing \ref{lst_semEval} eingebaut. Teilweise ist es für die Verwendung einer \Gls{Heuristik} notwendig, weitere Information während der \emph{semantischen Evaluation} zu ermitteln und diese zu speichern. In den folgenden Abschnitten werden die \Gls{Heuristik}en und die dafür notwendigen Anpassungen an den jeweiligen Funktionen beschrieben.
+\\\\
+Die \Gls{Heuristik}en, die in den Abschnitten \ref{sec_lmf} und \ref{sec_pttf} beschrieben werden, haben zum Ziel, die Reihenfolge, in der die \emph{Proxies} hinsichtlich der vordefinierten Tests geprüft werden, so anzupassen, dass ein valider \emph{Proxy} möglichst früh geprüft wird. Die dritte Heuristik, die im Abschnitt \ref{sec_bl_nmc} beschrieben wird, beschreibt ein Ausschlussverfahren.
+\\\\
+Der Pseudo-Code für die \emph{semantische Evaluation} mit der Kombination aller genannten \Gls{Heuristik}en ist im Anhang \ref{app_semEvalMitAllenHeuristiken} zu finden.
+
+
+\subsection{Beachtung des Matcherratings (LMF)}\label{sec_lmf}
+Bei dieser \Gls{Heuristik}, welche den Namen \emph{low matcherrating first} (kurz: \emph{LMF}) trägt, werden die Mengen von \emph{Target-Typen}, aus denen die \emph{Proxies} erzeugt werden, auf der Basis eines so genannten \emph{Matcherratings} bewertet. Bei dem \emph{Matcherrating} einer solchen Menge handelt es sich um einen numerischen Wert, auf dessen Basis entschieden werden kann, für welche Menge von \emph{Target-Typ} die Generierung und Evaluation der \emph{Proxies} vollzogen werden soll.
+\\\\
+Um das \emph{Matcherrating} zu ermitteln, wird für jede Matchingrelation bzw. für jeden Matcher aus Abschnitt \ref{sec_matcher} ein \emph{Basisrating} vergeben. Folgende Funktion beschreibt das \emph{Basisrating} für das Matching zweier Typen $S$ und $T$:
+\begin{gather*}
+\mathit{base(S,T)} :=  \left\{ 
+				\begin{array}{l}
+					100 \text{ wenn } S \Rightarrow_{exact}  T  \\
+					200 \text{ wenn } S \Rightarrow_{gen}  T  \\
+					200 \text{ wenn } S \Rightarrow_{spec}  T  \\
+					300 \text{ wenn } S \Rightarrow_{contained}  T   \\
+					300 \text{ wenn } S \Rightarrow_{container}  T  				
+				\end{array}             
+	\right.
+\end{gather*}
+\noindent
+Dabei ist zu erwähnen, dass einige der oben genannten Matcher über dasselbe \emph{Basisrating} verfügen. Das liegt daran, dass sie technisch jeweils gemeinsam umgesetzt wurden.\footnote{Der \emph{GenTypeMatcher} und der \emph{SpecTypeMatcher} wurden gemeinsam in der Klasse $\texttt{GenSpecTypeMatcher}$ umgesetzt. Der \emph{ContentTypeMatcher} und der \emph{ContainerTypeMatcher} wurden gemeinsam in der Klasse $\texttt{WrappedTypeMatcher}$ umgesetzt. (siehe angehängter Quellcode auf dem beiliegenden Datenträger)}
+\\\\
+Wie an der Funktion $\mathit{base}$ zu erkennen ist, wird das \emph{Matcherrating} für Typen, die über den \emph{StructuralTypeMatcher} gematcht wurden, nicht spezifiziert. Dieses muss berechnet werden. Die Basis dafür bildet ein \emph{Matcherrating}, welches für die gematchten Methoden ermittelt wird. Hierzu sei die Funktion $\mathit{bases_{method}}$ für zwei Methoden $\mathit{mR}$ und $\mathit{mT}$ mit $\mathit{mR} \Rightarrow_{method} \mathit{mT}$ wie folgt definiert:
+\begin{gather*}
+\mathit{bases_{method}(mR,mT)} := \begin{array}{l|l}
+\mathit{base(ret(mR), ret(mT))} \cup \mathit{ }
+&
+\{\mathit{pR_1,...,pR_n}\} = \mathit{params(mR)} \wedge \mathit{ }
+\\
+\bigcup\limits_{i=1}^{n} \mathit{base(pR_i,pT_i)}
+&
+\{\mathit{pT_1,...,pT_n}\} = \mathit{params(mT)}
+\end{array} 
+\end{gather*}
+\noindent
+Darauf aufbauend kann die Funktion $\mathit{mRating}$ für die beiden Methoden $\mathit{mR}$ und $\mathit{mT}$ definiert werden. Hierzu seien folgende Hilfsfunktionen definiert:
+\begin{gather*}
+\mathit{sum(\{v_1,...v_n\})} := \sum_{i=1}^{n}v_i
+\\
+\mathit{max(\{v_1,...,v_n\})} := 
+\begin{array}{l|l}
+v_{m}
+&
+1 \leq m \leq n  \wedge \forall i \in  \{1,...,n\}: v_i \leq v_{m}
+\end{array}
+\\    
+\mathit{min(\{v_1,...,v_n\})} := 
+\begin{array}{l|l}
+v_{m}
+&
+1 \leq m \leq n  \wedge \forall i \in  \{1,...,n\}: v_i \geq v_{m} 
+\end{array}  
+\end{gather*}
+\noindent
+In dieser Arbeit werden vier Varianten für diese Definition von $\mathit{mRating}$ vorgeschlagen, die in Abschnitt \ref{sec_evalLMF} evaluiert werden sollen.
+\paragraph{Variante 1: Durchschnitt ($\mathit{mRating}_1$)}
+
+\begin{gather*}
+\mathit{mRating_1(mR,mT)} := \frac{\mathit{sum(base_{method}(mR,mT))}}{|\mathit{params(mR)}|+1}
+\end{gather*}
+
+\paragraph{Variante 2: Maximum ($\mathit{mRating}_2$)}
+
+\begin{gather*}
+\mathit{mRating_2(mR,mT)} := \mathit{max(bases_{method}(mR,mT))}
+\end{gather*}
+
+\paragraph{Variante 3: Minimum ($\mathit{mRating}_3$)}
+
+\begin{gather*}
+\mathit{mRating_3(mR,mT)} := \mathit{min(bases_{method}(mR,mT))}
+\end{gather*}
+
+\paragraph{Variante 4: Durchschnitt aus Minimum und Maximum ($\mathit{mRating}_4$)}
+
+\begin{gather*}
+\mathit{mRating_4(mR,mT)} := \frac{\mathit{max(bases_{method}(mR,mT))}+\mathit{min(bases_{method}(mR,mT))}}{2}
+\end{gather*}
+\noindent
+In einem \emph{provided Typ} $T$ sind mitunter mehrere Methoden deklariert, die ein Matching zu einer Methode $m$ aufweisen. Für die Bestimmung des \emph{Matcherratings} sei hierbei nur das kleinste \emph{Matcherrating} jener Methoden aus $P$ relevant. Das \emph{minimale Matcherrating} einer solchen Methode wird durch folgende Funktion beschrieben\footnote{Da die Varianten der Funktion $\mathit{mRating}$ in $\mathit{minMRating}$ flexibel verwendet werden können, wurde für $\mathit{mRating}$ das Subskript $*$ verwendet.}
+\begin{gather*}
+\mathit{minMRating(m, T)} := 
+	\begin{array}{l|l}
+\mathit{min(mRating_*(m'_1),}
+&
+\{\mathit{m'_1,...,m'_n}\} =
+\\
+\mathit{...,mRating_*(m'_n))}
+&
+\mathit{structM_{target}(m, T)}
+\end{array}
+\end{gather*}
+\noindent
+Für einen \emph{required Typ} $R$ und einem \emph{provided Typ} $T$ wird die Menge dieser \emph{minimalen Matcherratings} je Methode $m \in \mathit{structM(R)}$ über folgende Funktion definiert:
+\begin{gather*}
+\mathit{minMRatings(R,T)} := \left\{
+\begin{array}{l|l}
+	\mathit{minMRating(m,T)}
+	& 
+	m \in \mathit{structM(R,T)}
+\end{array}
+\right\}
+\end{gather*}
+\noindent
+In einer Bibliothek $L$ wird die Ermittlung des \emph{Matcherratings} eines \emph{required Typs} $R$ und einer Menge von \emph{provided Typen} $\{T_1,...,T_n\}$ mit $\{T_1,...,T_n\} \in \mathit{cover(R,L)}$ über die Funktion $\mathit{rating}$ beschrieben. Auch hierfür werden in dieser Arbeit insgesamt 4 Varianten vorgeschlagen, die in Kapitel \ref{chap_evaluation} evaluiert werden sollen.
+\paragraph{Variante 1: Durchschnitt ($\mathit{rating}_1$)}
+
+\begin{gather*}
+\mathit{rating_1(R,\{T_1,...,T_n\})} := \frac{\mathit{sum(minMRatings(R,T_1),...,minMRatings(R,T_n))}}{\sum_{i=1}^{n}|\mathit{structM(R,T_i)}|}
+\end{gather*}
+
+\paragraph{Variante 2: Maximum ($\mathit{rating}_2$)}
+
+\begin{gather*}
+\mathit{rating_2(R,\{T_1,...,T_n\})} := \mathit{max(minMRatings(R,T_1),...,minMRatings(R,T_n))}
+\end{gather*}
+
+\paragraph{Variante 3: Minimum ($\mathit{rating}_3$)}
+
+\begin{gather*}
+\mathit{rating_3(R,\{T_1,...,T_n\})} := \mathit{min(minMRatings(R,T_1),...,minMRatings(R,T_n))}\end{gather*}
+
+\paragraph{Variante 4: Durchschnitt aus Minimum und Maximum ($\mathit{rating}_4$)}
+
+\begin{gather*}
+\mathit{rating_4(R,\{T_1,...,T_n\})} := 
+	\frac{\splitfrac{\mathit{min(minMRatings(R,T_1),...,
+	minMRatings(R,T_n))}}
+	{+ \mathit{max(minMRatings(R,T_1),...,minMRatings(R,T_n))}}}{2}	
+\end{gather*}
+\noindent
+Da die Funktion $\mathit{rating}$ von $\mathit{mRating}$ abhängt und für $\mathit{mRating}$ 4 Varianten vorgeschlagen wurden, ergeben sich insgesamt 16 Varianten für die Definition von $\mathit{rating}$. Diese Varianten (1.1 - 4.4) sind in der Tabelle \ref{tab_matcherratingvarianten} mit den Kombinationen der Varianten für $\mathit{mRating}$ und $\mathit{rating}$ aufgeführt.
+
+\begin{table}[h!]
+\centering
+\small
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+\hline
+\textbf{Variante} & 1.1 & 1.2 & 1.3 & 1.4 
+& 2.1 & 2.2 & 2.3 & 2.4 
+& 3.1 & 3.2 & 3.3 & 3.4 
+& 4.1 & 4.2 & 4.3 & 4.4 
+\\
+\hline
+$\mathit{rating}_{*}$& 1 & 1 & 1 & 1
+& 2 & 2 & 2 & 2 
+& 3 & 3 & 3 & 3 
+& 4 & 4 & 4 & 4 
+\\
+\hline
+$\mathit{mRating}_{*}$ & 1 & 2 & 3 & 4 
+& 1 & 2 & 3 & 4 
+& 1 & 2 & 3 & 4 
+& 1 & 2 & 3 & 4 
+\\
+\hline
+\hline
+\end{tabular}
+\caption{Varianten für die Ermittlung des Matcherratings einer Menge von \emph{provided Typen}}
+ \label{tab_matcherratingvarianten}
+\end{table}
+\noindent
+Zur Anwendung der \Gls{Heuristik} muss das \emph{Matcherrating} bei der Generierung der \emph{Proxies} aus den jeweiligen Mengen von \emph{provided Typen} beachtet werden. Dabei sollte die Liste der Mengen von \emph{provided Typen}, die über die Funktion $\mathit{targetSets}$ abgebildet wird (siehe Abschnitt \ref{sec_semEvalAlgo}) und über die in der Methode $\texttt{semanticEval}$ (siehe Listing \ref{lst_semEval}) iteriert wird, entsprechend dem \emph{Matcherrating} sortiert werden. Dadurch werden in der Methode $\texttt{evalProxies}$ (siehe Listing \ref{lst_semEval}) zuerst die \emph{Proxies} generiert und geprüft, die auf Basis einer Menge von \emph{provided Typen} mit dem kleinsten \emph{Matcherrating} erzeugt wurden.
+\\\\
+Listing \ref{lst_lmf} zeigt die Anpassungen der Methode $\texttt{relevantProxies}$ auf Basis der Implementierung der \emph{semantischen Evaluation} aus Listing \ref{lst_semEval}. Für die Sortierung der Liste von \emph{Proxies} wurde in der Methode $\texttt{LMF}$ exemplarisch das \Gls{bsort}-Verfahren verwendet.
+
+\begin{lstlisting}[style = pseudo, caption=Semantische Evaluation mit Heuristik LMF, captionpos=b, label = lst_lmf]
+function semanticEval( R, T, tests ){
+	for( anzahl = 1; anzahl <= $\mathit{maxTargets( R )}$; i++ ){
+		targetSets = $\mathit{targetSets( T, anzahl )}$
+		sortedSets = LMF( R, targetSets )		
+		for( targets : sorted ){
+			relProxies = $\mathit{proxies( R, targets )}$
+			proxy = evalProxies( relProxies, tests )	
+			if( proxy != null ){
+				// validen Proxy gefunden
+				return proxy
+			}
+		}
+	}
+	// kein validen Proxy gefunden
+	return null;
+}
+
+function LMF( R, targets ){
+	for	( n=targets.size(); n>1; n--){
+		for( i=0; i<n-1; i++){
+			if( $\mathit{rating(R,}$ targets[i] $)$ < $\mathit{rating(R,}$ targets[i+1] $)$ ){
+				tmp = targets[i]
+				targets[i] = targets[i+1]
+				targets[i+1] = tmp
+			}
+		}
+	}	
+	return targets
+}
+\end{lstlisting}
+
+
+\subsection{Beachtung positiver Tests (PTTF)}\label{sec_pttf}
+Das Testergebnis, welches bei Applikation eines Testfalls für einen \emph{Proxy} ermittelt wird, ist maßgeblich von den \emph{Methoden-Delegationen} des \emph{Proxies} abhängig. Jede \emph{Methoden-Delegation} $\mathit{MD}$ enthält einen Typ in dem die \emph{Delegationsmethode} deklariert wurde. Dieser Typ befindet sich im Attribut $\texttt{MD.del.delTyp}$. Im Fall der \emph{sturkturellen Proxies}, handelt es sich bei diesem Typ um einen der \emph{Target-Typen} des \emph{Proxies}. Bezüglich der \emph{Target-Typen} möglicher \emph{struktureller Proxies} gilt folgendes Theorem\footnote{Der Beweis ist in Anhang \ref{app_proofs} zu finden.}
+\begin{theorem}\label{lemma_wiederholteTargets}
+Sei $R$ ein \emph{required Typ} aus einer Bibliothek $L$. Sei weiterhin $\mathit{C} = \mathit{cover(R,L)}$. Ferner seien $\mathit{TM} \in \mathit{C}$ und $\mathit{TM'} \in \mathit{C}$ mit $\mathit{proxies_{struct}(R,TM)} \neq \emptyset$ sowie $\mathit{proxies_{struct}(R,TM')} \neq \emptyset$ und $|\mathit{TM}| < |\mathit{TM'}|$ gegeben.
+\\\\
+Dann gilt:
+\begin{gather*}
+\forall \mathit{T} \in \mathit{TM}: \exists \mathit{TM''} \in \mathit{targetSets(C,|\mathit{TM'}|)}: \mathit{proxies_{struct}(R,TM'')} \neq \emptyset \wedge \mathit{T} \in \mathit{TM''} 
+\end{gather*}
+\end{theorem}
+\noindent
+In Bezug auf die \emph{Proxies}, die bei der \emph{semantischen Evaluation} in mehreren Durchläufen geprüft werden sollen, bedeutet das Folgendes: Die einzelnen \emph{Target-Typen} der \emph{Proxies}, die innerhalb eines Durchlaufs geprüft wurden, sind auch in den \emph{Target-Typen} der \emph{Proxies} enthalten, die in einem späteren Durchlauf geprüft werden - sofern solche \emph{Proxies} überhaupt existieren.
+\\\\
+Für die in diesem Abschnitt beschriebene \Gls{Heuristik} mit dem Namen \emph{positive tested targets first} (kurz: \emph{PTTF}) ist das Ergebnis einzelner Tests in Bezug auf einen \emph{Proxy} $P$ relevant. Wenn ein Testfall mit einem \emph{Proxy} $P$ erfolgreich durchgeführt wurde, dann sollte die Reihenfolge der zu prüfenden \emph{Proxies} späterer Durchläufe so angepasst werden, dass die \emph{Proxies}, die einen \emph{Target-Typen} des \emph{Proxies} $P$ verwenden, im weiteren Verlauf zuerst geprüft werden.
+\\\\
+Dafür sind auf Basis von Listing \ref{lst_semEval} mehrere Anpassungen bzgl. der Implementierung der Methode $\texttt{evalProxies}$ von Nöten:
+\begin{enumerate}
+\item 
+Die \emph{Target-Typen} der \emph{Proxies}, mit denen mind. ein Testfall erfolgreich durchgeführt werden konnte, müssen in einer globalen Variable ($\texttt{prioTargets}$) hinterlegt werden.
+
+\item 
+Die Liste der \emph{Proxies}, die der Methode $\texttt{evalProxies}$ als Parameter übergeben wird, muss so sortiert werden, dass die \emph{Proxies}, mit den \emph{Target-Typen}, die in der globalen Variable ($\texttt{prioTargets}$) hinterlegt wurden, zuerst getestet werden. 
+
+\item 
+Die Liste der \emph{Proxies}, über die innerhalb der Methode $\texttt{evalProxies}$ iteriert wird, kann bzgl. ihrer Reihenfolge bereits dann optimiert werden, wenn mind. einer der Testfälle für den aktuellen \emph{Proxy} erfolgreich durchgeführt wurde. Dazu müssen jedoch die \emph{Proxies}, die bereits innerhalb der Methode getestet wurden, in einer lokalen Variable ($\texttt{tested}$) hinterlegt werden. Dann kann die Methode rekursiv mit den \emph{Proxies}, die noch nicht getestet wurden, aufgerufen werden. So werden die darin enthaltenen Elemente aufgrund der 2. Anpassung erneut sortiert.
+\end{enumerate}  
+In Listing \ref{lst_pttf} sind die oben genannten Anpassungen im Vergleich zu Listing \ref{lst_semEval} zu entnehmen. 
+\begin{lstlisting}[style = pseudo, caption = Semantische Evaluation mit Heuristik PTTF, captionpos = b, label = lst_pttf]
+prioTargets = []
+
+function evalProxies( proxies, tests ){
+ tested = []
+ sorted = PTTF( proxies )
+ for( proxy : sorted ){
+  passedTests = 0
+  evalProxy( proxy, tests )
+  if( passedTests == tests.size ){
+   // validen Proxy gefunden
+   return proxy
+  }
+  else{
+   tested.add( proxy )
+   if( passedTests > 0 ){
+    prioTargets.addAll( proxy.targets )
+    // noch nicht evaluierte Proxies ermitteln
+    leftProxies = sorted.removeAll( testedProxies )
+    return evalProxies( leftProxies, tests )
+   }
+  }
+ }
+ // kein validen Proxy gefunden
+ return null
+}
+
+function PTTF( proxies ){
+ for( n=proxies.size ; n>1; n--){
+  for( i=0; i<n-1; i++){
+   targetsFirst = proxies[i].targets
+   targetsSecond = proxies[i+1].targets			
+   if( !prioTargets.contains( targetsFirst ) 
+        && prioTargets.contains( targetsSecond ) ){
+    tmp = proxies[i]
+    proxies[i] = proxies[i+1]
+    proxies[i+1] = tmp
+   }
+  }
+ }
+ return proxies	
+}
+\end{lstlisting}
+
+\subsection{Beachtung fehlgeschlagener Methodenaufrufe (BL\_NMC)}\label{sec_bl_nmc}
+Diese \Gls{Heuristik} mit dem Namen \emph{blacklist negative method calls} (kurz: \emph{BL\_NMC}) beschreibt ein Ausschlussverfahren. Das bedeutet, dass bestimmte \emph{Proxies} auf der Basis von Erkenntnissen, die während der \emph{semantischen Evaluation} entstanden sind, für den weiteren Verlauf ausgeschlossen werden. Dadurch soll die Prüfung eines \emph{Proxies}, dessen \emph{Methoden-Delegationen} ohnehin nicht zum gewünschten Ergebnis führen, verhindert werden.
+\\\\
+Die Heuristik zielt darauf ab, \emph{Methoden-Delegationen}, die immer fehlschlagen, zu identifizieren. Wurde eine solche \emph{Methoden-Delegation} gefunden, können alle \emph{Proxies}, die diese \emph{Methoden-Delegation} enthalten von der weiteren Exploration ausgeschlossen werden.
+\\\\
+Die \emph{Methoden-Delegationen}, die auf der Basis der folgenden \Gls{Heuristik} aussortiert werden sollen, werden zu diesem Zweck in einer globalen Variable ($\texttt{mdelBlacklist}$) gehalten. Aus einer Liste von \emph{Proxies} können darauf aufbauend diejenigen \emph{Proxies} entfernt werden, die eine jener \emph{Methoden-Delegationen} enthalten. Für die Implementierung wird im Folgenden davon ausgegangen, dass die Methoden eines \emph{required Typen} über den Namen identifiziert werden können.
+\\\\
+Ausgehend vom Algorithmus der \emph{semantischen Evaluation} (siehe Listing \ref{lst_semEval}) muss die Methode $\texttt{evalProxy}$ für das Füllen der globalen Variable $\texttt{mdelBlacklist}$ angepasst werden. Die Identifikation der \emph{Methoden-Delegationen} über die Methodennamen erfolgt in der Methode $\texttt{getMethodDelegations}$. Beide Methoden sind Listing \ref{lst_BL_evalProxy} zu entnehmen.
+\begin{lstlisting}[style = pseudo, caption = Evaluierung einzelner Proxies mit BL\_MNC, captionpos = b, label = lst_BL_evalProxy]
+function evalProxy( proxy, tests ){
+ for( test : T ){	
+  if( test.eval( proxy ) ){
+   passedTestcases = passedTestcases + 1
+  }
+  else {
+   triedMethodCalls = test.triedMethodCalls
+   mDel = getMethodDelegations( proxy, triedMethodCalls )
+   mdelBlacklist.add( mDel )
+  }		
+ }
+}
+
+function getMethodDelegations( proxy, methodNames ){
+ for( i=0; i < proxy.dels.size; i++ ){
+  methodName = proxy.dels[i].call.name
+  if( methodNames.containsAll( methodName ) ){
+   return proxy.dels[i]
+  }
+ }
+ return null
+}
+\end{lstlisting}
+\noindent
+Das Ausschließen bestimmter \emph{Proxies} erfolgt, indem Elemente aus einer Liste von \emph{Proxies} entfernt werden. Listing \ref{lst_BL} zeigt die dafür vorgesehene Methode $\texttt{BL}$, welche die Basis-Liste der \emph{Proxies} im Parameter $\texttt{proxies}$ und die Liste der Kombinationen von \emph{Methoden-Delegationen}, die die Grundlage für den Ausschluss einzelner \emph{Proxies} bilden, im Parameter $\texttt{blacklist}$ erwartet.
+\begin{lstlisting}[style = pseudo, label = lst_BL, caption=Blacklist-Methode für Heuristil BL\_NMC, captionpos = b]
+function BL( proxies, blacklist ){
+	filtered = []	
+	for( proxy : proxies ){
+		blacklisted = false
+		for( md : blacklist ){
+			if( proxy.dels.contains( md ) ){
+				blacklisted = true
+				break
+			}	
+		}
+		if( !blacklisted ){
+			filtered.add( proxy )
+		}
+	}
+	return filtered
+}
+
+\end{lstlisting}
+\noindent
+Bei dieser \Gls{Heuristik} ist deren Anwendung nach jedem Evaluationsversuch eines einzelnen \emph{Proxies} sinnvoll. Listing \ref{lst_BL_NMC} zeigt die Anpassungen in der Funktion $\texttt{evalProxies}$ aus Listing \ref{lst_semEval} für die Heuristik \emph{BL\_NMC}. Dabei sei davon auszugehen, dass die oben beschriebenen Funktionen aus den Listings \ref{lst_BL} und \ref{lst_BL_evalProxy} zur Verfügung stehen.
+\begin{lstlisting}[style = pseudo, caption=Evaluation mehrere Proxies mit BL\_MNC, captionpos=b, label = lst_BL_NMC]
+function evalProxies( proxies, tests ){
+	tested = []
+	filtered = BL( proxies, mdelBlacklist )
+	for( proxy : proxies ){
+		passedTestcases = 0
+		evalProxy(proxy, tests)
+		if( passedTestcases == tests.size ){
+			// validen Proxy gefunden
+			return proxy
+		}
+		else{
+			tested.add( proxy )
+				// noch nicht evaluierte Proxies ermitteln
+			leftProxies = proxies.removeAll( tested )	
+			return evalProxies( leftProxies, tests )
+		}
+	}
+	// kein validen Proxy gefunden
+	return null
+}
+\end{lstlisting}
+\noindent

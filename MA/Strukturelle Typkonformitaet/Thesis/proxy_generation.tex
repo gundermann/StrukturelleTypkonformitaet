@@ -479,7 +479,7 @@ Ein \emph{struktureller Proxy} wird formal durch die folgenden Regeln beschriebe
 Ein \emph{struktureller Proxy} kann, wie bereits erwähnt, mehrere \emph{Target-Typen} $\mathit{TM}$ enthalten.
 Für jeden \emph{Target-Typ} $T \in \mathit{TM}$ muss dabei jedoch wenigstens eine \emph{Delegationsmethode} im \emph{Proxy} mit einem Attribut $\texttt{target} = T$ existieren. Dadurch gilt die für einen \emph{strukturellen Proxy} $P$:
 \begin{gather*}
-\frac{|\mathit{P.targets}| = |\mathit{TM}| \wedge \forall \mathit{T} \in \mathit{P.targets}: T \in \mathit{TM} \wedge \exists \mathit{MD} \in \mathtt{P.dels}:\mathit{MD.del.target} = T}{\mathit{targets_{multi}(P, \mathit{TM})}}
+\frac{|\mathit{P.targets}| = |\mathit{TM}| \wedge \forall \mathit{T} \in \mathit{P.targets}: T \in \mathit{TM} \wedge \exists \mathit{MD} \in \mathit{P.dels}:\mathit{MD.del.target} = T}{\mathit{targets_{multi}(P, \mathit{TM})}}
 \end{gather*}
 \noindent
 Für die \emph{aufgerufene Methode} und die \emph{Delegationsmethode} einer einzelnen \emph{Methoden-Delegation} gelten im \emph{strukturellen Proxy} dieselben Regeln wie für den \emph{Sub-Proxy}. Die Namen der \emph{aufgerufenen Methoden} und der \emph{Delegationsmethode} müssen dabei jedoch nicht übereinstimmen. Dafür müssen diese beiden Methoden jedoch ein strukturelles Matching aufweisen. Bezogen auf die Rückgabe-Typen einer \emph{aufgerufenen Methode} $\mathit{C}$ und einer \emph{Delegationsmethode} $\mathit{D}$ müssen daher folgende Regeln gelten.
@@ -595,16 +595,16 @@ Die im Abschnitt \ref{sec:proxygram} erwähnte Funktion $\mathit{proxies(S,\math
 \right\}
 \end{gather*}
 \subsection{Anzahl struktureller Proxies innerhalb einer Bibliothek}\label{sec_anzahlProxies}
-Die Generierung der \emph{strukturellen Proxies} für ein \emph{required Typ} $R$ aus der Bibliothek $L$ erfolgt während des \emph{Explorationsprozesses} auf Basis der Mengen von \emph{provided Typen} aus $\mathit{cover(R,L)}$ (siehe Abschnitt \ref{sec_ergStructEval}). Bezüglich dieser Mengen aus $\mathit{cover(R,L)}$ gilt jedoch folgendes Lemma\footnote{Der Beweis ist im Anhang \ref{app_proofs} zu finden.}:
-\begin{lemma}\label{lemma_targetcount}
+Die Generierung der \emph{strukturellen Proxies} für ein \emph{required Typ} $R$ aus der Bibliothek $L$ erfolgt während des \emph{Explorationsprozesses} auf Basis der Mengen von \emph{provided Typen} aus $\mathit{cover(R,L)}$ (siehe Abschnitt \ref{sec_ergStructEval}). Bezüglich dieser Mengen aus $\mathit{cover(R,L)}$ gilt jedoch folgendes Theorem\footnote{Der Beweis ist in Anhang \ref{app_proofs} zu finden.}:
+\begin{theorem}\label{lemma_targetcount}
 Sei $R$ ein \emph{required Typ} innerhalb einer Bibliothek $L$. 
 Ein \emph{struktureller Proxy} für $R$ lässt sich nur aus den Mengen $\mathit{TM} \in \mathit{cover(R,L)}$ generieren, für die gilt:
 \begin{gather*}
 |\mathit{TM}| \leq |\mathit{methods(R)}|
 \end{gather*}
-\end{lemma}
+\end{theorem}
 \noindent
-Mit einer Menge $\mathit{TM} \in \mathit{cover(R,L)}$, für die die Bedingung aus Lemma \ref{lemma_targetcount} eingehalten wird, können durchaus mehrere \emph{Proxies} erzeugt werden. Das ist dann der Fall, wenn mehrere der Methoden, die in den \emph{provided Typen} aus $\mathit{TM}$ deklariert wurden, mit einer Methode aus $R$ strukturell übereinstimmen, oder wenn für eine Methode $m$ aus $R$ und eine Methode $m'$ aus einem der \emph{Target-Typen} $|matchingParams(m,m')| > 1$ gilt (siehe Abschnitt \ref{subsec_structmatcher}).
+Mit einer Menge $\mathit{TM} \in \mathit{cover(R,L)}$, für die die Bedingung aus Theorem \ref{lemma_targetcount} eingehalten wird, können durchaus mehrere \emph{Proxies} erzeugt werden. Das ist dann der Fall, wenn mehrere der Methoden, die in den \emph{provided Typen} aus $\mathit{TM}$ deklariert wurden, mit einer Methode aus $R$ strukturell übereinstimmen, oder wenn für eine Methode $m$ aus $R$ und eine Methode $m'$ aus einem der \emph{Target-Typen} $|matchingParams(m,m')| > 1$ gilt (siehe Abschnitt \ref{subsec_structmatcher}).
 \\\\
 Die Anzahl der \emph{strukturellen Proxies} für einen \emph{required Typ} $R$ mit einer bestimmten Menge von \emph{Target-Typen} ist somit von der Anzahl der Methoden abhängig, die in einem der \emph{Target-Typen} deklariert wurden und strukturell mit den Methoden aus $R$ übereinstimmen. 
 \\\\
@@ -711,7 +711,7 @@ m_n
 \noindent
 Durch mehrere Möglichkeiten der Sortierung der Parameter würde sich dieser Wert nochmals erhöhen. Auf eine genaue Formel wird an dieser Stelle verzichtet, da hier lediglich eine Vorstellung davon vermittelt werden soll, wie große die Anzahl der möglichen \emph{strukturellen Proxies} mit einer bestimmten Mengen von \emph{Target-Typen} ist.
 \\\\
-Da innerhalb einer Bibliothek $L$ mehrere Mengen von \emph{Target-Typen} zur Bildung eines \emph{Proxies} für einen \emph{required Typ} $R$ infrage kommen (siehe Funktion $\mathit{cover}$) muss die Anzahl der \emph{strukturellen Proxies} über die Funktion $\mathit{proxyCount}$ für alle Elemente aus $\mathit{cover(R,L)}$ ermittelt und summiert werden. Dabei muss jedoch beachtet werden, dass die Funktion $\mathit{cover}$ nicht die Bedingung aus Lemma \ref{lemma_targetcount} abbildet. Daher muss die Funktion für diesen Sachverhalt, wie folgt näherungsweise definiert werden:
+Da innerhalb einer Bibliothek $L$ mehrere Mengen von \emph{Target-Typen} zur Bildung eines \emph{Proxies} für einen \emph{required Typ} $R$ infrage kommen (siehe Funktion $\mathit{cover}$) muss die Anzahl der \emph{strukturellen Proxies} über die Funktion $\mathit{proxyCount}$ für alle Elemente aus $\mathit{cover(R,L)}$ ermittelt und summiert werden. Dabei muss jedoch beachtet werden, dass die Funktion $\mathit{cover}$ nicht die Bedingung aus Theorem \ref{lemma_targetcount} abbildet. Daher muss die Funktion für diesen Sachverhalt, wie folgt näherungsweise definiert werden:
 \begin{gather*}
 \mathit{libProxyCount(R,L)} \leq 
 \begin{array}{l|l}
