@@ -1,14 +1,16 @@
 
 \section{Heuristiken}\label{sec_heuristics}
-Die \Gls{Heuristik}en werden innerhalb des Algorithmus aus Listing \ref{lst_semEval} eingebaut. Teilweise ist es für die Verwendung einer \Gls{Heuristik} notwendig, weitere Information während der \emph{semantischen Evaluation} zu ermitteln und diese zu speichern. In den folgenden Abschnitten werden die \Gls{Heuristik}en und die dafür notwendigen Anpassungen an den jeweiligen Funktionen beschrieben.
+Als \Gls{Heuristik}en werden in dieser Arbeit Verfahren bezeichnet, durch die die Lösung eines Problems beschleunigt werden kann, indem neu gewonnene Erkenntnisse beim Finden der Lösung berücksichtigt werden. Konkret bedeutet dies, dass die oben beschriebene \emph{semantische Evaluation} durch diese Verfahren beschleunigt werden soll.
 \\\\
 Die \Gls{Heuristik}en, die in den Abschnitten \ref{sec_lmf} und \ref{sec_pttf} beschrieben werden, haben zum Ziel, die Reihenfolge, in der die \emph{Proxies} hinsichtlich der vordefinierten Tests geprüft werden, so anzupassen, dass ein valider \emph{Proxy} möglichst früh geprüft wird. Die dritte Heuristik, die im Abschnitt \ref{sec_bl_nmc} beschrieben wird, beschreibt ein Ausschlussverfahren.
 \\\\
-Der Pseudo-Code für die \emph{semantische Evaluation} mit der Kombination aller genannten \Gls{Heuristik}en ist im Anhang \ref{app_semEvalMitAllenHeuristiken} zu finden.
+Für die Verwendung der \Gls{Heuristik}en wird der Algorithmus aus Listing \ref{lst_semEval} erweitert. Diese Erweiterung beinhaltet die Verwaltung der neu gewonnenen Erkenntnisse sowie die Anwendung der \Gls{Heuristik}en auf die zu generierenden bzw. generierten \emph{Proxies}. 
+\\\\
+In den folgenden Abschnitten werden die \Gls{Heuristik}en und die dafür notwendigen Anpassungen an den jeweiligen Funktionen beschrieben. Der Pseudo-Code für die \emph{semantische Evaluation} inklusive der Verwendung aller vorgestellten \Gls{Heuristik}en ist im Anhang \ref{app_semEvalMitAllenHeuristiken} zu finden.
 
 
 \subsection{Beachtung des Matcherratings (LMF)}\label{sec_lmf}
-Bei dieser \Gls{Heuristik}, welche den Namen \emph{low matcherrating first} (kurz: \emph{LMF}) trägt, werden die Mengen von \emph{Target-Typen}, aus denen die \emph{Proxies} erzeugt werden, auf der Basis eines so genannten \emph{Matcherratings} bewertet. Bei dem \emph{Matcherrating} einer solchen Menge handelt es sich um einen numerischen Wert, auf dessen Basis entschieden werden kann, für welche Menge von \emph{Target-Typ} die Generierung und Evaluation der \emph{Proxies} vollzogen werden soll.
+Bei dieser \Gls{Heuristik}, welche den Namen \emph{low matcherrating first} (kurz: \emph{LMF}) trägt, werden die Mengen von \emph{Target-Typen}, aus denen die \emph{Proxies} erzeugt werden, auf der Basis eines so genannten \emph{Matcherratings} bewertet. Bei dem \emph{Matcherrating} einer solchen Menge handelt es sich um einen numerischen Wert, auf dessen Basis entschieden werden kann, für welche Menge von \emph{Target-Typ} die Generierung und Prüfung der \emph{Proxies} zuerst vollzogen werden soll.
 \\\\
 Um das \emph{Matcherrating} zu ermitteln, wird für jede Matchingrelation bzw. für jeden Matcher aus Abschnitt \ref{sec_matcher} ein \emph{Basisrating} vergeben. Folgende Funktion beschreibt das \emph{Basisrating} für das Matching zweier Typen $S$ und $T$:
 \begin{gather*}
