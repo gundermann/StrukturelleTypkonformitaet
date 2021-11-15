@@ -34,7 +34,8 @@
 \glossentry{Heuristik}{\glossaryentrynumbers{\relax 
 		\setentrycounter[]{page}\glsnumberformat{49\delimN 50}\delimN 
 		\setentrycounter[]{page}\glsnumberformat{53}\delimN 
-		\setentrycounter[]{page}\glsnumberformat{55\delimR 58}\delimN 
+		\setentrycounter[]{page}\glsnumberformat{55}\delimN 
+		\setentrycounter[]{page}\glsnumberformat{57\delimN 58}\delimN 
 		\setentrycounter[]{page}\glsnumberformat{73}\delimN 
 		\setentrycounter[]{page}\glsnumberformat{75\delimN 76}\delimN 
 		\setentrycounter[]{page}\glsnumberformat{78}\delimN 
@@ -57,6 +58,7 @@
 		\setentrycounter[]{page}\glsnumberformat{71\delimR 73}\delimN 
 		\setentrycounter[]{page}\glsnumberformat{108\delimN 109}\delimN 
 		\setentrycounter[]{page}\glsnumberformat{112}\delimN 
+		\setentrycounter[]{page}\glsnumberformat{114}\delimN 
 		\setentrycounter[]{page}\glsnumberformat{117}\delimN 
 		\setentrycounter[]{page}\glsnumberformat{131}\delimN 
 		\setentrycounter[]{page}\glsnumberformat{133}\delimN 
@@ -80,7 +82,8 @@
 		\setentrycounter[]{page}\glsnumberformat{112}}}\glsgroupskip
 \glsgroupheading{S}\relax \glsresetentrylist %
 \glossentry{Speicherkomplexitaet}{\glossaryentrynumbers{\relax 
-		\setentrycounter[]{page}\glsnumberformat{101}}}%
+		\setentrycounter[]{page}\glsnumberformat{101}\delimN 
+		\setentrycounter[]{page}\glsnumberformat{115}}}%
 \glossentry{substitutionsprinzip}{\glossaryentrynumbers{\relax 
 		\setentrycounter[]{page}\glsnumberformat{26\delimN 27}}}\glsgroupskip
 \glsgroupheading{W}\relax \glsresetentrylist %
@@ -89,5 +92,6 @@
 		\setentrycounter[]{page}\glsnumberformat{111}}}\glsgroupskip
 \glsgroupheading{Z}\relax \glsresetentrylist %
 \glossentry{Zeitkomplexitaet}{\glossaryentrynumbers{\relax 
-		\setentrycounter[]{page}\glsnumberformat{101}}}%
+		\setentrycounter[]{page}\glsnumberformat{101}\delimN 
+		\setentrycounter[]{page}\glsnumberformat{115}}}%
 \end{theglossary}\glossarypostamble
