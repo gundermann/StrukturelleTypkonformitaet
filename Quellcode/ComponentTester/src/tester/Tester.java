@@ -20,12 +20,12 @@ class Tester {
 				}
 				tempResult = new TestEvaluator().test(testInstance);
 				finalResult.enhanceResult(tempResult);
-				if(finalResult.getResult() != Result.PASSED) {
+				if (finalResult.getResult() != Result.PASSED) {
 					return finalResult;
 				}
 			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
 					| InvocationTargetException e) {
-				// e.printStackTrace();
+				// do nothing and go on
 			}
 
 		}

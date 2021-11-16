@@ -61,8 +61,6 @@ public class ParamPermMethodMatcherTest {
 
   @Test
   public void test10() {
-    // Das dieser Test richtig ist, war eigentlich nicht meine Intension.
-    // Aber es ist nachvollziehbar, dass das Ergebnis durch eine Parameter-Permutation positiv ausfällt.
     assertTrue( matcher.matches( getMethod( "addSpec" ), getMethod( "addGen" ) ) );
   }
 }

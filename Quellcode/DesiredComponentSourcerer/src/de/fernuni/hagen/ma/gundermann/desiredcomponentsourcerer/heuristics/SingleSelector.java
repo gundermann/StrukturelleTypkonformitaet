@@ -40,7 +40,7 @@ public class SingleSelector implements Selector {
 		Stream<List<MatchingInfo>> stream = infos.stream()
 				.filter(CombinationFinderUtils::isFullMatchingComponent).map(i -> Collections.singletonList(i));
 		if (usedHeuristics.contains(Heuristic.LMF)) {
-			// H: respect to Matching Rate
+			// H: LMF
 			stream = stream.sorted(new MatcherratingComparator());
 		}
 		this.infos = stream.collect(Collectors.toList());
@@ -89,14 +89,13 @@ public class SingleSelector implements Selector {
 	
 	@Override
 	public void addToBlacklist(Class<?> componentInterface) {
-		// H: blacklist if no implementation available
-		// update cache
 		cachedCalculatedInfos = new CheckTypeBlacklistFilter(Arrays.asList(componentInterface.hashCode()), "update")
 				.filterWithNestedCriteria(cachedCalculatedInfos);
 	}
 
 	@Override
 	public void updateByBlacklist(Collection<Integer> combiParts, Collection<Collection<Integer>> methodMatchingInfoHCBlacklist) {
+		// H: BL_NMC
 		cachedCalculatedInfos = new MMICombiBlacklistFilter(methodMatchingInfoHCBlacklist, "update")
 				.filterWithNestedCriteria(cachedCalculatedInfos);		
 	}

@@ -57,7 +57,6 @@ public class StructuralTypeMatcherInfoCalculationTest {
 		assertThat(partlyTypeMatchingInfos.getTarget(), equalTo(Interface1.class));
 		assertThat(partlyTypeMatchingInfos.getMatchedSourceMethods().size(), equalTo(4));
 		assertThat(partlyTypeMatchingInfos.getMethodMatchingInfoSupplier().size(), equalTo(4));
-//    assertThat( partlyTypeMatchingInfos.getQuantitaiveMatchRating(), equalTo( 1.0 ) );
 		for (Entry<Method, Supplier<Collection<MethodMatchingInfo>>> entry : partlyTypeMatchingInfos
 				.getMethodMatchingInfoSupplier().entrySet()) {
 			switch (entry.getKey().getName()) {

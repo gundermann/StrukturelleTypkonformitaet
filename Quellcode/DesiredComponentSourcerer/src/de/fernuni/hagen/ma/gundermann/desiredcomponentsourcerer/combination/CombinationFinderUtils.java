@@ -16,40 +16,37 @@ import de.fernuni.hagen.ma.gundermann.signaturematching.matching.MatchingInfo;
 
 public abstract class CombinationFinderUtils {
 
-  private CombinationFinderUtils() {
+	private CombinationFinderUtils() {
 
-  }
+	}
 
-  public static boolean isFullMatchingComponent( MatchingInfo matchingInfo ) {
-    return matchingInfo.isFullMatching() ;
-  }
+	public static boolean isFullMatchingComponent(MatchingInfo matchingInfo) {
+		return matchingInfo.isFullMatching();
+	}
 
-  public static Map<Method, Collection<CombinationPartInfo>> transformToCombinationPartInfosPerMethod(
-      Map<Method, Collection<MatchingInfo>> method2typeMatchingInfos,
-      Collection<Collection<Integer>> methodMatchingInfoHCBlacklist ) {
+	public static Map<Method, Collection<CombinationPartInfo>> transformToCombinationPartInfosPerMethod(
+			Map<Method, Collection<MatchingInfo>> method2typeMatchingInfos,
+			Collection<Collection<Integer>> methodMatchingInfoHCBlacklist) {
 
-    AnalyzationUtils.filterCount = 0;
-    Map<Method, Collection<CombinationPartInfo>> transformed = new HashMap<>();
-    for ( Entry<Method, Collection<MatchingInfo>> entry : method2typeMatchingInfos.entrySet() ) {
-      Method method = entry.getKey();
-      Collection<MatchingInfo> tmpInfos = entry.getValue();
+		AnalyzationUtils.filterCount = 0;
+		Map<Method, Collection<CombinationPartInfo>> transformed = new HashMap<>();
+		for (Entry<Method, Collection<MatchingInfo>> entry : method2typeMatchingInfos.entrySet()) {
+			Method method = entry.getKey();
+			Collection<MatchingInfo> tmpInfos = entry.getValue();
 
-      Collection<CombinationPartInfo> tmpTransformed = tmpInfos.stream()
-          .map( Transformator::transformTypeInfo2CombinationPartInfos ).flatMap( Collection::stream )
-          .collect( Collectors.toList() );
+			Collection<CombinationPartInfo> tmpTransformed = tmpInfos.stream()
+					.map(Transformator::transformTypeInfo2CombinationPartInfos).flatMap(Collection::stream)
+					.collect(Collectors.toList());
 
-      Collection<CombinationPartInfo> combiPartInfos = tmpTransformed.stream()
-          .filter( cpi -> Objects.equals( cpi.getSourceMethod(), method ) )
-          .collect( Collectors.toList() );
+			Collection<CombinationPartInfo> combiPartInfos = tmpTransformed.stream()
+					.filter(cpi -> Objects.equals(cpi.getSourceMethod(), method)).collect(Collectors.toList());
 
-      // filter blacklist items by hashcode
-      combiPartInfos = new MMICombiBlacklistFilter( methodMatchingInfoHCBlacklist, false )
-          .filterBlacklistedSingleMMI( combiPartInfos );
-      transformed.put( method, combiPartInfos );
-    }
-    Logger.infoF( "filtered by %s: %d", MMICombiBlacklistFilter.class.getSimpleName(),
-        AnalyzationUtils.filterCount );
-    return transformed;
-  }
-  
+			combiPartInfos = new MMICombiBlacklistFilter(methodMatchingInfoHCBlacklist, false)
+					.filterBlacklistedSingleMMI(combiPartInfos);
+			transformed.put(method, combiPartInfos);
+		}
+		Logger.infoF("filtered by %s: %d", MMICombiBlacklistFilter.class.getSimpleName(), AnalyzationUtils.filterCount);
+		return transformed;
+	}
+
 }

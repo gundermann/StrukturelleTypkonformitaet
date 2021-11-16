@@ -73,18 +73,21 @@ public class BestMatchingComponentCombinationFinder {
 
 	}
 
-	public void optimizeMatchingInfoBlacklist(Collection<Class<?>> combiParts, Collection<Collection<MethodMatchingInfo>> collection) {
+	public void optimizeMatchingInfoBlacklist(Collection<Class<?>> combiParts,
+			Collection<Collection<MethodMatchingInfo>> collection) {
 		Collection<Collection<Integer>> hcCombis = new ArrayList<Collection<Integer>>();
 		for (Collection<MethodMatchingInfo> mmiCombi : collection) {
-			 List<Integer> hcList = mmiCombi.stream().map(mmi -> mmi.hashCode()).collect(Collectors.toList());
-			 hcCombis.add(hcList);
+			List<Integer> hcList = mmiCombi.stream().map(mmi -> mmi.hashCode()).collect(Collectors.toList());
+			hcCombis.add(hcList);
 		}
-		for(Class<?> combiPart : combiParts) {
-			Collection<Collection<Integer>> hcs = this.methodMatchingInfoHCBlacklist.getOrDefault(combiPart.hashCode(), new ArrayList<Collection<Integer>>());
+		for (Class<?> combiPart : combiParts) {
+			Collection<Collection<Integer>> hcs = this.methodMatchingInfoHCBlacklist.getOrDefault(combiPart.hashCode(),
+					new ArrayList<Collection<Integer>>());
 			hcs.addAll(hcCombis);
 			this.methodMatchingInfoHCBlacklist.put(combiPart.hashCode(), hcs);
 		}
-		selectors[currentSelectorIndex].updateByBlacklist(combiParts.stream().map(Object::hashCode).collect(Collectors.toList()), hcCombis);
+		selectors[currentSelectorIndex]
+				.updateByBlacklist(combiParts.stream().map(Object::hashCode).collect(Collectors.toList()), hcCombis);
 	}
 
 	public void optimizeCheckTypeBlacklist(Class<?> componentInterface) {

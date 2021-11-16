@@ -7,10 +7,6 @@ import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.Comb
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.AnalyzationUtils;
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.Logger;
 
-/**
- * H: blacklist by pivot test calls
- */
-
 public final class MMICombiBlacklistFilter {
 
 	private final Collection<Collection<Integer>> hashCodeBlacklists;

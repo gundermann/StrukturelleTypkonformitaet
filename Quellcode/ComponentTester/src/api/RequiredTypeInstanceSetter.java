@@ -5,8 +5,15 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Retention( RetentionPolicy.RUNTIME )
-@Target( ElementType.METHOD )
+/**
+ * Annotation fuer die markierung des RequiredType-Setters in der Testklasse.
+ * (Fuer Setter-Injection)
+ * 
+ * @author Niels Gundermann
+ *
+ */
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
 public @interface RequiredTypeInstanceSetter {
 
 }

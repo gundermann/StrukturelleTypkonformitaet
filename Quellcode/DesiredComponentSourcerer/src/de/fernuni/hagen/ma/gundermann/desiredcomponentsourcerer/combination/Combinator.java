@@ -49,12 +49,12 @@ public class Combinator<K, V> {
 		// erste Methode holen
 		Iterator<K> iterator = possibleMethodMatches.keySet().iterator();
 		if (!iterator.hasNext()) {
-			// keine Methode mehr übrig
+			// keine Methode mehr uebrig
 			return combinations;
 		}
 		K selectedMethod = iterator.next();
 		// possibleMethodMatches abbauen
-		// Kopie der ursprünglichen Map erstellen
+		// Kopie der urspruenglichen Map erstellen
 		Map<K, Collection<CombinationPartInfo>> localMethodMatches = new HashMap<>(possibleMethodMatches);
 		Collection<CombinationPartInfo> selectedValues = localMethodMatches.remove(selectedMethod);
 		if (selectedValues.isEmpty()) {

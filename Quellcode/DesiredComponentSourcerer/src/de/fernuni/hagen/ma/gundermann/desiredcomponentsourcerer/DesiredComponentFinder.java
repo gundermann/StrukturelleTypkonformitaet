@@ -85,7 +85,6 @@ public class DesiredComponentFinder {
 				desiredInterface, typeMatcher);
 
 		InfoCollector.setMatchingProvidedTypeCount(componentInterface2PartlyMatchingInfos.keySet().size());
-		// INFO OUTPUT
 		componentInterface2PartlyMatchingInfos.values().forEach(i -> {
 			Logger.toFile("%f;%b;%s;", MatcherratingFunctions.rating(Collections.singletonList(i)), i.isFullMatching(),
 					i.getTarget().getSimpleName());
@@ -125,22 +124,16 @@ public class DesiredComponentFinder {
 						return testedComponent.getComponent();
 					}
 					if (usedHeuristics.contains(Heuristic.PTTF) && testedComponent.anyTestPassed()) {
-						// H: combinate passed tests components first
+						// H: PTTF
 						combinationFinder.optimizeForCurrentCombination();
 					}
 					if (testedComponent.foundBlacklistedMMICombi()) {
-						// H: blacklist by pivot test calls
-						// H: blacklist failed single methods tested
+						// H: BL_NMC
 						combinationFinder.optimizeMatchingInfoBlacklist(combinationInfos.getComponentClasses(),
 								testedComponent.getBlacklistedMMICombis());
 					}
 				}
 			} catch (NoComponentImplementationFoundException e) {
-//				 H: blacklist if no implementation available
-//				 die Heuristik ist für das Test-System sinnvoll, aber man die provided Typen,
-//				 die keine Implementierung haben, sollten gar nicht erst in den Sourcerer
-//				 reinkommen.
-				// Außerdem verfaelscht die Heuristik die Evaluationsergebnisse.
 				combinationFinder.optimizeCheckTypeBlacklist(e.getComponentInterface());
 			}
 		}
@@ -180,7 +173,7 @@ public class DesiredComponentFinder {
 		logTestResult(testResult);
 		TestedComponent<DesiredInterface> testedComponent = new TestedComponent<>(convertedComponent, testResult);
 
-		// H: blacklist failed method calls
+		// H: BL_NMC
 		if (usedHeuristics.contains(Heuristic.BL_NMC) && Objects.equals(testResult.getCause(), Cause.FAILED_DELEGATION)
 		) {
 			Collection<Method> failedMethodCombi = new ArrayList<Method>(testResult.getTriedMethodCalls());
@@ -205,8 +198,6 @@ public class DesiredComponentFinder {
 					testResult.getTriedMethodCalls().stream().map(Method::getName).collect(Collectors.joining(",")));
 			break;
 		case CANCELED:
-//			Logger.infoF("test canceled: caused by %s\n%s", testResult.getCause(),
-//					testResult.getException().getMessage());
 			Logger.infoF("test canceled: caused by %s\n%s\n%s", testResult.getCause(),
 					testResult.getException().getMessage(), Stream.of(testResult.getException().getStackTrace())
 							.map(StackTraceElement::toString).map(s -> "\t\t\t" + s).collect(Collectors.joining("\n")));

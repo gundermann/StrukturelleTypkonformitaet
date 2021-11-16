@@ -7,17 +7,17 @@ import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.combination.Comb
 
 public class SelfCombinatedPartFilter implements Predicate<Collection<CombinationPartInfo>> {
 
-  @Override
-  public boolean test( Collection<CombinationPartInfo> col ) {
-    if ( col.isEmpty() ) {
-      return false;
-    }
-    if ( col.size() == 1 ) {
-      return true;
-    }
-    CombinationPartInfo info = col.iterator().next();
-    Class<?> checkCC = info.getComponentClass();
-    return col.stream().map( CombinationPartInfo::getComponentClass ).anyMatch( cc -> !cc.equals( checkCC ) );
-  }
+	@Override
+	public boolean test(Collection<CombinationPartInfo> col) {
+		if (col.isEmpty()) {
+			return false;
+		}
+		if (col.size() == 1) {
+			return true;
+		}
+		CombinationPartInfo info = col.iterator().next();
+		Class<?> checkCC = info.getComponentClass();
+		return col.stream().map(CombinationPartInfo::getComponentClass).anyMatch(cc -> !cc.equals(checkCC));
+	}
 
 }

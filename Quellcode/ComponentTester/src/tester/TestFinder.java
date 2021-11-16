@@ -15,14 +15,6 @@ class TestFinder<T> {
 
   Collection<Class<?>> findTestClassesOfQueryType() {
     Collection<Class<?>> testClasses = new ArrayList<>();
-    // Die Annotation ist nur eine Übergangslösung.
-    // Es funktioniert auch ohne diese Annotation, wenn der ClassLoader des queryTypes verwendet wird, um dessen Projekt
-    // nach den Testklassen zu durchsuchen.
-    // Vorteile:
-    // - eine Annotation weniger
-    // Nachteile:
-    // - stärkere Bedingungen an die Ablage der Testklassen (mit der Annotation können die Testklassen sonstwo liegen.)
-    // - die Angabe weiterer Informationen ist dadurch nicht gewaehrleistet
     if ( qt.isAnnotationPresent( RequiredTypeTestReference.class ) ) {
       RequiredTypeTestReference queryTypeTestReference = qt.getAnnotation( RequiredTypeTestReference.class );
       for ( Class<?> testClass : queryTypeTestReference.testClasses() ) {

@@ -39,10 +39,9 @@ public class CombinationSelector implements Selector {
 
 	private final Collection<Class<?>> higherPotentialTypes = new ArrayList<>();
 
-	// H: blacklist by pivot test calls
+	// H: BL_NMC
 	private final Map<Integer, Collection<Collection<Integer>>> methodMatchingInfoHCBlacklist = new HashMap<>();
 
-	// H: blacklist if no implementation available
 	private final Collection<Integer> checkTypeHCBlacklist = new ArrayList<>();
 
 	private final Collection<Heuristic> usedHeuristics;
@@ -83,8 +82,6 @@ public class CombinationSelector implements Selector {
 	}
 
 	private void collectRelevantMatchingInfoCombinations() {
-		// H: blacklist if no implementation available + BL_NMC (muss nicht abgefragt
-		// werden, weil die fehlende Implementierungen ohnehin herausgefiltert werden.
 		this.infos.retainAll(new CheckTypeBlacklistFilter(this.checkTypeHCBlacklist).filter(infos));
 
 		cachedMatchingInfoCombinations = new ArrayList<>(
@@ -93,14 +90,12 @@ public class CombinationSelector implements Selector {
 		cachedMatchingInfoCombinations = cachedMatchingInfoCombinations.stream()
 				.filter(c -> canCreateMethodDelegations(c)).collect(Collectors.toList());
 
-		// H: combinate low matcher rating first
-		// sort by matcher rate
+		// H: LMF
 		if (usedHeuristics.contains(Heuristic.LMF)) {
 			Collections.sort(cachedMatchingInfoCombinations, new MatcherratingComparator());
 		}
 
-		// H: combinate passed tests components first
-		// re-organize cache with respect to search optimization
+		// H: PTTF
 		if (usedHeuristics.contains(Heuristic.PTTF)) {
 			Collections.sort(cachedMatchingInfoCombinations,
 					new HigherPotentialTypesFirstComparator(higherPotentialTypes));
@@ -111,14 +106,12 @@ public class CombinationSelector implements Selector {
 
 	private boolean canCreateMethodDelegations(Collection<MatchingInfo> combi) {
 		Map<Method, Collection<MatchingInfo>> matchingInfoPerMethod = getMatchingInfoPerMethod(combi);
-		// Pruefen, ob auch alle erwarteten Methoden erfuellt wurden.
 		return matchingInfoPerMethod.keySet().containsAll(originalMethods);
 	}
 
 	private Map<Method, Collection<MatchingInfo>> collectRelevantInfosPerMethod() {
 		currentCombi = CollectionUtil.pop(cachedMatchingInfoCombinations);
 		Map<Method, Collection<MatchingInfo>> matchingInfoPerMethod = getMatchingInfoPerMethod(currentCombi);
-		// Pruefen, ob auch alle erwarteten Methoden erfuellt wurden.
 		if (!matchingInfoPerMethod.keySet().containsAll(originalMethods)) {
 			Logger.infoF("Empty Matchinginfos: %s", currentCombi.stream().map(MatchingInfo::getTarget)
 					.map(Class::getName).collect(Collectors.joining(" + ")));
@@ -131,14 +124,13 @@ public class CombinationSelector implements Selector {
 		Map<Method, Collection<CombinationPartInfo>> combiPartInfos = CombinationFinderUtils
 				.transformToCombinationPartInfosPerMethod(typeMatchingInfos, getHCBlacklistByCurrentCombi());
 		this.cachedCalculatedInfos = new Combinator<Method, CombinationPartInfo>().generateCombis(combiPartInfos,
-				// das wird vorher schon alles gefiltert
 				new ArrayList<Collection<Integer>>());
-
 		this.cachedCalculatedInfos = this.cachedCalculatedInfos.stream().filter(new SelfCombinatedPartFilter())
 				.collect(Collectors.toList());
 	}
 
 	private Collection<Collection<Integer>> getHCBlacklistByCurrentCombi() {
+		// H: BL_NMC
 		Collection<Collection<Integer>> result = new ArrayList<Collection<Integer>>();
 		for (MatchingInfo combiPart : currentCombi) {
 			int targetHC = combiPart.getTarget().hashCode();
@@ -168,10 +160,7 @@ public class CombinationSelector implements Selector {
 
 	@Override
 	public void addToBlacklist(Class<?> componentInterface) {
-		// H: blacklist if no implementation available
 		this.checkTypeHCBlacklist.add(componentInterface.hashCode());
-
-		// update cache
 		cachedCalculatedInfos = new CheckTypeBlacklistFilter(this.checkTypeHCBlacklist)
 				.filterWithNestedCriteria(cachedCalculatedInfos);
 	}
@@ -179,6 +168,7 @@ public class CombinationSelector implements Selector {
 	@Override
 	public void updateByBlacklist(Collection<Integer> combiParts,
 			Collection<Collection<Integer>> methodMatchingInfoHCBlacklist) {
+		// H: BL_NMC
 		for (Integer combiPart : combiParts) {
 			Collection<Collection<Integer>> hcs = this.methodMatchingInfoHCBlacklist.getOrDefault(combiPart,
 					new ArrayList<Collection<Integer>>());

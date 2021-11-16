@@ -169,8 +169,6 @@ public class ParamPermSignatureMatchingTypeConverterTest {
     for ( Method m : converted.getClass().getMethods() ) {
       if ( m.getParameterCount() == 0 ) {
         System.out.println( "try to invoke: " + m.getName() );
-        // TODO mit wait() gibt es Probleme
-        // m.invoke( converted );
       }
     }
 

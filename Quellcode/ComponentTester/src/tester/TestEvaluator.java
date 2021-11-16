@@ -18,13 +18,8 @@ public class TestEvaluator {
 	public TestResult test(Object testInstance) {
 		TestResult testResult = new TestResult();
 		try {
-			// setup before @BeforeClass
-
 			// test
 			invokeTests(testInstance, testResult);
-
-			// tear down after @AfterClass
-
 			return testResult;
 		} catch (IllegalAccessException | IllegalArgumentException e) {
 			// e.printStackTrace();
@@ -91,8 +86,6 @@ public class TestEvaluator {
 			}
 			testResult.incrementPassedTests();
 			collectCalledMethods(testInstance, testResult);
-			// System.out.println( String.format( "test passed: %d/%d", counter++,
-			// testMethods.length ) );
 		}
 	}
 

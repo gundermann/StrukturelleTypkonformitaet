@@ -270,18 +270,6 @@ public class WrappedAndExactTypeMethodMatcherMatchingInfosTest {
 		}
 	}
 
-	// TODO Dieser Test zeigt eine Schwäche auf. Eigentlich sollte man annehmen,
-	// dass int in einen BigInteger überführbar
-	// ist. (BigInteger::intValue)
-	// Mit dem WrapperMatcher kommt man aber nicht darauf. Das bedeutet, es muss
-	// noch eine andere Kombinationsmöglichkeit
-	// geben, die nicht auf innere Felder sondern auf Methoden und deren
-	// Rückgabewerte basiert. (BoxedMatcher?)
-	// TODO und es geht sogar noch weiter: Wenn ich bspw. Integer als Source habe
-	// und BigInteger als Target, können diese
-	// beiden Typen auchgemachted werden, indem in Betracht gezogen wird, dass sich
-	// beide auf int zurückführen lassen.
-	// (UnifikationMatcher???)
 	@Test
 	public void test9() {
 		Method checkMethod = getMethod("addPartlyWrapped");

@@ -4,9 +4,6 @@ import java.lang.reflect.Method;
 
 class WrappedAssertionError extends Throwable {
 
-  /**
-   *
-   */
   private static final long serialVersionUID = -2884957207053109323L;
 
   private final AssertionError error;

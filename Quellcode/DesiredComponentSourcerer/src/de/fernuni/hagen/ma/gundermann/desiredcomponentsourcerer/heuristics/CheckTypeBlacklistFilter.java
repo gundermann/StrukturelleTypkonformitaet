@@ -9,10 +9,6 @@ import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.Analyzation
 import de.fernuni.hagen.ma.gundermann.desiredcomponentsourcerer.util.Logger;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.MatchingInfo;
 
-/**
- * H: blacklist if no implementation available
- */
-
 public final class CheckTypeBlacklistFilter {
 
   private final Collection<Integer> hashCodeBlacklist;
