@@ -24,24 +24,20 @@ Die Untersuchungsergebnisse zeigen, dass alle drei Heuristiken - wenn auch mit A
 \include{glossarydef}
 
 
-%\phantomsection
 \tableofcontents
-%\newpage
 
-%\phantomsection
+
 \addcontentsline{toc}{chapter}{\listfigurename}
 \listoffigures
-%\newpage
 
-%\phantomsection
+
 \addcontentsline{toc}{chapter}{\listtablename}
 \listoftables
-%\newpage
 
-%\phantomsection
+
 \addcontentsline{toc}{chapter}{Listings}
 \lstlistoflistings
-%\newpage
+
 
 
 
@@ -54,9 +50,11 @@ Die Untersuchungsergebnisse zeigen, dass alle drei Heuristiken - wenn auch mit A
 \input{discussion}
 
 \input{finish}
-
 \newpage
+
 \appendix
+\pagenumbering{roman}
+\setcounter{page}{17}
 
 \input{app_matcherCombi}
 \input{app_heuristicCombi}
@@ -64,6 +62,7 @@ Die Untersuchungsergebnisse zeigen, dass alle drei Heuristiken - wenn auch mit A
 \input{app_requiredInterfacesAndTests}
 \input{app_matcherratingEval}
 \input{app_proofs}
+\input{app_test}
 \input{app_storage}
 
 \addcontentsline{toc}{chapter}{Glossar}
@@ -72,15 +71,6 @@ Die Untersuchungsergebnisse zeigen, dass alle drei Heuristiken - wenn auch mit A
 \bibliography{thesisbib}{}
 
 
-
-%\include{MatcherExamples}
-%\include{AnhangB}
-
-
-%\include{cd}
-
-
-%\phantomsection
 
 
 \end{document}
