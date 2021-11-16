@@ -1,0 +1,2 @@
+[autorun]
+action=explorer.exe index.html
