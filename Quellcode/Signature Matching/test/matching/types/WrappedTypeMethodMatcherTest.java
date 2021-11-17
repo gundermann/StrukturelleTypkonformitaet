@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import de.fernuni.hagen.ma.gundermann.signaturematching.SingleMatchingInfo;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.ExactTypeMatcher;
-import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.WrappedTypeMatcher;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.ContainerTypeMatcher;
 import testcomponents.genspec.General;
 import testcomponents.genspec.Specific;
 import testcomponents.wrapped.Wrapped;
@@ -21,7 +21,7 @@ public class WrappedTypeMethodMatcherTest {
 
   @Test
   public void matchesWrappedTypes() {
-    WrappedTypeMatcher matcher = new WrappedTypeMatcher( () -> new ExactTypeMatcher() );
+    ContainerTypeMatcher matcher = new ContainerTypeMatcher( () -> new ExactTypeMatcher() );
     assertTrue( matcher.matchesType( Wrapped.class, Wrapper.class ) );
     assertTrue( matcher.matchesType( Wrapper.class, Wrapped.class ) );
     assertTrue( matcher.matchesType( Integer.class, int.class ) );
@@ -30,14 +30,14 @@ public class WrappedTypeMethodMatcherTest {
 
   @Test
   public void dismatchesNonWrappedTypes() {
-    WrappedTypeMatcher matcher = new WrappedTypeMatcher( () -> new ExactTypeMatcher() );
+    ContainerTypeMatcher matcher = new ContainerTypeMatcher( () -> new ExactTypeMatcher() );
     assertFalse( matcher.matchesType( String.class, String.class ) );
     assertFalse( matcher.matchesType( General.class, Specific.class ) );
   }
 
   @Test
   public void matchingInfos() {
-    WrappedTypeMatcher matcher = new WrappedTypeMatcher( () -> new ExactTypeMatcher() );
+    ContainerTypeMatcher matcher = new ContainerTypeMatcher( () -> new ExactTypeMatcher() );
     Collection<SingleMatchingInfo> mis = matcher.calculateTypeMatchingInfos( Wrapped.class, Wrapper.class );
     assertTrue( mis.size() == 1 );
     SingleMatchingInfo mi = mis.iterator().next();

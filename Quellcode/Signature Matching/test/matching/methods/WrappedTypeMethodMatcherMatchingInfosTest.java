@@ -16,7 +16,7 @@ import org.junit.Test;
 import de.fernuni.hagen.ma.gundermann.signaturematching.SingleMatchingInfo;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.methods.MethodMatcher;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.ExactTypeMatcher;
-import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.WrappedTypeMatcher;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.ContainerTypeMatcher;
 import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo;
 
 public class WrappedTypeMethodMatcherMatchingInfosTest {
@@ -24,7 +24,7 @@ public class WrappedTypeMethodMatcherMatchingInfosTest {
 
   @Before
   public void setup() {
-    matcher = new CommonMethodMatcher( () -> new WrappedTypeMatcher( () -> new ExactTypeMatcher() ) );
+    matcher = new CommonMethodMatcher( () -> new ContainerTypeMatcher( () -> new ExactTypeMatcher() ) );
   }
 
   @Test

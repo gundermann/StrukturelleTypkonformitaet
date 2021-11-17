@@ -9,14 +9,14 @@ import org.junit.Test;
 
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.methods.MethodMatcher;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.ExactTypeMatcher;
-import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.WrappedTypeMatcher;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.ContainerTypeMatcher;
 
 public class WrappedTypeMethodMatcherTest {
   MethodMatcher matcher;
 
   @Before
   public void setup() {
-    matcher = new CommonMethodMatcher( () -> new WrappedTypeMatcher( () -> new ExactTypeMatcher() ) );
+    matcher = new CommonMethodMatcher( () -> new ContainerTypeMatcher( () -> new ExactTypeMatcher() ) );
   }
 
   @Test

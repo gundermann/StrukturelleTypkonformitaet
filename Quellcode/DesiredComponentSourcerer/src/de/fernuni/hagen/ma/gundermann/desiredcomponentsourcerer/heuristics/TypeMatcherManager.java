@@ -8,7 +8,7 @@ import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.ExactType
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.GenSpecTypeMatcher;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.StructuralTypeMatcher;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.TypeMatcher;
-import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.WrappedTypeMatcher;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.ContainerTypeMatcher;
 
 public enum TypeMatcherManager {
 	INSTANCE;
@@ -19,7 +19,7 @@ public enum TypeMatcherManager {
 		TypeMatcher exactTM = new ExactTypeMatcher();
 		TypeMatcher genSpecTM = new GenSpecTypeMatcher();
 		TypeMatcher combinedGenSpecExactTM = MatcherCombiner.combine(genSpecTM, exactTM).get();
-		TypeMatcher wrappedTM = new WrappedTypeMatcher(() -> combinedGenSpecExactTM);
+		TypeMatcher wrappedTM = new ContainerTypeMatcher(() -> combinedGenSpecExactTM);
 		TypeMatcher combinedWrappedGenSpecExact = MatcherCombiner.combine(genSpecTM, exactTM, wrappedTM).get();
 		StructuralTypeMatcher structWrappedGenSpecExactTM = new StructuralTypeMatcher(
 				() -> combinedWrappedGenSpecExact);

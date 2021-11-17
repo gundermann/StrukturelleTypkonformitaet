@@ -8,7 +8,7 @@ import de.fernuni.hagen.ma.gundermann.signaturematching.matching.MatcherCombiner
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.ExactTypeMatcher;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.GenSpecTypeMatcher;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.StructuralTypeMatcher;
-import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.WrappedTypeMatcher;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.ContainerTypeMatcher;
 import matching.types.testtypes.Class1;
 import matching.types.testtypes.Class2;
 import matching.types.testtypes.Enum2;
@@ -23,7 +23,7 @@ public class StructuralTypeMatcherMatchingTest {
   GenSpecTypeMatcher genSpecTypeMatcher = new GenSpecTypeMatcher();
 
   StructuralTypeMatcher matcher = new StructuralTypeMatcher( MatcherCombiner.combine( genSpecTypeMatcher, exactTypeMatcher,
-      new WrappedTypeMatcher( MatcherCombiner.combine( genSpecTypeMatcher, exactTypeMatcher ) ) ) );
+      new ContainerTypeMatcher( MatcherCombiner.combine( genSpecTypeMatcher, exactTypeMatcher ) ) ) );
 
   @Test
   public void interface2interface_full_match() {

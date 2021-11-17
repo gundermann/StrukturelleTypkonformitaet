@@ -8,7 +8,7 @@ import de.fernuni.hagen.ma.gundermann.signaturematching.matching.MatcherCombiner
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.MatcherRate;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.ExactTypeMatcher;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.GenSpecTypeMatcher;
-import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.WrappedTypeMatcher;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.ContainerTypeMatcher;
 
 public class CombinedMethodMatcher implements MethodMatcher {
 
@@ -17,7 +17,7 @@ public class CombinedMethodMatcher implements MethodMatcher {
 	GenSpecTypeMatcher genSpecTypeMatcher = new GenSpecTypeMatcher();
 
 	MethodMatcher combination = new ParamPermMethodMatcher(MatcherCombiner.combine(genSpecTypeMatcher, exactTypeMatcher,
-			new WrappedTypeMatcher(MatcherCombiner.combine(genSpecTypeMatcher, exactTypeMatcher))));
+			new ContainerTypeMatcher(MatcherCombiner.combine(genSpecTypeMatcher, exactTypeMatcher))));
 
 	@Override
 	public boolean matches(Method checkMethod, Method queryMethod) {

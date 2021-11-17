@@ -21,13 +21,13 @@ import de.fernuni.hagen.ma.gundermann.signaturematching.matching.MatcherCombiner
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.methods.MethodMatcher;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.ExactTypeMatcher;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.TypeMatcher;
-import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.WrappedTypeMatcher;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.ContainerTypeMatcher;
 
 public class WrappedAndExactTypeMethodMatcherMatchingInfosTest {
 
 	private TypeMatcher exactTypeMatcher = new ExactTypeMatcher();
 
-	private TypeMatcher wrappedTypeMatcher = new WrappedTypeMatcher(() -> exactTypeMatcher);
+	private TypeMatcher wrappedTypeMatcher = new ContainerTypeMatcher(() -> exactTypeMatcher);
 
 	private MethodMatcher matcher = new CommonMethodMatcher(
 			MatcherCombiner.combine(wrappedTypeMatcher, exactTypeMatcher));

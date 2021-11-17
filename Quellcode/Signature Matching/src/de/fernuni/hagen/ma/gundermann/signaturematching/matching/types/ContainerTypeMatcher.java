@@ -24,13 +24,13 @@ import de.fernuni.hagen.ma.gundermann.signaturematching.matching.Setting;
  * @author Niels Gundermann
  *
  */
-public class WrappedTypeMatcher implements TypeMatcher {
+public class ContainerTypeMatcher implements TypeMatcher {
 
 	final Map<Class<?>[], Boolean> cachedWrappedTypeChecks = new HashMap<>();
 
 	private final Supplier<TypeMatcher> innerMethodMatcherSupplier;
 
-	public WrappedTypeMatcher(Supplier<TypeMatcher> innerMethodMatcherSupplier) {
+	public ContainerTypeMatcher(Supplier<TypeMatcher> innerMethodMatcherSupplier) {
 		this.innerMethodMatcherSupplier = innerMethodMatcherSupplier;
 	}
 
