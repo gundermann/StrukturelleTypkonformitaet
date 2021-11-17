@@ -12,13 +12,13 @@ import java.util.Set;
 import org.easymock.EasyMock;
 import org.junit.Test;
 
-import de.fernuni.hagen.ma.gundermann.signaturematching.SingleMatchingInfo;
+import common.TypeMatchingInfo;
 import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo;
 import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo.ParamPosition;
+import de.fernuni.hagen.ma.gundermann.signaturematching.SingleMatchingInfo;
 import de.fernuni.hagen.ma.gundermann.signaturematching.glue.ConvertableBundle;
 import de.fernuni.hagen.ma.gundermann.signaturematching.glue.ConvertableComponent;
 import de.fernuni.hagen.ma.gundermann.signaturematching.glue.TypeConverter;
-import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.TypeMatchingInfo;
 import matching.types.testtypes.Enum2;
 import matching.types.testtypes.InterfaceWrapper;
 

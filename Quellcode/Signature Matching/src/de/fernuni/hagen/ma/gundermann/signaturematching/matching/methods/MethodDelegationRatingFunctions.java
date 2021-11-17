@@ -6,39 +6,45 @@ import java.util.stream.Collectors;
 
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.MatcherRate;
 
+/**
+ * Pool fuer die verschiedenen Varianten vom mRating
+ * 
+ * @author Niels Gundermann
+ *
+ */
 public final class MethodDelegationRatingFunctions {
 
 	private MethodDelegationRatingFunctions() {
 	}
 
-	
-	public static double mdRating(Collection<MatcherRate> rates) {
+	public static double mRating(Collection<MatcherRate> rates) {
 		if (rates.size() == 0) {
 			throw new UndefinedMatcherRatingException("found zero matcherrateings");
 		}
 		List<Double> ratings = rates.stream().map(MatcherRate::getMatcherRating).collect(Collectors.toList());
-		return mdRating1(ratings);
-//		return mdRating2(ratings);
-//		return mdRating3(ratings);
-//		return mdRating4(ratings);
+		return mRating1(ratings);
+//		return mRating2(ratings);
+//		return mRating3(ratings);
+//		return mRating4(ratings);
 	}
 
-	
-	private static double mdRating1(Collection<Double> ratings) {
+	private static double mRating1(Collection<Double> ratings) {
 		return ratings.stream().reduce(0d, (a, b) -> a + b) / ratings.size();
 	}
 
-	private static double mdRating2(Collection<Double> ratings) {
+	@SuppressWarnings("unused")
+	private static double mRating2(Collection<Double> ratings) {
 		return ratings.stream().max(Double::compareTo).get();
 	}
 
-	private static double mdRating3(Collection<Double> ratings) {
+	@SuppressWarnings("unused")
+	private static double mRating3(Collection<Double> ratings) {
 		return ratings.stream().min(Double::compareTo).get();
 	}
 
-	private static double mdRating4(Collection<Double> ratings) {
-		return (ratings.stream().max(Double::compareTo).get()
-				+ ratings.stream().min(Double::compareTo).get()) / 2;
+	@SuppressWarnings("unused")
+	private static double mRating4(Collection<Double> ratings) {
+		return (ratings.stream().max(Double::compareTo).get() + ratings.stream().min(Double::compareTo).get()) / 2;
 	}
 
 }

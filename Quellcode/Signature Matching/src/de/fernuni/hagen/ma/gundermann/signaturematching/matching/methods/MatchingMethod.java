@@ -12,7 +12,6 @@ public class MatchingMethod {
 
 	private MatcherRate rate;
 
-
 	public MatchingMethod(Method method, MatcherRate rate) {
 		this.method = method;
 		this.rate = rate;
@@ -31,5 +30,4 @@ public class MatchingMethod {
 		return rate;
 	}
 
-	
 }

@@ -1,4 +1,4 @@
-package de.fernuni.hagen.ma.gundermann.signaturematching.glue;
+package de.fernuni.hagen.ma.gundermann.signaturematching.glue.delegation;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -13,6 +13,10 @@ import java.util.stream.Collectors;
 
 import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo;
 import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo.ParamPosition;
+import de.fernuni.hagen.ma.gundermann.signaturematching.glue.ConvertableBundle;
+import de.fernuni.hagen.ma.gundermann.signaturematching.glue.ConvertableComponent;
+import de.fernuni.hagen.ma.gundermann.signaturematching.glue.SigMaGlueException;
+import de.fernuni.hagen.ma.gundermann.signaturematching.glue.TypeConverter;
 import de.fernuni.hagen.ma.gundermann.signaturematching.util.Logger;
 import de.fernuni.hagen.ma.gundermann.signaturematching.SingleMatchingInfo;
 import net.sf.cglib.proxy.MethodInterceptor;
@@ -53,18 +57,14 @@ public class BehaviourDelegateInvocationHandler implements MethodInterceptor, In
 		Optional<ComponentWithMatchingInfo> optMatchingInfo = getMethodMatchingInfo(method);
 		if (optMatchingInfo.isPresent()) {
 			try {
+				// Ausfuehren der im Target-Type deklarierten Methoden (Delegation)
 				return invokeOnComponentWithMatchingInfo(optMatchingInfo.get(), args);
 			} catch (Throwable e) {
 				throw new SigMaGlueException(e, method);
 			}
 		}
-
-		// Default-Methode
-		// (Hierbei handelt es sich um Methoden, dei von jedem Objekt erf�llt werden
-		// und
-		// f�r die aufgrund einer fehlenden
-		// Implementierung keine MatchingInfo existiert)
 		try {
+			// Ausfuehrung der im Source-Type deklarierten Methoden
 			return method.invoke(getSingleComponent(), args);
 		} catch (Throwable e) {
 			throw new SigMaGlueException(e, method);
@@ -85,15 +85,9 @@ public class BehaviourDelegateInvocationHandler implements MethodInterceptor, In
 		Object[] convertedArgs = convertArgs(args, methodMatchingInfo.getArgumentTypeMatchingInfos());
 		Object returnValue = targetMethod.invoke(component.getComponent(), convertedArgs);
 		SingleMatchingInfo returnTypeMatchingInfo = methodMatchingInfo.getReturnTypeMatchingInfo();
-		if (returnTypeMatchingInfo == null
-//				|| returnTypeMatchingInfo.isSubstitutable()
-		) {
+		if (returnTypeMatchingInfo == null) {
 			return returnValue;
 		}
-		// Bei einem allgemeineren returnValue des Targets (Target.retrunValue >
-		// Source.returnValue) muss der ReturnType
-		// ebenfalls gemocked werden
-
 		return convertType(returnValue, returnTypeMatchingInfo);
 	}
 
@@ -103,7 +97,8 @@ public class BehaviourDelegateInvocationHandler implements MethodInterceptor, In
 		}
 		Object[] convertedArgs = new Object[args.length];
 		for (int i = 0; i < args.length; i++) {
-			Entry<ParamPosition, SingleMatchingInfo> moduleMatchingInfoEntry = getParameterWithRepectToPosition(i, argMMI);
+			Entry<ParamPosition, SingleMatchingInfo> moduleMatchingInfoEntry = getParameterWithRepectToPosition(i,
+					argMMI);
 			if (moduleMatchingInfoEntry != null && moduleMatchingInfoEntry.getValue() != null
 					&& moduleMatchingInfoEntry.getKey() != null) {
 				ParamPosition paramPosition = moduleMatchingInfoEntry.getKey();
@@ -124,39 +119,18 @@ public class BehaviourDelegateInvocationHandler implements MethodInterceptor, In
 				.findFirst().orElse(null);
 	}
 
-	/**
-	 * Rekursiver Aufruf des gesamten Konvertierungsprozesses
-	 *
-	 * @param sourceType
-	 * @param moduleMatchingInfo
-	 * @return
-	 */
 	@SuppressWarnings("unchecked")
 	private <RT> RT convertType(Object sourceType, SingleMatchingInfo moduleMatchingInfo) {
 		Logger.info(String.format("convert type %s -> %s", moduleMatchingInfo.getSource().getName(),
 				moduleMatchingInfo.getTarget().getName()));
-		// Wenn das zu konvertierende Objekt null ist, dann kann dies auch gleich
-		// zur�ckgegeben werden, da null-Objekte
-		// keinen speziellen Typ haben muessen
-		// if ( sourceType == null ||
-		// moduleMatchingInfo.getMethodMatchingInfos().isEmpty()
-		// && moduleMatchingInfo.getTargetDelegate() == null
-		// && moduleMatchingInfo.getSourceDelegate() == null ) {
-		// return (RT) sourceType;
-		// }
-
 		if (sourceType == null) {
 			return (RT) sourceType;
 		}
-
 		Object source = sourceType;
-		// if ( moduleMatchingInfo.getSourceDelegate() != null ) {
-		// source = moduleMatchingInfo.getSourceDelegate().apply( sourceType );
-		// }
 		Map<Object, Collection<MethodMatchingInfo>> comp2MatchingInfo = new HashMap<>();
 		comp2MatchingInfo.put(source, moduleMatchingInfo.getMethodMatchingInfos().values());
-		List<ConvertableComponent> convertableComponents = comp2MatchingInfo.entrySet().stream().map(e -> new ConvertableComponent(e.getKey(), e.getValue()))
-				.collect(Collectors.toList());
+		List<ConvertableComponent> convertableComponents = comp2MatchingInfo.entrySet().stream()
+				.map(e -> new ConvertableComponent(e.getKey(), e.getValue())).collect(Collectors.toList());
 		ConvertableBundle convertableBundle = ConvertableBundle.createBundle(convertableComponents);
 		return new TypeConverter<>((Class<RT>) moduleMatchingInfo.getTarget(), moduleMatchingInfo.getConverterCreator())
 				.convert(convertableBundle);
@@ -184,26 +158,6 @@ public class BehaviourDelegateInvocationHandler implements MethodInterceptor, In
 			}
 		}
 		return true;
-	}
-
-	private static class ComponentWithMatchingInfo {
-		private final Object component;
-
-		private final MethodMatchingInfo matchingInfo;
-
-		private ComponentWithMatchingInfo(Object component, MethodMatchingInfo matchingInfo) {
-			this.component = component;
-			this.matchingInfo = matchingInfo;
-		}
-
-		public Object getComponent() {
-			return component;
-		}
-
-		public MethodMatchingInfo getMatchingInfo() {
-			return matchingInfo;
-		}
-
 	}
 
 }

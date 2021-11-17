@@ -13,17 +13,22 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo;
-import de.fernuni.hagen.ma.gundermann.signaturematching.glue.ProxyCreatorFactories;
+import de.fernuni.hagen.ma.gundermann.signaturematching.glue.factories.ProxyCreatorFactories;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.MatcherRate;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.MatchingInfo;
-import de.fernuni.hagen.ma.gundermann.signaturematching.matching.MatchingSupplier;
-import de.fernuni.hagen.ma.gundermann.signaturematching.matching.Setting;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.MatchingInfo.Builder;
+import de.fernuni.hagen.ma.gundermann.signaturematching.matching.MatchingSupplier;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.methods.MatchingMethod;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.methods.MethodMatcher;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.methods.ParamPermMethodMatcher;
 import de.fernuni.hagen.ma.gundermann.signaturematching.util.Logger;
 
+/**
+ * {@link TypeMatcher} fuer Typen, deren Methoden miteinander gematcht werden.
+ * 
+ * @author Niels Gundermann
+ *
+ */
 public class StructuralTypeMatcher {
 
 	private final MethodMatcher methodMatcher;
@@ -44,11 +49,7 @@ public class StructuralTypeMatcher {
 	public MatchingInfo calculateTypeMatchingInfos(Class<?> targetType, Class<?> sourceType) {
 		Builder miBuilder = new MatchingInfo.Builder(sourceType, targetType,
 				ProxyCreatorFactories.getInterfaceProxyFactoryCreator());
-//		  PartlyTypeMatchingInfoFactory factory = new PartlyTypeMatchingInfoFactory( targetType );
 		if (sourceType.equals(Object.class)) {
-			// Dieser Spezialfall fuehrt ohne diese Sonderregelung in einen Stackoverflow,
-			// da Object als Typ immer wieder
-			// auftaucht. Es ist also eine Abbruchbedingung.
 			return miBuilder.build();
 		}
 
@@ -56,7 +57,6 @@ public class StructuralTypeMatcher {
 		Logger.infoF("QueryMethods: %s",
 				Stream.of(queryMethods).map(m -> m.getName()).collect(Collectors.joining(", ")));
 
-		// gleicht nur die nicht statischen public-Methods ab
 		Method[] potentialMethods = getPotentialDelegateMethods(targetType.getMethods());
 		Map<Method, Collection<MatchingMethod>> possibleMatches = collectPossibleMatches(queryMethods,
 				potentialMethods);
@@ -99,35 +99,6 @@ public class StructuralTypeMatcher {
 		return matches;
 	}
 
-	// /**
-	// * @param checkType
-	// * @param queryType
-	// * must be an interface
-	// * @return matchende Methoden
-	// */
-	// public Map<Method, Collection<Method>> getMatchingMethods( Class<?> checkType
-	// ) {
-	// if ( partlyMatches( checkType ) ) {
-	// throw new RuntimeException( "Check-Type does not match Query-Type" );
-	// }
-	// Method[] queryMethods = getQueryMethods();
-	// Map<Method, Collection<Method>> possibleMatches = collectPossibleMatches(
-	// queryMethods, checkType.getMethods() );
-	// return possibleMatches;
-	// }
-
-	// Hier muessen alle Methoden der Klasse Object herausgefiltert werden, weil:
-	// 1. ohnehin alle Objekte mit diesen Methoden umgehen koenne
-	// 2. ein Interface die dazu passenden Methoden-Signaturen nicht ausweist
-
-	// Einsicht: Das Matching mit Klassen oder Enums als Query-Typ ist etwas
-	// kompliziert. Ich beschraenke mich erst einmal
-	// nur auf Interfaces als Query-Typ. Das ist auch hinsichtlich meines
-	// Anwendungsfalls eher relevant.
-
-	// Weiteres Problem: primitive Typen haben keine Methoden!!!
-
-	// Weiteres Problem: was ist mit package-Sichtbarkeit?
 	private Method[] getQueryMethods(Class<?> queryType) {
 		Method[] queryMethods = queryType.getMethods();
 		return queryMethods;
@@ -147,7 +118,8 @@ public class StructuralTypeMatcher {
 			}
 			return metMIs;
 		};
-		return new MatchingSupplier(supplier,matchingMethods.stream().map(MatchingMethod::getRate).collect(Collectors.toList()));
+		return new MatchingSupplier(supplier,
+				matchingMethods.stream().map(MatchingMethod::getRate).collect(Collectors.toList()));
 	}
 
 	private static Map<Method, Collection<Method>> convertMethod2MethodCollection(

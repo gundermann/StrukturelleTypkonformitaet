@@ -1,4 +1,4 @@
-package de.fernuni.hagen.ma.gundermann.signaturematching.glue;
+package de.fernuni.hagen.ma.gundermann.signaturematching.glue.factories;
 
 import java.util.Collection;
 
@@ -16,7 +16,7 @@ public final class ProxyCreatorFactories {
 
 			@Override
 			public <T> ProxyFactory<T> createProxyFactory(Class<T> targetType) {
-				return new InterfaceProxyFactory<T>(targetType);
+				return new StructProxyFactory<T>(targetType);
 			}
 		};
 	}
@@ -26,7 +26,7 @@ public final class ProxyCreatorFactories {
 
 			@Override
 			public <T> ProxyFactory<T> createProxyFactory(Class<T> targetType) {
-				return new WrapperProxyFactory<>(targetType, delegateAttr);
+				return new ContainerProxyFactory<>(targetType, delegateAttr);
 			}
 		};
 	}
@@ -36,7 +36,7 @@ public final class ProxyCreatorFactories {
 
 			@Override
 			public <T> ProxyFactory<T> createProxyFactory(Class<T> targetType) {
-				return new ClassProxyFactory<>(targetType);
+				return new SubProxyFactory<>(targetType);
 			}
 		};
 	}
@@ -46,7 +46,7 @@ public final class ProxyCreatorFactories {
 
 			@Override
 			public <T> ProxyFactory<T> createProxyFactory(Class<T> targetType) {
-				return new WrappedProxyFactory<>(targetType, delegateAttr);
+				return new ContentProxyFactory<>(targetType, delegateAttr);
 			}
 		};
 	}

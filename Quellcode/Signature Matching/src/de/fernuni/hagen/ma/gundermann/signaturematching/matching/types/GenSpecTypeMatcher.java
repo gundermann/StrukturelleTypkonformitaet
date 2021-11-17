@@ -16,54 +16,28 @@ import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo;
 import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo.ParamPosition;
 import de.fernuni.hagen.ma.gundermann.signaturematching.SingleMatchingInfo;
 import de.fernuni.hagen.ma.gundermann.signaturematching.SingleMatchingInfo.Builder;
-import de.fernuni.hagen.ma.gundermann.signaturematching.glue.ProxyCreatorFactories;
+import de.fernuni.hagen.ma.gundermann.signaturematching.glue.factories.ProxyCreatorFactories;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.MethodMatchingInfoCombinator;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.Setting;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.methods.MethodMatchingInfoFactory;
 import de.fernuni.hagen.ma.gundermann.signaturematching.util.Logger;
 
 /**
- * Dieser Matcher achtet darauf, dass die Typen (Return- und Argumenttypen) der
- * beiden Methoden auch Generelisierungen bzw. Spezialisierungen von einander
- * sein k�nnen.
+ * {@link TypeMatcher} fuer Typen, die in einer Vererbungsbeziehung zueinander
+ * stehen.
+ * 
+ * @author Niels Gundermann
  */
-
-// TODO QUERSTION: Dieser Matcher geh�rt doch eigentlich auch in die Kategorie "PartlyTypeMatcher" oder?
-// Zumindest, wenn ich Gen2Spec matchen m�chte. Dann kann es passieren, dass der Gen nur teilweise die Methoden des
-// Spec
-// erf�llt.
 public class GenSpecTypeMatcher implements TypeMatcher {
 
 	static int counter = 0;
 
-	// Versuch: Cache der Wrapped-Pr�fungen
-	// Grund: Im WrappedTypeMethodMatcher wird auch ein Cache verwendet und es ist
-	// sicherlich aus Performance-Sicht
-	// sinnvoll auch hier einen Cache aufzubauen.
 	Map<Class<?>[], Boolean> cachedGenSpecTypesChecks = new HashMap<>();
 
 	@Override
 	public boolean matchesType(Class<?> checkType, Class<?> queryType) {
-		// Versuch 1: �ber die Methode isAssignableFrom feststellen, ob die Typen
-		// voneinander erben.
-		// Problem: native Typen erben nicht von Object
-		// #####################Frage: Ist das wirklich ein Problem, oder ist das so
-		// korrekt????????#####################
-		// return t1.isAssignableFrom( t2 ) || t2.isAssignableFrom( t1 );
-
-		// Versuche 2: wie Versuch 1 mit zus�tzlicher Equals-Pr�fung, aufgrund des
-		// in Versuch 1 erw�hnten Problems
-		// return t1.equals( Object.class ) || t2.equals( Object.class ) ||
-		// t1.isAssignableFrom( t2 )
-		// || t2.isAssignableFrom( t1 );
-
-		// Versuch 3: wie Versuch 2 mit Cache
 		Class<?>[] cacheKey = new Class<?>[] { checkType, queryType };
 		if (isCombinationCached(cacheKey)) {
-			// false, weil die �berpr�fung noch nicht stattgefunden bzw. wenn sie
-			// bereits true ermittelt hatte, dann
-			// w�re die
-			// �berpr�fung bereits erfolgreich gewesen
 			return getResultFromCache(cacheKey);
 		}
 		cachedGenSpecTypesChecks.put(cacheKey, null);
@@ -74,7 +48,6 @@ public class GenSpecTypeMatcher implements TypeMatcher {
 	}
 
 	private boolean isCombinationCached(Class<?>[] newCacheKey) {
-		// Hier ist die Richtung der gepr�ften Typen egal. Also
 		for (Class<?>[] cacheKey : cachedGenSpecTypesChecks.keySet()) {
 			if (Objects.equals(cacheKey[0], newCacheKey[0]) && Objects.equals(cacheKey[1], newCacheKey[1])
 					|| Objects.equals(cacheKey[0], newCacheKey[1]) && Objects.equals(cacheKey[1], newCacheKey[0])) {
@@ -101,17 +74,13 @@ public class GenSpecTypeMatcher implements TypeMatcher {
 		int c = ++counter;
 		Logger.infoF("start calculation: %d", c);
 		Collection<SingleMatchingInfo> result = new ArrayList<>();
-//    TypeMatchingInfoFactory factory = new TypeMatchingInfoFactory( targetType, sourceType );
 		if (targetType.equals(sourceType)) {
 			Logger.infoF("assumtion: %s == %s", sourceType, targetType);
 			Logger.infoF("finish calculation: %d", c);
 			Builder mibuilder = new SingleMatchingInfo.Builder(sourceType, targetType,
 					ProxyCreatorFactories.getIdentityFactoryCreator());
 			result = Collections.singletonList(mibuilder.build());
-//      result = Collections.singletonList( factory.create() );
-		}
-		// f�r primitive Typen, die auch als Object verwendet werden k�nnen
-		else if ((targetType.isPrimitive() && sourceType.equals(Object.class))
+		} else if ((targetType.isPrimitive() && sourceType.equals(Object.class))
 				|| (sourceType.isPrimitive() && targetType.equals(Object.class))) {
 			Logger.infoF("assumtion: Object > primitiv");
 			Logger.infoF("finish calculation: %d", c);
@@ -119,25 +88,7 @@ public class GenSpecTypeMatcher implements TypeMatcher {
 			Builder mibuilder = new SingleMatchingInfo.Builder(sourceType, targetType,
 					ProxyCreatorFactories.getIdentityFactoryCreator());
 			result = Collections.singletonList(mibuilder.build());
-//	      result = Collections.singletonList( factory.create() );
-		} else if (sourceType.isAssignableFrom(targetType)
-		// Wurde nur f�r native Typen gemacht
-		// || queryType.equals( Object.class )
-		) {
-			// queryType > checkType
-			// Gen: queryType
-			// Spec: checkType
-
-			// Versuch 1
-			// TODO ich bin mir unsicher, ob die �bergabe von this an dieser Stelle
-			// korrekt ist, oder ob die
-			// ModuleMatchingInfos an dieser Stelle nicht auch durch den kombinierten
-			// Matcher ermittelt werden m�ssen. Das
-			// dauert aber sehr lange.
-			// return new ModuleMatcher<>( queryType, this ).calculateMatchingInfos(
-			// checkType );
-
-			// Versuch 2
+		} else if (sourceType.isAssignableFrom(targetType)) {
 			Logger.infoF("assumtion: %s > %s", sourceType, targetType);
 			Map<Method, Collection<MethodMatchingInfo>> methodMatchingInfos = createMethodMatchingInfoForGen2SpecMapping(
 					sourceType, targetType);
@@ -156,26 +107,16 @@ public class GenSpecTypeMatcher implements TypeMatcher {
 
 			for (Collection<MethodMatchingInfo> combi : permutedMethodMatches) {
 				Map<Method, MethodMatchingInfo> m = combi.stream()
-						.collect(Collectors.toMap(MethodMatchingInfo::getSource,mmi -> mmi));
+						.collect(Collectors.toMap(MethodMatchingInfo::getSource, mmi -> mmi));
 				mibuilder.withMethodMatchingInfos(m);
 				result.add(mibuilder.build());
 			}
 
-		} else if (targetType.isAssignableFrom(sourceType)
-
-		// Wurde nur f�r native Typen gemacht
-		// || checkType.equals( Object.class )
-		) {
-			// queryType < checkType
-			// Gen: checkType
-			// Spec: queryType
-
+		} else if (targetType.isAssignableFrom(sourceType)) {
 			Logger.infoF("assumtion: %s < %s", sourceType, targetType);
-
 			Builder mibuilder = new SingleMatchingInfo.Builder(sourceType, targetType,
 					ProxyCreatorFactories.getIdentityFactoryCreator());
 			result = Collections.singletonList(mibuilder.build());
-//			result = Collections.singletonList(factory.create());
 		}
 		Logger.infoF("finish calculation: %d", c);
 		return result;
@@ -184,15 +125,7 @@ public class GenSpecTypeMatcher implements TypeMatcher {
 	private Map<Method, Collection<MethodMatchingInfo>> createMethodMatchingInfoForGen2SpecMapping(Class<?> genType,
 			Class<?> specType) {
 		Map<Method, Collection<MethodMatchingInfo>> matchingInfos = new HashMap<>();
-
-		// Es wird davon ausgegangen, dass nur f�r die �berschreibbaren Methoden
-		// MatchingInfos erzeugt werden k�nnen.
-		// Und f�r jede �berschreibbare Methode muss eine MatchingInfo erzeugt
-		// werden.
 		Collection<Method> genMethods = getOverrideableMethods(genType);
-		// Methoden, die im speziellen Typ deklariert aber nicht �berschrieben wurden,
-		// k�nnen keine passenede Methode im
-		// Supertyp haben.
 		Method[] specMethods = specType.getDeclaredMethods();
 		for (Method specM : specMethods) {
 			Method genM = getOriginalMethod(specM, genType);
@@ -200,16 +133,9 @@ public class GenSpecTypeMatcher implements TypeMatcher {
 				genMethods.remove(genM);
 				Logger.infoF("matching methods found: %s === %s", specM, genM);
 				MethodMatchingInfoFactory factory = new MethodMatchingInfoFactory(specM, genM);
-				// Hier kann wirklich der gleiche TypeMatcher verwendet werden, weil f�r
-				// �berschriebene Methode bestimmte
-				// Regeln
-				// gelten.
-				// Regel 1: Der Returntype kann spezieller werden. Liskov l�sst gr��en.
 				// (Kovarianz)
 				SingleMatchingInfo returnTypeMatchingInfo = calculateTypeMatchingInfos(genM.getReturnType(),
 						specM.getReturnType()).iterator().next();
-
-				// Regel 2: Die Argumente k�nnen allgemeiner werden. Liskov l�sst gr��en
 				// (Kontravarianz)
 				Map<ParamPosition, Collection<SingleMatchingInfo>> argumentTypeMatchingInfos = calculateArgumentTypesMatchingInfos(
 						specM.getParameterTypes(), genM.getParameterTypes());

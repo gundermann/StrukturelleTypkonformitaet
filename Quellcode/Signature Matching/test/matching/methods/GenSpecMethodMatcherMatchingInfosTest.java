@@ -19,10 +19,8 @@ import de.fernuni.hagen.ma.gundermann.signaturematching.SingleMatchingInfo;
 import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo;
 import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo.ParamPosition;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.MatchingSupplier;
-import de.fernuni.hagen.ma.gundermann.signaturematching.matching.methods.CommonMethodMatcher;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.methods.MethodMatcher;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.GenSpecTypeMatcher;
-import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.TypeMatchingInfo;
 
 public class GenSpecMethodMatcherMatchingInfosTest {
 

@@ -5,32 +5,36 @@ import java.util.Collection;
 import de.fernuni.hagen.ma.gundermann.signaturematching.SingleMatchingInfo;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.MatcherRate;
 
+/**
+ * Matcher-Interface fuer Type-Matcher
+ * 
+ * @author Niels Gundermann
+ *
+ */
 public interface TypeMatcher {
 
-  /**
-   * Prüft, ob ein Matching über den TypeMatcher hergestellt werden kann.<br>
-   * Matching über Matcher <code>M</code>: <br>
-   * <b> checkType &equiv;<sub>M</sub> queryType</b>
-   *
-   * @param checkType
-   *          - source
-   * @param queryType
-   *          - target
-   * @return
-   */
-  boolean matchesType( Class<?> checkType, Class<?> queryType );
+	/**
+	 * Prüft, ob ein Matching über den TypeMatcher hergestellt werden kann.<br>
+	 * Matching über Matcher <code>M</code>: <br>
+	 * <b> checkType &equiv;<sub>M</sub> queryType</b>
+	 *
+	 * @param checkType - source
+	 * @param queryType - target
+	 * @return
+	 */
+	boolean matchesType(Class<?> checkType, Class<?> queryType);
 
-  Collection<SingleMatchingInfo> calculateTypeMatchingInfos( Class<?> checkType, Class<?> queryType );
+	Collection<SingleMatchingInfo> calculateTypeMatchingInfos(Class<?> checkType, Class<?> queryType);
 
-  double getTypeMatcherRate();
+	double getTypeMatcherRate();
 
-  default MatcherRate matchesWithRating( Class<?> checkType, Class<?> queryType ) {
-    if ( matchesType( checkType, queryType ) ) {
-      MatcherRate rate = new MatcherRate();
-      rate.add( this.getClass().getSimpleName(), getTypeMatcherRate() );
-      return rate;
-    }
-    return null;
-  }
+	default MatcherRate matchesWithRating(Class<?> checkType, Class<?> queryType) {
+		if (matchesType(checkType, queryType)) {
+			MatcherRate rate = new MatcherRate();
+			rate.add(this.getClass().getSimpleName(), getTypeMatcherRate());
+			return rate;
+		}
+		return null;
+	}
 
 }

@@ -13,10 +13,6 @@ import de.fernuni.hagen.ma.gundermann.signaturematching.ProxyFactoryCreator;
 
 public class MatchingInfo {
 
-	// Hier stehen nur Methoden drin, bei deren Aufruf auch an ein anderes Objekt
-	// delegiert werden muss. Methoden, die von dem Objekt selbst ausgefuehrt werden
-	// koennen, stehen hier nicht drin. D.h. bei einem Exact Matching waere diese
-	// Liste leer.
 	private final Collection<Method> matchedSourceMethods;
 
 	private final Map<Method, MatchingSupplier> methodMatchingSupplier;
@@ -64,8 +60,6 @@ public class MatchingInfo {
 	public Collection<MatcherRate> getQualitativeMatchRating() {
 		return methodMatchingSupplier.values().stream().map(MatchingSupplier::getMatcherRating)
 				.flatMap(Collection::stream).collect(Collectors.toList());
-//		return Setting.QUALITATIVE_COMPONENT_MATCH_RATE_CUMULATION
-//				.apply(methodMatchingSupplier.values().stream().map(MatchingSupplier::getMatcherRating));
 	}
 
 	public static class Builder {

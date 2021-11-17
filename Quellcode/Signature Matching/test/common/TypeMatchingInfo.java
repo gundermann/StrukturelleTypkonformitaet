@@ -1,12 +1,12 @@
-package de.fernuni.hagen.ma.gundermann.signaturematching.matching.types;
+package common;
+
 
 import java.util.Collection;
 
 import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo;
 import de.fernuni.hagen.ma.gundermann.signaturematching.ProxyFactoryCreator;
-import de.fernuni.hagen.ma.gundermann.signaturematching.glue.ProxyCreatorFactories;
+import de.fernuni.hagen.ma.gundermann.signaturematching.glue.factories.ProxyCreatorFactories;
 
-@Deprecated
 public class TypeMatchingInfo {
 
   private final Class<?> source;

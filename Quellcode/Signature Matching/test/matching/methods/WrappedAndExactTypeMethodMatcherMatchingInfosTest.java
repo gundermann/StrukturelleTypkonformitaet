@@ -18,7 +18,6 @@ import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo;
 import de.fernuni.hagen.ma.gundermann.signaturematching.MethodMatchingInfo.ParamPosition;
 import de.fernuni.hagen.ma.gundermann.signaturematching.SingleMatchingInfo;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.MatcherCombiner;
-import de.fernuni.hagen.ma.gundermann.signaturematching.matching.methods.CommonMethodMatcher;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.methods.MethodMatcher;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.ExactTypeMatcher;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.TypeMatcher;

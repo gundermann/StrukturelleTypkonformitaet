@@ -8,10 +8,6 @@ import java.util.Map;
 
 public class SingleMatchingInfo {
 
-	// Hier stehen nur Methoden drin, bei deren Aufruf auch an ein anderes Objekt
-	// delegiert werden muss. Methoden, die von dem Objekt selbst ausgefuehrt werden
-	// koennen, stehen hier nicht drin. D.h. bei einem Exact Matching waere diese
-	// Liste leer.
 	private final Collection<Method> matchedSourceMethods;
 
 	private final Map<Method, MethodMatchingInfo> methodMatchingInfos;
@@ -28,7 +24,6 @@ public class SingleMatchingInfo {
 		this.converterCreator = converterCreator;
 		this.methodMatchingInfos = new HashMap<Method, MethodMatchingInfo>();
 		this.matchedSourceMethods = new ArrayList<Method>();
-
 	}
 
 	public Class<?> getSource() {

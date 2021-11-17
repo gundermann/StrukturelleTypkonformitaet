@@ -11,6 +11,7 @@ import de.fernuni.hagen.ma.gundermann.signaturematching.SingleMatchingInfo;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.TypeMatcher;
 
 public final class MatcherCombiner {
+
 	private MatcherCombiner() {
 	}
 
@@ -50,7 +51,7 @@ public final class MatcherCombiner {
 
 			@Override
 			public double getTypeMatcherRate() {
-				// irrelevant, weil matchesWithRating ueberschrieben wurde.
+				// irrelevant, weil matchesWithRating ueberschrieben wird
 				return -0;
 			}
 

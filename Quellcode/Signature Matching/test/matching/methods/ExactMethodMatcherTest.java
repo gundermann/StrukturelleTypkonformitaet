@@ -6,7 +6,6 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import de.fernuni.hagen.ma.gundermann.signaturematching.matching.methods.CommonMethodMatcher;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.methods.MethodMatcher;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.ExactTypeMatcher;
 

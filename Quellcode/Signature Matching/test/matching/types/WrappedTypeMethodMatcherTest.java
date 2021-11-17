@@ -11,7 +11,6 @@ import org.junit.Test;
 
 import de.fernuni.hagen.ma.gundermann.signaturematching.SingleMatchingInfo;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.ExactTypeMatcher;
-import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.TypeMatchingInfo;
 import de.fernuni.hagen.ma.gundermann.signaturematching.matching.types.WrappedTypeMatcher;
 import testcomponents.genspec.General;
 import testcomponents.genspec.Specific;
