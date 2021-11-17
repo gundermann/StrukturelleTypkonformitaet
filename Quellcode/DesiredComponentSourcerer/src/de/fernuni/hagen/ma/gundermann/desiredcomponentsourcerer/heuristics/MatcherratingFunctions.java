@@ -36,14 +36,17 @@ public class MatcherratingFunctions {
 		return ratings.stream().reduce(0d, (a, b) -> a + b) / ratings.size();
 	}
 
+	@SuppressWarnings("unused")
 	private static double rating2(Collection<Double> ratings) {
 		return ratings.stream().max(Double::compareTo).get();
 	}
 
+	@SuppressWarnings("unused")
 	private static double rating3(Collection<Double> ratings) {
 		return ratings.stream().min(Double::compareTo).get();
 	}
 
+	@SuppressWarnings("unused")
 	private static double rating4(Collection<Double> ratings) {
 		return (ratings.stream().max(Double::compareTo).get()
 				+ ratings.stream().min(Double::compareTo).get())
