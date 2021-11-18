@@ -35,17 +35,17 @@ Die in Abschnitt \ref{sec_matcher} beschriebenen Matcher und Generatoren wurden 
 \hline
 \textbf{Matcher} & \textbf{Matcher-Implementierung} & \textbf{Generator-Implementierung}\\
 \hline
-ExactTypeMatcher & $\texttt{ExactTypeMatcher}$ & $\texttt{ClassProxyFactory}$ \\
+ExactTypeMatcher & $\texttt{ExactTypeMatcher}$ &  \\
 \hline
-GenTypeMatcher & $\texttt{GenSpecTypeMatcher}$ & $\texttt{ClassProxyFactory}$\\
+GenTypeMatcher & $\texttt{GenSpecTypeMatcher}$ & \\
 \hline
-SpecTypeMatcher & $\texttt{GenSpecTypeMatcher}$ & $\texttt{ClassProxyFactory}$\\
+SpecTypeMatcher & $\texttt{GenSpecTypeMatcher}$ & $\texttt{SubProxyFactory}$\\
 \hline
 ContentTypeMatcher & $\texttt{ContainerTypeMatcher}$ & $\texttt{ContentProxyFactory}$\\
 \hline
 ContainerTypeMatcher & $\texttt{ContainerTypeMatcher}$ & $\texttt{ContainerProxyFactory}$\\
 \hline
-StructuralTypeMatcher & $\texttt{StructuralTypeMatcher}$ & $\texttt{InterfaceProxyFactory}$\\
+StructuralTypeMatcher & $\texttt{StructuralTypeMatcher}$ & $\texttt{StructProxyFactory}$\\
 \hline
 \hline
 \end{tabular}
@@ -80,7 +80,7 @@ Eine Instanz der Klasse $\texttt{MethodSupplier}$ enthält zum einen ein $\textt
 \\\\
 Bezüglich der Klasse $\texttt{SingleMatchingInfo}$ ist noch das Attribut $\texttt{proxyFactoryCreator}$ zu beschreiben. Darin werden Informationen bzgl. der strukturellen Verbindung zwischen den gematchten Typen gehalten. 
 \\\\
-Für den \emph{ExactTypeMatcher}, den \emph{GenTypeMatcher} und den \emph{SpecTypeMatcher} wird dabei ein $\texttt{ProxyFactoryCreator}$ erzeugt, der in der Lage ist, eine $\texttt{ProxyFactory}$ für Typen zu erzeugen, die in einer nominalen Beziehung \footnote{Identität, Generalisierung, Spezialisierung} stehen. 
+Für den \emph{ExactTypeMatcher}, den \emph{GenTypeMatcher} und den \emph{SpecTypeMatcher} wird dabei ein $\texttt{ProxyFactoryCreator}$ erzeugt, das in der Lage ist, eine $\texttt{ProxyFactory}$ für Typen zu erzeugen, die in einer nominalen Beziehung \footnote{Identität, Generalisierung, Spezialisierung} stehen. 
 \\\\
 Für den \emph{ContentTypeMatcher} und den \emph{ContainedTypeMatcher} hingegen, wird ein Objekt vom Typ $\texttt{ProxyFactoryCreator}$ erzeugt, der in der Lage ist, eine $\texttt{ProxyFactory}$ für Typen zu erzeugen, bei denen der eine Typ ein Attribut vom Typ des anderen enthält (vgl. mit Tabelle \ref{tab_matcher2impl}). Die erzeugten Objekte vom Typ $\texttt{ProxyFactory}$ werden bei der Generierung der \emph{Proxies} unter der Zuhilfenahme der Bibliotheken \emph{cglib} und \emph{objenesis} verwendet\footnote{Diese beiden Frameworks wurden verwendet, da die Erzeugung der \emph{Proxies} mit ihnen komfortabler ist, als mit den Mitteln die das JKD zur Verfügung stellt. Dies gilt insbesondere für die Erzeugung von \emph{Proxies} für Klassen, die mit dem Schlüsselwort $\texttt{final}$ versehen sind. (vgl. \cite{objenesis}, \cite{cglib})}.
 \\\\
@@ -96,7 +96,7 @@ Ein Objekt der Klasse $\texttt{MethodMatchingInfo}$ enthält in den Attributen $
 \\\\
 Analog dazu wird im Attribut $\texttt{argumentTypeMatchingInfos}$ eine Map, bestehend aus weiteren Objekten der Klasse $\texttt{SingleMatchingInfo}$ und jeweils einem Objekt der Klasse $\texttt{ParamPosition}$, gehalten. Diese Map enthält alle notwendigen Information für das Erzeugen eines \emph{Proxies} für die Parametertypen der \emph{Delegationsmethoden} aus den Parametertypen der \emph{aufgerufenen Methode}, sowie der Anpassung der Übergabeposition bei der Delegation der \emph{aufgerufenen Methode} (siehe auch Abschnitt \ref{sec:proxygram}).
 \\\\
-Um die \emph{Methoden-Delegationen} zu koordinieren, wird bei der Erzeugung des \emph{Proxies} in der jeweiligen $\texttt{ProxyFactory}$ für das \emph{Proxy}-Objekt ein $\texttt{InvocationHandler}$ instanziiert (vgl. \cite{invocationhandler}). Dieses \Gls{Interface} wird im \emph{glue}-Package durch die Klasse $\texttt{BehaviourDelegateInvocationHandler}$ implementiert, in der letztendlich die Koordination der \emph{Methoden-Delegationen} auf Basis der jeweiligen $\texttt{MethodMatchingInfo}$ spezifiziert ist.
+Um die \emph{Methoden-Delegationen} zu koordinieren, wird bei der Erzeugung des \emph{Proxies} in der jeweiligen $\texttt{ProxyFactory}$ für das \emph{Proxy}-Objekt ein $\texttt{InvocationHandler}$ instanziiert (vgl. \cite{invocationhandler}). Dieses \Gls{Interface} wird im Sub-Package \emph{glue.delegation} durch die Klasse $\texttt{BehaviourDelegateInvocationHandler}$ implementiert, in der letztendlich die Koordination der \emph{Methoden-Delegationen} auf Basis der jeweiligen $\texttt{MethodMatchingInfo}$ spezifiziert ist.
 \\\\
 Um einen \emph{Proxy} basierend auf dem Matching zweier Typen zu erzeugen, steht die Klasse $\texttt{TypeConverter}$ zur Verfügung (siehe Abbildung \ref{cd_typeconverter}). Die Zugriffe innerhalb des Packages \emph{glue} als auch die Zugriffe von außerhalb verlangen jeweils ein Objekt der Klasse $\texttt{ConvertableBundle}$. Diese Klasse beschreibt eine Kombination mehrerer Objekte vom Typ $\texttt{ConvertableComponent}$, die als \emph{Target-Typen} des zu erzeugenden Proxy-Objektes fungieren sollen. Ein Objekt der Klasse $\texttt{ConvertableComponent}$ enthält eine Liste von Objekten vom Typ $\texttt{SingleMatchingInfo}$, die wie bereits erwähnt beschreiben, am welche Methode die Delegation erfolgen soll. Das Objekt im Attribut $\texttt{convertableObject}$ der $\texttt{ModuleMatchingInfo}$ beinhaltet das Objekt, auf dem die \emph{Delegationsmethode} aufgerufen werden soll.
 \begin{figure}[h!]

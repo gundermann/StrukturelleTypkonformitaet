@@ -25,7 +25,7 @@ Um das \emph{Matcherrating} zu ermitteln, wird für jede Matchingrelation bzw. f
 	\right.
 \end{gather*}
 \noindent
-Dabei ist zu erwähnen, dass einige der oben genannten Matcher über dasselbe \emph{Basisrating} verfügen. Das liegt daran, dass sie technisch jeweils gemeinsam umgesetzt wurden.\footnote{Der \emph{GenTypeMatcher} und der \emph{SpecTypeMatcher} wurden gemeinsam in der Klasse $\texttt{GenSpecTypeMatcher}$ umgesetzt. Der \emph{ContentTypeMatcher} und der \emph{ContainerTypeMatcher} wurden gemeinsam in der Klasse $\texttt{WrappedTypeMatcher}$ umgesetzt. (siehe angehängter Quellcode auf dem beiliegenden Datenträger)}
+Dabei ist zu erwähnen, dass einige der oben genannten Matcher über dasselbe \emph{Basisrating} verfügen. Das liegt daran, dass sie technisch jeweils gemeinsam umgesetzt wurden.\footnote{Der \emph{GenTypeMatcher} und der \emph{SpecTypeMatcher} wurden gemeinsam in der Klasse $\texttt{GenSpecTypeMatcher}$ umgesetzt. Der \emph{ContentTypeMatcher} und der \emph{ContainerTypeMatcher} wurden gemeinsam in der Klasse $\texttt{ContainerTypeMatcher}$ umgesetzt. (siehe auch Abschnitt \ref{impl_sigma})}
 \\\\
 Wie an der Funktion $\mathit{base}$ zu erkennen ist, wird das \emph{Matcherrating} für Typen, die über den \emph{StructuralTypeMatcher} gematcht wurden, nicht spezifiziert. Dieses muss berechnet werden. Die Basis dafür bildet ein \emph{Matcherrating}, welches für die gematchten Methoden ermittelt wird. Hierzu sei die Funktion $\mathit{bases_{method}}$ für zwei Methoden $\mathit{mR}$ und $\mathit{mT}$ mit $\mathit{mR} \Rightarrow_{method} \mathit{mT}$ wie folgt definiert:
 \begin{gather*}
