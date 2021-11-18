@@ -14,12 +14,13 @@ Die Implementierung der $\texttt{eval}$-Methode ist an folgende Bedingungen gekn
 \begin{example}{xmpl_evalMethode}
 In folgendem Listing \ref{lst_examEval} ist eine $\texttt{eval}$-Methode aufgeführt, die die oben genannten Bedingungen erfüllt. Es sei davon auszugehen, dass der als Parameter übergebene \emph{Proxy} eine Methode mit der Struktur $\methodForm{Integer}{add}{Integer, Integer}$
 anbietet.
+\newpage
 \begin{lstlisting}[style = pseudo, label = lst_examEval, caption = Beispielhafte Implementierung einer $\texttt{eval}$-Methode, captionpos = b]
 function eval( proxy ){
-	res = 0	
-	triedMethodCalls.add( "add" )
-	res = proxy.add(1, 1)
-	return res == 2;
+ res = 0	
+ triedMethodCalls.add( "add" )
+ res = proxy.add(1, 1)
+ return res == 2;
 }
 \end{lstlisting}
 \end{example}
@@ -43,48 +44,44 @@ Die Mengen innerhalb einer Menge $\mathit{C}$ mit einer Mächtigkeit $a$ seien d
 \right\}
 \end{gather*}
 \noindent
-Ausgehend von einer Bibliothek $L$ kann der Algorithmus für die \emph{semantische Evaluation} der \emph{Proxies}, die für einen \emph{required Typ} $R$ (Parameter $\texttt{R}$) mit den Mengen der \emph{Target-Typen} $\mathit{cover(R, L)}$ (Parameter $\texttt{T}$) erzeugt werden können, und einer Menge von Tests (Parameter $\texttt{tests}$) über die Methode $\texttt{semanticEval}$ wie folgt im Pseudo-Code beschrieben werden. Die globale Variable $\texttt{passedTests}$ enthält dabei die Anzahl der für den aktuell zu überprüfenden \emph{Proxy} erfolgreich durchgeführten Tests. Außerdem sei davon auszugehen, dass die Funktionen aus Abschnitt \ref{sec_proxyGen} wie beschrieben definiert sind.
+Ausgehend von einer Bibliothek $L$ kann der Algorithmus für die \emph{semantische Evaluation} der \emph{Proxies}, die für einen \emph{required Typ} $R$ (Parameter $\texttt{R}$) mit den Mengen der \emph{Target-Typen} $\mathit{cover(R, L)}$ (Parameter $\texttt{T}$) erzeugt werden können, und einer Menge von Tests (Parameter $\texttt{tests}$) über die Methode $\texttt{semanticEval}$ wie in Listring \ref{lst_semEval} im Pseudo-Code beschrieben werden. Die globale Variable $\texttt{passedTests}$ enthält dabei die Anzahl der für den aktuell zu überprüfenden \emph{Proxy} erfolgreich durchgeführten Tests. Außerdem sei davon auszugehen, dass die Funktionen aus Abschnitt \ref{sec_proxyGen} wie beschrieben definiert sind.
+\\\\
+Die Dauer der Laufzeit der in Listing \ref{lst_semEval} definierten Funktionen hängt maßgeblich von der Anzahl der \emph{Proxies} ab, die für den \emph{required Typ} $R$ in der Bibliothek $L$ erzeugt werden können (siehe auch Abschnitt \ref{sec_anzahlProxies} Funktion $\mathit{libProxyCount}$). Im schlimmsten Fall müssen alle \emph{Proxies} generiert werden und hinsichtlich der vordefinierten Tests geprüft werden. Um die Anzahl dieser \emph{Proxies} zu reduzieren, werden die im folgenden Abschnitt beschriebenen Heuristiken verwendet.
+\newpage
 \begin{lstlisting}[style = pseudo, caption = Semantische Evaluation ohne Heuristiken, captionpos = b, label = lst_semEval]
 passedTests = 0
 
 function semanticEval( R, T, tests ){
-	for( anzahl = 1; anzahl <= $\mathit{maxTargets( R )}$; i++ ){
-		for( targets : $\mathit{targetSets( T, anzahl )}$ ){
-			relProxies = $\mathit{proxies( R, targets )}$
-			proxy = evalProxies( relProxies, tests )	
-			if( proxy != null ){
-				// validen Proxy gefunden
-				return proxy
-			}
-		}
-	}
-	// kein validen Proxy gefunden
-	return null;
+ for( anzahl = 1; anzahl <= $\mathit{maxTargets( R )}$; i++ ){
+  for( targets : $\mathit{targetSets( T, anzahl )}$ ){
+   relProxies = $\mathit{proxies( R, targets )}$
+   proxy = evalProxies( relProxies, tests )	
+   if( proxy != null ){
+    return proxy
+   }
+  }
+ }
+ return null;
 }
 
 function evalProxies(proxies, tests){
-	for( proxy : proxies ){
-		passedTests = 0
-		evalProxy(proxy, tests)
-		if( passedTests == tests.size ){
-			// validen Proxy gefunden
-			return proxy
-		}
-	}
-	// kein validen Proxy gefunden
-	return null
+ for( proxy : proxies ){
+  passedTests = 0
+  evalProxy(proxy, tests)
+  if( passedTests == tests.size ){
+   return proxy
+  }
+ }
+ return null
 }
 
 function evalProxy(proxy, tests){
-	for( test : tests ){
-		if( !test.eval( proxy ) ){
-			// wenn ein Test fehlschlaegt, dann entspricht der 
-			// Proxy nicht den semantischen Anforderungen
-			return
-		}
-		passedTests = passedTests + 1
-	}
+ for( test : tests ){
+  if( !test.eval( proxy ) ){
+   return
+  }
+  passedTests = passedTests + 1
+ }
 }
 \end{lstlisting}
-Die Dauer der Laufzeit der in Listing \ref{lst_semEval} definierten Funktionen hängt maßgeblich von der Anzahl der \emph{Proxies} ab, die für den \emph{required Typ} $R$ in der Bibliothek $L$ erzeugt werden können (siehe auch Abschnitt \ref{sec_anzahlProxies} Funktion $\mathit{libProxyCount}$). Im schlimmsten Fall müssen alle \emph{Proxies} generiert werden und hinsichtlich der vordefinierten Tests geprüft werden. Um die Anzahl dieser \emph{Proxies} zu reduzieren, werden die im folgenden Abschnitt beschriebenen Heuristiken verwendet.
-
+\newpage

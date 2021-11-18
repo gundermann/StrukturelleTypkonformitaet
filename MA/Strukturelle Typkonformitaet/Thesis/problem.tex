@@ -6,7 +6,7 @@ Die Idee der \emph{TDCS} beruht im Grunde auf dem Ziel der Wiederverwendung von 
 Bei der \emph{TDCS} werden die jeweiligen Anforderungen an den zu suchenden Source Code durch die Entwickler*innen spezifiziert. Diese werden im Abschluss verwendet, um den relevanten Source Code aus einem Repository zu ermittelt. Darauf aufbauend kann das jeweilige Tool den Entwickler*innen Vorschläge für die Wiederverwendung des bestehenden Codes unterbreiten.
 \\\\
 Der Prozess der \emph{TDCS} wurde von Hummel und Janjic grundlegend als Zyklus beschrieben und wie in \abbref{tdr_cycle} dargestellt  \cite{Hummel2013}.
-\myScalableFigure[0.6\linewidth]{tdr_cycle}{The testdriven reuse "cycle"  \cite{Hummel2013}}{tdr_cycle}
+\myScalableFigure[0.9\linewidth]{tdr_cycle}{The testdriven reuse "cycle"  \cite{Hummel2013}}{tdr_cycle}
 \noindent
 Hier spezifizieren die Entwickler*innen eine Menge von Testfällen (a) aus denen von eine Search \Gls{Engine} (in der Abbildung \glqq Reuse System\grqq{} genannt) ein \Gls{Interface} extrahiert wird (b). Dieses \Gls{Interface} wird für die Suche nach Kandidaten, die zu diesem \Gls{Interface} passen, verwendet (c). Diese Kandidaten werden im Anschluss kompiliert, wobei mitunter eine Anpassung (Adaption) erfolgen muss, um das extrahierte \Gls{Interface} vollständig\footnote{ein (angepasster) Kandidat erfüllt ein \Gls{Interface} vollständig, wenn er zu jeder Methode des \Gls{Interface}s eine passende Methode anbietet.} zu erfüllen (d). Die letzte Aufgabe der Search \Gls{Engine} besteht dann im Test der kompilierten und mitunter adaptierten Kandidaten. Hierfür werden die von den Entwickler*innen in Schritt a spezifizierten Testfälle verwendet. Darauf aufbauend wird eine Liste von relevanten Kandidaten erarbeitet, aus der die Entwickler*innen eine Kandidaten zur weiteren Verwendung auswählen können (f).
 \\\\
@@ -41,12 +41,12 @@ Darüber hinaus muss klargestellt werden, dass die Exploration der \emph{EJBs} z
 Der Prozess für den beschriebenen Ansatz kann somit in einen Implementierungsprozess und einen Explorationsprozess, welcher zur Laufzeit durchgeführt wird, eingeteilt werden.
 \\\\
 In \abbref{ejb_expl_impl} ist der Implementierungsprozess aufgezeigt:
-\myScalableFigure[1.0\linewidth]{ejb_expl_impl}{Implementierungsprozess}{ejb_expl_impl}
+\myScalableFigure[0.9\linewidth]{ejb_expl_impl}{Implementierungsprozess}{ejb_expl_impl}
 \noindent
 Wie bereits erwähnt, deklarieren die Entwickler*innen das \Gls{Interface} (1) und die Testklassen (2). Im dritten Schritt erfolgt der Aufruf der Explorationskomponente, wodurch zur Laufzeit der Explorationsprozess (siehe \abbref{ejb_expl_search}) gestartet wird. Das Ergebnis des Explorationsprozesses kann in Form des deklarierten \Gls{Interface}s weiter verwendet werden. Allerdings muss der Entwickler auch davon ausgehen, dass durch die Explorationskomponente keine passende Komponente ermittelt werden konnte.
 \\\\
 Die folgende Abbildung stellt den Explorationsprozess dar:
-\myScalableFigure[1.0\linewidth]{ejb_expl_search}{Explorationsprozess}{ejb_expl_search}
+\myScalableFigure[0.9\linewidth]{ejb_expl_search}{Explorationsprozess}{ejb_expl_search}
 \noindent
 Hier wird zuerst eine \emph{strukturelle Evaluation} auf Basis des vorgegebenen \Gls{Interface}s und der vom \emph{EJB-Container} publizierten \Gls{Interface}s durchgeführt. 
 Dieser Schritt ist mit dem Suchen der Kanditaten aus \abbref{tdr_cycle} vergleichbar. Auf Basis der Kandidaten, die bei der \emph{sturkturellen Evaluation} ermittelt wurden, werden im zweiten Schritt \emph{Proxies} generiert, durch die die Methodenaufrufe auf dem vorgegebenen \Gls{Interface} an die jeweiligen Kandidaten delegiert werden. Dies ist mit Schritt d aus \abbref{tdr_cycle} zu vergleichen. Im nächsten Schritt (\emph{semantische Evaluation}) werden - analog zu Schritt e aus \abbref{tdr_cycle} - die vorgegebenen Testklassen verwendet, um eben jene \emph{Proxies} zu validieren. Sofern ein valider \emph{Proxy} gefunden wurden, wird dieser im 4. Schritt von der Explorationskomponente zurückgegeben.

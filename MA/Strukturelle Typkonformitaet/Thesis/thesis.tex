@@ -6,38 +6,45 @@
 
 \mywork{Niels Gundermann}{Evaluation von Heuristiken für die testgetriebene Exploration von Enterprise-Java-Beans}
 \begin{document}
-\mymastertitle{Univ.\ Prof.\ Dr.\ Friedrich Steimann}
-
-
+\mymastertitle{Prof.\ Dr.\ Friedrich Steimann}
 \masterabschlusserklaerung{20.11.2021}
-\frontmatter
 
+\frontmatter
 \section*{Abstract}
 Mit dem Verfahren der testgetriebenen Codesuche ist ein*e Software-Entwickler*in in der Lage bestehenden Code in einem Repository nach vorgegebenen Kriterien zu durchsuchen. Die Kriterien beinhalten dabei Testfälle, die auf den bestehenden Code im Repository angewendet werden. Ausgehend davon, dass eine solche Suche während der Laufzeit innerhalb eines Systems möglich ist, wird die Zeit, die dafür zur Verfügung steht zu einem kritischen Aspekt.
 \\\\
 Daher zielt diese Arbeit darauf ab, Heuristiken zu evaluieren, durch die die testgetriebene Codesuche beschleunigt werden kann. Dazu wird die Exploration im Kontext der Arbeit formal beschrieben. Aufbauend auf dieser formalen Beschreibung werden drei Heuristiken vorgestellt, die bei der Exploration in einem bestehenden System evaluiert werden. Das Repository bildet dabei ein EJB-Container mit ca. 900 EJBs innerhalb des Systems. 
 \\\\
 Die Untersuchungsergebnisse zeigen, dass alle drei Heuristiken - wenn auch mit Abstufungen - das Potential haben, die Exploration zu beschleunigen.
-\newpage
-
 
 \include{glossarydef}
 
+\newpage
+\quad
+\newpage
 
 \tableofcontents
-
-
+\clearpage
+%\newpage
+%\quad
+%\newpage
+\phantomsection
 \addcontentsline{toc}{chapter}{\listfigurename}
 \listoffigures
 
+%\newpage
+%\quad
+%\newpage
 
+\phantomsection
 \addcontentsline{toc}{chapter}{\listtablename}
 \listoftables
+\clearpage
 
-
+\phantomsection
 \addcontentsline{toc}{chapter}{Listings}
 \lstlistoflistings
-
+\clearpage
 
 
 
@@ -54,7 +61,7 @@ Die Untersuchungsergebnisse zeigen, dass alle drei Heuristiken - wenn auch mit A
 
 \appendix
 \pagenumbering{roman}
-\setcounter{page}{17}
+\setcounter{page}{19}
 
 \input{app_matcherCombi}
 \input{app_heuristicCombi}
@@ -65,10 +72,15 @@ Die Untersuchungsergebnisse zeigen, dass alle drei Heuristiken - wenn auch mit A
 \input{app_test}
 \input{app_storage}
 
+\clearpage
 \addcontentsline{toc}{chapter}{Glossar}
-\printglossaries
+\phantomsection
+\printglossaries[title=Glossar,toctitle=Glossar]
+\clearpage
+\phantomsection
 \addcontentsline{toc}{chapter}{Literaturverzeichnis}
 \bibliography{thesisbib}{}
+
 
 
 

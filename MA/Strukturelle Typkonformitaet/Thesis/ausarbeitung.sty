@@ -33,32 +33,37 @@
 \newcommand{\mytitle}[2]{
   \mybetreuer{#2}
   \thispagestyle{fancy}
-  \chead{\large FernUniversität Hagen \normalsize}
+ % \chead{\large FernUniversität Hagen \normalsize}
   \cfoot{\rule{\textwidth}{0.1pt}}
   \null\vfil
-%% \begin{center}\includegraphics[height=2cm]{feulogo}\end{center}
+ \begin{center}\includegraphics[height=2cm]{feulogo}\end{center}
+ \begin{center}
+ \textbf{FernUniversität in Hagen, Fakultät für Mathematik und Informatik, Lehrgebiet Programmiersysteme, Prof.\ Dr.\ Friedrich Steimann}
+ \end{center}
 %%  \vskip 20pt
 %% anstelle der folgenden Zeile, um das Schloss mit einzufügen:
-  \vskip 7.5cm
+  \vskip 3.5cm
   \begin{center}%
     {\large \textbf{#1} \par}
     \vskip 1cm
     {\textbf{\Large \MyThema} \par}
     \vskip 1.5cm
     {\Large \MyAuthor \par}
+    {\Large (Matrikelnummer: 3100570) \par}
   \end{center}
+  \vskip 2.5cm
   \vspace*{\stretch{1}}
-    Prüfer: Univ.\ Prof.\ Dr.\ Friedrich Steimann\\
-    Zweitprüfer : Dr.\ Daniela Keller\\
+  %  Prüfer: Univ.\ Prof.\ Dr.\ Friedrich Steimann\\
+  %  Zweitprüfer : Dr.\ Daniela Keller\\
     \ifthenelse{\equal{\MyBetreuer}{}}{}{Betreuer: \MyBetreuer \\}
-    Lehrgebiet Programmiersysteme \\
-    Fachbereich Informatik \\
+   % Lehrgebiet Programmiersysteme \\
+   % Fakultät für Mathematik und Informatik \\
   \vfil\null
   \newpage
-%%  \thispagestyle{empty}
-%%  \begin{small}
-%%   \hspace*{1pt}
-%%  \end{small}
+  \thispagestyle{empty}
+%  \begin{small}
+%   \hspace*{1pt}
+%  \end{small}
 }
 
 \newcommand{\mydiplomtitle}[1]{
@@ -66,7 +71,7 @@
 }
 
 \newcommand{\mymastertitle}[1]{
-  \mytitle{Masterarbeit}{#1}
+  \mytitle{Abschlussarbeit im Studiengang Master of Science in\\Praktischer Informatik}{#1}
 }
 \newcommand{\mybachelortitle}[1]{
   \mytitle{Bachelorarbeit}{#1}

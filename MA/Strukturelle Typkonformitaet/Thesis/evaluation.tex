@@ -107,6 +107,7 @@ Die \tabsrefs{tmr_start_tei1}{tmr_start_tei7_2} zeigen die Vier-Felder-Tafeln, i
 \columnbreak
 \vft{2}{43360}{$p_2(1323)-43361$}{1}{0}{Ausgangspunkt für TEI6 2.~\mbox{Durchlauf}}{tmr_start_tei6_2}
 \end{multicols}
+\pagebreak
 \begin{multicols}{2}
 \vft{1}{$161294$}{0}{0}{0}{Ausgangspunkt für TEI7 1.~\mbox{Durchlauf}}{tmr_start_tei7_1}
 \columnbreak
@@ -118,8 +119,7 @@ Für die \emph{required Typen} \emph{TEI4}-\emph{TEI7} werden zwei Durchläufe b
 \input{test_tmr}
 \input{test_pttf}
 \input{test_blnmc}
-\noindent
-\\\\
+
 Aus den Ergebnissen, die in den Abschnitten \ref{sec_evalLMF} - \ref{sec_evalBLNMC} beschrieben wurden, lässt sich je \emph{required Typ} eine Rangfolge der vorgestellten \Gls{Heuristik}en erstellen. Diese Rangfolge kann Tabelle \ref{tab_rankingSingle} entnommen werden. Dabei gilt, dass die \Gls{Heuristik}, mit der am wenigsten \emph{Proxies} generiert und geprüft werden mussten, den ersten Platz einnimmt. 
 \begin{table}[!h]
 \centering
@@ -141,7 +141,7 @@ BL\_NMC & 2. &1. &1. &1. &1.&1.&1.\\
 \label{tab_rankingSingle}
 \end{table}
 
-
+\pagebreak
 \section{Ergebnisse für die Kombination der Heuristiken}\label{sec_evalKombis}
 Im vorherigen Abschnitt wurde gezeigt, dass der \emph{Explorationsprozess} durch jede der beschriebenen \Gls{Heuristik}en beschleunigt werden kann. Dabei wurde der \emph{Explorationsprozess} mit jeweils einer der \Gls{Heuristik}en durchgeführt. In den folgenden Abschnitten soll evaluiert werden, ob die Verwendung einer Kombination der einzelnen \Gls{Heuristik}en während des \emph{Explorationsprozesses} einen zusätzlichen Vorteil bringt.
 \\\\
@@ -173,6 +173,7 @@ Die folgenden Vier-Felder Tafeln zeigen die Ergebnisse mit der Kombination der \
 \vft{1}{$161294$}{0}{0}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} für TEI7 1. Durchlauf}{lmfpttf_TEI7_1}\columnbreak
 \vft{2}{1076}{$p_2(52150)-1077$}{1}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} für TEI7 2. Durchlauf}{lmfpttf_TEI7_2}
 \end{multicols}
+\pagebreak
 \noindent
 Aus diesen Ergebnissen lässt sich Folgendes ableiten:
 \begin{enumerate}
@@ -211,6 +212,7 @@ Die folgenden Vier-Felder Tafeln zeigen die Ergebnisse mit der Kombination der \
 \vft{1}{2448}{$158846$}{0}{0}{Ergebnisse \emph{LMF} + \emph{BL\_NMC} für TEI7 1. Durchlauf}{lmfbl_TEI7_1}\columnbreak
 \vft{2}{954}{$p_2(52150)-955$}{1}{0}{Ergebnisse \emph{LMF} + \emph{BL\_NMC} für TEI7 2. Durchlauf}{lmfbl_TEI7_2}
 \end{multicols}
+\pagebreak
 \noindent
 Aus diesen Ergebnissen lässt sich Folgendes ableiten:
 \begin{enumerate}
@@ -246,6 +248,7 @@ Die folgenden Vier-Felder Tafeln zeigen die Ergebnisse mit der Kombination der \
 \vft{1}{1036}{$160258$}{0}{0}{Ergebnisse \emph{PTTF} + \emph{BL\_NMC} für TEI7 1. Durchlauf}{pttfbl_TEI7_1}\columnbreak
 \vft{2}{6015}{$p_2(52150)-6016$}{1}{0}{Ergebnisse \emph{PTTF} + \emph{BL\_NMC} für TEI7 2. Durchlauf}{pttfbl_TEI7_2}
 \end{multicols}
+\pagebreak
 \noindent
 Aus diesen Ergebnissen lässt sich Folgendes ableiten:
 \begin{enumerate}
@@ -282,6 +285,7 @@ Die folgenden Vier-Felder Tafeln zeigen die Ergebnisse mit der Kombination der \
 \vft{1}{2448}{$158846$}{0}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} + \emph{BL\_NMC} für TEI7 1. Durchlauf}{lmfpttfbl_TEI7_1}\columnbreak
 \vft{2}{12}{$p_2(52150)-13$}{1}{0}{Ergebnisse \emph{LMF} + \emph{PTTF} + \emph{BL\_NMC} für TEI7 2. Durchlauf}{lmfpttfbl_TEI7_2}
 \end{multicols}
+\pagebreak
 \noindent
 Aus diesen Ergebnissen lässt sich Folgendes ableiten:
 \begin{enumerate}

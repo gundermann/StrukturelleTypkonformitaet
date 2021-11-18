@@ -138,7 +138,8 @@ Der \emph{SpecTypeMatcher} definiert im Verhältnis zum \emph{GenTypeMatcher} da
 \begin{gather*}
 \frac{T < T'}{T \Rightarrow_{spec} T'}
 \end{gather*}
-\\\\
+\newpage
+\noindent
 Die oben genannten Matchingrelationen werden für die Definition weiterer Matcher zusammengefasst, wodurch sich die Matchingrelation $\Rightarrow_{internCont}$ ergibt:
 \begin{gather*}
 \frac{T \Rightarrow_{exact} T' \vee T \Rightarrow_{gen} T' \vee
@@ -146,7 +147,7 @@ T \Rightarrow_{spec} T'  }{T \Rightarrow_{internCont} T'}
 \end{gather*}
 \noindent
 \\\\
-Die folgenden Matcher definieren das Matching für so genannte \Gls{wrappertype}en zu den Typen der in ihnen enthaltenen Attribute. Die Idee für solche Matcher fand in \cite{hummel08} zwar Erwähnung, jedoch erfolgte dort keine formale Beschreibung. Das Ziel dieser Matcher ist es bspw. die Typen $\texttt{boolean}$ und $\texttt{FireState}$ aus der in Listing \ref{lst:libEx} deklarierten Bibliothek \emph{ExampLe} zu matchen.
+Die folgenden Matcher definieren das Matching für so genannte \Gls{wrappertype}en zu den Typen der in ihnen enthaltenen Attribute. Die Idee für solche Matcher fand in \cite{hummel08} zwar Erwähnung, jedoch erfolgte dort keine formale Beschreibung. Das Ziel dieser Matcher ist es bspw. die Typen $\texttt{boolean}$ und $\texttt{FireState}$ aus der in Listing \ref{lst:libEx} deklarierten Bibliothek zu matchen.
 \subsubsection{ContentTypeMatcher}
 Der \emph{ContentTypeMatcher} definiert das Matching von einem Typ $T$ zu einem Typ $T'$, wobei $T'$ ein Feld enthält, auf dessen Typ $T''$ der Typ $T$ über die Matchingrelation $\Rightarrow_{internCont}$ gematcht werden kann.
 \\\\
@@ -155,7 +156,7 @@ Die dazugehörige Matchingrelation $\Rightarrow_{content}$ wird durch folgende R
 \frac{\exists \mathit{T''\text{ }f}\in members(T'): T \Rightarrow_{internCont} T''}{T \Rightarrow_{content} T'}
 \end{gather*}
 \noindent
-So würde für die Typen $\texttt{boolean}$ und $\texttt{FireState}$ aus der Bibliothek \emph{ExampLe} (siehe \ref{lst:libEx}) gelten: 
+So würde für die Typen $\texttt{boolean}$ und $\texttt{FireState}$ aus der Bibliothek \emph{ExampLe} (siehe Listing \ref{lst:libEx}) gelten: 
 \begin{gather*}
 \texttt{boolean} \Rightarrow_{content} \texttt{FireState}
 \end{gather*}
@@ -167,7 +168,7 @@ Die dazugehörige Matchingrelation $\Rightarrow_{container}$ wird durch folgende
 \frac{\exists \mathit{T''\text{ }f}\in members(T): T'' \Rightarrow_{internCont} T'}{T \Rightarrow_{container} T'}
 \end{gather*}
 \noindent
-So gilt für die Typen $\texttt{FireState}$ und $\texttt{boolean}$ aus der Bibliothek \emph{ExampLe} (siehe \ref{lst:libEx}): 
+So gilt für die Typen $\texttt{FireState}$ und $\texttt{boolean}$ aus der Bibliothek \emph{ExampLe} (siehe Listing \ref{lst:libEx}): 
 \begin{gather*}
 \texttt{FireState} \Rightarrow_{container} \texttt{boolean}
 \end{gather*}
@@ -176,6 +177,7 @@ Zur Definition des letzten Matchers werden die Matchingrelationen der oben genan
 \begin{gather*}
 \frac{T \Rightarrow_{internCont}T' \vee T \Rightarrow_{container} T' \vee T \Rightarrow_{content} T'}{T \Rightarrow_{internStruct}T'}
 \end{gather*}
+\\\\
 \subsubsection{StructuralTypeMatcher} \label{subsec_structmatcher}
 Der \emph{StructuralTypeMatcher} definiert das Matching von einem \emph{required Typ} $R$ zu einem \emph{provided Typ} $T$ auf der Basis der Methoden-Signaturen der beiden Typen.
 \\\\
@@ -226,7 +228,6 @@ Die Matchingrelation für den \emph{StructuralTypeMatcher} wird durch folgende R
 
 \subsection{Ergebnis der strukturellen Evaluation}\label{sec_ergStructEval}
 Die Exploration wird für einen \emph{required Typ} durchgeführt. Bei der \emph{strukturellen Evaluation} sollen Mengen von \emph{provided Typen} ermittelt werden, deren Methoden in Kombination zu jeder Methode des \emph{required Typ} ein Matching aufweisen. Die Mengen von \emph{provided Typen} innerhalb einer Bibliothek $L$ für die dies in Bezug auf ein \emph{required Typ} $R$ zutrifft, wird über die Funktion $cover$ beschrieben.
-
 \begin{gather*}
 cover(R,L) := 
 \left\{\begin{array}{l|l}
@@ -236,22 +237,23 @@ cover(R,L) :=
 					& \forall T \in \{T_1,...,T_n\}:											\mathit{structM(R,T)} \neq \emptyset
 \end{array}\right\}
 \end{gather*}
-Die \emph{provided Typen} innerhalb dieser Mengen werden im nächsten Schritt des Explorationsprozesses als \emph{Target-Typen} bezeichnet und als Basis für die Generierung der Proxies für den \emph{required Typ} $R$ verwendet. 
+Die \emph{provided Typen} innerhalb dieser Mengen werden im nächsten Schritt des Explorationsprozesses als \emph{Target-Typen} bezeichnet und als Basis für die Generierung der Proxies für den \emph{required Typ} $R$ verwendet.
+
 \begin{example}{bsp_cover}
 Sei folgende Bibliothek $L$ gegeben.
 \begin{lstlisting}[style = dsl]
 provided Come extends Object{
-	String hello()
-	String goodMorning()
+ String hello()
+ String goodMorning()
 }
 
 provided Leave extends Object{
-	String bye()
+ String bye()
 }
 
 required Greeting{
-	String hello()
-	String bye()
+ String hello()
+ String bye()
 }
 \end{lstlisting}
 Über die Funktion $\mathit{cover}$ werden folgende \emph{Target-Typen} für die Generierung von Proxies für den \emph{required Typ} $\texttt{Greeting}$ ermittelt.
@@ -261,4 +263,5 @@ required Greeting{
 \}
 \end{gather*}
 \end{example}
+\newpage
 

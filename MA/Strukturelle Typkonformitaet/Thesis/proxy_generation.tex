@@ -5,7 +5,8 @@ Dabei wird zwischen einem \emph{Source-Typen} und einem oder mehrerer \emph{Targ
 \\\\
 Zur Beschreibung der Generierung von \emph{Proxies} wird im Folgenden zuerst vorgegeben, wie sich ein \emph{Proxy} deklarieren lässt. Darauf aufbauend werden die Generatoren, die in Abhängigkeit des Matchings zwischen \emph{Source-} und \emph{Target-Typen} Anwendung finden, beschrieben.
 \subsection{Struktur für die Definition von Proxies}\label{sec:proxygram}
-Die Grammatikregeln für die Deklaration eines \emph{Proxies} sind Tabelle \ref{tab:grProxies} zu entnehmen.
+Die Grammatikregeln für die Deklaration eines \emph{Proxies} sind Tabelle \ref{tab:grProxies} zu entnehmen. Es handelt sich dabei um Produktionsregeln einer \Gls{attributgrammatik}. Die dazugehörigen Attribute sind der Tabelle \ref{tab:attrGrProxies} zu entnehmen. Dazu sei zusätzlich festgelegt, dass die Notation $\mathit{NT}\texttt{.}\text{*}$ in der Spalte \emph{Attribute} eine Key-Value-Liste aller Attribute des Nonterminals $\mathit{NT}$ beschreibt, wobei der Attributname als Key und dessen Wert als Value innerhalb der Liste verwendet wird. Weiterhin sei ein Attribut, dass in der Spalte \emph{Attribute} zu einem Nonterminal nicht aufgeführt ist, mit dem Wert \emph{none} belegt.
+\newpage
 \begin{table}[H]
 \centering
 \begin{tabular}{|p{5cm}|p{9cm}|}
@@ -49,8 +50,7 @@ $\mathit{REF} ::= \mathit{P_i}\texttt{.}\mathit{f}$
  \label{tab:grProxies}
 \end{table}
 \noindent
-Es handelt sich dabei um Produktionsregeln einer \Gls{attributgrammatik}. Die dazugehörigen Attribute sind der Tabelle \ref{tab:attrGrProxies} zu entnehmen. Dazu sei zusätzlich festgelegt, dass die Notation $\mathit{NT}\texttt{.}\text{*}$ in der Spalte \emph{Attribute} eine Key-Value-Liste aller Attribute des Nonterminals $\mathit{NT}$ beschreibt, wobei der Attributname als Key und dessen Wert als Value innerhalb der Liste verwendet wird. Weiterhin sei ein Attribut, dass in der Spalte \emph{Attribute} zu einem Nonterminal nicht aufgeführt ist, mit dem Wert \emph{none} belegt.
-\begin{table}[h!]
+\begin{table}[H]
 \centering
 \begin{tabular}{|p{6cm}|p{10cm}|}
 \hline
@@ -138,15 +138,16 @@ $\texttt{delType} = \mathit{memType(f,P)}$
 \noindent
 \subsection{Delegation von Methoden im Proxy}
 Ein \emph{Proxy} bietet alle Methoden des \emph{Source-Typen} an. Einige dieser Methoden werden an eine Methode delegiert, die von einem \emph{Target-Typ} des \emph{Proxies} angeboten wird. Eine solche Delegation wird durch eine \emph{Methoden-Delegation} (siehe Tabelle \ref{tab:attrGrProxies} Nontermial $\mathit{MDEL}$) definiert.
-\paragraph{Beispiel} So beschreibt die folgende \emph{Methoden-Delegation}, dass die Methode $\texttt{extinguishFire}$, die vom \emph{Source-Typ} $\texttt{Patient}$ - und damit auch vom \emph{Proxy} - angeboten wird, an die Methoden $\texttt{heal}$, die der \emph{Target-Typ} $\texttt{Injured}$ anbietet, delegiert wird.
+\begin{example}{bsp_methDel}
+So beschreibt die folgende \emph{Methoden-Delegation}, dass die Methode $\texttt{extinguishFire}$, die vom \emph{Source-Typ} $\texttt{Patient}$ - und damit auch vom \emph{Proxy} - angeboten wird, an die Methoden $\texttt{heal}$, die der \emph{Target-Typ} $\texttt{Injured}$ anbietet, delegiert wird.
 \begin{lstlisting}[style = dsl, caption = Einfache Methoden-Delegation, captionpos = b]
 	Patient.heal(Medicine):void --> Injured.heal(Medicine):void
 \end{lstlisting}
-\noindent
+\end{example}
 Die Delegation einer \emph{aufgerufenen Methode} an ein \emph{Delegationsziel}, erfolgt in drei Schritten.
 \begin{enumerate}
 \item Parameterübergabe\\
-Dabei werden die Parameter, mit denen die vom \emph{Proxy} \emph{angebotene Methode} aufgerufen wird, an die \emph{Delegationsmethode} des \emph{Delegationsziels} übergeben. Dabei sind zwei Dinge zu beachten. Zum einen müssen die Typen der übergebenen Parameter zu den Typen der von der \emph{Delegationsmethode} erwarteten Parameter passen. Zum anderen muss die Reihenfolge, in der die Parameter übergeben wurden, an die erwartete Reihenfolge der \emph{Delegationsmethode} angepasst werden. (siehe auch Funktion $\mathit{matchingParams}$ aus Abschnitt \ref{subsec_structmatcher})
+Dabei werden die Parameter, mit denen die vom \emph{Proxy} angebotene Methode aufgerufen wird, an die \emph{Delegationsmethode} des \emph{Delegationsziels} übergeben. Dabei sind zwei Dinge zu beachten. Zum einen müssen die Typen der übergebenen Parameter zu den Typen der von der \emph{Delegationsmethode} erwarteten Parameter passen. Zum anderen muss die Reihenfolge, in der die Parameter übergeben wurden, an die erwartete Reihenfolge der \emph{Delegationsmethode} angepasst werden. (siehe auch Funktion $\mathit{matchingParams}$ aus Abschnitt \ref{subsec_structmatcher})
 \item Ausführung\\
 Dieser Schritt meint die Durchführung der \emph{Delegationsmethode} mit den übergeben Parametern aus Schritt 1. Dies schließt auch die Ermittlung des korrekten Rückgabewertes der \emph{Delegationsmethode} ein.
 \item Übergabe des Rückgabewertes\\
@@ -154,7 +155,8 @@ Dieser Schritt meint die Durchführung der \emph{Delegationsmethode} mit den üb
 \end{enumerate}
 Die Delegation aus dem oben genannten Beispiel kann schematisch wie in Abbildung \ref{fig:DEL_heal} dargestellt werden. Die Übergabe der Parameter- und Rückgabewerte wird durch die gestrichelten Pfeile symbolisiert.
 \begin{figure}[h!]
-\includegraphics[width=\linewidth]{MDEL_heal}
+\centering
+\includegraphics[width=1\linewidth]{MDEL_heal}
 \caption{Delegation der Methode $\texttt{heal}$}
 \label{fig:DEL_heal}
 \end{figure}
@@ -163,16 +165,19 @@ Die Delegation aus dem oben genannten Beispiel kann schematisch wie in Abbildung
 In diesem Beispiel sind sowohl die Parameter- als auch die Rückgabe-Typen der \emph{aufgerufenen Methode} und der \emph{Delegationsmethode} identisch. Weiterhin spielt die Reihenfolge der Parameter in diesem Beispiel keine Rolle, da es nur einen Parameter gibt. Daher stellt die Übergabe der Parameter- und Rückgabewerte kein Problem dar.
 \\\\
 Folgendes Beispiel soll zeigen, wie mit unterschiedlichen Reihenfolgen bzgl. der Parameter bei einer \emph{Methoden-Delegation} umzugehen ist.
-\paragraph{Beispiel} Die \emph{Methoden-Delegation} aus Listing \ref{lst:methdel2} ist ein Beispiel für einen solchen Fall. Hier wird die \emph{aufgerufene Methode} $\texttt{heal}$ mit den Parametern $\texttt{Patient}$ und $\texttt{MedCabinet}$ aus dem Typ $\texttt{PatientMedicalFireFighter}$ an die gleichnamige Methode aus dem Typ $\texttt{InverseDoctor}$ delegiert. Die \emph{Delegationsmethode} verwendet zwar identische Parameter-Typen, aber die Reihenfolge, in der die Parameter übergeben werden, ist unterschiedlich.
+
+\begin{example}{bsp_methDel_posModi}
+Die \emph{Methoden-Delegation} aus Listing \ref{lst:methdel2} ist ein Beispiel für einen solchen Fall. Hier wird die \emph{aufgerufene Methode} $\texttt{heal}$ mit den Parametern $\texttt{Patient}$ und $\texttt{MedCabinet}$ aus dem Typ $\texttt{PatientMedicalFireFighter}$ an die gleichnamige Methode aus dem Typ $\texttt{InverseDoctor}$ delegiert. Die \emph{Delegationsmethode} verwendet zwar identische Parameter-Typen, aber die Reihenfolge, in der die Parameter übergeben werden, ist unterschiedlich.
 \begin{lstlisting}[style = dsl, caption = Methoden-Delegation mit Parametern in unterschiedlicher Reihenfolge, captionpos = b]
 	PatientMedicalFireFighter.heal(Patient, MedCabinet):void --> posModi(1,0)  InverseDoctor.heal(MedCabinet,Patient):void
 \end{lstlisting}\label{lst:methdel2}
-\noindent
+\end{example}
 Um die Reihenfolge der Parameter aus dem ursprünglichen Aufruf zu variieren, wird das Schlüsselwort $\texttt{posModi}$ verwendet. Dort werden eine Reihe von Indizes angegeben. Die Anzahl der angegebenen Indizes muss mit der Anzahl der Parameter übereinstimmen. Ein Index beschreibt die Position des in der \emph{aufgerufenen Methode} angegebenen Parameter. Weiterhin spielt die Reihenfolge der Indizes eine wichtige Rolle. Diese ist mit der Reihenfolge der Parameter der \emph{Delegationsmethoden} gleichzusetzen.
 \\\\
 So wird in dem o.g. Beispiel der erste Parameter der \emph{aufgerufenen Methoden} (Index = 0) der \emph{Delegationsmethode} als zweiter Parameter übergeben. Dementsprechend wird der zweite Parameter der \emph{aufgerufenen Methode} (Index = 1) der \emph{Delegationsmethode} als erster Parameter übergeben (siehe Abbildung \ref{fig:DEL_healInverse}). 
 \begin{figure}[H]
-\includegraphics[width=\linewidth]{MDEL_healInverse}
+\centering
+\includegraphics[width=1\linewidth]{MDEL_healInverse}
 \caption{Delegation der Methode $\texttt{heal}$ mit Parametern in unterschiedlicher Reihenfolge}
 \label{fig:DEL_healInverse}
 \end{figure}
@@ -182,22 +187,25 @@ Dass identische Typen keine Probleme bei der Übergabe zwischen \emph{aufgerufen
 Darüber hinaus können Typen aber auch dann ohne Probleme übergeben werden, wenn sie sich aufgrund des \Gls{substitutionsprinzip}s austauschen lassen. Daher kann ein Typ $T$ anstelle eines Typs $T'$ verwendet werden, sofern $T \leq T'$ gilt.
 \\\\
 Folgendes Beispiel soll zeigen, wie mit übergebenen Typen umzugehen ist, die nicht ohne Probleme übergeben werden können.
-\\\\
-\paragraph{Beispiel} In folgendem Listing ist eine \emph{Methoden-Delegation} aufgerührt, bei der sowohl die Parameter- als auch die Rückgabe-Typen der \emph{aufgerufenen Methode} und der \emph{Delegationsmethode} nicht auf Basis des \Gls{substitutionsprinzip}s übergeben werden können.
+
+\begin{example}{bsp_methDel_proxy}
+In folgendem Listing ist eine \emph{Methoden-Delegation} aufgerührt, bei der sowohl die Parameter- als auch die Rückgabe-Typen der \emph{aufgerufenen Methode} und der \emph{Delegationsmethode} nicht auf Basis des \Gls{substitutionsprinzip}s übergeben werden können.
 \begin{lstlisting}[style = dsl, caption = Methoden-Delegation mit Typkonvertierung, captionpos = b, label = lst:methdel3 ]
 	MedicalFireFighter.extinguishFire(ExtFire):boolean --> FireFigher.extinguishFire(Fire):FireState
 \end{lstlisting}
-\noindent
+\end{example}
 In einem solchen Fall müssen die Parameter-Typen der \emph{aufgerufenen Methoden} in die Parameter-Typen der \emph{Delegationsmethode} konvertiert werden. Analog dazu muss der Rückgabetyp der \emph{Delegationsmethode} in den Rückgabetyp der \emph{aufgerufenen Methoden} konvertiert werden. Die Konvertierung wird dabei über die Generierung eines \emph{Proxies} erzielt.
 \\\\
-Angenommen, eine Funktion $\mathit{proxies(S,T)}$ beschreibt eine Menge von \emph{Proxies}, mit $S$ als \emph{Source-Typ} und $T$ als Menge der \emph{Target-Typen}, dann müssten bezogen auf die \emph{Methoden-Delegation} aus Listing \ref{lst:methdel3} für die Parameter einer der \emph{Proxies} aus der Menge $\mathit{proxies(\texttt{Fire}, \{\texttt{ExtFire}\})}$ an die \emph{Delegationsmethode} übergeben werden. Nach der Ausführung der \emph{Delegationsmethode} müsste aus dem Rückgabewert ein \emph{Proxy} aus der Menge $\mathit{proxies(\texttt{boolean},\{\texttt{FireState}\})}$ erzeugt werden und an die \emph{aufgerufene Methode} als Rückgabewert übergeben werden. Der Sachverhalt wird in Abbildung \ref{fig:DEL_extinguishFire} schematisch dargestellt. Die grauen Kästen symbolisieren die Generierung eines Proxies.
+Angenommen, eine Funktion $\mathit{proxies(S,TM)}$ beschreibt eine Menge von \emph{Proxies}, mit $S$ als \emph{Source-Typ} und $\mathit{TM}$ als Menge der \emph{Target-Typen}, dann müssten bezogen auf die \emph{Methoden-Delegation} aus Listing \ref{lst:methdel3} für die Parameter einer der \emph{Proxies} aus $\mathit{proxies(\texttt{Fire}, \{\texttt{ExtFire}\})}$ an die \emph{Delegationsmethode} übergeben werden. Nach der Ausführung der \emph{Delegationsmethode} müsste aus dem Rückgabewert ein \emph{Proxy} aus $\mathit{proxies(\texttt{boolean},\{\texttt{FireState}\})}$ erzeugt werden und an die \emph{aufgerufene Methode} als Rückgabewert übergeben werden. Der Sachverhalt wird in Abbildung \ref{fig:DEL_extinguishFire} schematisch dargestellt. Die grauen Kästen symbolisieren die Generierung eines Proxies. Wie die \emph{Proxies} generiert werden, wird im folgenden Abschnitt beschrieben.
+\newpage
 \begin{figure}[H]
-\includegraphics[width=\linewidth]{MDEL_extinguishFire}
+\centering
+\includegraphics[width=1\linewidth]{MDEL_extinguishFire}
 \caption{Delegation der Methode $\texttt{extinguishFire}$ mit Typkonvertierungen}
 \label{fig:DEL_extinguishFire}
 \end{figure}
 \noindent
-Wie die \emph{Proxies} generiert werden, wird im folgenden Abschnitt beschrieben.
+
 
 \subsection{Generierung von Proxies}\label{sec_proxyGen}
 Wie im Abschnitt \ref{sec:proxygram} bereits angedeutet, soll die Menge der \emph{Proxies} für einen \emph{Source-Typ} $S$ und einer Menge von \emph{Target-Typen} $\mathit{TM}$ über die Funktion $\mathit{proxies(S,\mathit{TM})}$ beschrieben werden.
@@ -209,7 +217,8 @@ In den folgenden Abschnitten werden diese Funktionen für die einzelnen Proxy-Ar
 
 \subsubsection{Sub-Proxy}
 Die Voraussetzung für die Erzeugung eines \emph{Sub-Proxies} vom Typ $S$ (\emph{Source-Typ}) aus einem \emph{Target-Typ} $\mathit{T}$ ist $S \Rightarrow_{spec} T$. Damit ist der \emph{SpecTypeMatcher} der \emph{Basis-Matcher} für den \emph{Sub-Proxy}.
-\paragraph{Beispiel}
+
+\begin{example}{bsp_subproxy}
 Als Beispiel soll  der Typ $\texttt{Patient}$ als \emph{Source-Typ} und der Typ $\texttt{Injured}$ als \emph{Target-Typ} verwendet werden. Da $\texttt{Patient} \Rightarrow_{spec} \texttt{Injured}$ gilt, kann ein \emph{Sub-Proxy} für diese Konstellation erzeugt werden. Der resultierende \emph{Sub-Proxy} ist in Listing \ref{lst:subproxy} aufgeführt. Der abstrakte Syntaxbaum (\acrshort{ast}) mit den dazugehörigen Attributen ist Abbildung \ref{fig:ASTSUB} zu entnehmen. \footnote{Es wurden nur die Nonterminale mit den dazugehörigen Attributen aufgeführt.}
 \begin{lstlisting}[style = dsl, caption = Sub-Proxy für Patient, captionpos = b, label = lst:subproxy]
 proxy for Patient with [Injured]{
@@ -217,17 +226,15 @@ proxy for Patient with [Injured]{
 	Patient.getName():String --> err
 }
 \end{lstlisting}
-\noindent
-\begin{figure}[h!]
+\end{example}
+Ein \emph{Proxy} bietet alle Methoden an, die auch von dessen \emph{Source-Typ} angeboten werden. Sofern für eine angebotene Methode keine \emph{Methodendelegationen} innerhalb des \emph{Proxies} existiert, wird diese Methode so ausgeführt, wie sie innerhalb des \emph{Source-Typen} implementiert wurde. Anderenfalls beschreiben die \emph{Methodendelegationen} innerhalb eines \emph{Proxies}, was beim Aufruf der entsprechenden Methode passiert. So wird ein Aufruf der Methode $\texttt{heal}$ an die Methode $\texttt{heal}$ aus dem \emph{Target-Typ} delegiert. Ein Aufruf der Methode $\texttt{getName}$ hingegen führt zu einem Fehler, weil keine passende \emph{Delegationsmethode} zur Verfügung steht.
+\\\\
+Weiterhin beschreibt der \emph{Sub-Proxy} aus dem Beispiel auch, dass der Aufruf der Methode $\texttt{getName}$ zu einem Fehlschlag führt. Dies ist auf eine Problematik zurückzuführen, die auch bei einem \Gls{downcast} auftritt. Hierbei soll ein Objekt eines Super-Typs anstelle eines Objektes eines Sub-Typs verwendet werden. Das Objekt des Sub-Typs bietet jedoch mitunter Methoden an, die im Super-Typ nicht deklariert wurden. Folglich können diese Methoden nicht ausgeführt werden, was jedoch häufig erst zur Laufzeit auffällt.
+\begin{figure}[H]
 \includegraphics[width=\linewidth]{AST_SubExample}
 \caption{AST für das Beispiel zum Sub-Proxy}
 \label{fig:ASTSUB}
 \end{figure}
-\noindent
-\\
-Ein \emph{Proxy} bietet alle Methoden an, die auch von dessen \emph{Source-Typ} angeboten werden. Sofern für eine angebotene Methode keine \emph{Methodendelegationen} innerhalb des \emph{Proxies} existiert, wird diese Methode so ausgeführt, wie sie innerhalb des \emph{Source-Typen} implementiert wurde. Anderenfalls beschreiben die \emph{Methodendelegationen} innerhalb eines \emph{Proxies}, was beim Aufruf der entsprechenden Methode passiert. So wird ein Aufruf der Methode $\texttt{heal}$ an die Methode $\texttt{heal}$ aus dem \emph{Target-Typ} delegiert. Ein Aufruf der Methode $\texttt{getName}$ hingegen führt zu einem Fehler, weil keine passende \emph{Delegationsmethode} zur Verfügung steht.
-\\\\
-Weiterhin beschreibt der \emph{Sub-Proxy} aus dem Beispiel auch, dass der Aufruf der Methode $\texttt{getName}$ zu einem Fehlschlag führt. Dies ist auf eine Problematik zurückzuführen, die auch bei einem \Gls{downcast} auftritt. Hierbei soll ein Objekt eines Super-Typs anstelle eines Objektes eines Sub-Typs verwendet werden. Das Objekt des Sub-Typs bietet jedoch mitunter Methoden an, die im Super-Typ nicht deklariert wurden. Folglich können diese Methoden nicht ausgeführt werden, was jedoch häufig erst zur Laufzeit auffällt.
 \paragraph{Formalisierung}
 Formal wird ein \emph{Sub-Proxy} für einen \emph{Source-Typ} $S$ auf der Basis von einer Menge von \emph{Target-Typen} $\mathit{TM}$ durch die Regeln beschrieben, die im Folgenden vorgestellt werden.
 \\\\
@@ -327,7 +334,10 @@ Die Menge der \emph{Sub-Proxies}, die mit dem \emph{Source-Typ} $S$ und der Meng
 \end{gather*}
 \subsubsection{Content-Proxy}
 Die Voraussetzung für die Erzeugung eines \emph{Content-Proxies} vom Typ $S$ aus einem \emph{Target-Typ} $T$ ist $S \Rightarrow_{content} T$. Damit ist der \emph{ContentTypeMatcher} der Basis-Matcher für den \emph{Content-Proxy}.
-\paragraph{Beispiel} Als Beispiel sollen die Typen $\texttt{Medicine}$ und $\texttt{MedCabinet}$ verwendet werden, welche ein Matching der Form $\texttt{Medicine} \Rightarrow_{content} \texttt{MedCabinet}$ aufweisen. Daher kann ein \emph{Content-Proxy} für diese Konstellation erzeugt werden. Ein resultierender \emph{Content-Proxy} ist in folgendem Listing aufgeführt.
+
+\begin{example}{bsp_contentproxy}
+Als Beispiel sollen die Typen $\texttt{Medicine}$ und $\texttt{MedCabinet}$ verwendet werden, welche ein Matching der Form $\texttt{Medicine} \Rightarrow_{content} \texttt{MedCabinet}$ aufweisen. Daher kann ein \emph{Content-Proxy} für diese Konstellation erzeugt werden. Ein resultierender \emph{Content-Proxy} ist in folgendem Listing aufgeführt.
+\newpage
 \begin{lstlisting}[style = dsl, caption = Content-Proxy für Medicine, captionpos = b]
 proxy for Medicine with [MedCabinet]{
 	Medicine.getDesciption():String --> MedCabinet.med.getDesciption():String
@@ -335,13 +345,14 @@ proxy for Medicine with [MedCabinet]{
 \end{lstlisting}
 Durch die Methoden-Delegation dieses \emph{Content-Proxies} wird die Methode $\texttt{getDescription}$ an das Feld $\texttt{med}$ des \emph{Target-Typen} $\texttt{MedCabniet}$ delegiert.\\\\
 Der \acrshort{ast} mit den dazugehörigen Attributen ist Abbildung \ref{fig:ASTCONTENT} zu entnehmen. \footnote{Es wurden nur die Nonterminale mit den dazugehörigen Attributen aufgeführt.}
+
+\end{example}
 \begin{figure}[h!]
 \centering
 \includegraphics[width=0.5\linewidth]{AST_ContentExample}
 \caption{AST für das Beispiel zum Content-Proxy}
 \label{fig:ASTCONTENT}
 \end{figure}
-\noindent
 \paragraph{Formalisierung}
 Formal wird ein \emph{Content-Proxy} durch die Regeln beschrieben, die im Folgenden vorgestellt werden.\\\\
 Ein \emph{Content-Proxy} enthält, wie auch der \emph{Sub-Proxy}, genau einen \emph{Target-Typ}. Ebenfalls identisch zum \emph{Sub-Proxy} sind die Bedingungen hinsichtlich der \emph{aufgerufenen Methoden} in den einzelnen \emph{Methoden-Delegationen}.
@@ -388,7 +399,8 @@ Die Menge der \emph{Content-Proxies}, die mit dem \emph{Source-Typ} $S$ und der 
 \end{gather*}
 \subsubsection{Container-Proxy}
 Die Voraussetzung für die Erzeugung eines \emph{Container-Proxies} vom Typ $S$ aus einem \emph{Target-Typ} $T$ ist $S \Rightarrow_{container} T$. Damit ist der \emph{ContainerTypeMatcher} der Basis-Matcher für den \emph{Container-Proxy}.
-\paragraph{Beispiel}
+
+\begin{example}{bsp_containerproxy}
 Als Beispiel werden wiederum die Typen $\texttt{Medicine}$ und $\texttt{MedCabinet}$ verwendet, welche ein Matching der Form $\texttt{MedCabinet} \Rightarrow_{container} \texttt{Medicine}$ aufweisen. Daher kann ein \emph{Content-Proxy} für diese Konstellation erzeugt werden. Ein resultierender \emph{Content-Proxy} ist in folgendem Listing aufgeführt.
 \begin{lstlisting}[style = dsl, caption = Container-Proxy für MedCabniet, captionpos = b ]
 proxy for MedCabinet with [Medicine]{
@@ -396,8 +408,10 @@ proxy for MedCabinet with [Medicine]{
 }
 \end{lstlisting}
 Durch die \emph{Methoden-Delegation} dieses \emph{Container-Proxies} findet eine Delegation nur dann statt, wenn die Methoden $\texttt{getDescription}$ auf dem Feld $\texttt{med}$ des \emph{Source-Typ} aufgerufen wird. Diese wird dann an den \emph{Target-Typen} $\texttt{MedCabniet}$ delegiert.
-\\\\
+\newpage
 Der \acrshort{ast} mit den dazugehörigen Attributen ist Abbildung \ref{fig:ASTCONTAINER} zu entnehmen. \footnote{Es wurden nur die Nonterminale mit den dazugehörigen Attributen aufgeführt.}
+
+\end{example}
 \begin{figure}[h!]
 \centering
 \includegraphics[width=0.5\linewidth]{AST_ContainerExample}
@@ -454,8 +468,9 @@ Die Menge der \emph{Container-Proxies}, die mit dem \emph{Source-Typ} $S$ und de
 Die Voraussetzung für die Erzeugung eines \emph{strukturellen Proxies} vom \emph{required Typ} $R$ aus einem Target-Typ $T$ ist $R \Rightarrow_{struct} T$. Damit ist der \emph{StructuralTypeMatcher} der Basis-Matcher für den \emph{strukturellen Proxy}.
 \\\\
 Der \emph{strukturelle Proxy} ist der einzige \emph{Proxy}, der mit mehreren \emph{Target-Typen} erzeugt werden kann. 
-\paragraph{Beispiel}
-Als Beispiel werden die Typen $\texttt{MedicalFireFighter}$, $\texttt{Doctor}$ und $\texttt{FireFighter}$ verwendet. Dabei ist $\texttt{MedicalFireFighter}$ der \emph{Source-Typ} des \emph{Proxies} und die Menge der anderen beiden Typen bilden die \emph{Target-Typen} des \emph{Proxies}. Da der \emph{Source-Typ }zu den \emph{Target-Typen} ein Matching der Form $\texttt{MedicalFireFighter} \Rightarrow_{struct} \texttt{FireFighter}$ bzw. $\texttt{MedicalFireFighter} \Rightarrow_{struct} \texttt{Doctor}$ aufweist, kann ein \emph{struktureller Proxy} erzeugt werden. Ein solcher ist in folgendem Listing aufgeführt.
+
+\begin{example}{bsp_structproxy}
+Als Beispiel werden die Typen $\texttt{MedicalFireFighter}$, $\texttt{Doctor}$ und $\texttt{FireFighter}$ verwendet. Dabei ist $\texttt{MedicalFireFighter}$ der \emph{Source-Typ} des \emph{Proxies} und die Menge der anderen beiden Typen bilden die \emph{Target-Typen} des \emph{Proxies}. Da der \emph{Source-Typ }zu den \emph{Target-Typen} ein Matching der Form $\texttt{MedicalFireFighter} \Rightarrow_{struct} \texttt{FireFighter}$ sowie\linebreak $\texttt{MedicalFireFighter} \Rightarrow_{struct} \texttt{Doctor}$ aufweist, kann ein \emph{struktureller Proxy} erzeugt werden. Ein solcher ist in folgendem Listing aufgeführt.
 \begin{lstlisting}[style = dsl, caption = Struktureller Proxy für MedicalFireFighter, captionpos = b]
 proxy for MedicalFireFighter with [Doctor, FireFighter]{
  MedicalFireFighter.heal(Patient, MedCabinet):void -->
@@ -466,6 +481,8 @@ proxy for MedicalFireFighter with [Doctor, FireFighter]{
 In diesem Beispiel wird der Methodenaufruf der Methode $\texttt{heal}$ auf dem \emph{Proxy} an die Methode $\texttt{heal}$ des Typs $\texttt{Doctor}$ delegiert. Analog dazu würde ein Aufruf der Methode $\texttt{extinguishFire}$ auf dem Proxy an die Methode $\texttt{extinguishFire}$ des Typs $\texttt{FireFighter}$ delegiert werden. Die Methoden stimmen jeweils strukturell überein.
 \\\\
 Der \acrshort{ast} mit den dazugehörigen Attributen ist Abbildung \ref{fig:ASTSTRUCT} zu entnehmen. \footnote{Es wurden nur die Nonterminale mit den dazugehörigen Attributen aufgeführt.}
+
+\end{example}
 \begin{figure}[h!]
 \centering
 \includegraphics[width=\linewidth]{AST_StructExample}
@@ -625,9 +642,8 @@ m'	& \exists T \in \mathit{TM}: m' \in \mathit{structM_{target}(m,T)}
 \end{array}
 \right\}
 \end{gather*}
-\noindent
 \begin{example}{bsp_structmtarget}
-Aufbauend auf dem vorherigen Beispiel \ref{bsp_cover} ergeben sich für die Menge der \emph{Target-Typen}  $\{\texttt{Leave}, \texttt{Come}\}$ und die beiden Methoden des \emph{required Typs} $\texttt{Greeting}$ folgende Mengen von übereinstimmenden Methoden über die Funktion $\mathit{structM_{targetset}}$:
+Aufbauend auf dem Beispiel \ref{bsp_cover} ergeben sich für die Menge der \emph{Target-Typen}  $\{\texttt{Leave}, \texttt{Come}\}$ und die beiden Methoden des \emph{required Typs} $\texttt{Greeting}$ folgende Mengen von übereinstimmenden Methoden über die Funktion $\mathit{structM_{targetset}}$:
 \begin{gather*}
 \mathit{structM_{targetset}(\methodForm{String}{hello}{},\{\texttt{Leave}, \texttt{Come}\})} = 
 \left\{
@@ -647,8 +663,8 @@ Aufbauend auf dem vorherigen Beispiel \ref{bsp_cover} ergeben sich für die Meng
 \right\}
 \end{gather*}
 \end{example}
-\\
 Sei $R$ ein \emph{required Typ} und $\mathit{TM}$ eine Menge von \emph{provided Typen} innerhalb einer Bibliothek $L$ mit $\mathit{TM} \in \mathit{cover(R,L)}$. Dann bildet die Funktion $\mathit{structMSets}$ die Menge von Mengen der Methoden aus den Elementen aus $\mathit{TM}$ ab, die mit jeweils einer Methode aus $R$ gematcht werden können.
+\newpage
 \begin{gather*}
 \mathit{structMSets(R,\mathit{TM})} := 
 \left\{M
@@ -661,30 +677,31 @@ Sei $R$ ein \emph{required Typ} und $\mathit{TM}$ eine Menge von \emph{provided 
 \end{gather*}
 \noindent
 Für die Bildung eines \emph{Proxies} wird aus jedem Element der Menge $structMSets(R,\mathit{TM})$ genau ein Element als \emph{Delegationsmethode} verwendet. 
+
 \begin{example}{bsp_proxycreation}
 Ausgehend von Beispiel \ref{bsp_structmtarget} lassen sich die folgenden vier \emph{Proxies} mit den \emph{Target-Typen} $\texttt{Leave}$ und $\texttt{Come}$ erzeugen.
 \begin{lstlisting}[style = dsl]
 proxy Greeting with [Come, Leave]{
-	Greeting.hello():String --> Come.hello():String
-	Greeting.bye():String --> Leave.bye():String
+ Greeting.hello():String --> Come.hello():String
+ Greeting.bye():String --> Leave.bye():String
 }
 \end{lstlisting}
 \begin{lstlisting}[style = dsl]
 proxy Greeting with [Come, Leave]{
-	Greeting.hello():String --> Come.goodMorning():String
-	Greeting.bye():String --> Leave.bye():String
+ Greeting.hello():String --> Come.goodMorning():String
+ Greeting.bye():String --> Leave.bye():String
 }
 \end{lstlisting}
 \begin{lstlisting}[style = dsl]
 proxy Greeting with [Come, Leave]{
-	Greeting.hello():String --> Leave.bye():String
-	Greeting.bye():String --> Come.hello():String
+ Greeting.hello():String --> Leave.bye():String
+ Greeting.bye():String --> Come.hello():String
 }
 \end{lstlisting}
 \begin{lstlisting}[style = dsl]
 proxy Greeting with [Come, Leave]{
-	Greeting.hello():String --> Leave.bye():String
-	Greeting.bye():String --> Come.goodMorning():String
+ Greeting.hello():String --> Leave.bye():String
+ Greeting.bye():String --> Come.goodMorning():String
 }
 \end{lstlisting}
 \end{example}

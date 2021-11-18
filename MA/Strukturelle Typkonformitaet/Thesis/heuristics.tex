@@ -172,35 +172,33 @@ Zur Anwendung der \Gls{Heuristik} muss das \emph{Matcherrating} bei der Generier
 \\\\
 Listing \ref{lst_lmf} zeigt die Anpassungen der Methode $\texttt{relevantProxies}$ auf Basis der Implementierung der \emph{semantischen Evaluation} aus Listing \ref{lst_semEval}. Für die Sortierung der Liste von \emph{Proxies} wurde in der Methode $\texttt{LMF}$ exemplarisch das \Gls{bsort}-Verfahren verwendet.
 
-\begin{lstlisting}[style = pseudo, caption=Semantische Evaluation mit Heuristik LMF, captionpos=b, label = lst_lmf]
+\begin{lstlisting}[style = pseudo, caption=Semantische Evaluation mit Heuristik \emph{LMF}, captionpos=b, label = lst_lmf]
 function semanticEval( R, T, tests ){
-	for( anzahl = 1; anzahl <= $\mathit{maxTargets( R )}$; i++ ){
-		targetSets = $\mathit{targetSets( T, anzahl )}$
-		sortedSets = LMF( R, targetSets )		
-		for( targets : sorted ){
-			relProxies = $\mathit{proxies( R, targets )}$
-			proxy = evalProxies( relProxies, tests )	
-			if( proxy != null ){
-				// validen Proxy gefunden
-				return proxy
-			}
-		}
-	}
-	// kein validen Proxy gefunden
-	return null;
+ for( anzahl = 1; anzahl <= $\mathit{maxTargets( R )}$; i++ ){
+  targetSets = $\mathit{targetSets( T, anzahl )}$
+  sortedSets = LMF( R, targetSets )		
+  for( targets : sorted ){
+   relProxies = $\mathit{proxies( R, targets )}$
+   proxy = evalProxies( relProxies, tests )	
+   if( proxy != null ){
+    return proxy
+   }
+  }
+ }
+ return null;
 }
 
 function LMF( R, targets ){
-	for	( n=targets.size(); n>1; n--){
-		for( i=0; i<n-1; i++){
-			if( $\mathit{rating(R,}$ targets[i] $)$ < $\mathit{rating(R,}$ targets[i+1] $)$ ){
-				tmp = targets[i]
-				targets[i] = targets[i+1]
-				targets[i+1] = tmp
-			}
-		}
-	}	
-	return targets
+ for( n=targets.size(); n>1; n--){
+  for( i=0; i<n-1; i++){
+   if( $\mathit{rating(R,}$ targets[i] $)$ < $\mathit{rating(R,}$ targets[i+1] $)$ ){
+    tmp = targets[i]
+    targets[i] = targets[i+1]
+    targets[i+1] = tmp
+   }
+  }
+ }	
+ return targets
 }
 \end{lstlisting}
 
@@ -219,7 +217,8 @@ Dann gilt:
 In Bezug auf die \emph{Proxies}, die bei der \emph{semantischen Evaluation} in mehreren Durchläufen geprüft werden sollen, bedeutet das Folgendes: Die einzelnen \emph{Target-Typen} der \emph{Proxies}, die innerhalb eines Durchlaufs geprüft wurden, sind auch in den \emph{Target-Typen} der \emph{Proxies} enthalten, die in einem späteren Durchlauf geprüft werden - sofern solche \emph{Proxies} überhaupt existieren.
 \\\\
 Für die in diesem Abschnitt beschriebene \Gls{Heuristik} mit dem Namen \emph{positive tested targets first} (kurz: \emph{PTTF}) ist das Ergebnis einzelner Tests in Bezug auf einen \emph{Proxy} $P$ relevant. Wenn ein Testfall mit einem \emph{Proxy} $P$ erfolgreich durchgeführt wurde, dann sollte die Reihenfolge der zu prüfenden \emph{Proxies} späterer Durchläufe so angepasst werden, dass die \emph{Proxies}, die einen \emph{Target-Typen} des \emph{Proxies} $P$ verwenden, im weiteren Verlauf zuerst geprüft werden.
-\\\\
+\newpage
+\noindent
 Dafür sind auf Basis von Listing \ref{lst_semEval} mehrere Anpassungen bzgl. der Implementierung der Methode $\texttt{evalProxies}$ von Nöten:
 \begin{enumerate}
 \item 
@@ -231,8 +230,9 @@ Die Liste der \emph{Proxies}, die der Methode $\texttt{evalProxies}$ als Paramet
 \item 
 Die Liste der \emph{Proxies}, über die innerhalb der Methode $\texttt{evalProxies}$ iteriert wird, kann bzgl. ihrer Reihenfolge bereits dann optimiert werden, wenn mind. einer der Testfälle für den aktuellen \emph{Proxy} erfolgreich durchgeführt wurde. Dazu müssen jedoch die \emph{Proxies}, die bereits innerhalb der Methode getestet wurden, in einer lokalen Variable ($\texttt{tested}$) hinterlegt werden. Dann kann die Methode rekursiv mit den \emph{Proxies}, die noch nicht getestet wurden, aufgerufen werden. So werden die darin enthaltenen Elemente aufgrund der 2. Anpassung erneut sortiert.
 \end{enumerate}  
-In Listing \ref{lst_pttf} sind die oben genannten Anpassungen im Vergleich zu Listing \ref{lst_semEval} zu entnehmen. 
-\begin{lstlisting}[style = pseudo, caption = Semantische Evaluation mit Heuristik PTTF, captionpos = b, label = lst_pttf]
+In Listing \ref{lst_pttf} sind die oben genannten Anpassungen im Vergleich zu Listing \ref{lst_semEval} zu entnehmen.
+\newpage
+\begin{lstlisting}[style = pseudo, caption = Semantische Evaluation mit Heuristik \emph{PTTF}, captionpos = b, label = lst_pttf]
 prioTargets = []
 
 function evalProxies( proxies, tests ){
@@ -242,20 +242,17 @@ function evalProxies( proxies, tests ){
   passedTests = 0
   evalProxy( proxy, tests )
   if( passedTests == tests.size ){
-   // validen Proxy gefunden
    return proxy
   }
   else{
    tested.add( proxy )
    if( passedTests > 0 ){
     prioTargets.addAll( proxy.targets )
-    // noch nicht evaluierte Proxies ermitteln
     leftProxies = sorted.removeAll( testedProxies )
     return evalProxies( leftProxies, tests )
    }
   }
  }
- // kein validen Proxy gefunden
  return null
 }
 
@@ -284,7 +281,11 @@ Die Heuristik zielt darauf ab, \emph{Methoden-Delegationen}, die immer fehlschla
 Die \emph{Methoden-Delegationen}, die auf der Basis der folgenden \Gls{Heuristik} aussortiert werden sollen, werden zu diesem Zweck in einer globalen Variable ($\texttt{mdelBlacklist}$) gehalten. Aus einer Liste von \emph{Proxies} können darauf aufbauend diejenigen \emph{Proxies} entfernt werden, die eine jener \emph{Methoden-Delegationen} enthalten. Für die Implementierung wird im Folgenden davon ausgegangen, dass die Methoden eines \emph{required Typen} über den Namen identifiziert werden können.
 \\\\
 Ausgehend vom Algorithmus der \emph{semantischen Evaluation} (siehe Listing \ref{lst_semEval}) muss die Methode $\texttt{evalProxy}$ für das Füllen der globalen Variable $\texttt{mdelBlacklist}$ angepasst werden. Die Identifikation der \emph{Methoden-Delegationen} über die Methodennamen erfolgt in der Methode $\texttt{getMethodDelegations}$. Beide Methoden sind Listing \ref{lst_BL_evalProxy} zu entnehmen.
-\begin{lstlisting}[style = pseudo, caption = Evaluierung einzelner Proxies mit BL\_MNC, captionpos = b, label = lst_BL_evalProxy]
+\\\\
+Das Ausschließen bestimmter \emph{Proxies} erfolgt, indem Elemente aus einer Liste von \emph{Proxies} entfernt werden. Listing \ref{lst_BL} zeigt die dafür vorgesehene Methode $\texttt{BL}$, welche die Basis-Liste der \emph{Proxies} im Parameter $\texttt{proxies}$ und die Liste der Kombinationen von \emph{Methoden-Delegationen}, die die Grundlage für den Ausschluss einzelner \emph{Proxies} bilden, im Parameter $\texttt{blacklist}$ erwartet.
+\\\\
+Bei dieser \Gls{Heuristik} ist deren Anwendung nach jedem Evaluationsversuch eines einzelnen \emph{Proxies} sinnvoll. Listing \ref{lst_BL_NMC} zeigt die Anpassungen in der Funktion $\texttt{evalProxies}$ aus Listing \ref{lst_semEval} für die Heuristik \emph{BL\_NMC}. Dabei sei davon auszugehen, dass die oben beschriebenen Funktionen aus den Listings \ref{lst_BL} und \ref{lst_BL_evalProxy} zur Verfügung stehen.
+\begin{lstlisting}[style = pseudo, caption = Evaluierung einzelner Proxies mit \emph{BL\_MNC}, captionpos = b, label = lst_BL_evalProxy]
 function evalProxy( proxy, tests ){
  for( test : T ){	
   if( test.eval( proxy ) ){
@@ -308,49 +309,44 @@ function getMethodDelegations( proxy, methodNames ){
  return null
 }
 \end{lstlisting}
-\noindent
-Das Ausschließen bestimmter \emph{Proxies} erfolgt, indem Elemente aus einer Liste von \emph{Proxies} entfernt werden. Listing \ref{lst_BL} zeigt die dafür vorgesehene Methode $\texttt{BL}$, welche die Basis-Liste der \emph{Proxies} im Parameter $\texttt{proxies}$ und die Liste der Kombinationen von \emph{Methoden-Delegationen}, die die Grundlage für den Ausschluss einzelner \emph{Proxies} bilden, im Parameter $\texttt{blacklist}$ erwartet.
-\begin{lstlisting}[style = pseudo, label = lst_BL, caption=Blacklist-Methode für Heuristil BL\_NMC, captionpos = b]
+\begin{lstlisting}[style = pseudo, label = lst_BL, caption=Blacklist-Methode für Heuristik \emph{BL\_NMC}, captionpos = b]
 function BL( proxies, blacklist ){
-	filtered = []	
-	for( proxy : proxies ){
-		blacklisted = false
-		for( md : blacklist ){
-			if( proxy.dels.contains( md ) ){
-				blacklisted = true
-				break
-			}	
-		}
-		if( !blacklisted ){
-			filtered.add( proxy )
-		}
-	}
-	return filtered
+ filtered = []	
+ for( proxy : proxies ){
+  blacklisted = false
+  for( md : blacklist ){
+   if( proxy.dels.contains( md ) ){
+    blacklisted = true
+    break
+   }	
+  }
+  if( !blacklisted ){
+   filtered.add( proxy )
+  }
+ }
+ return filtered
 }
 
 \end{lstlisting}
 \noindent
-Bei dieser \Gls{Heuristik} ist deren Anwendung nach jedem Evaluationsversuch eines einzelnen \emph{Proxies} sinnvoll. Listing \ref{lst_BL_NMC} zeigt die Anpassungen in der Funktion $\texttt{evalProxies}$ aus Listing \ref{lst_semEval} für die Heuristik \emph{BL\_NMC}. Dabei sei davon auszugehen, dass die oben beschriebenen Funktionen aus den Listings \ref{lst_BL} und \ref{lst_BL_evalProxy} zur Verfügung stehen.
-\begin{lstlisting}[style = pseudo, caption=Evaluation mehrere Proxies mit BL\_MNC, captionpos=b, label = lst_BL_NMC]
+
+\begin{lstlisting}[style = pseudo, caption=Evaluation mehrere Proxies mit \emph{BL\_MNC}, captionpos=b, label = lst_BL_NMC]
 function evalProxies( proxies, tests ){
-	tested = []
-	filtered = BL( proxies, mdelBlacklist )
-	for( proxy : proxies ){
-		passedTestcases = 0
-		evalProxy(proxy, tests)
-		if( passedTestcases == tests.size ){
-			// validen Proxy gefunden
-			return proxy
-		}
-		else{
-			tested.add( proxy )
-				// noch nicht evaluierte Proxies ermitteln
-			leftProxies = proxies.removeAll( tested )	
-			return evalProxies( leftProxies, tests )
-		}
-	}
-	// kein validen Proxy gefunden
-	return null
+ tested = []
+ filtered = BL( proxies, mdelBlacklist )
+ for( proxy : proxies ){
+  passedTestcases = 0
+  evalProxy(proxy, tests)
+  if( passedTestcases == tests.size ){
+   return proxy
+  }
+  else{
+   tested.add( proxy )
+   leftProxies = proxies.removeAll( tested )	
+   return evalProxies( leftProxies, tests )
+  }
+ }
+ return null
 }
 \end{lstlisting}
 \noindent

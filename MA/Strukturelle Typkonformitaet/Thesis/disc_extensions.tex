@@ -23,6 +23,9 @@ Dass ein passender \emph{Proxy} nicht gefunden wurde, kann allgemein betrachtet 
 Die Generierung eines \emph{Proxies} hängt von dem Matching der Methoden des \emph{required Typs} und der Methoden der \emph{provided Typen} ab. Aufgrund dessen dass der Entwickler Testfälle für den \emph{required Typ} spezifizieren muss, hat er eine grundlegende Vorstellung von den Ein- und Ausgabewerten der Methoden, sowie der Verarbeitung dieser. Um nun der Gefahr vorzubeugen, dass gar kein \emph{Proxy} generiert werden kann, könnten die Entwickler*innen eine Implementierung, die seine Erwartungen zumindest minimal erfüllt, als \Gls{defaultmethode} in dem \Gls{Interface} zum \emph{required Typ} aufnehmen. Sofern bei der Exploration zu dieser Methode keine passende Methode aus einem \emph{provided Typ} gefunden wird, kann auf die Default-Implementierung zurückgegriffen werden. Der generierte \emph{Proxy}, welcher technisch gesehen das \Gls{Interface} zum \emph{required Typ} implementiert, würde den Methodenaufruf dann an sich selbst bzw. an die \Gls{defaultmethode} delegieren.
 \\\\
 Ein Beispiel für eine solche Konstellation zeigen die folgenden Listings. In Listing \ref{lst_calc} ist der \emph{required Typ} \emph{Calc} deklariert. Listing \ref{lst_interface_calc} zeigt das dazugehörige Java-Interface mit der \Gls{defaultmethode} $\texttt{div}$. Die Implementierung wurde so umgesetzt, dass die Testfälle, welche in der Klasse in Listing \ref{lst_testklasse_calc} enthalten sind, positiv ausfallen.
+\\\\
+Dadurch ist zwar immer noch nicht sichergestellt, dass ein passender \emph{Proxy} in jedem Fall gefunden wird, aber den Entwickler*innen kann ein alternatives Verhalten direkt im \Gls{Interface} zum \emph{required Typ} implementieren, wodurch diese Implementierung einen sehr engen Bezug zum \emph{required Typ} hat.
+\newpage
 \begin{lstlisting}[caption={Required Typ \emph{Calc}},captionpos=b, style = dsl, label=lst_calc]
 required Calc {
  Float div( int a, int b )	
@@ -63,4 +66,3 @@ public class CalcTest {
 }
 \end{lstlisting}
 \noindent
-Dadurch ist zwar immer noch nicht sichergestellt, dass ein passender \emph{Proxy} in jedem Fall gefunden wird, aber den Entwickler*innen kann ein alternatives Verhalten direkt im \Gls{Interface} zum \emph{required Typ} implementieren, wodurch diese Implementierung einen sehr engen Bezug zum \emph{required Typ} hat.

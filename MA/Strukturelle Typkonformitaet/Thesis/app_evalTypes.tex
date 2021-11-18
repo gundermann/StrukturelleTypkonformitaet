@@ -4,283 +4,253 @@ Im Folgenden erfolgt die Deklaration der \emph{required Typen}, mit denen die Ev
 Die Listings \ref{lst_tei1} - \ref{lst_tei7} zeigen die Deklarationen für die \emph{required Typen}.
 \begin{lstlisting}[style = dsl, caption = Deklaration von ElerFTFoerderprogrammeProvider, captionpos = b, label = lst_tei1]
 required ElerFTFoerderprogrammeProvider{
-	Collection getAlleFreigegebenenFPs()
-	ElerFTFoerderprogramm getElerFTFoerderprogramm(DvAntragsJahr, DvFoerderprogramm, Date)
+ Collection getAlleFreigegebenenFPs()
+ ElerFTFoerderprogramm getElerFTFoerderprogramm(DvAntragsJahr, DvFoerderprogramm, Date)
 }
 \end{lstlisting}
 \begin{lstlisting}[style = dsl, caption = Deklaration von FoerderprogrammeProvider, captionpos = b, label = lst_tei2]
 required FoerderprogrammeProvider{
-	Collection getAlleFreigegebenenFPs()
-	Foerderprogramm getFoerderprogramm(DvAntragsJahr, DvFoerderprogramm, Date)
+ Collection getAlleFreigegebenenFPs()
+ Foerderprogramm getFoerderprogramm(DvAntragsJahr, DvFoerderprogramm, Date)
 }
 \end{lstlisting}
+\newpage
 \begin{lstlisting}[style = dsl, caption = Deklaration von MinimalFoerderprogrammeProvider, captionpos = b, label = lst_tei3]
 required MinimalFoerderprogrammeProvider{
-	Collection getAlleFreigegebenenFPs()
-	Foerderprogramm getFoerderprogramm(String, int, Date)
+ Collection getAlleFreigegebenenFPs()
+ Foerderprogramm getFoerderprogramm(String, int, Date)
 }
 \end{lstlisting}
 \begin{lstlisting}[style = dsl, caption = Deklaration von IntubatingFireFighter, captionpos = b, label = lst_tei4]
 required IntubatingFireFighter{
-	void intubate(Injured)
-	FireState extinguishFire(Fire)
+ void intubate(Injured)
+ FireState extinguishFire(Fire)
 }
 \end{lstlisting}
 \begin{lstlisting}[style = dsl, caption = Deklaration von IntubatingFreeing, captionpos = b, label = lst_tei5]
 required IntubatingFreeing{
-	void intubate(Injured)
-	void free(Injured)
+ void intubate(Injured)
+ void free(Injured)
 }
 \end{lstlisting}
 \begin{lstlisting}[style = dsl, caption = Deklaration von IntubatingPatientFireFighter, captionpos = b, label = lst_tei6]
 required IntubatingFreeing{
-	void intubate(IntubationPatient)
-	FireState extinguishFire(Fire)
+ void intubate(IntubationPatient)
+ FireState extinguishFire(Fire)
 }
 \end{lstlisting}
 \begin{lstlisting}[style = dsl, caption = Deklaration von KOFGPCProvider, captionpos = b, label = lst_tei7]
 required KOFGPCProvider{
-	Collection getKOFGsVonFP(DvFoerderprogramm)
-	Collection getPCsZuKOFG(DvFoerdergegenstand, DvAntragsJahr)
+ Collection getKOFGsVonFP(DvFoerderprogramm)
+ Collection getPCsZuKOFG(DvFoerdergegenstand, DvAntragsJahr)
 }
 \end{lstlisting}
+\newpage
 \noindent
 Die Listings \ref{lst_ElerFTFoerderprogramm} - \ref{lst_IntubationPatient} zeigen die \emph{provided Typen}, die in den Deklarationen der \emph{required Typen} verwendet wurden und nicht Teil des JDKs sind.
 \begin{lstlisting}[style = dsl, caption = Deklaration von ElerFTFoerderprogramm, captionpos = b, label = lst_ElerFTFoerderprogramm]
 provided ElerFTFoerderprogramm extends Foerderprogramm{
-  DvFlaeche mindestParzellenGroesse
-  DvFlaeche maximaleParzellenGroesse
-  int differenzKassenjahrAntragsjahr
-  boolean isMehrjaehrig
+ DvFlaeche mindestParzellenGroesse
+ DvFlaeche maximaleParzellenGroesse
+ int differenzKassenjahrAntragsjahr
+ boolean isMehrjaehrig
   
-  DvFlaeche getMaximaleParzellengroesse()
-  DvFlaeche getMindestParzellenGroesse()
-  int getDifferenzKassenjahrAntragsjahr()
-  boolean isMehrjaehrig()
+ DvFlaeche getMaximaleParzellengroesse()
+ DvFlaeche getMindestParzellenGroesse()
+ int getDifferenzKassenjahrAntragsjahr()
+ boolean isMehrjaehrig()
 }
 \end{lstlisting}
 \begin{lstlisting}[style = dsl, caption = Deklaration von Foerderprogramm, captionpos = b, label = lst_Foerderprogramm]
 provided Foerderprogramm extends Object{
-  Long id
-  STDGueltigkeit gueltigkeit
-  Long fpId
-  BigDecimal bagatellbetrag
-  BigDecimal bagatellmenge
-  List vorgaengeAm15
-  Set landesmassnahmen
+ Long id
+ STDGueltigkeit gueltigkeit
+ Long fpId
+ BigDecimal bagatellbetrag
+ BigDecimal bagatellmenge
+ List vorgaengeAm15
+ Set landesmassnahmen
   
-  Long getId()
-  boolean isTechnischGueltig(Date)
-  DvFoerderprogramm getFoerderprogramm()
-  BigDecimal getBagatellmengeFoerd()
-  BigDecimal getBagatellbetragFoerd()
-  boolean isFachlichGueltig(DvAntragsJahr)
-  STDGueltigkeit getGueltigkeit()
-  Long getFpId()
+ Long getId()
+ boolean isTechnischGueltig(Date)
+ DvFoerderprogramm getFoerderprogramm()
+ BigDecimal getBagatellmengeFoerd()
+ BigDecimal getBagatellbetragFoerd()
+ boolean isFachlichGueltig(DvAntragsJahr)
+ STDGueltigkeit getGueltigkeit()
+ Long getFpId()
 }
 \end{lstlisting}
-%\begin{lstlisting}[style = dsl, caption = Deklartion von STDGueltigkeit, captionpos = b, label = lst_STDGueltigkeit]
-%provided STDGueltigkeit extends Object{
-%  STDTechnischeGueltigkeit technisch
-%  STDFachlicheGueltigkeitAJ fachlich
-%  STDTechnischeGueltigkeit getTechnisch()
-%  STDFachlicheGueltigkeitAJ getFachlich()
-%  boolean imGueltigkeitszeitraum(Date)
-%  boolean imGueltigkeitszeitraum(DvAntragsJahr)
-%}
-%\end{lstlisting}
+\pagebreak
 \begin{lstlisting}[style = dsl, caption = Deklaration von DvAntragsJahr, captionpos = b, label = lst_dvantragsjahr]
 provided DvAntragsJahr extends AbstractDomainValue{
-  int antragsJahr
+ int antragsJahr
   
-  DvAntragsJahr add(int)
-  int compareTo(Object)
-  int intValue()
-  Object readResolve()
-  DvAntragsJahr getVorjahr()
-  int differenz(DvAntragsJahr)
-  DvAntragsJahr sub(int)
-  String toStringImpl()
+ DvAntragsJahr add(int)
+ int compareTo(Object)
+ int intValue()
+ Object readResolve()
+ DvAntragsJahr getVorjahr()
+ int differenz(DvAntragsJahr)
+ DvAntragsJahr sub(int)
+ String toStringImpl()
 }
 \end{lstlisting}
-%\begin{lstlisting}[style = dsl, caption = Deklartion von AbstractDomainValue, captionpos = b, label = lst_AbstractDomainValue]
-%provided AbstractDomainValue extends InspectableImpl{
-%  boolean _isDefined
-%  int compareTo(Object)
-%  Object readResolve()
-%  boolean isDefined()
-%  void setDefined(boolean)
-%  String toStringImpl()
-%  String[] toStrings()
-%}
-%\end{lstlisting}
-%\begin{lstlisting}[style = dsl, caption = Deklartion von InspectableImpl, captionpos = b, label = lst_InspectableImpl]
-%provided InspectableImpl extends Object{
-%  String fullAttributeName(Field)
-%  boolean canWriteAttribute(String)
-%  void writeAttributeValue(String, Object)
-%  boolean canReadAttribute(String)
-%  String[] attributeNames()
-%  Object attributeValue(String)
-%  Field fieldByFullName(String)
-%  Field[] allFields()
-%  boolean hasAttribute(String)
-%}
-%\end{lstlisting}
 \begin{lstlisting}[style = dsl, caption = Deklaration von DvFoerderprogramm, captionpos = b, label = lst_DvFoerderprogramm]
 provided DvFoerderprogramm extends DvEnumerable{
-  long id
-  String code
-  String fpGruppe
-  String bezeichnung
-  String bezeichnungLang
-  String getName()
+ long id
+ String code
+ String fpGruppe
+ String bezeichnung
+ String bezeichnungLang
+ String getName()
   
-  Long getId()
-  Long getNummer()
-  void validateCode(String)
-  String getFpGruppe()
-  String getBezeichnung()
-  String toStringImpl()
-  String getCode()
-  String getFPNummerExtern()
-  String getBezeichnungLang()
+ Long getId()
+ Long getNummer()
+ void validateCode(String)
+ String getFpGruppe()
+ String getBezeichnung()
+ String toStringImpl()
+ String getCode()
+ String getFPNummerExtern()
+ String getBezeichnungLang()
 }
 \end{lstlisting}
 \begin{lstlisting}[style = dsl, caption = Deklaration von Injured, captionpos = b, label = lst_Injured]
 provided Injured extends Object{
-  Collection suffers
+ Collection suffers
 
-  Collection getSuffers()
-  void healSuffer(Suffer)
-  boolean isStabilized()
+ Collection getSuffers()
+ void healSuffer(Suffer)
+ boolean isStabilized()
 }
 \end{lstlisting}
 \begin{lstlisting}[style = dsl, caption = Deklaration von Fire, captionpos = b, label = lst_Fire]
 provided Fire extends Object{
-  boolean active
+ boolean active
 
-  void extinguish()
-  boolean isActive()
+ void extinguish()
+ boolean isActive()
 }
 \end{lstlisting}
 \begin{lstlisting}[style = dsl, caption = Deklaration von IntubationPatient, captionpos = b, label = lst_IntubationPatient]
 provided IntubationPatient extends Object{
-  boolean isIntubated
+ boolean isIntubated
 
-  boolean isIntubated()
-  void setIntubated(boolean)
+ boolean isIntubated()
+ void setIntubated(boolean)
 }
 \end{lstlisting}
 \noindent
 Die Listings \ref{lst_eftstd} - \ref{lst_firefighter} zeigen die Deklarationen der \emph{provided Typen}, aus denen bei der Exploration ein passender Proxy erzeugt werden soll.
 \begin{lstlisting}[style = dsl, caption = Deklaration von ElerFTStammdatenAuskunftService, captionpos = b, label = lst_eftstd]
 provided ElerFTStammdatenAuskunftService extends Object{
-	Collection getAlleElerFTKombiKzFpFoerdergegenstaende()
-	Collection getAlleElerFTKoFoerdergegenstaende()
-	Collection getFeststellungscodeVerpflichtungList(FeststellungscodeVerpflichtungImplQuery)
-	FeststellungscodeVerpflichtungImpl getFeststellungscodeVerpflichtungImpl(FeststellungscodeVerpflichtungImplQuery)
-	Collection getAlleElerFTTierFoerdergegenstaende(DvFoerderprogramm, DvAntragsJahr, AntragsVorgangsTyp)
-	Collection getAlleFreigegebenenFoerderprogramme(AntragsVorgangsTyp)
-	Collection getAlleFreigegebenenFoerderprogramme()
-	ElerFTKzFpFoerdergegenstand2Foerderfaehigkeit getElerFTKzFpFoerdergegenstand2Foerderfaehigkeit(DvFoerdergegenstand, DvAntragsJahr)
-	FeststellungsCodeVerpflichtung2FP getFeststellungsCodeVerpflichtung2FP(FeststellungsCodeVerpflichtung2FPQuery)
-	DvEftOekoFoerdergegenstandGruppe getOekoFgGruppe2Foerdergegenstand(DvFoerdergegenstand)
-	Collection getAlleElerFTKzFpFoerdergegenstaende()
-	VerpflichtungsGegenstandImpl getVerpflichtungsGegenstandImpl(VerpflichtungsGegenstandImplQuery)
-	ElerFTVorhaben getVorhaben2Foerdergegenstand(DvFoerdergegenstand, DvAntragsJahr)
-	Verpflichtungszeitraum getVerpflichtungszeitraum(DvFoerderprogramm, DvAntragsJahr)
-	int getMaxStandardAnzahlZahlungen(DvFoerderprogramm, DvAntragsJahr)
-	DvZusatzInfoTyp getZusatzInfo2Foerdergegenstand(DvFoerdergegenstand, DvAntragsJahr)
-	int getStandardAnzahlZahlungen(DvUntermassnahme, DvAntragsJahr)
-	int getStandardAnzahlZahlungen(Landesmassnahme, DvAntragsJahr)
-	Collection getElerFTKoFoerdergegenstaende(DvFoerderprogramm, DvUntermassnahme, DvAntragsJahr)
-	Collection getElerFTKoFoerdergegenstaende(DvFoerderprogramm)
-	Collection getAlleFg2ZusatzInfo(DvZusatzInfoTyp, DvAntragsJahr)
-	int getDifferenzJahrVerpflbeginnEAJ(DvFoerderprogramm, DvAntragsJahr)
-	Collection getVerpflichtungsGegenstandList(VerpflichtungsGegenstandImplQuery)
-	Collection getAenderungscodePropertiesList(AenderungscodePropertiesQuery)
-	Collection getAlleFg2OekoFgGruppe(DvEftOekoFoerdergegenstandGruppe)
-	ElerFTFoerderprogramm getFoerderprogramm(ElerFTFoerderprogrammQuery)
-	ElerFTFoerderprogramm getFoerderprogramm(DvAntragsJahr, DvFoerderprogramm, Date)
-	Collection getElerFTAenderung2ElerFTFP(DvFoerderprogramm)
-	Collection getElerFTAenderung2ElerFTFP(ElerFTAenderung)
-	ElerFTAenderung2ElerFTFP getElerFTAenderung2ElerFTFP(ElerFTAenderung, DvFoerderprogramm)
-	Collection getFoerdergegenstaende(AbstractElerFTFoerdergegenstandQuery)
-	Collection getElerFTTierFoerdergegenstaende(DvFoerderprogramm, DvUntermassnahme, DvAntragsJahr)
-	Collection getFoerderprogramme(ElerFTFoerderprogrammQuery)
-	Collection getFoerderprogramme(Date)
-	Collection getAlleFoerderprogramme()
-	Collection getElerFTKzFpFoerdergegenstaende(DvFoerderprogramm, DvUntermassnahme, DvAntragsJahr)
-	Collection getElerFTKzFpFoerdergegenstaende(ElerFTKombiKzFpFoerdergegenstand)
-	Collection getElerFTKzFpFoerdergegenstaende(DvFoerderprogramm, Finanzierungsschluessel, DvAntragsJahr)
-	Collection getElerFTKzFpFoerdergegenstaende(DvFoerderprogramm, DvAntragsJahr)
-	Collection getAlleFg2Vorhaben(ElerFTVorhaben, DvAntragsJahr)
-	Map getKzFpJeFg(Collection, DvAntragsJahr)
+ Collection getAlleElerFTKombiKzFpFoerdergegenstaende()
+ Collection getAlleElerFTKoFoerdergegenstaende()
+ Collection getFeststellungscodeVerpflichtungList(FeststellungscodeVerpflichtungImplQuery)
+ FeststellungscodeVerpflichtungImpl getFeststellungscodeVerpflichtungImpl(FeststellungscodeVerpflichtungImplQuery)
+ Collection getAlleElerFTTierFoerdergegenstaende(DvFoerderprogramm, DvAntragsJahr, AntragsVorgangsTyp)
+ Collection getAlleFreigegebenenFoerderprogramme(AntragsVorgangsTyp)
+ Collection getAlleFreigegebenenFoerderprogramme()
+ ElerFTKzFpFoerdergegenstand2Foerderfaehigkeit getElerFTKzFpFoerdergegenstand2Foerderfaehigkeit(DvFoerdergegenstand, DvAntragsJahr)
+ FeststellungsCodeVerpflichtung2FP getFeststellungsCodeVerpflichtung2FP(FeststellungsCodeVerpflichtung2FPQuery)
+ DvEftOekoFoerdergegenstandGruppe getOekoFgGruppe2Foerdergegenstand(DvFoerdergegenstand)
+ Collection getAlleElerFTKzFpFoerdergegenstaende()
+ VerpflichtungsGegenstandImpl getVerpflichtungsGegenstandImpl(VerpflichtungsGegenstandImplQuery)
+ ElerFTVorhaben getVorhaben2Foerdergegenstand(DvFoerdergegenstand, DvAntragsJahr)
+ Verpflichtungszeitraum getVerpflichtungszeitraum(DvFoerderprogramm, DvAntragsJahr)
+ int getMaxStandardAnzahlZahlungen(DvFoerderprogramm, DvAntragsJahr)
+ DvZusatzInfoTyp getZusatzInfo2Foerdergegenstand(DvFoerdergegenstand, DvAntragsJahr)
+ int getStandardAnzahlZahlungen(DvUntermassnahme, DvAntragsJahr)
+ int getStandardAnzahlZahlungen(Landesmassnahme, DvAntragsJahr)
+ Collection getElerFTKoFoerdergegenstaende(DvFoerderprogramm, DvUntermassnahme, DvAntragsJahr)
+ Collection getElerFTKoFoerdergegenstaende(DvFoerderprogramm)
+ Collection getAlleFg2ZusatzInfo(DvZusatzInfoTyp, DvAntragsJahr)
+ int getDifferenzJahrVerpflbeginnEAJ(DvFoerderprogramm, DvAntragsJahr)
+ Collection getVerpflichtungsGegenstandList(VerpflichtungsGegenstandImplQuery)
+ Collection getAenderungscodePropertiesList(AenderungscodePropertiesQuery)
+ Collection getAlleFg2OekoFgGruppe(DvEftOekoFoerdergegenstandGruppe)
+ ElerFTFoerderprogramm getFoerderprogramm(ElerFTFoerderprogrammQuery)
+ ElerFTFoerderprogramm getFoerderprogramm(DvAntragsJahr, DvFoerderprogramm, Date)
+ Collection getElerFTAenderung2ElerFTFP(DvFoerderprogramm)
+ Collection getElerFTAenderung2ElerFTFP(ElerFTAenderung)
+ ElerFTAenderung2ElerFTFP getElerFTAenderung2ElerFTFP(ElerFTAenderung, DvFoerderprogramm)
+ Collection getFoerdergegenstaende(AbstractElerFTFoerdergegenstandQuery)
+ Collection getElerFTTierFoerdergegenstaende(DvFoerderprogramm, DvUntermassnahme, DvAntragsJahr)
+ Collection getFoerderprogramme(ElerFTFoerderprogrammQuery)
+ Collection getFoerderprogramme(Date)
+ Collection getAlleFoerderprogramme()
+ Collection getElerFTKzFpFoerdergegenstaende(DvFoerderprogramm, DvUntermassnahme, DvAntragsJahr)
+ Collection getElerFTKzFpFoerdergegenstaende(ElerFTKombiKzFpFoerdergegenstand)
+ Collection getElerFTKzFpFoerdergegenstaende(DvFoerderprogramm, Finanzierungsschluessel, DvAntragsJahr)
+ Collection getElerFTKzFpFoerdergegenstaende(DvFoerderprogramm, DvAntragsJahr)
+ Collection getAlleFg2Vorhaben(ElerFTVorhaben, DvAntragsJahr)
+ Map getKzFpJeFg(Collection, DvAntragsJahr)
 }
 \end{lstlisting}
 \begin{lstlisting}[style = dsl, caption = Deklaration von StammdatenAuskunftService, captionpos = b, label = lst_std]
 provided StammdatenAuskunftService extends Object{
-  Collection getLandesmassnahmen2Foerdergegenstaende(Landesmassnahme2FoerdergegenstandQuery)
-  Collection getFoerdergegenstaendeZuFinanzierungsschluessel(DvFoerderprogramm, Finanzierungsschluessel, DvAntragsJahr)
-  Landesmassnahme getLandesmassnahme(Long)
-  Map getOberFgJeUnterFg(DvAntragsJahr)
-  Collection getFoerderprogramme(Date)
-  Foerdergegenstand getFoerdergegenstand(FoerdergegenstandQuery)
-  Collection getFoerdergegenstaende(DvFoerderprogramm)
-  Collection getFoerdergegenstaende(FoerdergegenstandQuery)
-  Collection getFoerdergegenstaende(Landesmassnahme)
-  Collection getFinanzierungsschluessel(FinanzierungsschluesselQuery)
-  Collection getFinanzierungskonfigurationen(FinanzierungskonfigurationQuery)
-  Collection getFinanzierungskonfigurationen(Collection, DvAntragsJahr)
-  Collection getFinanzierungskonfigurationen(DvAntragsJahr, DvFoerderprogramm, Long)
-  Finanzierungskonfiguration getFinanzierungskonfigurationen(DvAntragsJahr, DvFoerderprogramm, DvFoerdergegenstand)
-  Map getProduktcodesJeFg(DvFoerderprogramm, DvAntragsJahr, Collection, ProduktcodeArt, Finanzierungsschluessel)
-  Foerderprogramm getFoerderprogramm(Foerdergegenstand)
-  Foerderprogramm getFoerderprogramm(DvAntragsJahr, DvFoerderprogramm, Date)
-  Collection getAblehnungsgrundCodes(Foerderprogramm, DvAntragsJahr, KuerzungsgrundCode)
-  Collection getUnterFoerdergegenstaende(DvAntragsJahr, Collection)
-  Collection getFoerdergegenstandGruppenZuFgs(DvAntragsJahr, Collection)
-  Collection getLandesmassnahmen(DvAntragsJahr, DvFoerderprogramm)
-  Collection getLandesmassnahmen(DvAntragsJahr, Foerdergegenstand)
-  Collection getLandesmassnahmen(LandesmassnahmeQuery)
-  Produktcode getProduktcode(ProduktcodeQuery)
-  Produktcode getProduktcode(DvAntragsJahr, DvFoerdergegenstand, ProduktcodeArt)
-  Produktcode getProduktcode(DvAntragsJahr, DvFoerdergegenstand, ProduktcodeArt, Finanzierungsschluessel)
-  BigDecimal getBeihilfesatz(DvAntragsJahr, DvFoerdergegenstand, Integer)
-  Collection getProduktcodes(DvAntragsJahr, Finanzierungsschluessel)
-  Collection getProduktcodes(DvAntragsJahr, DvFoerdergegenstand, Finanzierungsschluessel)
-  Collection getProduktcodes(ProduktcodeQuery)
-  Collection getProduktcodes(DvAntragsJahr, DvFoerderprogramm)
-  Collection getProduktcodes(DvAntragsJahr, DvFoerdergegenstand)
-  Collection getProduktcodes(Collection)
-  BigDecimal getKappungBetrag(DvFoerdergegenstand, DvAntragsJahr)
-  Collection getVorgaenge(Date, DvFoerderprogramm)
-  Collection getVorgaenge(AntragsVorgangsTyp)
-  Collection getVorgaenge(Date, AntragsVorgangsTyp)
-  Collection getVorgaenge()
-  Collection getVorgaenge(DvFoerderprogramm, Date, AntragsVorgangsTyp)
-  BigDecimal getKappungMenge(DvFoerdergegenstand, DvAntragsJahr)
-  Vorgang getVorgang(DvAntragsJahr, DvFoerderprogramm, Date, AntragsVorgangsTyp, DvAntragsJahr)
-  Vorgang getVorgang(DvFoerderprogramm, Date, AntragsVorgangsTyp, DvAntragsJahr)
+ Collection getLandesmassnahmen2Foerdergegenstaende(Landesmassnahme2FoerdergegenstandQuery)
+ Collection getFoerdergegenstaendeZuFinanzierungsschluessel(DvFoerderprogramm, Finanzierungsschluessel, DvAntragsJahr)
+ Landesmassnahme getLandesmassnahme(Long)
+ Map getOberFgJeUnterFg(DvAntragsJahr)
+ Collection getFoerderprogramme(Date)
+ Foerdergegenstand getFoerdergegenstand(FoerdergegenstandQuery)
+ Collection getFoerdergegenstaende(DvFoerderprogramm)
+ Collection getFoerdergegenstaende(FoerdergegenstandQuery)
+ Collection getFoerdergegenstaende(Landesmassnahme)
+ Collection getFinanzierungsschluessel(FinanzierungsschluesselQuery)
+ Collection getFinanzierungskonfigurationen(FinanzierungskonfigurationQuery)
+ Collection getFinanzierungskonfigurationen(Collection, DvAntragsJahr)
+ Collection getFinanzierungskonfigurationen(DvAntragsJahr, DvFoerderprogramm, Long)
+ Finanzierungskonfiguration getFinanzierungskonfigurationen(DvAntragsJahr, DvFoerderprogramm, DvFoerdergegenstand)
+ Map getProduktcodesJeFg(DvFoerderprogramm, DvAntragsJahr, Collection, ProduktcodeArt, Finanzierungsschluessel)
+ Foerderprogramm getFoerderprogramm(Foerdergegenstand)
+ Foerderprogramm getFoerderprogramm(DvAntragsJahr, DvFoerderprogramm, Date)
+ Collection getAblehnungsgrundCodes(Foerderprogramm, DvAntragsJahr, KuerzungsgrundCode)
+ Collection getUnterFoerdergegenstaende(DvAntragsJahr, Collection)
+ Collection getFoerdergegenstandGruppenZuFgs(DvAntragsJahr, Collection)
+ Collection getLandesmassnahmen(DvAntragsJahr, DvFoerderprogramm)
+ Collection getLandesmassnahmen(DvAntragsJahr, Foerdergegenstand)
+ Collection getLandesmassnahmen(LandesmassnahmeQuery)
+ Produktcode getProduktcode(ProduktcodeQuery)
+ Produktcode getProduktcode(DvAntragsJahr, DvFoerdergegenstand, ProduktcodeArt)
+ Produktcode getProduktcode(DvAntragsJahr, DvFoerdergegenstand, ProduktcodeArt, Finanzierungsschluessel)
+ BigDecimal getBeihilfesatz(DvAntragsJahr, DvFoerdergegenstand, Integer)
+ Collection getProduktcodes(DvAntragsJahr, Finanzierungsschluessel)
+ Collection getProduktcodes(DvAntragsJahr, DvFoerdergegenstand, Finanzierungsschluessel)
+ Collection getProduktcodes(ProduktcodeQuery)
+ Collection getProduktcodes(DvAntragsJahr, DvFoerderprogramm)
+ Collection getProduktcodes(DvAntragsJahr, DvFoerdergegenstand)
+ Collection getProduktcodes(Collection)
+ BigDecimal getKappungBetrag(DvFoerdergegenstand, DvAntragsJahr)
+ Collection getVorgaenge(Date, DvFoerderprogramm)
+ Collection getVorgaenge(AntragsVorgangsTyp)
+ Collection getVorgaenge(Date, AntragsVorgangsTyp)
+ Collection getVorgaenge()
+ Collection getVorgaenge(DvFoerderprogramm, Date, AntragsVorgangsTyp)
+ BigDecimal getKappungMenge(DvFoerdergegenstand, DvAntragsJahr)
+ Vorgang getVorgang(DvAntragsJahr, DvFoerderprogramm, Date, AntragsVorgangsTyp, DvAntragsJahr)
+ Vorgang getVorgang(DvFoerderprogramm, Date, AntragsVorgangsTyp, DvAntragsJahr)
 }
 \end{lstlisting}
+\pagebreak
 \begin{lstlisting}[style = dsl, caption = Deklaration von Doctor, captionpos = b, label = lst_doctor]
 provided Doctor extends Object{
-  void provideHeartbeatMassage(Injured)
-  void stablilizeBrokenBones(Injured)
-  void healWithMed(Injured, Medicine)
-  void placeInfusion(Injured)
-  void nurseWounds(Injured)
-  void intubate(Injured)
+ void provideHeartbeatMassage(Injured)
+ void stablilizeBrokenBones(Injured)
+ void healWithMed(Injured, Medicine)
+ void placeInfusion(Injured)
+ void nurseWounds(Injured)
+ void intubate(Injured)
 }
 \end{lstlisting}
 \begin{lstlisting}[style = dsl, caption = Deklaration von FireFighter, captionpos = b, label = lst_firefighter]
 provided FireFighter extends Object{
-  void stabilizeBrokenBones(Injured)
-  void provideHeartbeatMassage(Injured)
-  FireState extinguishFire(Fire)
-  void free(Injured)
-  void nurseWounds(Injured)
+ void stabilizeBrokenBones(Injured)
+ void provideHeartbeatMassage(Injured)
+ FireState extinguishFire(Fire)
+ void free(Injured)
+ void nurseWounds(Injured)
 }
 \end{lstlisting}
