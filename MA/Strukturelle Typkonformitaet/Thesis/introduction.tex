@@ -1,6 +1,6 @@
 \chapter{Einleitung}
 \section{Motivation}
-In größeren Software-Systemen ist es üblich, dass mehrere \gls{komponente}n miteinander über Schnittstellen kommunizieren. In der Regel werden diese Schnittstellen so konzipiert, dass sie Informationen oder Services anbieten, die von anderen \gls{komponente}n abgefragt und benutzt werden können. Dabei wird zwischen der \gls{komponente}, welche die Schnittstelle implementiert - als angebotene Komponente - und der \gls{komponente}, welche die Schnittstelle nutzen soll - als nachfragende \gls{komponente} - unterschieden (siehe \abbref{motiv}). 
+In größeren Software-Systemen ist es üblich, dass mehrere \gls{komponente}n miteinander über Schnittstellen kommunizieren. In der Regel werden diese Schnittstellen so konzipiert, dass sie Informationen oder Services anbieten, die von anderen \gls{komponente}n abgefragt und benutzt werden können. Dabei wird zwischen der \gls{komponente}, welche die Schnittstelle implementiert - als angebotene \Gls{komponente} - und der \gls{komponente}, welche die Schnittstelle nutzen soll - als nachfragende \gls{komponente} - unterschieden (siehe \abbref{motiv}). 
 \myScalableFigure[0.6\linewidth]{motiv}{Abhängigkeiten von nachfragenden und angebotenen Komponenten}{motiv}
 \noindent
 Wird von einer nachfragenden \gls{komponente} eine Information benötigt, die in dieser Form noch nicht angeboten wird, so wird häufig ein neues \Gls{Interface} für diese benötigte Information erstellt, welches dann passend dazu implementiert wird. Dabei muss neben der Anpassung der nachfragenden \gls{komponente} auch eine Anpassung oder Erzeugung der anbietenden \gls{komponente} erfolgen und zusätzlich das neue \Gls{Interface} deklariert werden. Zudem bedingt eine nachträgliche Änderung der neuen Schnittstelle ebenfalls eine Anpassung der drei genannten \gls{artefakt}e.\\\\
@@ -14,16 +14,16 @@ Ein solches Vorgehen wird bei der testgetriebene Codesuche (testdriven codesearc
 \\\\
 Die Suchergebnisse werden aufgelistet und der Entwickler entscheidet letztendlich explizit, welche \gls{komponente} verwenden möchte. Die Verwendung der \gls{komponente} läuft dann jedoch auf eine Referenzierung dieser in der nachfragenden \gls{komponente} hinaus. Somit arbeiten die Source \Gls{Engine}s also nicht zur Laufzeit des Systems, in dem die \gls{komponente}n verwendet werden sollen.
 \\\\
-In dieser Arbeit soll eine solche Exploration jedoch zur Laufzeit erfolgen, sodass eine explizite Referenzierung der angebotenen \gls{komponente} nicht erfolgen muss. Dabei ist die Zeit als Ressource während der Suche nach einer passenden \gls{komponente} als knapp anzusehen. Aus diesem Grund werden in dieser Arbeit Heuristiken vorgeschlagen, die ein gezieltes Auffinden einer passenden \gls{komponente} ermöglichen und damit die Suche beschleunigen.
+In dieser Arbeit soll eine solche Exploration jedoch zur Laufzeit erfolgen, sodass eine explizite Referenzierung der angebotenen \gls{komponente} nicht erfolgen muss. Dabei ist die Zeit als Ressource während der Suche nach einer passenden \gls{komponente} als knapp anzusehen. Aus diesem Grund werden in dieser Arbeit \Gls{Heuristik}en vorgeschlagen, die ein gezieltes Auffinden einer passenden \gls{komponente} ermöglichen und damit die Suche beschleunigen.
 
 \section{Aufbau dieser Arbeit}
 Zuerst wird in Kapitel \ref{chap_problem} auf den aktuellen Forschungsstand zur \emph{TDCS} eingegangen. Im Anschluss daran wird beschrieben, wie sich die \emph{TDCS} auf einen Ansatz, in dem zur Laufzeit nach \gls{komponente}n gesucht wird, eingegangen, um so eine Abgrenzung zu den früheren Arbeiten zu schaffen.
 \\\\
-In Kapitel \ref{chap_foundation} werden die einzelnen Schnritte, die während der Exploration durchgeführt werden, sowie die zu evaluierenden Heuristiken formal beschrieben.
+In Kapitel \ref{chap_foundation} werden die einzelnen Schnritte, die während der Exploration durchgeführt werden, sowie die zu evaluierenden \Gls{Heuristik}en formal beschrieben.
 \\\\
 Kapitel \ref{chap_impl} gibt einen kurzen Überblick über die Implementierung der in Kapitel \ref{chap_foundation} genannten Aspekte.
 \\\\
-In Kapitel \ref{chap_evaluation} werden die Untersuchungsergebnisse, die unter Anwendung der Heuristiken im Einzelnen und in Kombination zusammengetragen wurden, vorgestellt. 
+In Kapitel \ref{chap_evaluation} werden die Untersuchungsergebnisse, die unter Anwendung der \Gls{Heuristik}en im Einzelnen und in Kombination zusammengetragen wurden, vorgestellt. 
 \\\\
 Die Auswertung dieser Ergebnisse erfolgt in Kapitel \ref{chap_disc} zusammen mit einer kritischen Betrachtung des in der Arbeit vorgestellten Ansatzes, sowie einer kurzen Betrachtung möglicher Erweiterungen für diesen Ansatz.
 \\\\

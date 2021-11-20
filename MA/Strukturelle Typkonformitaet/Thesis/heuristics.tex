@@ -2,7 +2,7 @@
 \section{Heuristiken}\label{sec_heuristics}
 Als \Gls{Heuristik}en werden in dieser Arbeit Verfahren bezeichnet, durch die die Lösung eines Problems beschleunigt werden kann, indem neu gewonnene Erkenntnisse beim Finden der Lösung berücksichtigt werden. Konkret bedeutet dies, dass die oben beschriebene \emph{semantische Evaluation} durch diese Verfahren beschleunigt werden soll.
 \\\\
-Die \Gls{Heuristik}en, die in den Abschnitten \ref{sec_lmf} und \ref{sec_pttf} beschrieben werden, haben zum Ziel, die Reihenfolge, in der die \emph{Proxies} hinsichtlich der vordefinierten Tests geprüft werden, so anzupassen, dass ein valider \emph{Proxy} möglichst früh geprüft wird. Die dritte Heuristik, die im Abschnitt \ref{sec_bl_nmc} beschrieben wird, beschreibt ein Ausschlussverfahren.
+Die \Gls{Heuristik}en, die in den Abschnitten \ref{sec_lmf} und \ref{sec_pttf} beschrieben werden, haben zum Ziel, die Reihenfolge, in der die \emph{Proxies} hinsichtlich der vordefinierten Tests geprüft werden, so anzupassen, dass ein valider \emph{Proxy} möglichst früh geprüft wird. Die dritte \Gls{Heuristik}, die im Abschnitt \ref{sec_bl_nmc} beschrieben wird, beschreibt ein Ausschlussverfahren.
 \\\\
 Für die Verwendung der \Gls{Heuristik}en wird der Algorithmus aus Listing \ref{lst_semEval} erweitert. Diese Erweiterung beinhaltet die Verwaltung der neu gewonnenen Erkenntnisse sowie die Anwendung der \Gls{Heuristik}en auf die zu generierenden bzw. generierten \emph{Proxies}. 
 \\\\
@@ -276,7 +276,7 @@ function PTTF( proxies ){
 \subsection{Beachtung fehlgeschlagener Methodenaufrufe (BL\_NMC)}\label{sec_bl_nmc}
 Diese \Gls{Heuristik} mit dem Namen \emph{blacklist negative method calls} (kurz: \emph{BL\_NMC}) beschreibt ein Ausschlussverfahren. Das bedeutet, dass bestimmte \emph{Proxies} auf der Basis von Erkenntnissen, die während der \emph{semantischen Evaluation} entstanden sind, für den weiteren Verlauf ausgeschlossen werden. Dadurch soll die Prüfung eines \emph{Proxies}, dessen \emph{Methoden-Delegationen} ohnehin nicht zum gewünschten Ergebnis führen, verhindert werden.
 \\\\
-Die Heuristik zielt darauf ab, \emph{Methoden-Delegationen}, die immer fehlschlagen, zu identifizieren. Wurde eine solche \emph{Methoden-Delegation} gefunden, können alle \emph{Proxies}, die diese \emph{Methoden-Delegation} enthalten von der weiteren Exploration ausgeschlossen werden.
+Die \Gls{Heuristik} zielt darauf ab, \emph{Methoden-Delegationen}, die immer fehlschlagen, zu identifizieren. Wurde eine solche \emph{Methoden-Delegation} gefunden, können alle \emph{Proxies}, die diese \emph{Methoden-Delegation} enthalten von der weiteren Exploration ausgeschlossen werden.
 \\\\
 Die \emph{Methoden-Delegationen}, die auf der Basis der folgenden \Gls{Heuristik} aussortiert werden sollen, werden zu diesem Zweck in einer globalen Variable ($\texttt{mdelBlacklist}$) gehalten. Aus einer Liste von \emph{Proxies} können darauf aufbauend diejenigen \emph{Proxies} entfernt werden, die eine jener \emph{Methoden-Delegationen} enthalten. Für die Implementierung wird im Folgenden davon ausgegangen, dass die Methoden eines \emph{required Typen} über den Namen identifiziert werden können.
 \\\\
@@ -284,7 +284,7 @@ Ausgehend vom Algorithmus der \emph{semantischen Evaluation} (siehe Listing \ref
 \\\\
 Das Ausschließen bestimmter \emph{Proxies} erfolgt, indem Elemente aus einer Liste von \emph{Proxies} entfernt werden. Listing \ref{lst_BL} zeigt die dafür vorgesehene Methode $\texttt{BL}$, welche die Basis-Liste der \emph{Proxies} im Parameter $\texttt{proxies}$ und die Liste der Kombinationen von \emph{Methoden-Delegationen}, die die Grundlage für den Ausschluss einzelner \emph{Proxies} bilden, im Parameter $\texttt{blacklist}$ erwartet.
 \\\\
-Bei dieser \Gls{Heuristik} ist deren Anwendung nach jedem Evaluationsversuch eines einzelnen \emph{Proxies} sinnvoll. Listing \ref{lst_BL_NMC} zeigt die Anpassungen in der Funktion $\texttt{evalProxies}$ aus Listing \ref{lst_semEval} für die Heuristik \emph{BL\_NMC}. Dabei sei davon auszugehen, dass die oben beschriebenen Funktionen aus den Listings \ref{lst_BL} und \ref{lst_BL_evalProxy} zur Verfügung stehen.
+Bei dieser \Gls{Heuristik} ist deren Anwendung nach jedem Evaluationsversuch eines einzelnen \emph{Proxies} sinnvoll. Listing \ref{lst_BL_NMC} zeigt die Anpassungen in der Funktion $\texttt{evalProxies}$ aus Listing \ref{lst_semEval} für die \Gls{Heuristik} \emph{BL\_NMC}. Dabei sei davon auszugehen, dass die oben beschriebenen Funktionen aus den Listings \ref{lst_BL} und \ref{lst_BL_evalProxy} zur Verfügung stehen.
 \begin{lstlisting}[style = pseudo, caption = Evaluierung einzelner Proxies mit \emph{BL\_MNC}, captionpos = b, label = lst_BL_evalProxy]
 function evalProxy( proxy, tests ){
  for( test : T ){	

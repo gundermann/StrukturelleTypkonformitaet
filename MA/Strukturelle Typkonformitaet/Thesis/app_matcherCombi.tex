@@ -1,7 +1,7 @@
 \chapter{Kombination von Matchern}\label{app_matchercombination}
 Wie aus der formalen Beschreibung zum \emph{StructuralTypeMatcher} im Abschnitt \ref{subsec_structmatcher} hervorgeht, ist dieser von den übrigen Matchern abhängig. Die Implementierung der dazugehörigen Klasse $\texttt{StructuralTypeMatcher}$ verlangt zur Erzeugung eines Objektes dieser Klasse eine $\texttt{TypeMatcher}$. Dieser $\texttt{TypeMatcher}$ muss laut der formalen Beschreibung die Implementierung der Matchingrelation $\Rightarrow_{internStruct}$ darstellen.
 \\\\
-Zu diesem Zweck müssen die übrigen Matcher bzw. die dafür implementierten Klassen miteinander kombiniert werden, wie es in der Definition zur Matchingrelation $\Rightarrow_{internStruct}$ der Fall ist. Für solche Kombinationen steht die Klasse $\texttt{MatcherCombiner}$ im Modul \emph{SignatureMatching} bereit (siehe Listing \ref{lst_matchercombiner}).
+Zu diesem Zweck müssen die übrigen Matcher bzw. die dafür implementierten Klassen miteinander kombiniert werden, wie es in der Definition zur Matchingrelation $\Rightarrow_{internStruct}$ der Fall ist. Für solche Kombinationen steht die Klasse $\texttt{MatcherCombiner}$ im \Gls{Modul} \emph{SignatureMatching} bereit (siehe Listing \ref{lst_matchercombiner}).
 \\\\
 Diese Klasse erlaubt die Kombination von Objekten vom Typ $\texttt{TypeMatcher}$. 
 Die Matcher-Klassen $\texttt{ExactTypeMatcher}$, $\texttt{GenSpecTypeMatcher}$ und $\texttt{WrappedTypeMatcher}$ implementieren alle dieses \Gls{Interface}. 
