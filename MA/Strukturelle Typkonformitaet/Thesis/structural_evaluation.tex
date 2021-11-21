@@ -186,7 +186,7 @@ Somit soll bspw. ein Matching zwischen dem Typ $\texttt{MedicalFireFighter}$ und
 Damit ein \emph{required Typ} $R$ auf einen \emph{provided Typ} $T$ über den \emph{StrukturalTypeMatcher} gematcht werden kann, muss mindestens eine Methode aus $R$ zu einer Methode aus $T$ gematcht werden (Signature-Matching). Ein Matching der Methoden liegt dann vor, wenn sowohl die Rückgabe- als auch die Parameter-Typen dieser beiden Methoden miteinander gematcht werden können (vgl. \cite{moormann}). 
 \\\\
 Wie in \cite{moormann} soll die Reihenfolge, in der die Parameter in der jeweiligen Methode deklariert wurden, keine Rolle spielen. Ausgehend von den Parameter-Typen der beiden Methoden als Mengen, muss eine der Mengen also so umsortiert werden, dass die Parameter-Typen aus beiden Mengen an der jeweils gleichen Position miteinander gematcht werden können.
-Die möglichen umsortierte Mengen von Parameter-Typen einer Methode $m$ auf die dies in Bezug auf die Menge der Parameter-Typen einer Methode $m'$ zutrifft, werden über die Funktion $\mathit{matchingParams}$ beschrieben:
+Die möglichen umsortierten Mengen von Parameter-Typen einer Methode $m$ auf die dies in Bezug auf die Menge der Parameter-Typen einer Methode $m'$ zutrifft, werden über die Funktion $\mathit{matchingParams}$ beschrieben:
 \begin{gather*}
 \mathit{matchingParams(m, m')} :=
 \left\{
@@ -194,12 +194,12 @@ Die möglichen umsortierte Mengen von Parameter-Typen einer Methode $m$ auf die 
 	&
 	\{\mathit{P_1,...,P_n}\} = \mathit{params(m)} \wedge \mathit{ }
 	\\
-	\{\mathit{mP_1,...,mP_n}\}
+	\{\mathit{P'_1,...,P'_n}\}
 	&
-	\forall i \in \{1,...,n\}: \mathit{mP_i} \in \mathit{params(m'}) \wedge \mathit{ }
+	\forall i \in \{1,...,n\}: \mathit{P'_i} \in \mathit{params(m'}) \wedge \mathit{ }
 	\\
 	&
-	\mathit{mP_i} \Rightarrow_{internStruct} \mathit{P_i}
+	\mathit{P'_i} \Rightarrow_{internStruct} \mathit{P_i}
 \end{array}
 \right\}
 \end{gather*}
@@ -213,9 +213,9 @@ Die Menge der gematchten Methoden aus $R$ in $T$ wird darauf aufbauend durch fol
 \begin{gather*}
 structM_{source}(R,T) := \left\{ 
 				\begin{array}{l|l}
-m	& \mathit{m} \in \mathit{methoden(R)} \wedge \mathit{ }
+m	& \mathit{m} \in \mathit{methods(R)} \wedge \mathit{ }
 \\
-	& \exists \mathit{m'} \in \mathit{methoden(P)} : m \Rightarrow_{method} m'
+	& \exists \mathit{m'} \in \mathit{methods(P)} : m \Rightarrow_{method} m'
 				\end{array}
               \right\}
 \end{gather*}
@@ -232,12 +232,12 @@ Die Exploration wird für einen \emph{required Typ} durchgeführt. Bei der \emph
 cover(R,L) := 
 \left\{\begin{array}{l|l}
 					& T_1 \in L \wedge \text{...} \wedge T_n \in L 								\wedge \mathit{ }\\
-\{T_1,...,T_n\}		& \mathit{methoden(R)} = \mathit{structM(R,T_1)}							\cup \mathit{ }\\
+\{T_1,...,T_n\}		& \mathit{methods(R)} = \mathit{structM(R,T_1)}							\cup \mathit{ }\\
 					& \texttt{...} \cup \mathit{structM(R, T_n)} 								\wedge \mathit{ }\\
 					& \forall T \in \{T_1,...,T_n\}:											\mathit{structM(R,T)} \neq \emptyset
 \end{array}\right\}
 \end{gather*}
-Die \emph{provided Typen} innerhalb dieser Mengen werden im nächsten Schritt des Explorationsprozesses als \emph{Target-Typen} bezeichnet und als Basis für die Generierung der Proxies für den \emph{required Typ} $R$ verwendet.
+Die \emph{provided Typen} innerhalb dieser Mengen werden im nächsten Schritt des \emph{Explorationsprozesses} als \emph{Target-Typen} bezeichnet und als Basis für die Generierung der Proxies für den \emph{required Typ} $R$ verwendet.
 
 \begin{example}{bsp_cover}
 Sei folgende Bibliothek $L$ gegeben.
