@@ -1,0 +1,16 @@
+\ProvidesPackage{examples}
+
+
+\newcounter{examplec}
+\setcounter{examplec}{0}
+
+
+\newenvironment{example}[1]{
+\refstepcounter{examplec}\label{#1}
+\noindent\rule[0.5ex]{\linewidth}{1pt}
+\paragraph{Beispiel \arabic{examplec}}
+}
+{
+\noindent\rule[0.5ex]{\linewidth}{1pt}
+\noindent
+}

@@ -1,0 +1,68 @@
+\section{Erweiterungsmöglichkeiten}
+\subsection{Zusätzliche Matcher}
+Eine mögliche Erweiterung des Ansatzes wäre die Definition und Implementierung zusätzlicher Matcher. Diese würde es ermöglichen, dass der Abstraktionsgrad zwischen den Typen, die in den Methoden der \emph{required Typen} und \emph{provided Typen} verwendet werden, noch weiter auseinandergeht, als es bei den vorgestellten Matchern in Abschnitt \ref{sec_matcher} der Fall ist (Identität, Vererbung, Container).
+\\\\
+Die vorgestellten Matcher beachten beispielsweise keine impliziten Typumwandlungen (\emph{Coercions}). Diese können je nach Programmiersprache abweichen, was eine formale und allgemeine Beschreibung wie in Abschnitt \ref{sec_matcher} eines solchen Matchers (\emph{CoercionMatcher}) erschwert. So müsste ein \emph{CoercionMatcher} für jede Programmiersprache explizit spezifiziert werden.
+\\\\
+Die Programmiersprache Java bietet eine Vielzahl solcher impliziten Typumwandlungen an \cite{conversions_and_promotions}. Dabei ist zu beachten, dass es implizite Typumwandlungen gibt, die ohne Informationsverlust vonstatten gehen\footnote{bspw. \emph{Identity Conversion} oder \emph{Widening Primitive Conversion} \cite{conversions_and_promotions}} und solche, bei denen ein Informationsverlust nicht auszuschließen ist\footnote{bspw. \emph{Narrowing Primitive Conversion} \cite{conversions_and_promotions}}. 
+\\\\
+Implizite Typumwandlungen ohne Informationsverlust sind in Bezug auf die weitere Verwendung innerhalb eines \emph{Proxies} unbedenklich. Diese sind hinsichtlich des Informationsverlustes mit dem \emph{GenTypeMatcher} vergleichbar, welcher in Abschnitt \ref{sec_matcher} beschrieben wurde. So wie ein Typ $A$, der über den \emph{GenTypeMatcher} zu einem Typ $B$ gematcht wird ($B \Rightarrow_{gen} A$), ohne Probleme anstelle des Typen $B$ verwendet werden kann, kann auch ein Typ $C$, der ohne Informationsverlust implizit aus $B$ umgewandelt wurde, anstelle von $B$ verwendet werden.
+\\\\
+Anders ist es bei impliziten Typumwandlungen mit Informationsverlust. Diese sind eher mit dem \emph{SpecTypeMatcher} vergleichbar (siehe Abschnitt \ref{sec_matcher}). In der Spezifikation des darauf aufbauenden \emph{Proxy}-Generators ist zu erkennen, dass durch eine solche Typumwandlung bestimmte \emph{Methodendelegationen} in einen Fehler münden. Da sich der \emph{SpecTypeMatcher} direkt auf die Vererbungsbeziehung der beiden Typen bezieht, kann die Ursache solcher Fehler auf die Methoden zurückgeführt werden, die zwar im Subtyp jedoch nicht im Supertyp implementiert sind. Bei einem \emph{CoercionMatcher}, der in Abhängigkeit der Programmiersprache spezifiziert wird, kann es andere Fehlerursachen geben.
+\\\\
+Aus diesem Grund wäre es sinnvoll, nicht einen einzigen Matcher zu spezifizieren, der alle impliziten Typumwandlungen abdeckt. Vielmehr sollten die in der Programmiersprache definierten \emph{Coercions} nach dem möglichem Informationsverlust kategorisiert werden und dann je Kategorie ein Matcher spezifiziert werden.
+\\\\
+Darüber hinaus ist zu beachten, dass die Spezifikation eines Matchers alleine nicht ausreicht, um diesen zu integrieren. Da die \Gls{Heuristik} \emph{LMF} auf dem \emph{Matcherrating} aufbaut, ist es ebenso notwendig, den zusätzlichen Matchern ein Basisrating zuzuweisen. Wie in Abschnitt \ref{impl_sigma} beschrieben, wird dieses Basisrating von der Implementierung des Matchers geliefert. Dabei gilt es jedoch zu beachten, dass das Basisrating eines zusätzlichen Matchers im korrekten Verhältnis zu den bestehenden Matchern steht.
+\\\\
+In Bezug auf den/die \emph{CoercionMatcher} gibt es hierbei mehrere Möglichkeiten. Beispielsweise könnte für den/die \emph{CoercionMatcher} ein Basisrating zwischen 100 und 200 verwendet. Die untere Schranke von 100 wird dadurch begründet, dass es kein besseres Matching gibt, als die Identität, welche durch den \emph{ExactTypeMatcher} mit einem Basisrating von 100 beschrieben wird. Die obere Schranke von 200 könnte damit begründet werden, dass es sich um Typumwandlungen handelt, die über die Programmiersprache definiert sind und diese somit sicherer sind als ein \Gls{downcast}, der durch den \emph{SpecTypeMatcher} mit einem Basisrating von 200 abgedeckt werden.
+\subsection{Default-Implementierungen in required Typen}
+Im Abschnitt \ref{sec_tdcs_ejb} wurde darauf aufmerksam gemacht, dass der \emph{Explorationsprozess} das Auffinden eines passenden \emph{Proxies} nicht garantiert. Die Entwickler*innen muss also in einem solchen Fall eine alternative Implementierung bereitstellen.
+\\\\
+Dass ein passender \emph{Proxy} nicht gefunden wurde, kann allgemein betrachtet zwei Ursachen haben: Entweder konnte kein \emph{Proxy} generiert werden, oder keiner der generierten \emph{Proxies} erfüllt alle vordefinierten Test. 
+\\\\
+Die Generierung eines \emph{Proxies} hängt von dem Matching der Methoden des \emph{required Typs} und der Methoden der \emph{provided Typen} ab. Aufgrund dessen dass der Entwickler Testfälle für den \emph{required Typ} spezifizieren muss, hat er eine grundlegende Vorstellung von den Ein- und Ausgabewerten der Methoden, sowie der Verarbeitung dieser. Um nun der Gefahr vorzubeugen, dass gar kein \emph{Proxy} generiert werden kann, könnten die Entwickler*innen eine Implementierung, die seine Erwartungen zumindest minimal erfüllt, als \Gls{defaultmethode} in dem \Gls{Interface} zum \emph{required Typ} aufnehmen. Sofern bei der Exploration zu dieser Methode keine passende Methode aus einem \emph{provided Typ} gefunden wird, kann auf die Default-Implementierung zurückgegriffen werden. Der generierte \emph{Proxy}, welcher technisch gesehen das \Gls{Interface} zum \emph{required Typ} implementiert, würde den Methodenaufruf dann an sich selbst bzw. an die \Gls{defaultmethode} delegieren.
+\\\\
+Ein Beispiel für eine solche Konstellation zeigen die folgenden Listings. In Listing \ref{lst_calc} ist der \emph{required Typ} \emph{Calc} deklariert. Listing \ref{lst_interface_calc} zeigt das dazugehörige Java-\Gls{Interface} mit der \Gls{defaultmethode} $\texttt{div}$. Die Implementierung wurde so umgesetzt, dass die Testfälle, welche in der Klasse in Listing \ref{lst_testklasse_calc} enthalten sind, positiv ausfallen.
+\\\\
+Dadurch ist zwar immer noch nicht sichergestellt, dass ein passender \emph{Proxy} in jedem Fall gefunden wird, aber den Entwickler*innen kann ein alternatives Verhalten direkt im \Gls{Interface} zum \emph{required Typ} implementieren, wodurch diese Implementierung einen sehr engen Bezug zum \emph{required Typ} hat.
+\newpage
+\begin{lstlisting}[caption={Required Typ \emph{Calc}},captionpos=b, style = dsl, label=lst_calc]
+required Calc {
+ Float div( int a, int b )	
+}
+\end{lstlisting}
+\begin{lstlisting}[style = java, caption = Interface Calc, captionpos = b, label = lst_interface_calc]
+@RequiredTypeTestReference( testClasses = CalcTest.class )
+public interface Calc {
+
+ default Float div(int a, int b){
+  if(b == 0)
+   return null;
+  return Float.valueOf(a/b)
+ }
+ 
+}
+\end{lstlisting}
+\begin{lstlisting}[style = java, caption = Test CalcTest, captionpos = b, label = lst_testklasse_calc]
+public class CalcTest {
+
+ private Calc calc;
+  
+ @RequiredTypeInstanceSetter
+ public void setProvider( Calc calc ) {
+  this.calc = calc;
+ }
+
+ @RequiredTypeTest
+ public void testDivByZero() {
+  assertThat( calc.dev(1,0), nullValue() );
+ }
+  
+ @RequiredTypeTest
+ public void testDiv() {
+  assertThat( calc.dev(4,2), equalTo(2) );
+ }
+
+}
+\end{lstlisting}
+\noindent

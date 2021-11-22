@@ -1,0 +1,41 @@
+\section{Ergebnisse für die Heuristik LMF}\label{sec_evalLMF}
+In Bezug auf die \Gls{Heuristik} \emph{LMF} gilt es nicht nur zu evaluieren, ob die Suche nach einem \emph{Proxy}, der die vordefinierten Tests besteht, beschleunigt werden kann, sondern auch, mit welcher Variante zur Bestimmung des \emph{Matcherratings} (vgl. Abschnitt \ref{sec_lmf}) die besten Ergebnisse erzielt werden können. 
+\\\\
+Hierzu wird der \emph{Explorationsprozess} für alle in Tabelle \ref{tab:eIShort} genannten \emph{required Typen} mit jede Variante zur Bestimmung der \emph{Matcherratings} durchgeführt (siehe Abschnitt \ref{sec_lmf} Tabelle \ref{tab_matcherratingvarianten}). Im Folgenden wird lediglich auf die Variante eingegangen, die die besten Ergebnisse hervorgebracht hat. Die Ergebnisse unter Verwendung der übrigen Varianten sind im Anhang \ref{app_matcherratingEval} zu finden.
+\\\\
+Die Variante \emph{1.1} (vgl. Tabelle \ref{tab_matcherratingvarianten}) erbrachte die besten Ergebnisse. Die folgenden Vier-Felder-Tafeln zeigen die Ergebnisse mit dieser Variante zur Bestimmung der \emph{Matcherratings} für die \emph{required Typen} \emph{TEI1}-\emph{TEI3} auf.
+\begin{multicols}{3}
+\vft{1}{5}{$p_1(44)-6$}{1}{0}{Ergebnisse \emph{LMF} mit Variante 1.1 für TEI1 \\1. Durchlauf}{lmf11_TEI1_1}
+\vft{1}{1889}{$p_1(55)-1890$}{1}{0}{Ergebnisse \emph{LMF} mit Variante 1.1 für TEI2 1.~\mbox{Durchlauf}}{lmf11_TEI2_1}
+\vft{1}{1463}{$p_1(50)-1464$}{1}{0}{Ergebnisse \emph{LMF} mit Variante 1.1 für TEI3 1.~\mbox{Durchlauf}}{lmf11_TEI3_1}
+\end{multicols}
+\noindent
+Die Ergebnisse für die \emph{required Typen} \emph{TEI4}-\emph{TEI7} zeigen die folgenden Vier-Felder-Tafeln. 
+\begin{multicols}{2}
+\vft{1}{$1174$}{0}{0}{0}{Ergebnisse \emph{LMF} mit Variante 1.1 für TEI4 1.~\mbox{Durchlauf}}{lmf11_TEI4_1}
+\vft{2}{2}{$p_2(2247)-3$}{1}{0}{Ergebnisse \emph{LMF} mit Variante 1.1 für TEI4 2.~\mbox{Durchlauf}}{lmf11_TEI4_2}
+\end{multicols}
+
+\begin{multicols}{2}
+\vft{1}{$4984$}{0}{0}{0}{Ergebnisse \emph{LMF} mit Variante 1.1 für TEI5 1.~\mbox{Durchlauf}}{lmf11_TEI5_1}
+\vft{2}{32}{$p_2(2775)-33$}{1}{0}{Ergebnisse \emph{LMF} mit Variante 1.1 für TEI5 2.~\mbox{Durchlauf}}{lmf11_TEI5_2}
+\end{multicols}
+
+\begin{multicols}{2}
+\vft{1}{$1051$}{0}{0}{0}{Ergebnisse \emph{LMF} mit Variante 1.1 für TEI6 1.~\mbox{Durchlauf}}{lmf11_TEI6_1}
+\vft{2}{0}{$p_2(1323)-1$}{1}{0}{Ergebnisse \emph{LMF} mit Variante 1.1 für TEI6 2.~\mbox{Durchlauf}}{lmf11_TEI6_2}
+\end{multicols}
+
+\begin{multicols}{2}
+\vft{1}{$161294$}{0}{0}{0}{Ergebnisse \emph{LMF} mit Variante 1.1 für TEI7 1.~\mbox{Durchlauf}}{lmf11_TEI7_1}
+\vft{2}{7641}{$p_2(52150)-7642$}{1}{0}{Ergebnisse \emph{LMF} mit Variante 1.1 für TEI7 2.~\mbox{Durchlauf}}{lmf11_TEI7_2}
+\end{multicols}
+\noindent
+Folgendes kann aus diesen Ergebnissen abgeleitet werden:
+\begin{enumerate}
+\item Die \Gls{Heuristik} \emph{LMF} erzielt im Vergleich zum Ausgangspunkt (Abschnitt \ref{sec_ausgangspunkt}) für jeden \emph{required Typ} eine weitere Reduktion der zu prüfenden \emph{Proxies}.
+
+\item Die \Gls{Heuristik} \emph{LMF} hat keine Auswirkung auf einen Durchlauf, in dem kein \emph{Proxy} erzeugt wird, mit dem die vordefinierten Tests erfolgreich durchgeführt werden können. Dies kann durch einen Vergleich des ersten Durchlaufs für die \emph{required Typen} \emph{TEI4}-\emph{TEI7} im Ausgangspunkt (Tabellen \ref{tab:tmr_start_tei4_1}, \ref{tab:tmr_start_tei5_1}, \ref{tab:tmr_start_tei6_1} und \ref{tab:tmr_start_tei6_1}) mit dem ersten Durchlauf unter Anwendung der \Gls{Heuristik} \emph{LMF} (Tabellen \ref{tab:lmf11_TEI4_1}, \ref{tab:lmf11_TEI5_1}, \ref{tab:lmf11_TEI6_1} und \ref{tab:lmf11_TEI7_1}) festgestellt werden. Aus diesem Grund kommt die in Punkt 1 beschriebene Reduktion erst im jeweils letzten Durchlauf zum Tragen.
+\end{enumerate}
+
+

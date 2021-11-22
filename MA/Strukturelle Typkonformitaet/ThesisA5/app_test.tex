@@ -1,0 +1,12 @@
+\chapter{DesCoSTests}\label{app_test}
+Das Java-Projekt \emph{DesCoSTests} bietet einen kleinen Einblick in die Verwendung der \Gls{Modul}e, die in Kapitel \ref{chap_impl} vorgestellt wurden. Die Jar-Dateien, von denen das Projekt abhängt, befinden sich im Verzeichnis \emph{./lib} innerhalb des Java-Projektes.
+\\\\
+Das Projekt enthält zwei Source-Verzeichnisse:
+\begin{itemize}
+\item \textbf{./src}: \\
+Hier befindet sich lediglich eine Enum (\texttt{ComponentContainer}) wodurch ein Container mit mehreren Dienste abgebildet werden soll (siehe auch Abbildung \ref{abb:cd_cc}). Die Dienste können über die Methode \texttt{registerComponent} im Container hinterlegt werden. Über die Methode \texttt{getRegisteredComponentInterfaces} werden alle im Container hinterlegten \Gls{Interface}s der \Gls{komponente}n zurückgegeben, während über die Methoden \texttt{getOptComponent} ein \texttt{java.lang.Optional} zurückgegeben wird, in dem die \Gls{komponente} zu dem übergebenen \Gls{Interface} enthalten ist.
+
+\item \textbf{./test}:\\
+Hier sind Testklassen hinterlegt, mit denen der \emph{Explorationsprozess} für bestimmte \emph{required Typen} gestartet werden kann. In dem Sub-Package \texttt{ma\_scenarios} befinden sich drei Testklassen, die über das JUnit-Plugin in Eclipse gestartet werden können (JUnit4). Die Implementierung dieser Testklassen verwenden jeweils einen anderen \emph{required Typ} (siehe jeweils die Methode \texttt{findCombined}). Dabei wird in diesen Methoden jeweils zuerst der Container gefüllt. Im Anschluss wird die \emph{Config} für den \emph{Finder} erzeugt (vgl. auch Abschnitt \ref{sec_impl_descos}). Und zuletzt wird der \emph{Explorationsprozess} über den \emph{Finder} mit dem jeweiligen \emph{required Typ} gestartet. Aus der Log-Datei, die bei der Ausführung der Tests erzeugt wird, lässt sich ermittelt, wie viele \emph{Proxies} in wie vielen Durchläufen erzeugt wurden. Die Log-Dateien sind nach der Ausführung im Verzeichnis \emph{./log} zu finden.
+\end{itemize}
+\myScalableFigure[0.8\linewidth]{cd_cc}{ComponentContainer}{cd_cc}
