@@ -10,7 +10,7 @@ Ein \emph{struktureller Proxy} für $R$ lässt sich nur aus den Mengen $\mathit{
 \begin{proof}
 In Bezug auf alle \emph{strukturellen Proxies} $P \in \mathit{proxies_{struct}(R,TM})$, drückt das Theorem folgendes aus:
 \begin{gather*}
-\forall \mathit{P} \in \mathit{proxies_{struct}(R,TM}):\mathit{TM}| \leq |\mathit{methods(R)}|
+\forall \mathit{P} \in \mathit{proxies_{struct}(R,TM}):|\mathit{TM}| \leq |\mathit{methods(R)}|
 \end{gather*}
 \noindent
 Da ein \emph{struktureller Proxy} $P \in \mathit{proxies_{struct}(R,TM)}$ der Bedingung $\mathit{targets_{multi}(P,TM)}$ unterliegt (siehe Abschnitt \ref{sssec_structproxy}), muss gelten:
@@ -32,7 +32,7 @@ Zusätzlich gilt aufgrund der Regel $\mathit{delegationCount_{struct}(P)}$ (sieh
 \end{gather*}
 Daraus folgt direkt:
 \begin{gather*}
-\forall \mathit{P} \in \mathit{proxies_{struct}(R,TM}):\mathit{TM}| \leq |\mathit{methods(R)}|
+\forall \mathit{P} \in \mathit{proxies_{struct}(R,TM}):|\mathit{TM}| \leq |\mathit{methods(R)}|
 \end{gather*}
 \end{proof}
 
@@ -46,12 +46,12 @@ Dann gilt:
 \end{gather*}
 \end{theorem*}
 \begin{proof}
-Sofern es zwei Mengen von \emph{Target-Typen} eines \emph{strukturellen Proxies} unterschiedlicher Mächtigkeit gibt - so wie es bei $\mathit{TM}$ und $\mathit{TM'}$ der Fall ist, gibt in der Menge mit der geringeren Mächtigkeit auch immer einen Typ der mind. zwei Methoden enthält, die zu den Methoden des \emph{required Typ} $R$ gematcht werden können. Anderenfalls würde Theorem \ref{lemma_targetcount} nicht gelten.
+Sofern es zwei Mengen von \emph{Target-Typen} eines \emph{strukturellen Proxies} unterschiedlicher Mächtigkeit gibt - so wie es bei $\mathit{TM}$ und $\mathit{TM'}$ der Fall ist - gibt in der Menge mit der geringeren Mächtigkeit immer einen Typ der mind. zwei Methoden enthält, die zu den Methoden des \emph{required Typ} $R$ gematcht werden können. Anderenfalls würde Theorem \ref{lemma_targetcount} nicht gelten.
 Darauf aufbauend kann jede Konstellation von Mengen von \emph{Target-Typen}, auf die die oben genannten Voraussetzungen zutreffen, auf das folgende Szenario reduziert werden.
 \\\\
 Angenommen $R$ enthält zwei Methoden $m_1$ und $m_2$ und $|\mathit{TM}| = 1$.
 Dann sind in $A \in \mathit{TM}$ zwei Methoden $a_1$ und $a_2$ deklariert, sodass $m_1 \Rightarrow_{method} a_1$ und $m_2 \Rightarrow_{method} a_2$ oder $m_1 \Rightarrow_{method} a_2$ und $m_2 \Rightarrow_{method} a_1$. Dann wäre aufgrund von Theorem \ref{lemma_targetcount} $|\mathit{TM'}| = 2$. Somit ist in $B \in \mathit{TM'}$ eine Methode $b_1$ deklariert mit $m_1 \Rightarrow_{method} b_1$ oder $m_2 \Rightarrow_{method} b_1$.
-Somit sind vier Fälle zu unterscheiden:
+Demnach sind die folgenden vier Fälle zu unterscheiden:
 \begin{enumerate}
 \item 
 Wenn gilt: 
